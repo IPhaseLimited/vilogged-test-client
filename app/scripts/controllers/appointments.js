@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name viLoggedClientApp.controller:VisitorsCtrl
+ * @name viLoggedClientApp.controller:AppointmentsCtrl
  * @description
- * # VisitorsCtrl
+ * # AppointmentsCtrl
  * Controller of the viLoggedClientApp
  */
 angular.module('viLoggedClientApp')
-  .controller('VisitorsCtrl', function ($scope) {
+  .controller('AppointmentsCtrl', function ($scope) {
 
   });
