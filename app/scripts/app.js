@@ -8,7 +8,8 @@ angular.module('viLoggedClientApp', [
     'nvd3ChartDirectives',
     'angular-growl',
     'ngAnimate',
-    'db'
+    'db',
+    'db.names'
   ])
   .run(function($rootScope, $state) {
     $rootScope.pageTitle = 'CouchDB Console';
