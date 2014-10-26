@@ -1,5 +1,6 @@
 <div>
-  <a class="btn btn-default" ui-sref="add-company-department">Add</a>
+  <a class="btn btn-default hidden-xs" ng-click="addDepartment()" ><i class="fa fa-plus"></i> Add</a>
+  <a class="btn btn-default visible-xs" ui-sref="add-company-department" ><i class="fa fa-plus"></i> Add</a>
 </div>
 
 <div class="row">
@@ -18,7 +19,10 @@
           <td>{{ $index + 1}}</td>
           <td>{{ department.department_name }}</td>
           <td>{{ department.description }}</td>
-          <td>{{ department._id }}</td>
+          <td>
+            <a class="hidden-xs pointer" ng-click="addDepartment(department._id)">Edit <i class="fa fa-edit"></i></a>
+            <a class="visible-xs pointer" ui-sref="edit-company-department({id: department._id})">Edit <i class="fa fa-edit"></i></a>
+          </td>
         </tr>
       </tbody>
     </table>

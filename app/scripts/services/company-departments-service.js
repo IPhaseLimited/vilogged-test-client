@@ -19,4 +19,8 @@ angular.module('viLoggedClientApp')
     this.all = function() {
       return storageService.all(DB_NAME);
     };
+
+    this.get = function(id) {
+      return storageService.find(DB_NAME, id);
+    };
   });
