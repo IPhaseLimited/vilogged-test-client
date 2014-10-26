@@ -20,7 +20,7 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/create-visitor-profile',
         templateUrl: 'views/visitors/form.html',
-        controller: 'VisitorProfileFormCtrl'
+        controller: 'VisitorFormCtrl'
       })
       .state('edit-visitor-profile', {
         parent: 'root.index',
@@ -49,6 +49,8 @@ angular.module('viLoggedClientApp')
     $scope.visitor = {};
     $scope.default = {};
     $scope.pageTitle = 'Create Visitor Profile';
+
+    console.log($scope.pageTitle);
 
     if ($stateParams.id !== null && $stateParams.id !== undefined) {
       var deferred = visitorService.get($stateParams.id);
