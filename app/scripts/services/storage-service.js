@@ -25,7 +25,6 @@ angular.module('viLoggedClientApp')
       }
       return pouchStorageService.put(table, data)
         .then(function(result) {
-          // FIXME: item:710
           return result.id;
         });
     };
@@ -104,11 +103,6 @@ angular.module('viLoggedClientApp')
         data.modified = utility.getDateTime();
       }
 
-      // FIXME: This is a workaround to maintain interface compatibility with
-      // a previous implementation (which did not try to prevent collisions).
-      // Rather than introducing an intermediary `get`, the callee should pass
-      // `_rev` itself; it should be considered a first-class citizen as with
-      // `uuid/_id`, see item:710.
       return pouchStorageService.get(table, data.uuid)
         .then(function(doc) {
           data._rev = doc._rev;
@@ -148,7 +142,6 @@ angular.module('viLoggedClientApp')
     };
 
     /**
-     * TODO: there must be a better framework way of doing this.
      * this is basically just filter() but the idea is that there are probably ways to pass this
      * to the storage layer to get the filtering done in the db, so make it a separae fn and figure that out later
      */
