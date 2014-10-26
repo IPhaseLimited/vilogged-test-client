@@ -16,7 +16,103 @@
 
         <fieldset>
 
-          <ng-include src="'views/visitors/_form.html'"></ng-include>
+          <!--<ng-include src="'/views/visitors/_form.html'"></ng-include>-->
+          <legend>Personal Information</legend>
+
+          <div class="form-group">
+            <label for="image" class="col-sm-2 control-label">Image</label>
+            <div class="col-sm-6">
+              <input type="file" class="form-control" id="image" name="image" ng-model="visitor.image">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="fingerprint" class="col-sm-2 control-label">Fingerprint Image</label>
+            <div class="col-sm-6">
+              <input type="file" class="form-control" id="fingerprint" name="fingerprint" ng-model="visitor.fingerprint">
+            </div>
+          </div>
+
+          <div class="form-group" ng-class="{ 'has-error' : visitorForm.firstName.$invalid && !visitorForm.firstName.$pristine }">
+            <label class="control-label col-sm-2" for="firstName">First Name</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" required id="firstName" name="firstName" ng-model="visitor.firstName">
+              <p class="help-block" ng-show="visitorForm.firstName.$invalid && !visitorForm.firstName.$pristine">
+                Your first name is required
+              </p>
+            </div>
+          </div>
+
+          <div class="form-group" ng-class="{ 'has-error' : visitorForm.lastName.$invalid && !visitorForm.lastName.$pristine }">
+            <label for="lastName" class="col-sm-2 control-label">Last Name</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" required id="lastName" name="lastName">
+              <p class="help-block" ng-show="visitorForm.lastName.$invalid && !visitorForm.lastName.$pristine"></p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="birthDate" class="col-sm-2 control-label">Birth Date</label>
+            <div class="col-sm-6">
+              <input type="date" class="form-control" id="birthDate" name="birthDate" ng-model="visitor.birthDate">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="lga" class="col-sm-2 control-label">Origin City/LGA</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" id="lga" name="lga" ng-model="visitor.lga">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="originState" class="col-sm-2 control-label">State of Origin</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" id="originState" name="originState" ng-model="visitor.originState">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="nationality" class="col-sm-2 control-label">Nationality</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" id="nationality" name="nationality" ng-model="visitor.nationality">
+            </div>
+          </div>
+
+          <legend>Contact Information</legend>
+
+          <div class="form-group" ng-class="{ 'has-errors' : visitorForm.visitorEmail.$invalid && !visitorForm.visitorEmail.$pristine}">
+            <label for="visitorEmail" class="col-sm-2 control-label">Visitor's Email</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" id="visitorEmail" name="visitorEmail" ng-model="visitor.visitorEmail">
+              <p class="help-block" ng-show="visitorForm.visitorEmail.$invalid">Enter a valid email</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="visitorPhone" class="col-sm-2 control-label">Visitor's Phone</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" id="visitorPhone" name="visitorPhone" ng-model="visitor.visitorPhone">
+            </div>
+          </div>
+
+          <legend>Company Information</legend>
+
+          <div class="form-group">
+            <label for="companyName" class="col-sm-2 control-label">Company Name</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" id="companyName" name="companyName" ng-model="visitor.companyName">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="companyAddress" class="col-sm-2 control-label">Company Address</label>
+            <div class="col-sm-6">
+              <textarea id="companyAddress" class="form-control" name="companyAddress" data-ng-model="visitor.companyAddress"></textarea>
+            </div>
+          </div>
+
+          <hr/>
 
           <div class="col-sm-offset-2 col-sm-10">
             <button class="btn btn-primary" ng-class="{ 'disabled' : visitorForm.$invalid }" ng-click="createProfile()">

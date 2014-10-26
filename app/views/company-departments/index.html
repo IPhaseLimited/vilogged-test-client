@@ -1,0 +1,26 @@
+<div>
+  <a class="btn btn-default" ui-sref="add-company-department">Add</a>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <table class="table table-bordered table-condensed table-striped table-responsive">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Department</th>
+          <th>Description</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="department in departments">
+          <td>{{ $index + 1}}</td>
+          <td>{{ department.department_name }}</td>
+          <td>{{ department.description }}</td>
+          <td>{{ department._id }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -45,14 +45,16 @@ angular.module('viLoggedClientApp')
       }
     ];
   })
-  .controller('CreateVisitorProfileCtrl', function($scope) {
+  .controller('CreateVisitorProfileCtrl', function($scope, visitorService) {
     $scope.default = {};
     $scope.visitor = {};
     $scope.pageTitle = 'Create Visitor Profile';
+    $scope.wasSaved = false;
 
     $scope.createProfile = function () {
-      console.log($scope.visitor);
+      visitorService.save($scope.visitor);
 
       $scope.visitor = angular.copy($scope.default);
+      $scope.wasSaved = true;
     }
   });
