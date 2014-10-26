@@ -11,7 +11,8 @@ angular.module('viLoggedClientApp', [
     'db',
     'db.names'
   ])
-  .run(function($rootScope, $state) {
+  .run(function($rootScope, $state, storageService) {
+//    storageService.clear();
     $rootScope.pageTitle = 'CouchDB Console';
     $rootScope.$on('$stateChangeSuccess', function () {
       if(angular.isDefined($state.$current.self.data)){

@@ -13,7 +13,14 @@ angular.module('viLoggedClientApp')
     var DB_NAME = db.VISITORS;
 
     this.save = function(object) {
-      storageService.save(object)
-    }
+      return storageService.save(DB_NAME, object);
+    };
 
+    this.get = function(id) {
+      return storageService.find(DB_NAME, id);
+    };
+
+    this.getAllVisitors = function() {
+      return storageService.all(DB_NAME);
+    }
   });

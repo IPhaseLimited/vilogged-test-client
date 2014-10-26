@@ -16,45 +16,67 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/visitors/index.html',
         controller: 'VisitorsCtrl'
       })
-      .state('createVisitorProfile', {
+      .state('create-visitor-profile', {
         parent: 'root.index',
         url: '/create-visitor-profile',
         templateUrl: 'views/visitors/form.html',
-        controller: 'CreateVisitorProfileCtrl'
+        controller: 'VisitorProfileFormCtrl'
       })
-      .state('editVisitorProfile', {
+      .state('edit-visitor-profile', {
         parent: 'root.index',
-        url: '/edit-visitor-profile',
-        templateUrl: 'views/visitors/edit-visitor-profile.html',
-        controller: 'EditVisitorProfileCtrl'
+        url: '/visitor-profile/:id',
+        templateUrl: 'views/visitors/form.html',
+        controller: 'VisitorFormCtrl'
+      })
+      .state('show-visitor', {
+        parent: 'root.index',
+        url: '/show-visitor',
+        templateUrl: 'views/visitors/detail.html',
+        controller: 'VisitorDetailCtrl'
       })
   })
-  .controller('VisitorsCtrl', function ($scope) {
-    $scope.visitors = [
-      {
-        id : 1,
-        name : 'Jane Doe'
-      },
-      {
-        id : 2,
-        name : 'John Doe'
-      },
-      {
-        id : 3,
-        name : 'John Smith'
-      }
-    ];
+  .controller('VisitorsCtrl', function ($scope, visitorService) {
+    $scope.visitors = [];
+
+    var deferred = visitorService.getAllVisitors();
+
+    deferred
+      .then(function (response) {
+        $scope.visitors = response;
+      });
   })
-  .controller('CreateVisitorProfileCtrl', function($scope, visitorService) {
-    $scope.default = {};
+  .controller('VisitorFormCtrl', function($scope, $state, $stateParams , visitorService) {
     $scope.visitor = {};
+    $scope.default = {};
     $scope.pageTitle = 'Create Visitor Profile';
-    $scope.wasSaved = false;
+
+    if ($stateParams.id !== null && $stateParams.id !== undefined) {
+      var deferred = visitorService.get($stateParams.id);
+
+      deferred
+        .then(function(response) {
+          $scope.visitor = response;
+
+          $scope.pageTitle = 'Edit ' + $scope.visitor.firstName + '\'s Profile';
+        })
+        .catch(function(reason) {
+          console.log(reason);
+        });
+    }
 
     $scope.createProfile = function () {
-      visitorService.save($scope.visitor);
-
-      $scope.visitor = angular.copy($scope.default);
-      $scope.wasSaved = true;
+      var deferred = visitorService.save($scope.visitor);
+      deferred
+        .then(function(response) {
+          $scope.visitor = angular.copy($scope.default);
+          $state.go('visitors')
+        })
+        .catch(function (reason) {
+          console.log(reason);
+        });
     }
-  });
+  })
+//  .controller('VisitorDetailCtrl', function () {
+//    $scope
+//  })
+;

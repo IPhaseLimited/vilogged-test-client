@@ -46,7 +46,7 @@
           <div class="form-group" ng-class="{ 'has-error' : visitorForm.lastName.$invalid && !visitorForm.lastName.$pristine }">
             <label for="lastName" class="col-sm-2 control-label">Last Name</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" required id="lastName" name="lastName">
+              <input type="text" class="form-control" required id="lastName" name="lastName" ng-model="visitor.lastName">
               <p class="help-block" ng-show="visitorForm.lastName.$invalid && !visitorForm.lastName.$pristine"></p>
             </div>
           </div>
@@ -66,9 +66,9 @@
           </div>
 
           <div class="form-group">
-            <label for="originState" class="col-sm-2 control-label">State of Origin</label>
+            <label for="stateOfOrigin" class="col-sm-2 control-label">State of Origin</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" id="originState" name="originState" ng-model="visitor.originState">
+              <input type="text" class="form-control" id="stateOfOrigin" name="stateOfOrigin" ng-model="visitor.stateOfOrigin">
             </div>
           </div>
 
@@ -93,6 +93,28 @@
             <label for="visitorPhone" class="col-sm-2 control-label">Visitor's Phone</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" id="visitorPhone" name="visitorPhone" ng-model="visitor.visitorPhone">
+            </div>
+          </div>
+
+          <div class="form-group" ng-class="{ 'has-errors': visitorForm.visitorLocation.contactAddress.$invalid && !visitorForm.visitorLocation.contactAddress.$pristine }">
+            <label for="contactAddress" class="col-sm-2 control-label">Contact Address</label>
+            <div class="col-sm-6">
+              <textarea type="text" id="contactAddress" class="form-control" name="contactAddress" data-ng-model="visitor.visitorLocation.contactAddress"></textarea>
+              <p class="help-text" ng-show="visitorForm.visitorLocation.contactAddress.$invalid">Contact address is required</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="cstate" class="col-sm-2 control-label">State</label>
+            <div class="col-sm-6">
+              <input type="text" id="cstate" class="form-control" name="cstate" data-ng-model="visitor.visitorLocation.state">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="clga" class="col-sm-2 control-label">City/LGA</label>
+            <div class="col-sm-6">
+              <input type="text" id="clga" class="form-control" name="clga" data-ng-model="visitor.visitorLocation.lga">
             </div>
           </div>
 
