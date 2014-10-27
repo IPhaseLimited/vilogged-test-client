@@ -23,4 +23,8 @@ angular.module('viLoggedClientApp')
     this.get = function(id) {
       return storageService.find(DB_NAME, id);
     };
+
+    this.remove = function(id) {
+      return storageService.removeRecord(DB_NAME, id);
+    }
   });
