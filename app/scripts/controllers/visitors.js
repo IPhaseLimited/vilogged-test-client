@@ -38,14 +38,18 @@ angular.module('viLoggedClientApp')
   .controller('VisitorsCtrl', function ($scope, visitorService) {
     $scope.visitors = [];
 
-    var deferred = visitorService.getAllVisitors();
-
-    deferred
+    visitorService.getAllVisitors()
       .then(function (response) {
         $scope.visitors = response;
       });
   })
-  .controller('VisitorFormCtrl', function($scope, $state, $stateParams, visitorService) {
+  .controller('VisitorFormCtrl', function($scope, $state, $stateParams, visitorService, validationService) {
+    $scope.visitors = [];
+
+    visitorService.getAllVisitors()
+      .then(function (response) {
+        $scope.visitors = response;
+      });
     $scope.visitor = {};
     $scope.vehicle = {};
     $scope.document = {};
@@ -68,6 +72,21 @@ angular.module('viLoggedClientApp')
     }
 
     $scope.createProfile = function () {
+      //TODO:: Complete validations
+      var emailValidation = validationService.EMAIL;
+      emailValidation.required = true;
+      emailValidation.unique = true;
+      emailValidation.dbName = visitorService.DBNAME;
+      emailValidation.dataList = $scope.visitors;
+      var validationParams = {
+        first_name: validationService.BASIC,
+        last_name: validationService.BASIC,
+        lga_of_origin: validationService.BASIC,
+        state_of_origin: validationService.BASIC,
+        nationality: validationService.BASIC,
+        visitor_email: emailValidation
+      };
+
       //TODO:: Work on a better generator for visitor's pass code possibly a service
       $scope.visitor.visitorPasscode = angular.isDefined($scope.visitor.visitorPasscode)
         ? new Date().getTime(): $scope.visitor.visitorPasscode;
