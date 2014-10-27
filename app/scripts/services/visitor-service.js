@@ -22,5 +22,7 @@ angular.module('viLoggedClientApp')
 
     this.getAllVisitors = function() {
       return storageService.all(DB_NAME);
-    }
+    };
+
+    this.DBNAME = DB_NAME;
   });
