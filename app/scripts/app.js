@@ -11,8 +11,17 @@ angular.module('viLoggedClientApp', [
     'db',
     'db.names'
   ])
-  .run(function($rootScope, $state, storageService) {
-//    storageService.clear();
+  .run(function($rootScope, $state, $stateParams, storageService) {
+    /*
+     * Helper to clear pouch database via url
+     * NOTE:: use only during development environment
+     * HINT:: localhost:9000/#/?cleardb
+     */
+    if (angular.isDefined($stateParams.cleardb)) {
+      storageService.clear();
+      console.log('PouchDB cleared successfully');
+    }
+
     $rootScope.pageTitle = 'CouchDB Console';
     $rootScope.$on('$stateChangeSuccess', function () {
       if(angular.isDefined($state.$current.self.data)){

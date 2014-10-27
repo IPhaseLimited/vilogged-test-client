@@ -1,6 +1,6 @@
 <div class="widget">
   <div class="widget-head">
-    <div class="pull-left">{{ pageTitle }}</div>
+    <div class="pull-left">{{ title }}</div>
     <div class="widget-icons pull-right">
       <a href="#" class="wminimize"><i class="fa fa-chevron-up"></i></a>
       <a href="#" class="wclose"><i class="fa fa-times"></i></a>
@@ -128,6 +128,75 @@
             <label for="companyAddress" class="col-sm-2 control-label">Company Address</label>
             <div class="col-sm-6">
               <textarea id="companyAddress" class="form-control" name="companyAddress" data-ng-model="visitor.companyAddress"></textarea>
+            </div>
+          </div>
+
+          <div ng-if="!visitor._id">
+            <legend>Vehicle Information</legend>
+
+            <div class="form-group">
+              <label for="vehicleType" class="col-sm-2 control-label">Vehicle Type</label>
+              <div class="col-sm-6">
+                <select class="form-control" name="vehicleType" id="vehicleType" ng-model="vehicle.vehicleType">
+                  <option value="{{ vehicleType.name }}" ng-repeat="vehicleType in vehicleTypes">{{ vehicleType.name }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="fuelType" class="col-sm-2 control-label">Fuel Type</label>
+              <div class="col-sm-6">
+                <select class="form-control" name="fuelType" id="fuelType" ng-model="vehicle.fuelType">
+                  <option value="Petrol">Petrol</option>
+                  <option value="Diesel">Diesel</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="model" class="col-sm-2 control-label">Model</label>
+              <div class="col-sm-6">
+                <input class="form-control" type="text" name="model" id="model" ng-model="vehicle.model">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="license" class="col-sm-2 control-label">License</label>
+              <div class="col-sm-6">
+                <input class="form-control" type="text" name="license" id="license" ng-model="visitor.vehicle.license">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="tankSize" class="col-sm-2 control-label">Tank Size</label>
+              <div class="col-sm-6">
+                <input class="form-control" type="text" name="tankSize" id="tankSize" ng-model="vehicle.tankSize">
+              </div>
+            </div>
+          </div>
+
+          <div ng-show="!visitor._id">
+            <legend>Document Management</legend>
+
+            <div class="form-group">
+              <label for="documentCode" class="col-sm-2 control-label">Document Code</label>
+              <div class="col-sm-6">
+                <input class="form-control" type="text" name="documentCode" id="documentCode" ng-model="visitor.document.documentCode">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="documentName" class="col-sm-2 control-label">Document Name</label>
+              <div class="col-sm-6">
+                <input class="form-control" type="text" name="documentName" id="documentName" ng-model="visitor.document.documentName">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="documentType" class="col-sm-2 control-label">Document Type</label>
+              <div class="col-sm-6">
+                <input class="form-control" type="text" name="documentType" id="documentType" ng-model="visitor.document.documentType">
+              </div>
             </div>
           </div>
 
