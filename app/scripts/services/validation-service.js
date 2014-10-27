@@ -12,7 +12,6 @@ angular.module('viLoggedClientApp')
     // AngularJS will instantiate a singleton by calling "new" on this function
     var emailPattern = /^(([^<>()[]\.,;:s@"]+(.[^<>()[]\.,;:s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
     var usernamePattern = /^[A-Za-z0-9_]{3,20}$/;
-    var _errors = {};
 
     var BASIC = {
       required: true,
@@ -115,14 +114,11 @@ angular.module('viLoggedClientApp')
           var emailValidation = params[key].type === 'email' ? validateEmail(fieldData, params[key]) : [];
           var usernameValidation = params[key].type === 'username' ? validateUsername(fieldData, params[key]) : [];
           var updatedMessages = messages.concat(required, lengthValidation, emailValidation, usernameValidation);
+
           if (updatedMessages.length > 0) {
             errors[key] = updatedMessages;
           }
         });
-      }
-
-      if ((Object.keys(errors)).length > 0) {
-        _errors = errors;
       }
       return errors;
     }
@@ -130,6 +126,5 @@ angular.module('viLoggedClientApp')
     this.BASIC = BASIC;
     this.EMAIL = EMAIL;
     this.USERNAME = USERNAME;
-    this.validationErrors = _errors;
     this.validateFields = validateFields
   });
