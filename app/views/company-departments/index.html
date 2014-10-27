@@ -1,30 +1,61 @@
 <div>
-  <a class="btn btn-default hidden-xs" ng-click="addDepartment()" ><i class="fa fa-plus"></i> Add</a>
-  <a class="btn btn-default visible-xs" ui-sref="add-company-department" ><i class="fa fa-plus"></i> Add</a>
+  <a class="fa fa-plus-circle btn btn-primary btn-sm hidden-xs" ng-click="addDepartment()" > Create Department</a>
+  <a class="fa fa-plus-circle btn btn-primary btn-sm visible-xs" ui-sref="add-company-department" > Create Department</a>
 </div>
 
-<div class="row">
-  <div class="col-xs-12">
-    <table class="table table-bordered table-condensed table-striped table-responsive">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Department</th>
-          <th>Description</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="department in departments">
-          <td>{{ $index + 1}}</td>
-          <td>{{ department.department_name }}</td>
-          <td>{{ department.description }}</td>
-          <td>
-            <a class="hidden-xs pointer" ng-click="addDepartment(department._id)">Edit <i class="fa fa-edit"></i></a>
-            <a class="visible-xs pointer" ui-sref="edit-company-department({id: department._id})">Edit <i class="fa fa-edit"></i></a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+<div class="widget">
+  <div class="widget-head">
+    <!--div class="pull-left">Title</div-->
+    <div class="widget-icons pull-right">
+
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <div class="widget-content">
+    <div class="padd">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <div class="alert alert-info" ng-if="!departments.length">
+            <p>
+              No Department have been created. Click on the create Department visitor profile button to create one.
+            </p>
+          </div>
+
+          <table class="table table-bordered table-condensed table-striped table-responsive" ng-if="departments.length">
+            <thead>
+            <tr>
+              <th>#</th>
+              <th>Department</th>
+              <th>Description</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="department in departments">
+              <td>{{ $index + 1}}</td>
+              <td>{{ department.department_name }}</td>
+              <td>{{ department.description }}</td>
+              <td>
+                <a class="hidden-xs pointer btn btn-info btn-xs" ng-click="addDepartment(department._id)">
+                  <i class="fa fa-edit"></i> Edit
+                </a>
+                <a class="visible-xs pointer btn btn-info btn-xs" ui-sref="edit-company-department({id: department._id})">
+                  <i class="fa fa-edit"></i> Edit
+                </a>
+                <a ng-click="remove(department._id)" class="btn btn-danger btn-xs">
+                  <i class="fa fa-times-circle"></i> Delete
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="widget-foot">
+      <!-- Footer goes here -->
+    </div>
   </div>
 </div>
+
