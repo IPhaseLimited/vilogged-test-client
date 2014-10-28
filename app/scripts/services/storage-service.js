@@ -184,6 +184,28 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     };
 
+    var findByField = function(tableName, field, value) {
+
+      var deferred = $q.defer();
+      getAllFromTable(tableName)
+        .then(function(response) {
+
+          var filtered = response
+           .filter(function(row) {
+              console.log(value);
+              console.log(row[field]);
+              return String(row[field]) === value;
+           });
+           
+           deferred.resolve(filtered);
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
+        });
+
+        return deferred.promise;
+    }
+
     var validateBatch = function(batch) {
       var now = utility.getDateTime();
       if (!utility.has(batch, 'uuid')) {
@@ -231,6 +253,7 @@ angular.module('viLoggedClientApp')
 
     var api = {
       all: getAllFromTable,
+      findByField: findByField,
       add: setData,
       get: getData,
       removeRecord: removeRecordFromTable,
