@@ -92,8 +92,8 @@ angular.module('viLoggedClientApp')
       };
 
       //TODO:: Work on a better generator for visitor's pass code possibly a service
-      if (!angular.isDefined($scope.visitor.visitorPassCode)) {
-        $scope.visitor.visitorPassCode = new Date().getTime();
+      if (!angular.isDefined($scope.visitor.visitor_pass_code)) {
+        $scope.visitor.visitor_pass_code = new Date().getTime();
       }
 
       visitorService.save($scope.visitor)
