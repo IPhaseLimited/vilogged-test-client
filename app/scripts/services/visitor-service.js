@@ -24,5 +24,9 @@ angular.module('viLoggedClientApp')
       return storageService.all(DB_NAME);
     };
 
+    this.findByVisitorPassCode = function(visitorPassCode) {
+      return storageService.find(DB_NAME, visitorPassCode);
+    };
+
     this.DBNAME = DB_NAME;
   });
