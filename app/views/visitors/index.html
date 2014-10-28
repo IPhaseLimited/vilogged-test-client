@@ -40,6 +40,12 @@
                title="View {{ visitor.first_name }}'s details">
               <i class="fa fa-eye"></i> View
             </a>
+
+            <a class="btn btn-success btn-xs"
+               ui-sref="create-appointment-visitor({id: visitor._id})"
+               title="Create appointment">
+              <i class="fa fa-plus-circle"></i> Create Appointment
+            </a>
           </td>
         </tr>
         </tbody>
