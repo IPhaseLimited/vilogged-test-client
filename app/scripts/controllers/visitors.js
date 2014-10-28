@@ -8,7 +8,7 @@
  * Controller of the viLoggedClientApp
  */
 angular.module('viLoggedClientApp')
-  .config(function($stateProvider){
+  .config(function ($stateProvider) {
     $stateProvider
       .state('visitors', {
         parent: 'root.index',
@@ -43,7 +43,7 @@ angular.module('viLoggedClientApp')
         $scope.visitors = response;
       });
   })
-  .controller('VisitorFormCtrl', function($scope, $state, $stateParams, visitorService, validationService) {
+  .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, visitorService, validationService) {
     $scope.visitors = [];
 
     visitorService.getAllVisitors()
@@ -55,18 +55,22 @@ angular.module('viLoggedClientApp')
     $scope.document = {};
     $scope.default = {};
     $scope.title = 'Create Visitor Profile';
-    $scope.vehicleTypes = [{name: 'Car'}, {name: 'Bus'}, {name: 'Motor Cycle'}, {name: 'Tri-Cycle'}, {name: 'Lorry'}];
+    $scope.vehicleTypes = [
+      {name: 'Car'},
+      {name: 'Bus'},
+      {name: 'Motor Cycle'},
+      {name: 'Tri-Cycle'},
+      {name: 'Lorry'}
+    ];
 
     if ($stateParams.id !== null && $stateParams.id !== undefined) {
-      var deferred = visitorService.get($stateParams.id);
-
-      deferred
-        .then(function(response) {
+      visitorService.get($stateParams.id)
+        .then(function (response) {
           $scope.visitor = response;
 
           $scope.title = 'Edit ' + $scope.visitor.firstName + '\'s Profile';
         })
-        .catch(function(reason) {
+        .catch(function (reason) {
           console.log(reason);
         });
     }
@@ -89,12 +93,10 @@ angular.module('viLoggedClientApp')
 
       //TODO:: Work on a better generator for visitor's pass code possibly a service
       $scope.visitor.visitorPassCode = angular.isDefined($scope.visitor.visitorPassCode)
-        ? new Date().getTime(): $scope.visitor.visitorPassCode;
+        ? new Date().getTime() : $scope.visitor.visitorPassCode;
 
-      var deferred = visitorService.save($scope.visitor);
-
-      deferred
-        .then(function(response) {
+      visitorService.save($scope.visitor)
+        .then(function (response) {
           $scope.visitor = angular.copy($scope.default);
           $state.go('visitors')
         })
@@ -106,15 +108,13 @@ angular.module('viLoggedClientApp')
   .controller('VisitorDetailCtrl', function ($scope, $stateParams, visitorService) {
     $scope.visitor = {};
 
-    var deferred = visitorService.get($stateParams.id);
-
-    deferred
-      .then(function(response) {
+    visitorService.get($stateParams.id)
+      .then(function (response) {
         console.log(response);
         $scope.visitor = response;
         $scope.title = $scope.visitor.firstName + ' ' + $scope.visitor.lastName + '\'s Detail';
       })
-      .catch(function(reason) {
+      .catch(function (reason) {
         console.log(reason);
       });
   })
