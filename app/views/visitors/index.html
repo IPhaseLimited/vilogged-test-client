@@ -24,21 +24,27 @@
         <tbody>
         <tr data-ng-repeat="visitor in visitors">
           <td>{{ $index + 1 }}</td>
-          <td>{{ visitor.firstName }} {{ visitor.lastName }}</td>
-          <td>{{ visitor.visitorEmail }}</td>
-          <td>{{ visitor.visitorPhone }}</td>
-          <td>{{ visitor.companyName }}</td>
+          <td>{{ visitor.first_name }} {{ visitor.last_name }}</td>
+          <td>{{ visitor.visitor_email }}</td>
+          <td>{{ visitor.visitor_phone }}</td>
+          <td>{{ visitor.company_name }}</td>
           <td>
             <a class="btn btn-primary btn-xs"
                ui-sref="edit-visitor-profile({id: visitor._id})"
-               title="Edit {{ visitor.firstName }}'s details">
+               title="Edit {{ visitor.first_name }}'s details">
               <i class="fa fa-edit"></i> Edit
             </a>
 
             <a class="btn btn-success btn-xs"
                ui-sref="show-visitor({id: visitor._id})"
-               title="View {{ visitor.firstName }}'s details">
+               title="View {{ visitor.first_name }}'s details">
               <i class="fa fa-eye"></i> View
+            </a>
+
+            <a class="btn btn-success btn-xs"
+               ui-sref="create-appointment-visitor({id: visitor._id})"
+               title="Create appointment">
+              <i class="fa fa-plus-circle"></i> Create Appointment
             </a>
           </td>
         </tr>
