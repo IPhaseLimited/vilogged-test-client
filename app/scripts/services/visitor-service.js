@@ -26,7 +26,7 @@ angular.module('viLoggedClientApp')
       return storageService.find(DB_NAME, id);
     };
 
-    this.getAllVisitors = function() {
+    var getAllVisitors = function() {
       return storageService.all(DB_NAME);
     };
 
@@ -47,5 +47,6 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     };
 
+    this.all = getAllVisitors;
     this.DBNAME = DB_NAME;
   });
