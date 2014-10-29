@@ -13,3 +13,6 @@ build
 nbproject/private/
 Thumbs.db
 app/scripts/db.js
+config/development.json
+config/production.json
+config/test.json

@@ -1,5 +1,6 @@
 {
   "api": {
-    "url": "http://localhost"
+    "backend": "http://localhost:8000",
+    "couchDB": "http://localhost:5984"
   }
 }
