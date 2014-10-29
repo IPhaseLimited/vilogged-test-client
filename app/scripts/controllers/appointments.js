@@ -39,7 +39,7 @@ angular.module('viLoggedClientApp')
     $scope.appointment = {};
     $scope.default = {};
 
-    if (angular.isDefined($stateParams.id)) {
+    /*if (angular.isDefined($stateParams.id)) {
       visitorService.get($stateParams.id)
         .then(function (response) {
           $scope.appointment.visitor = response;
@@ -47,14 +47,14 @@ angular.module('viLoggedClientApp')
         .catch(function(reason) {
           console.log(reason);
         });
-    }
+    }*/
 
     $scope.convertDateStringToObject = function () {
       $scope.appointment.appointment_date = new Date($scope.appointment_date);
     };
 
     $scope.refreshHostsList = function () {
-      userService.getAllUsers()
+      userService.all()
         .then(function(response){
           $scope.hosts = response;
         })

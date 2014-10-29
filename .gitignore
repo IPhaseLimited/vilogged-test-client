@@ -12,3 +12,4 @@ app/scripts/config.js
 build
 nbproject/private/
 Thumbs.db
+app/scripts/db.js

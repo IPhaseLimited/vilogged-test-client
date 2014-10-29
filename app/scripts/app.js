@@ -9,11 +9,15 @@ angular.module('viLoggedClientApp', [
     'nvd3ChartDirectives',
     'angular-growl',
     'ngAnimate',
+    'ngCookies',
     'db',
     'db.names'
   ])
-  .run(function($rootScope, $state, $stateParams, storageService) {
-    $rootScope.pageTitle = 'CouchDB Console';
+  .run(function($cookieStore, $rootScope, $state, $http) {
+    if ($cookieStore.get('vi-token')) {
+      $http.defaults.headers.common['Authorization'] = 'Token ' + $cookieStore.get('vi-token');
+    }
+    $rootScope.pageTitle = 'viLogged';
     $rootScope.$on('$stateChangeSuccess', function () {
       if(angular.isDefined($state.$current.self.data)){
         $rootScope.pageTitle =
