@@ -8,6 +8,7 @@ angular.module('viLoggedClientApp', [
     'nvd3ChartDirectives',
     'angular-growl',
     'ngAnimate',
+    'ngCookies',
     'db',
     'db.names'
   ])
