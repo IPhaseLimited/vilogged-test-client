@@ -24,5 +24,5 @@ angular.module('viLoggedClientApp')
       return storageService.get(DB_NAME);
     };
 
-    this.all = getAllAppointments();
+    this.all = getAllAppointments;
   });
