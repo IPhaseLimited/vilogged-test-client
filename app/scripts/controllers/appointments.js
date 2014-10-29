@@ -1,5 +1,7 @@
 'use strict';
 
+//TODO:: Work on model validations
+
 angular.module('viLoggedClientApp')
   .config(function ($stateProvider) {
     $stateProvider
@@ -25,15 +27,17 @@ angular.module('viLoggedClientApp')
   .controller('AppointmentCtrl', function ($scope, appointmentService) {
     appointmentService.getAllAppointments()
       .then(function (response) {
+        console.log(response);
         $scope.appointments = response;
       })
       .catch(function (reason) {
         console.log(reason)
       })
   })
-  .controller('AppointmentFormCtrl', function ($scope, $stateParams, $state,
-                                               $timeout, visitorService, userService, appointmentService) {
+  .controller('AppointmentFormCtrl', function ($scope, $stateParams, $state, visitorService,
+                                               userService, appointmentService) {
     $scope.appointment = {};
+    $scope.default = {};
 
     if (angular.isDefined($stateParams.id)) {
       visitorService.get($stateParams.id)
@@ -45,7 +49,10 @@ angular.module('viLoggedClientApp')
         });
     }
 
-    $scope.host = {};
+    $scope.convertDateStringToObject = function () {
+      $scope.appointment.appointment_date = new Date($scope.appointment_date);
+    };
+
     $scope.refreshHostsList = function () {
       userService.getAllUsers()
         .then(function(response){
@@ -58,13 +65,13 @@ angular.module('viLoggedClientApp')
 
     $scope.createAppointment = function () {
       console.log($scope.appointment);
-//      appointmentService.save($scope.visitor)
-//        .then(function (response) {
-//          $scope.appointment = angular.copy($scope.default);
-//          $state.go('appointments');
-//        })
-//        .catch(function (reason) {
-//          console.log(reason);
-//        });
+      appointmentService.save($scope.appointment)
+        .then(function (response) {
+          $scope.appointment = angular.copy($scope.default);
+          $state.go('appointments');
+        })
+        .catch(function (reason) {
+          console.log(reason);
+        });
     };
   });
