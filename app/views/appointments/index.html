@@ -20,9 +20,9 @@
             <th>S/N</th>
             <th>Visitor Name</th>
             <th>Host Name</th>
-            <th>Appointment Date</th>
-            <th>Appointment Begins At</th>
-            <th>Appointment Ends At</th>
+            <th>Date</th>
+            <th>Start Time</th>
+            <th>Ends Time</th>
           </tr>
         </thead>
         <tbody>
@@ -30,7 +30,7 @@
             <td>{{ $index+1 }}</td>
             <td>{{ ((appointment).visitor).first_name + ' ' + ((appointment).visitor).last_name }}</td>
             <td>{{ ((appointment).host).first_name + ' ' + ((appointment).host).last_name }}</td>
-            <td>{{ ((appointment).appointment_date).toDateString() }}</td>
+            <td>{{ ((appointment).appointment_date) | date:'EEE, MMM d, y' }}</td>
             <td>{{ appointment.visit_start_time }}</td>
             <td>{{ appointment.visit_end_time }}</td>
           </tr>
