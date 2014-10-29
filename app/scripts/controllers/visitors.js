@@ -49,7 +49,7 @@ angular.module('viLoggedClientApp')
   .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, visitorService, validationService) {
     $scope.visitors = [];
 
-    visitorService.getAllVisitors()
+    visitorService.all()
       .then(function (response) {
         $scope.visitors = response;
       });
