@@ -35,7 +35,7 @@ angular.module('viLoggedClientApp')
                                                $timeout, visitorService, userService, appointmentService) {
     $scope.appointment = {};
 
-    if (angular.isDefined($stateParams.id)) {
+    /*if (angular.isDefined($stateParams.id)) {
       visitorService.get($stateParams.id)
         .then(function (response) {
           $scope.appointment.visitor = response;
@@ -43,11 +43,11 @@ angular.module('viLoggedClientApp')
         .catch(function(reason) {
           console.log(reason);
         });
-    }
+    }*/
 
     $scope.host = {};
     $scope.refreshHostsList = function () {
-      userService.getAllUsers()
+      userService.all()
         .then(function(response){
           $scope.hosts = response;
         })
