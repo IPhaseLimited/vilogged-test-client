@@ -11,7 +11,7 @@
         <legend>Create Appointment</legend>
         <form class="form-horizontal" name="appointmentForm" ng-submit="createAppointment()" novalidate>
 
-          <div class="form-group" ng-hide="appointment.visitor.visitor_pass_code">
+          <div class="form-group" ng-hide="!appointment.visitor.visitor_pass_code">
             <label class="control-label col-sm-2" for="visitor">Visitor</label>
 
             <div class="col-sm-6" id="visitor">
