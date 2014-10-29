@@ -24,6 +24,17 @@ angular.module('viLoggedClientApp')
       type: 'basic'
     };
 
+    var INT = {
+      required: false,
+      pattern: '/^[0-9]/',
+      checkLength: false,
+      minLength: 0,
+      maxLength: 0,
+      unique: false,
+      dbName: '',
+      type: 'int'
+    };
+
     var EMAIL = {
       required: false,
       pattern: emailPattern,
@@ -62,6 +73,15 @@ angular.module('viLoggedClientApp')
 
       if (params.checkLength && params.maxLength !== 0 && params.maxLength > fieldData.length) {
         messages.push('you have exceeded the maximum characters allowed (' + params.maxLength + ')');
+      }
+      return messages;
+    }
+
+    function validateInt(fieldData, _params) {
+      var params = angular.isDefined(_params) && angular.isObject(_params) ? _params : BASIC;
+      var messages = [];
+      if (params.pattern !== '' && params.pattern.test(fieldData)) {
+        messages.push('Only integers are allowed.');
       }
       return messages;
     }
@@ -113,6 +133,7 @@ angular.module('viLoggedClientApp')
           var lengthValidation = validateStringLength(fieldData, params[key]);
           var emailValidation = params[key].type === 'email' ? validateEmail(fieldData, params[key]) : [];
           var usernameValidation = params[key].type === 'username' ? validateUsername(fieldData, params[key]) : [];
+          var intValidation = params[key].type === 'int' ? validateInt(fieldData, params[key]) : [];
           var updatedMessages = messages.concat(required, lengthValidation, emailValidation, usernameValidation);
 
           if (updatedMessages.length > 0) {
@@ -126,5 +147,6 @@ angular.module('viLoggedClientApp')
     this.BASIC = BASIC;
     this.EMAIL = EMAIL;
     this.USERNAME = USERNAME;
+    this.INT = INT;
     this.validateFields = validateFields
   });

@@ -1,6 +1,6 @@
 <div class="widget">
   <div class="widget-head">
-    <div class="pull-left">{{ pageTitle }}</div>
+    <div class="pull-left">{{ title }}</div>
     <div class="widget-icons pull-right">
       <a href="#" class="wminimize"><i class="fa fa-chevron-up"></i></a>
       <a href="#" class="wclose"><i class="fa fa-times"></i></a>
@@ -30,42 +30,38 @@
             </div>
           </div>
 
-          <div class="form-group" ng-class="{ 'has-error' : visitorForm.firstName.$invalid && !visitorForm.firstName.$pristine }">
+          <div class="form-group">
             <label class="control-label col-sm-2" for="firstName">First Name</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" required id="firstName" name="firstName" ng-model="visitor.firstName">
-              <p class="help-block" ng-show="visitorForm.firstName.$invalid && !visitorForm.firstName.$pristine">
-                Your first name is required
-              </p>
+              <input type="text" class="form-control" id="firstName" name="firstName" ng-model="visitor.first_name" required>
             </div>
           </div>
 
-          <div class="form-group" ng-class="{ 'has-error' : visitorForm.lastName.$invalid && !visitorForm.lastName.$pristine }">
+          <div class="form-group">
             <label for="lastName" class="col-sm-2 control-label">Last Name</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" required id="lastName" name="lastName" ng-model="visitor.lastName">
-              <p class="help-block" ng-show="visitorForm.lastName.$invalid && !visitorForm.lastName.$pristine"></p>
+              <input type="text" class="form-control" id="lastName" name="lastName" ng-model="visitor.last_name" required>
             </div>
           </div>
 
           <div class="form-group">
             <label for="birthDate" class="col-sm-2 control-label">Birth Date</label>
             <div class="col-sm-6">
-              <input type="date" class="form-control" id="birthDate" name="birthDate" ng-model="visitor.birthDate">
+              <input type="date" class="form-control" id="birthDate" name="birthDate" ng-model="visitor.birth_date">
             </div>
           </div>
 
           <div class="form-group">
             <label for="lga" class="col-sm-2 control-label">Origin City/LGA</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" id="lga" name="lga" ng-model="visitor.lga">
+              <input type="text" class="form-control" id="lga" name="lga" ng-model="visitor.lga_of_origin">
             </div>
           </div>
 
           <div class="form-group">
             <label for="stateOfOrigin" class="col-sm-2 control-label">State of Origin</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" id="stateOfOrigin" name="stateOfOrigin" ng-model="visitor.stateOfOrigin">
+              <input type="text" class="form-control" id="stateOfOrigin" name="stateOfOrigin" ng-model="visitor.state_of_origin">
             </div>
           </div>
 
@@ -78,40 +74,43 @@
 
           <legend>Contact Information</legend>
 
-          <div class="form-group" ng-class="{ 'has-errors' : visitorForm.visitorEmail.$invalid && !visitorForm.visitorEmail.$pristine}">
+          <div class="form-group">
             <label for="visitorEmail" class="col-sm-2 control-label">Visitor's Email</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" id="visitorEmail" name="visitorEmail" ng-model="visitor.visitorEmail">
-              <p class="help-block" ng-show="visitorForm.visitorEmail.$invalid">Enter a valid email</p>
+              <input type="text" class="form-control" id="visitorEmail" name="visitorEmail" ng-model="visitor.visitor_email">
             </div>
           </div>
 
           <div class="form-group">
             <label for="visitorPhone" class="col-sm-2 control-label">Visitor's Phone</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" id="visitorPhone" name="visitorPhone" ng-model="visitor.visitorPhone">
+              <input type="text" class="form-control" id="visitorPhone" name="visitorPhone" ng-model="visitor.visitor_phone">
             </div>
           </div>
 
-          <div class="form-group" ng-class="{ 'has-errors': visitorForm.visitorLocation.contactAddress.$invalid && !visitorForm.visitorLocation.contactAddress.$pristine }">
+          <div class="form-group">
             <label for="contactAddress" class="col-sm-2 control-label">Contact Address</label>
             <div class="col-sm-6">
-              <textarea type="text" id="contactAddress" class="form-control" name="contactAddress" data-ng-model="visitor.visitorLocation.contactAddress"></textarea>
-              <p class="help-text" ng-show="visitorForm.visitorLocation.contactAddress.$invalid">Contact address is required</p>
+              <textarea type="text" id="contactAddress" class="form-control" name="contactAddress"
+                        data-ng-model="visitor.visitor_location.contact_address"></textarea>
             </div>
           </div>
 
           <div class="form-group">
             <label for="cstate" class="col-sm-2 control-label">State</label>
             <div class="col-sm-6">
-              <input type="text" id="cstate" class="form-control" name="cstate" data-ng-model="visitor.visitorLocation.state">
+              <input type="text" id="cstate"
+                     class="form-control" name="cstate"
+                     data-ng-model="visitor.visitor_location.residential_state">
             </div>
           </div>
 
           <div class="form-group">
             <label for="clga" class="col-sm-2 control-label">City/LGA</label>
             <div class="col-sm-6">
-              <input type="text" id="clga" class="form-control" name="clga" data-ng-model="visitor.visitorLocation.lga">
+              <input type="text" id="clga"
+                     class="form-control" name="clga"
+                     data-ng-model="visitor.visitor_location.residential_lga">
             </div>
           </div>
 
@@ -120,14 +119,16 @@
           <div class="form-group">
             <label for="companyName" class="col-sm-2 control-label">Company Name</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" id="companyName" name="companyName" ng-model="visitor.companyName">
+              <input type="text" class="form-control"
+                     id="companyName" name="companyName" ng-model="visitor.company_name">
             </div>
           </div>
 
           <div class="form-group">
             <label for="companyAddress" class="col-sm-2 control-label">Company Address</label>
             <div class="col-sm-6">
-              <textarea id="companyAddress" class="form-control" name="companyAddress" data-ng-model="visitor.companyAddress"></textarea>
+              <textarea id="companyAddress" class="form-control"
+                        name="companyAddress" data-ng-model="visitor.company_address"></textarea>
             </div>
           </div>
 

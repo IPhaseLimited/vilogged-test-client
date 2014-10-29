@@ -3,6 +3,7 @@
 angular.module('viLoggedClientApp', [
     'ui.bootstrap',
     'ui.router',
+    'ui.select',
     'pouchdb',
     'config',
     'nvd3ChartDirectives',
@@ -12,8 +13,7 @@ angular.module('viLoggedClientApp', [
     'db',
     'db.names'
   ])
-  .run(function($rootScope, $state, storageService) {
-//    storageService.clear();
+  .run(function($rootScope, $state, $stateParams, storageService) {
     $rootScope.pageTitle = 'CouchDB Console';
     $rootScope.$on('$stateChangeSuccess', function () {
       if(angular.isDefined($state.$current.self.data)){
@@ -26,6 +26,9 @@ angular.module('viLoggedClientApp', [
     // to bypass Chrome app CSP for images.
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(chrome-extension):/);
   })
+  .config(function(uiSelectConfig) {
+      uiSelectConfig.theme = 'bootstrap';
+    })
   .config(function(growlProvider) {
     growlProvider.globalTimeToLive({
       success: 5000,

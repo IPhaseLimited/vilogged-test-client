@@ -9,70 +9,62 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/appointments/index.html',
         controller: 'AppointmentCtrl'
       })
-      .state('newAppointment', {
+      .state('create-appointment-visitor', {
         parent: 'root.index',
-        url: '/new-appointments',
+        url: '/appointments/add/:id',
         templateUrl: 'views/appointments/form.html',
-        controller: 'NewAppointmentCtrl'
+        controller: 'AppointmentFormCtrl'
+      })
+      .state('create-appointment', {
+        parent: 'root.index',
+        url: '/appointments/add/',
+        templateUrl: 'views/appointments/form.html',
+        controller: 'AppointmentFormCtrl'
       })
   })
-  .controller('AppointmentCtrl', function ($scope) {})
-  .controller('NewAppointmentCtrl', function($scope) {
-    $scope.entrance = [
-      {
-        id: 1,
-        entrance_name: 'Gate 1'
-      },
-      {
-        id: 2,
-        entrance_name: 'Gate 2'
-      },
-      {
-        id: 3,
-        entrance_name: 'Gate 3'
-      },
-      {
-        id: 4,
-        entrance_name: 'Gate 4'
-      }
-    ];
+  .controller('AppointmentCtrl', function ($scope, appointmentService) {
+    appointmentService.getAllAppointments()
+      .then(function (response) {
+        $scope.appointments = response;
+      })
+      .catch(function (reason) {
+        console.log(reason)
+      })
+  })
+  .controller('AppointmentFormCtrl', function ($scope, $stateParams, $state,
+                                               $timeout, visitorService, userService, appointmentService) {
+    $scope.appointment = {};
 
-    $scope.hosts = [
-      {
-        id: 1,
-        user: {
-          id: 1,
-          name: 'John Doe'
-        }
-      },
-      {
-        id: 2,
-        user: {
-          id: 2,
-          name: 'Jane Doe'
-        }
-      },
-      {
-        id: 3,
-        user: {
-          id: 3,
-          name: 'John Smith'
-        }
-      }
-    ];
+    if (angular.isDefined($stateParams.id)) {
+      visitorService.get($stateParams.id)
+        .then(function (response) {
+          $scope.appointment.visitor = response;
+        })
+        .catch(function(reason) {
+          console.log(reason);
+        });
+    }
 
-    $scope.vistors = [
-      {
-        id: 1,
-        name: 'John Doe'
-      },
-      {
-        id: 2,
-        name: 'Jane Doe'
-      },
-      {
-        id: 3,
-        name: 'John Smith'
-      }
-    ]
+    $scope.host = {};
+    $scope.refreshHostsList = function () {
+      userService.getAllUsers()
+        .then(function(response){
+          $scope.hosts = response;
+        })
+        .catch(function(reason){
+          console.log(reason);
+        });
+    };
+
+    $scope.createAppointment = function () {
+      console.log($scope.appointment);
+//      appointmentService.save($scope.visitor)
+//        .then(function (response) {
+//          $scope.appointment = angular.copy($scope.default);
+//          $state.go('appointments');
+//        })
+//        .catch(function (reason) {
+//          console.log(reason);
+//        });
+    };
   });

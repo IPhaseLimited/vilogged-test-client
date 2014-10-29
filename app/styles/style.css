@@ -1812,3 +1812,9 @@ footer .copy{
 .pointer{
   cursor: pointer;
 }
+
+/* widget btn */
+.btn {
+  text-shadow: none !important;
+  color: #fff !important;
+}
