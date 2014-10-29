@@ -13,7 +13,13 @@ angular.module('viLoggedClientApp')
       })
       .state('create-appointment-visitor', {
         parent: 'root.index',
-        url: '/appointments/add/:id',
+        url: '/appointments/add/:visitor_id',
+        templateUrl: 'views/appointments/form.html',
+        controller: 'AppointmentFormCtrl'
+      })
+      .state('create-appointment-host', {
+        parent: 'root.index',
+        url: '/appointments/add/:host_id',
         templateUrl: 'views/appointments/form.html',
         controller: 'AppointmentFormCtrl'
       })
@@ -39,15 +45,25 @@ angular.module('viLoggedClientApp')
     $scope.appointment = {};
     $scope.default = {};
 
-    /*if (angular.isDefined($stateParams.id)) {
-      visitorService.get($stateParams.id)
+    if (angular.isDefined($stateParams.visitor_id)) {
+      visitorService.get($stateParams.visitor_id)
         .then(function (response) {
-          $scope.appointment.visitor = response;
+          $scope.visitor = response;
         })
         .catch(function(reason) {
           console.log(reason);
         });
-    }*/
+    }
+
+    if (angular.isDefined($stateParams.host_id)) {
+      visitorService.get($stateParams.host_id)
+        .then(function (response) {
+          $scope.host = response;
+        })
+        .catch(function(reason) {
+          console.log(reason);
+        });
+    }
 
     $scope.convertDateStringToObject = function () {
       $scope.appointment.appointment_date = new Date($scope.appointment_date);
@@ -63,8 +79,25 @@ angular.module('viLoggedClientApp')
         });
     };
 
+    $scope.refreshVisitorsList = function () {
+      visitorService.all()
+        .then(function(response) {
+          $scope.visitors = response;
+        })
+        .catch(function (reason) {
+          console.log(reason);
+        })
+    };
+
     $scope.createAppointment = function () {
-      console.log($scope.appointment);
+      if (angular.isDefined($scope.visitor) && $scope.visitor !== null) {
+        $scope.appointment.visitor = angular.copy($scope.visitor);
+      }
+
+      if (angular.isDefined($scope.host) && $scope.host !== null) {
+        $scope.appointment.host = angular.copy($scope.host);
+      }
+
       appointmentService.save($scope.appointment)
         .then(function (response) {
           $scope.appointment = angular.copy($scope.default);
