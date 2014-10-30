@@ -38,15 +38,34 @@ angular.module('viLoggedClientApp')
   .controller('VisitorsCtrl', function ($scope, visitorService) {
     $scope.visitors = [];
 
-    visitorService.getAllVisitors()
+    visitorService.all()
       .then(function (response) {
         $scope.visitors = response;
+      })
+      .catch(function (reason) {
+
       });
   })
-  .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, visitorService, validationService) {
+  .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, visitorService, validationService, $window) {
     $scope.visitors = [];
 
-    visitorService.getAllVisitors()
+    $scope.setFiles = function(element) {
+      $scope.$apply(function(scope) {
+
+        var fileToUpload = element.files[0];
+        if (fileToUpload.type.match('image*')) {
+          var reader = new $window.FileReader();
+          reader.onload = function(theFile) {
+            $scope.visitor.image = theFile.target.result;
+            console.log(theFile.target.result);
+          };
+          reader.readAsDataURL(fileToUpload);
+        }
+
+      });
+    };
+
+    visitorService.all()
       .then(function (response) {
         $scope.visitors = response;
       });
