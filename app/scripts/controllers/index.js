@@ -13,8 +13,12 @@ angular.module('viLoggedClientApp')
         views: {
           'header': {
             templateUrl: 'views/index/header.html',
-            controller: function($scope, $state) {
-
+            controller: function($scope, $state, userService) {
+              if (angular.isDefined(userService.user)) {
+                $scope.user = userService.user;
+              } else {
+                $state.go('login');
+              }
             }
           },
           'breadcrumbs': {
