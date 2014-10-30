@@ -13,7 +13,7 @@ angular.module('viLoggedClientApp', [
     'db',
     'db.names'
   ])
-  .run(function($cookieStore, $rootScope, $state, $http, $location, userService) {
+  .run(function($cookieStore, $rootScope, $state, $http, $location, loginService) {
     $rootScope.pageTitle = 'viLogged';
     $rootScope.$on('$stateChangeSuccess', function () {
       if (angular.isDefined($location.search().disable_login) && $location.search().disable_login === 'true') {
@@ -27,17 +27,15 @@ angular.module('viLoggedClientApp', [
       if (!$cookieStore.get('vi-token') && ($cookieStore.get('no-login') === 0 || $cookieStore.get('no-login') === undefined)) {
         $state.go('login');
       }
+
       if(angular.isDefined($state.$current.self.data)){
         $rootScope.pageTitle =
           angular.isDefined($state.$current.self.data.label) ? $state.$current.self.data.label : $rootScope.pageTitle;
       }
-      userService.currentUser()
-        .then(function(user) {
-          console.log(user);
-        })
-        .catch(function(reason) {
-          console.log(reason);
-        });
+
+      if ($state.$current.name === 'login') {
+        loginService.logout();
+      }
     });
   })
   .config(function($httpProvider) {
