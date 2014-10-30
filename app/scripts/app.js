@@ -58,6 +58,7 @@ angular.module('viLoggedClientApp', [
   .config(function($compileProvider) {
     // to bypass Chrome app CSP for images.
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(chrome-extension):/);
+    $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file|blob):|data:image\//);
   })
   .config(function(uiSelectConfig) {
       uiSelectConfig.theme = 'bootstrap';
