@@ -164,4 +164,8 @@ angular.module('viLoggedClientApp')
       return new Date().toJSON();
     };
 
+    this.generateRandomInteger = function() {
+      return Date.now();
+    }
+
   });

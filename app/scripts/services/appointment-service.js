@@ -20,7 +20,9 @@ angular.module('viLoggedClientApp')
       return storageService.find(DB_NAME, id);
     };
 
-    this.getAllAppointments = function() {
+    var getAllAppointments = function() {
       return storageService.get(DB_NAME);
-    }
+    };
+
+    this.all = getAllAppointments;
   });
