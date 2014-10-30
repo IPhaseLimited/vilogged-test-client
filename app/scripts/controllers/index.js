@@ -12,33 +12,17 @@ angular.module('viLoggedClientApp')
         abstract: true,
         views: {
           'header': {
-            templateUrl: 'views/index/header.html',
-            controller: function($scope, $state, userService) {
-              if (angular.isDefined(userService.user)) {
-                $scope.user = userService.user;
-              } else {
-                $state.go('login');
-              }
-            }
+            templateUrl: 'views/index/header.html'
           },
           'breadcrumbs': {
-            templateUrl: 'views/index/breadcrumbs.html',
-            controller: function($scope, $state) {
-
-            }
+            templateUrl: 'views/index/breadcrumbs.html'
           },
           'sidebar': {
-            templateUrl: 'views/index/sidebar.html',
-            controller: function($scope, $state) {
-
-            }
+            templateUrl: 'views/index/sidebar.html'
           },
           'content': {},
           'footer': {
-            templateUrl: 'views/index/footer.html',
-            controller: function($scope, $window) {
-
-            }
+            templateUrl: 'views/index/footer.html'
           }
         }
       })
