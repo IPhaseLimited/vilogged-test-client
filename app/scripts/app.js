@@ -13,7 +13,7 @@ angular.module('viLoggedClientApp', [
     'db',
     'db.names'
   ])
-  .run(function($cookieStore, $rootScope, $state, $http, $location, loginService) {
+  .run(function($cookieStore, $rootScope, $state, $http, $location, loginService, userService) {
     $rootScope.pageTitle = 'viLogged';
     $rootScope.$on('$stateChangeSuccess', function () {
       if (angular.isDefined($location.search().disable_login) && $location.search().disable_login === 'true') {
@@ -32,7 +32,9 @@ angular.module('viLoggedClientApp', [
         $rootScope.pageTitle =
           angular.isDefined($state.$current.self.data.label) ? $state.$current.self.data.label : $rootScope.pageTitle;
       }
-
+      if (angular.isDefined(userService.user)) {
+        $rootScope.user = userService.user;
+      }
       if ($state.$current.name === 'login') {
         loginService.logout();
       }
