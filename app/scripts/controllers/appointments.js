@@ -57,7 +57,6 @@ angular.module('viLoggedClientApp')
           $scope.visitor = response;
         })
         .catch(function (reason) {
-          console.log(reason);
         });
     }
 
