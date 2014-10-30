@@ -13,17 +13,47 @@ angular.module('viLoggedClientApp', [
     'db',
     'db.names'
   ])
-  .run(function($cookieStore, $rootScope, $state, $http) {
-    if ($cookieStore.get('vi-token')) {
-      $http.defaults.headers.common['Authorization'] = 'Token ' + $cookieStore.get('vi-token');
-    }
+  .run(function($cookieStore, $rootScope, $state, $http, $location, userService) {
     $rootScope.pageTitle = 'viLogged';
     $rootScope.$on('$stateChangeSuccess', function () {
+      if (angular.isDefined($location.search().disable_login) && $location.search().disable_login === 'true') {
+        $cookieStore.put('no-login', 1);
+      }
+
+      if (angular.isDefined($location.search().disable_login) && $location.search().disable_login === 'false') {
+        $cookieStore.put('no-login', 0);
+      }
+
+      if (!$cookieStore.get('vi-token') && ($cookieStore.get('no-login') === 0 || $cookieStore.get('no-login') === undefined)) {
+        $state.go('login');
+      }
       if(angular.isDefined($state.$current.self.data)){
         $rootScope.pageTitle =
           angular.isDefined($state.$current.self.data.label) ? $state.$current.self.data.label : $rootScope.pageTitle;
       }
+      userService.currentUser()
+        .then(function(user) {
+          console.log(user);
+        })
+        .catch(function(reason) {
+          console.log(reason);
+        });
     });
+  })
+  .config(function($httpProvider) {
+    $httpProvider.interceptors.push([
+      '$cookieStore',
+      function($cookieStore) {
+        return {
+          'request': function(config) {
+            if ($cookieStore.get('vi-token')) {
+              $httpProvider.defaults.headers.common['Authorization'] = 'Token ' + $cookieStore.get('vi-token');
+            }
+            return config;
+          }
+        };
+      }
+    ]);
   })
   .config(function($compileProvider) {
     // to bypass Chrome app CSP for images.
