@@ -8,7 +8,7 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('userService', function userService($q, $http) {
+  .service('userService', function userService($q, $http, config, $cookieStore) {
     // AngularJS will instantiate a singleton by calling "new" on this function
      function getAllUsers() {
       var deferred = $q.defer();
@@ -41,8 +41,22 @@ angular.module('viLoggedClientApp')
           deferred.reject(reason);
         });
       return deferred.promise;
-    };
+    }
+
+    function getCurrentUser() {
+      var deferred = $q.defer();
+      $http.get(config.api.backend+'/api/v1/current-user/')
+        .success(function(user) {
+          deferred.resolve(user);
+        })
+        .error(function(reason) {
+          deferred.reject(reason);
+        });
+      return deferred.promise;
+    }
 
     this.all = getAllUsers;
     this.get = getUser;
+    this.currentUser = getCurrentUser;
+    this.user = $cookieStore.get('current-user');
   });
