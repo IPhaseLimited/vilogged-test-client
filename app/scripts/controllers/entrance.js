@@ -10,22 +10,5 @@ angular.module('viLoggedClientApp')
     })
   })
   .controller('EntranceCtrl', function ($scope) {
-    $scope.entrance = [
-      {
-        uuid: 1,
-        entrance_name: 'Gate 1'
-      },
-      {
-        uuid: 2,
-        entrance_name: 'Gate 2'
-      },
-      {
-        uuid: 3,
-        entrance_name: 'Gate 3'
-      },
-      {
-        uuid: 4,
-        entrance_name: 'Gate 4'
-      }
-    ]
+    $scope.entrance = [];
   });
