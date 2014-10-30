@@ -23,6 +23,7 @@
             <th>Date</th>
             <th>Start Time</th>
             <th>Ends Time</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -30,9 +31,13 @@
             <td>{{ $index+1 }}</td>
             <td>{{ ((appointment).visitor).first_name + ' ' + ((appointment).visitor).last_name }}</td>
             <td>{{ ((appointment).host).first_name + ' ' + ((appointment).host).last_name }}</td>
-            <td>{{ ((appointment).appointment_date) | date:'EEE, MMM d, y' }}</td>
+            <td>{{ appointment.appointment_date | date:'EEE, MMM d, y' }}</td>
             <td>{{ appointment.visit_start_time }}</td>
             <td>{{ appointment.visit_end_time }}</td>
+            <td>
+              <a ui-sref="visitor-check-in({ appointment_id: appointment._id })"
+                 class="btn btn-xs btn-success">Check In</a>
+            </td>
           </tr>
         </tbody>
       </table>
