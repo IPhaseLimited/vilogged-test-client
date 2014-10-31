@@ -18,19 +18,19 @@ angular.module('viLoggedClientApp')
       })
       .state('create-visitor-profile', {
         parent: 'root.index',
-        url: '/visitors/new',
+        url: '/visitors/add',
         templateUrl: 'views/visitors/form.html',
         controller: 'VisitorFormCtrl'
       })
       .state('edit-visitor-profile', {
         parent: 'root.index',
-        url: '/visitors/:id/edit',
+        url: '/visitors/:visitor_id/edit',
         templateUrl: 'views/visitors/form.html',
         controller: 'VisitorFormCtrl'
       })
       .state('show-visitor', {
         parent: 'root.index',
-        url: '/visitors/:id',
+        url: '/visitors/:visitor_id',
         templateUrl: 'views/visitors/detail.html',
         controller: 'VisitorDetailCtrl'
       })
@@ -82,8 +82,8 @@ angular.module('viLoggedClientApp')
       {name: 'Lorry'}
     ];
 
-    if ($stateParams.id !== null && $stateParams.id !== undefined) {
-      visitorService.get($stateParams.id)
+    if ($stateParams.visitor_id !== null && $stateParams.visitor_id !== undefined) {
+      visitorService.get($stateParams.visitor_id)
         .then(function (response) {
           $scope.visitor = response;
 
@@ -128,7 +128,7 @@ angular.module('viLoggedClientApp')
   .controller('VisitorDetailCtrl', function ($scope, $stateParams, visitorService) {
     $scope.visitor = {};
 
-    visitorService.get($stateParams.id)
+    visitorService.get($stateParams.visitor_id)
       .then(function (response) {
         console.log(response);
         $scope.visitor = response;
