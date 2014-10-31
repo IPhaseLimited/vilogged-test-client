@@ -12,6 +12,7 @@ angular.module('viLoggedClientApp')
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     function login(credentials) {
+      var ERROR_MESSAGE = 'username and password didn\'t match. Please try again';
       var deferred = $q.defer();
       var loginResponse = {
         loginMessage: {},
@@ -39,12 +40,18 @@ angular.module('viLoggedClientApp')
           })
           .error(function(reason, status) {
             loginResponse.status = status;
-            loginResponse.loginRawResponse = reason.non_field_errors[0];
+            if (angular.isDefined(reason.non_field_errors)){
+              loginResponse.loginMessage = reason.non_field_errors[0];
+            }
+            if (angular.isDefined(reason.detail)) {
+              loginResponse.loginMessage = reason.detail === 'Invalid Token' ? ERROR_MESSAGE : reason.detail;
+            }
+
             deferred.reject(loginResponse);
           });
       } else {
         loginResponse.status = 401;
-        loginResponse.loginMessage = 'username and password didn\'t match. Please try again';
+        loginResponse.loginMessage = ERROR_MESSAGE;
         deferred.reject(loginResponse);
       }
 

@@ -31,6 +31,7 @@ angular.module('viLoggedClientApp')
         })
         .catch(function(reason) {
           $scope.loginError = true;
+          $scope.errorMessages = reason.loginMessage;
           console.log(reason);
         });
     }

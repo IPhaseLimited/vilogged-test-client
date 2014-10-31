@@ -39,9 +39,7 @@
               <!-- Login form -->
 
                 <div class="alert fade in alert alert-danger" style="text-align: center;" ng-show="loginError">
-                  <ul>
-                    <li ng-repeat="row in errorMessages"></li>
-                  </ul>
+                  {{ errorMessages }}
                   <button data-dismiss="alert" class="close" type="button" ng-click="loginError=!loginError">×</button>
                 </div>
 
