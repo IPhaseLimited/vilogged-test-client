@@ -35,6 +35,12 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/appointments/check-in.html',
         controller: 'CheckInCtrl'
       })
+      .state('visitor-check-out', {
+        parent: 'root.index',
+        url: '/appointments/:appointment_id/check-out',
+        templateUrl: 'views/appointments/check-out.html',
+        controller: 'CheckInCtrl'
+      })
   })
   .controller('AppointmentCtrl', function ($scope, appointmentService) {
     appointmentService.all()
@@ -70,10 +76,6 @@ angular.module('viLoggedClientApp')
         });
     }
 
-    $scope.convertDateStringToObject = function () {
-      $scope.appointment.appointment_date = new Date($scope.appointment_date).toJSON();
-    };
-
     $scope.refreshHostsList = function () {
       userService.all()
         .then(function (response) {
@@ -104,6 +106,10 @@ angular.module('viLoggedClientApp')
       }
 
       $scope.appointment.label_code = utility.generateRandomInteger();
+      $scope.appointment.appointment_date = new Date($scope.appointment.appointment_date).toJSON();
+      $scope.appointment.is_expired = false;
+      $scope.appointment.check_in = null;
+      $scope.appointment.check_out = null;
 
       appointmentService.save($scope.appointment)
         .then(function (response) {
