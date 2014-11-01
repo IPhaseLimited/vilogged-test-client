@@ -10,12 +10,18 @@
 angular.module('viLoggedClientApp')
   .config(function($stateProvider) {
     $stateProvider
+      .state('users', {
+        parent: 'root.index',
+        url: '/users',
+        templateUrl: 'views/user/user-profile.html',
+        controller: 'UsersCtrl'
+      })
       .state('profile', {
         parent: 'root.index',
         url: '/profile',
         templateUrl: 'views/user/user-profile.html',
         controller: 'userProfileCtrl'
-      })
+      });
   })
   .controller('userProfileCtrl', function($scope, $interval, userService, appointmentService) {
     $scope.currentUser = userService.user;
@@ -47,10 +53,12 @@ angular.module('viLoggedClientApp')
         console.log(reason);
       });
   })
-  .controller('UsersCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('UsersCtrl', function ($scope, $http, config) {
+    $http.get(config.api.backend+'/api/v1/users/')
+      .success(function(users) {
+        console.log(users);
+      })
+      .error(function(reason) {
+        console.log(reason);
+      });
   });
