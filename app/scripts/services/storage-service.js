@@ -184,6 +184,15 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     };
 
+    /**
+     * this gets data from table by searching given field and comparing
+     * data with provided value
+     * @param tableName
+     * @param field
+     * @param value
+     * @returns {promise}
+     */
+
     var findByField = function(tableName, field, value) {
 
       var deferred = $q.defer();
@@ -192,8 +201,6 @@ angular.module('viLoggedClientApp')
 
           var filtered = response
            .filter(function(row) {
-              console.log(value);
-              console.log(row[field]);
               return String(row[field]) === value;
            });
            
@@ -204,7 +211,7 @@ angular.module('viLoggedClientApp')
         });
 
         return deferred.promise;
-    }
+    };
 
     var validateBatch = function(batch) {
       var now = utility.getDateTime();
