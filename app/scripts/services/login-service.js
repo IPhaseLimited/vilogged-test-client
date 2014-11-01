@@ -8,7 +8,7 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('loginService', function loginService($q, userService, $cookieStore, $http, config) {
+  .service('loginService', function loginService($q, userService, $cookieStore, $http, config, $rootScope) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     function login(credentials) {
@@ -30,12 +30,12 @@ angular.module('viLoggedClientApp')
             $http.defaults.headers.common['Authorization'] = 'Token ' + response.token;
             userService.currentUser()
               .then(function(user) {
+                $rootScope.user = user;
                 $cookieStore.put('current-user', user);
                 deferred.resolve(loginResponse);
               })
               .catch(function(reason) {
                 deferred.resolve(loginResponse);
-                console.log(reason);
               });
           })
           .error(function(reason, status) {
