@@ -10,20 +10,32 @@
 angular.module('viLoggedClientApp')
   .config(function($stateProvider) {
     $stateProvider
-      .state('users', {
-        parent: 'root.index',
-        url: '/users',
-        templateUrl: 'views/user/user-profile.html',
-        controller: 'UsersCtrl'
-      })
       .state('profile', {
         parent: 'root.index',
         url: '/profile',
         templateUrl: 'views/user/user-profile.html',
-        controller: 'userProfileCtrl'
-      });
+        controller: 'UserProfileCtrl'
+      })
   })
-  .controller('userProfileCtrl', function($scope, $interval, userService, appointmentService) {
+  .config(function($stateProvider) {
+    $stateProvider
+      .state('users', {
+        parent: 'root.index',
+        url: '/users',
+        templateUrl: 'views/user/index.html',
+        controller: 'UsersCtrl'
+      })
+  })
+  .config(function($stateProvider) {
+    $stateProvider
+      .state('createUser', {
+        parent: 'root.index',
+        url: '/user/add',
+        templateUrl: 'views/user/widget-form.html',
+        controller: 'UserFormCtrl'
+      })
+  })
+  .controller('UserProfileCtrl', function($scope, $interval, userService, appointmentService) {
     $scope.currentUser = userService.user;
 
     appointmentService.getAppointmentsByUser($scope.currentUser)
@@ -53,12 +65,54 @@ angular.module('viLoggedClientApp')
         console.log(reason);
       });
   })
-  .controller('UsersCtrl', function ($scope, $http, config) {
-    $http.get(config.api.backend+'/api/v1/users/')
-      .success(function(users) {
-        console.log(users);
+  .controller('UsersCtrl', function ($scope, userService) {
+    userService.all()
+      .then(function(response) {
+        $scope.users = response;
       })
-      .error(function(reason) {
+      .catch(function(reason) {
         console.log(reason);
       });
+
+    $scope.toggleActive = function (id) {
+      userService.toggleUserActivationStatus(id)
+        .then(function(response){
+          console.log(response);
+        });
+    };
+
+    $scope.deleteAccount = function (id) {
+      userService.remove(id)
+    }
+  })
+  .controller('UserFormCtrl', function ($scope, $state, userService, companyDepartmentsService) {
+    $scope.currentUser = userService.user;
+    $scope.user = {};
+
+    companyDepartmentsService.all()
+      .then(function (response) {
+        $scope.departments = response;
+      })
+      .catch(function (reason) {
+        console.log(reason);
+      });
+
+    if (!$scope.currentUser.is_superuser) {
+      $state.go("users");
+    }
+
+    $scope.createUserAccount = function () {
+      if ($scope.user.user_profile !== undefined || $scope.user.user_profile === null) {
+        $scope.user.user_profile.home_phone = $scope.user.user_profile.home_phone || null;
+        $scope.user.user_profile.work_phone = $scope.user.user_profile.work_phone || null;
+      }
+
+      userService.save($scope.user)
+        .then(function() {
+          $state.go("users");
+        })
+        .catch(function(reason) {
+          console.log(reason);
+        });
+    }
   });

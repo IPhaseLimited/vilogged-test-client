@@ -1,0 +1,124 @@
+<div>
+  <form class="form-horizontal" ng-submit="createUserAccount()" name="userAccount">
+    <legend>User Account Detail</legend>
+    <div class="form-group">
+      <label for="username" class="control-label col-sm-2">Username</label>
+
+      <div class="col-sm-6">
+        <input class="form-control" type="text" name="username" id="username"
+               ng-model="user.username" required/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password" class="control-label col-sm-2">Password</label>
+
+      <div class="col-sm-6">
+        <input class="form-control" type="password" name="password" id="password"
+               ng-model="user.password" required/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="confirm_password" class="control-label col-sm-2">Confirm Password</label>
+
+      <div class="col-sm-6">
+        <input class="form-control" type="password" name="confirm_password" id="confirm_password"
+               ng-model="user.confirm_password" required/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email" class="control-label col-sm-2">Email</label>
+
+      <div class="col-sm-6">
+        <input class="form-control" type="text" name="email" id="email" ng-model="user.email" required/>
+      </div>
+    </div>
+
+    <legend>User Profile</legend>
+
+    <div class="form-group">
+      <label for="first_name" class="control-label col-sm-2">First Name</label>
+
+      <div class="col-sm-6">
+        <input class="form-control" type="text" name="first_name" id="first_name"
+               ng-model="user.first_name" required/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="last_name" class="control-label col-sm-2">Last Name</label>
+
+      <div class="col-sm-6">
+        <input class="form-control" type="text" name="last_name" id="last_name"
+               ng-model="user.last_name" required/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="phone" class="control-label col-sm-2">Phone</label>
+
+      <div class="col-sm-6">
+        <input class="form-control" type="text" name="phone" id="phone" ng-model="user.user_profile.phone" required/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="home_phone" class="control-label col-sm-2">Home Phone</label>
+
+      <div class="col-sm-6">
+        <input class="form-control" type="text" name="last_name" id="home_phone"
+               ng-model="user.user_profile.home_phone"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="work_phone" class="control-label col-sm-2">Work Phone</label>
+
+      <div class="col-sm-6">
+        <input class="form-control" type="text" name="work_phone" id="work_phone" ng-model="user.work_phone"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="department" class="control-label col-sm-2">Department</label>
+
+      <div class="col-sm-6">
+        <select class="form-control" name="department" id="department" ng-model="user.user_profile.department">
+          <option value=""></option>
+          <option value="{{ department._id }}" ng-repeat="department in departments">{{ department_name }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" ng_model="user.is_staff"> Grant staff privileges?
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" ng-model="user.is_active"> Make account active?
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <hr/>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-6">
+        <button class="btn btn-primary" ng-class="{'disabled btn-danger': userAccount.$invalid}">
+          Create User Account
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
