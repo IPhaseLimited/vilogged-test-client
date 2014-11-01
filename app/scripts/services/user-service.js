@@ -77,10 +77,16 @@ angular.module('viLoggedClientApp')
       getUser(id)
         .then(function (response) {
           response.is_active = !response.is_active;
-          updateUserAccount(id, response);
+          updateUserAccount(id, response)
+            .then(function(response) {
+              deferred.resolve(response);
+            })
+            .catch(function(reason) {
+              deferred.reject(reason);
+            });
         })
         .catch(function(reason) {
-          console.log(reason);
+          deferred.reject(reason);
         });
       return deferred.promise;
     }
