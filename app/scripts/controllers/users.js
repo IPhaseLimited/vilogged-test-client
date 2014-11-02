@@ -35,6 +35,24 @@ angular.module('viLoggedClientApp')
         controller: 'UserFormCtrl'
       })
   })
+  .config(function($stateProvider) {
+    $stateProvider
+      .state('editUser', {
+        parent: 'root.index',
+        url: '/user/:user_id/edit',
+        templateUrl: 'views/user/widget-form.html',
+        controller: 'UserFormCtrl'
+      })
+  })
+  .config(function($stateProvider) {
+    $stateProvider
+      .state('change-password', {
+        parent: 'root.index',
+        url: '/users/change-password',
+        templateUrl: 'views/user/user-change-password.html',
+        controller: 'ChangePasswordCtrl'
+      })
+  })
   .controller('UserProfileCtrl', function($scope, $interval, userService, appointmentService) {
     $scope.currentUser = userService.user;
 
@@ -85,9 +103,18 @@ angular.module('viLoggedClientApp')
       userService.remove(id)
     }
   })
-  .controller('UserFormCtrl', function ($scope, $state, userService, companyDepartmentsService) {
+  .controller('UserFormCtrl', function ($scope, $state, $stateParams, userService, companyDepartmentsService) {
     $scope.currentUser = userService.user;
     $scope.user = {};
+
+    if ($stateParams.user_id) {
+      userService.get($stateParams.user_id)
+        .then(function (response) {
+          $scope.user = response;
+        })
+        .catch(function (reason) {
+        })
+    }
 
     companyDepartmentsService.all()
       .then(function (response) {
@@ -115,4 +142,9 @@ angular.module('viLoggedClientApp')
           console.log(reason);
         });
     }
+  })
+  .controller('ChangePasswordCtrl', function($scope, $sate, $stateParams) {
+    $scope.userPassword = {};
+
+
   });
