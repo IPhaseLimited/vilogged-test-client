@@ -14,7 +14,7 @@ angular.module('viLoggedClientApp', [
     'db.names'
   ])
   .run(function($cookieStore, $rootScope, $state, $http, $location, loginService, userService, storageService) {
-    $rootScope.pageTitle = 'viLogged';
+    $rootScope.pageTitle = 'Visitor Management System';
     $rootScope.$on('$stateChangeSuccess', function () {
       if (angular.isDefined($location.search().disable_login) && $location.search().disable_login === 'true') {
         $cookieStore.put('no-login', 1);
