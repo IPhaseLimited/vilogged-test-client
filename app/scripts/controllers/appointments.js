@@ -29,6 +29,12 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/appointments/form.html',
         controller: 'AppointmentFormCtrl'
       })
+      .state('edit-appointment', {
+        parent: 'root.index',
+        url: '/appointments/:appointment_id/edit/',
+        templateUrl: 'views/appointments/form.html',
+        controller: 'AppointmentFormCtrl'
+      })
       .state('visitor-check-in', {
         parent: 'root.index',
         url: '/appointments/:appointment_id/check-in',
@@ -42,10 +48,11 @@ angular.module('viLoggedClientApp')
         controller: 'CheckInCtrl'
       })
   })
-  .controller('AppointmentCtrl', function ($scope, appointmentService) {
+  .controller('AppointmentCtrl', function ($scope, appointmentService, authorizationService) {
+    $scope.canCheckInOrCheckOutVisitor = authorizationService.canCheckInOrCheckOutVisitor();
+
     appointmentService.all()
       .then(function (response) {
-        console.log(response);
         $scope.appointments = response;
       })
       .catch(function (reason) {
@@ -53,9 +60,22 @@ angular.module('viLoggedClientApp')
       });
   })
   .controller('AppointmentFormCtrl', function ($scope, $stateParams, $state, visitorService,
-                                               userService, appointmentService, utility) {
+                                               userService, appointmentService, utility, authorizationService) {
     $scope.appointment = {};
     $scope.default = {};
+
+    if ($stateParams.appointment_id !== null && $stateParams.appointment_id !== undefined) {
+      appointmentService.get($stateParams.appointment_id)
+        .then(function(response) {
+          $scope.appointment = response;
+          if (!authorizationService.canEditAppointment($scope.appointment)) {
+            $state.go("appointments");
+          }
+        })
+        .catch(function(reason) {
+          console.log(reason);
+        });
+    }
 
     if (angular.isDefined($stateParams.visitor_id)) {
       visitorService.get($stateParams.visitor_id)
@@ -123,7 +143,10 @@ angular.module('viLoggedClientApp')
   })
   .controller('CheckInCtrl', function ($scope, $state, $stateParams, $q,
                                        visitorService, appointmentService, entranceService,
-                                       vehicleTypeConstant, notificationService, utility) {
+                                       vehicleTypeConstant, notificationService, utility, authorizationService) {
+    if (!authorizationService.canCheckInOrCheckOutVisitor) {
+      $state.go("appointments");
+    }
     $scope.appointment = {};
     $scope.appointment.restricted_items = [{
       item_code: '',
@@ -142,7 +165,7 @@ angular.module('viLoggedClientApp')
 
     appointmentService.get($stateParams.appointment_id)
       .then(function (response) {
-        $scope.appointment = response;console.log($scope.appointment)
+        $scope.appointment = response;
         if (angular.isUndefined($scope.appointment.restricted_items)) {
           $scope.appointment.restricted_items = [{
             item_code: '',
@@ -154,19 +177,19 @@ angular.module('viLoggedClientApp')
       .catch(function (reason) {
       });
 
-    $scope.checkItemScope = function() {
+    $scope.checkItemScope = function () {
       if ($scope.item === false) {
         $scope.appointment.restricted_items = [];
       }
     };
 
-    $scope.addItem = function() {
+    $scope.addItem = function () {
       if (!angular.isDefined($scope.item)) {
         $scope.item = true;
         return;
       }
 
-      if ($scope.item ===  false) {
+      if ($scope.item === false) {
         $scope.item = true;
       }
 
@@ -195,4 +218,4 @@ angular.module('viLoggedClientApp')
         .catch(function (reason) {
         });
     };
-});
+  });
