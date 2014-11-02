@@ -102,8 +102,12 @@
 
           <div class="col-sm-offset-2 col-sm-10">
             <button class="btn btn-primary"
-                    ng-class="{ 'disabled btn-danger' : appointmentForm.$invalid }">
+                    ng-class="{ 'disabled btn-danger' : appointmentForm.$invalid }" ng-if="!appointment._id">
               Create Appointment
+            </button>
+            <button class="btn btn-primary"
+                    ng-class="{ 'disabled btn-danger' : appointmentForm.$invalid }" ng-if="appointment._id">
+              Edit Appointment {{appointment.appointment_id}}
             </button>
           </div>
         </form>
