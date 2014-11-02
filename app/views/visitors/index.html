@@ -30,19 +30,19 @@
           <td>{{ visitor.company_name }}</td>
           <td>
             <a class="btn btn-primary btn-xs"
-               ui-sref="edit-visitor-profile({id: visitor._id})"
+               ui-sref="edit-visitor-profile({visitor_id: visitor.uuid})"
                title="Edit {{ visitor.first_name }}'s details">
               <i class="fa fa-edit"></i> Edit
             </a>
 
             <a class="btn btn-success btn-xs"
-               ui-sref="show-visitor({id: visitor._id})"
+               ui-sref="show-visitor({visitor_id: visitor._id})"
                title="View {{ visitor.first_name }}'s details">
               <i class="fa fa-eye"></i> View
             </a>
 
             <a class="btn btn-success btn-xs"
-               ui-sref="create-appointment-visitor({visitor_id: visitor._id})"
+               ui-sref="create-appointment-visitor({visitor_id: visitor.uuid})"
                title="Create appointment">
               <i class="fa fa-plus-circle"></i> Create Appointment
             </a>

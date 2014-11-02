@@ -15,24 +15,18 @@
 
           <legend>Personal Information</legend>
 
-          <div class="form-group">
-            <label for="image" class="col-sm-2 control-label">Image</label>
-            <div class="col-sm-6">
-              <input type="file" ng-model-instant id="fileToUpload" multiple onchange="angular.element(this).scope().setFiles(this)">
-            </div>
-          </div>
 
-          <div class="form-group">
-            <label for="fingerprint" class="col-sm-2 control-label">Fingerprint Image</label>
-            <div class="col-sm-6">
-              <input type="file" class="form-control" id="fingerprint" name="fingerprint" ng-model="visitor.fingerprint">
-            </div>
-          </div>
 
           <div class="form-group">
             <label class="control-label col-sm-2" for="firstName">First Name</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" id="firstName" name="firstName" ng-model="visitor.first_name" required>
+            </div>
+            <div class="clearfix"></div>
+            <div class="text-danger bold text-center" ng-show="(validationErrors).first_name.length">
+              <span ng-repeat="error in (validationErrors).first_name">
+                {{ error }}<br>
+              </span>
             </div>
           </div>
 
@@ -40,6 +34,12 @@
             <label for="lastName" class="col-sm-2 control-label">Last Name</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" id="lastName" name="lastName" ng-model="visitor.last_name" required>
+            </div>
+            <div class="clearfix"></div>
+            <div class="text-danger bold text-center" ng-show="(validationErrors).last_name.length">
+              <span ng-repeat="error in (validationErrors).last_name">
+                {{ error }}<br>
+              </span>
             </div>
           </div>
 
@@ -51,23 +51,49 @@
           </div>
 
           <div class="form-group">
-            <label for="lga" class="col-sm-2 control-label">Origin City/LGA</label>
+            <label for="nationality" class="col-sm-2 control-label">Nationality</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" id="lga" name="lga" ng-model="visitor.lga_of_origin">
+              <!--input type="text" class="form-control" id="nationality" name="nationality" ng-model="visitor.nationality"-->
+              <select class="form-control" id="nationality" ng-change="getStates(visitor.nationality)" name="nationality" ng-model="visitor.nationality">
+                <option value=""></option>
+                <option ng-repeat="country in countries" value="{{ country  }}"> {{ countryState[country].name }}</option>
+              </select>
             </div>
           </div>
 
           <div class="form-group">
             <label for="stateOfOrigin" class="col-sm-2 control-label">State of Origin</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" id="stateOfOrigin" name="stateOfOrigin" ng-model="visitor.state_of_origin">
+              <!--input type="text" class="form-control" id="stateOfOrigin" name="stateOfOrigin" ng-model="visitor.state_of_origin"-->
+              <select class="form-control" id="stateOfOrigin" ng-change="getLGAs(visitor.state_of_origin, visitor.nationality)" name="nationality" ng-model="visitor.state_of_origin">
+                <option value=""></option>
+                <option ng-repeat="state in states track by $index" value="{{ state  }}"> {{ countryState[visitor.nationality].states[state].name }}</option>
+              </select>
             </div>
           </div>
 
           <div class="form-group">
-            <label for="nationality" class="col-sm-2 control-label">Nationality</label>
+            <label for="lga" class="col-sm-2 control-label">Origin City/LGA</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" id="nationality" name="nationality" ng-model="visitor.nationality">
+              <!--input type="text" class="form-control" id="lga" name="lga" ng-model="visitor.lga_of_origin"-->
+              <select class="form-control" id="lga" name="nationality" ng-model="visitor.lga_of_origin">
+                <option value=""></option>
+                <option ng-repeat="lga in lgas track by $index" value="{{ lga  }}"> {{ lga }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="image" class="col-sm-2 control-label">Image</label>
+            <div class="col-sm-6">
+              <input id="image" type="file" ng-model-instant onchange="angular.element(this).scope().setFiles(this, 'image')">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="fingerprint" class="col-sm-2 control-label">Fingerprint Image</label>
+            <div class="col-sm-6">
+              <input type="file" id="fingerprint" ng-model-instant onchange="angular.element(this).scope().setFiles(this, 'fingerprint')">
             </div>
           </div>
 
@@ -78,6 +104,13 @@
             <div class="col-sm-6">
               <input type="text" class="form-control" id="visitorEmail" name="visitorEmail" ng-model="visitor.visitor_email">
             </div>
+            <div class="clearfix"></div>
+            <div class="text-danger bold text-center" ng-show="(validationErrors).visitor_email.length">
+              <span ng-repeat="error in (validationErrors).visitor_email">
+                {{ error }}<br>
+              </span>
+            </div>
+
           </div>
 
           <div class="form-group">
