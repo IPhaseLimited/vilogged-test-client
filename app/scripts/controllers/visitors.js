@@ -46,18 +46,31 @@ angular.module('viLoggedClientApp')
 
       });
   })
-  .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, visitorService, validationService, $window) {
+  .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, visitorService, validationService, $window,
+                                           countryStateService) {
     $scope.visitors = [];
+    $scope.countryState = {};
+    $scope.countries = [];
+    $scope.states = [];
+    $scope.lgas = [];
 
-    $scope.setFiles = function(element) {
+    countryStateService.all()
+      .then(function(response) {
+        $scope.countryState = response;
+        $scope.countries = Object.keys(response);
+      })
+      .catch(function(reason) {
+        console.log(reason);
+      });
+
+    $scope.setFiles = function(element, field) {
       $scope.$apply(function(scope) {
 
         var fileToUpload = element.files[0];
         if (fileToUpload.type.match('image*')) {
           var reader = new $window.FileReader();
           reader.onload = function(theFile) {
-            $scope.visitor.image = theFile.target.result;
-            console.log(theFile.target.result);
+            $scope.visitor[field] = theFile.target.result;
           };
           reader.readAsDataURL(fileToUpload);
         }
@@ -114,16 +127,31 @@ angular.module('viLoggedClientApp')
       if (!angular.isDefined($scope.visitor.visitor_pass_code)) {
         $scope.visitor.visitor_pass_code = new Date().getTime();
       }
+      $scope.validationErrors = validationService.validateFields(validationParams, $scope.visitor);
+      if (!Object.keys($scope.validationErrors).length) {
+        visitorService.save($scope.visitor)
+          .then(function (response) {
+            $scope.visitor = angular.copy($scope.default);
+            $state.go('visitors')
+          })
+          .catch(function (reason) {
+            console.log(reason);
+          });
+      }
 
-      visitorService.save($scope.visitor)
-        .then(function (response) {
-          $scope.visitor = angular.copy($scope.default);
-          $state.go('visitors')
-        })
-        .catch(function (reason) {
-          console.log(reason);
-        });
-    }
+    };
+
+    $scope.getStates = function(country) {
+      $scope.visitor.state_of_origin = '';
+      $scope.states = Object.keys($scope.countryState[country].states).sort();
+    };
+
+    $scope.getLGAs = function(state, country) {
+      $scope.visitor.lga_of_origin = '';
+      if ($scope.countryState[country].states[state]) {
+        $scope.lgas = $scope.countryState[country].states[state].lga.sort();
+      }
+    };
   })
   .controller('VisitorDetailCtrl', function ($scope, $stateParams, visitorService) {
     $scope.visitor = {};

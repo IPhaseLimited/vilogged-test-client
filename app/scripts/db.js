@@ -1,5 +1,9 @@
 angular.module('db', [])
 
-.constant('collections', {ENTRANCE: 'entrance', USERS: 'users'})
+.constant('collections', {
+ COUNTRIES: 'countries',
+ ENTRANCE: 'entrance',
+ USERS: 'users',
+})
 
 ;
