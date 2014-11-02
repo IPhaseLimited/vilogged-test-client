@@ -1,120 +1,105 @@
-<!-- TODO:: rename and fix propsFilter -->
-<div class="widget" ng-cloak>
-  <div class="widget-head">
-    <div class="pull-left"></div>
-    <div class="widget-icons pull-right">
+<fieldset>
+  <legend ng-if="!appointment._id">Create Appointment</legend>
+  <legend ng-if="appointment._id">Edit Appointment</legend>
+  <form class="form-horizontal" name="appointmentForm" ng-submit="createAppointment()" novalidate>
+
+    <div class="form-group" ng-if="!visitor">
+      <label class="control-label col-sm-2" for="visitor">Visitor</label>
+
+      <div class="col-sm-6" id="visitor">
+        <ui-select ng-model="appointment.visitor" theme="select2" ng-disabled="disabled" class="select2">
+          <ui-select-match placeholder="Select your appointment visitor">{{$select.selected.first_name}}</ui-select-match>
+          <ui-select-choices refresh="refreshVisitorsList($select.search)"
+                             refresh-delay="0" repeat="visitor in visitors track by $index">
+            <div> {{vistor.first_name}}</div>
+            <small>
+              email: {{visitor.email}}
+              phone: <span>{{visitor.phone}}</span>
+            </small>
+          </ui-select-choices>
+        </ui-select>
+      </div>
     </div>
-    <div class="clearfix"></div>
-  </div>
-  <div class="widget-content">
-    <div class="padd">
-      <fieldset>
-        <legend>Create Appointment</legend>
-        <form class="form-horizontal" name="appointmentForm" ng-submit="createAppointment()" novalidate>
 
-          <div class="form-group" ng-if="!visitor">
-            <label class="control-label col-sm-2" for="visitor">Visitor</label>
+    <div class="form-group" ng-if="!host">
+      <label class="control-label col-sm-2" for="host">Host</label>
 
-            <div class="col-sm-6" id="visitor">
-              <ui-select ng-model="person.selected" theme="select2" ng-disabled="disabled" class="select2">
-                <ui-select-match placeholder="Select your appointment visitor">{{$select.selected.first_name}}</ui-select-match>
-                <ui-select-choices refresh="refreshVisitorsList($select.search)"
-                    refresh-delay="0" repeat="visitor in visitors track by $index">
-                  <div> {{vistor.first_name}}</div>
-                  <small>
-                    email: {{visitor.email}}
-                    phone: <span>{{visitor.phone}}</span>
-                  </small>
-                </ui-select-choices>
-              </ui-select>
-            </div>
-          </div>
-
-          <div class="form-group" ng-if="!host">
-            <label class="control-label col-sm-2" for="host">Host</label>
-
-            <div class="col-sm-6">
-              <ui-select ng-model="appointment.host" theme="select2" ng-disabled="disabled" class="select2">
-                <ui-select-match placeholder="Select your appointment host">
-                  {{$select.selected.first_name}}
-                </ui-select-match>
-                <ui-select-choices refresh="refreshHostsList($select.search)"
-                                   refresh-delay="0" repeat="host in hosts | propsFilter: {
+      <div class="col-sm-6">
+        <ui-select ng-model="appointment.host" theme="select2" ng-disabled="disabled" class="select2">
+          <ui-select-match placeholder="Select your appointment host">
+            {{$select.selected.first_name}}
+          </ui-select-match>
+          <ui-select-choices refresh="refreshHostsList($select.search)"
+                             refresh-delay="0" repeat="host in hosts | propsFilter: {
                                    first_name: $select.search,
                                    last_name: $select.search,
                                    user_profile.phone: $select.search}">
-                  <div>{{host.first_name + ' ' + host.last_name}}</div>
-                  <small>
-                    Email: {{host.email}} <br/>
-                    Phone: <span>{{((host).user_profile).phone}}</span> <br/>
-                    Home Phone: {{ ((host).user_profile).home_phone }} <br/>
-                  </small>
-                </ui-select-choices>
-              </ui-select>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="control-label col-sm-2" for="appointmentDate">Appointment Date</label>
-
-            <div class="col-sm-6">
-              <input class="form-control" name="appointmentDate"
-                     id="appointmentDate" ng-model="appointment.appointment_date" type="date" required/>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="control-label col-sm-2" for="visitStartTime">Appointment Starts At</label>
-
-            <div class="col-sm-6">
-              <input class="form-control" name="visitStartTime"
-                     id="visitStartTime" ng-model="appointment.visit_start_time" type="time" required/>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="control-label col-sm-2" for="visitEndTime">Appointment Ends At</label>
-
-            <div class="col-sm-6">
-              <input class="form-control" name="visitEndTime"
-                     id="visitEndTime" ng-model="appointment.visit_end_time" type="time" required/>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="control-label col-sm-2" for="representing">Representing</label>
-
-            <div class="col-sm-6">
-              <input class="form-control" name="representing" id="representing"
-                     ng-model="appointment.representing" type="text"/>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="control-label col-sm-2" for="purpose">Purpose of Visit</label>
-
-            <div class="col-sm-6">
-              <textarea name="purpose" id="purpose" class="form-control" required></textarea>
-            </div>
-          </div>
-
-          <hr/>
-
-          <div class="col-sm-offset-2 col-sm-10">
-            <button class="btn btn-primary"
-                    ng-class="{ 'disabled btn-danger' : appointmentForm.$invalid }" ng-if="!appointment._id">
-              Create Appointment
-            </button>
-            <button class="btn btn-primary"
-                    ng-class="{ 'disabled btn-danger' : appointmentForm.$invalid }" ng-if="appointment._id">
-              Edit Appointment {{appointment.appointment_id}}
-            </button>
-          </div>
-        </form>
-      </fieldset>
+            <div>{{host.first_name + ' ' + host.last_name}}</div>
+            <small>
+              Email: {{host.email}} <br/>
+              Phone: <span>{{((host).user_profile).phone}}</span> <br/>
+              Home Phone: {{ ((host).user_profile).home_phone }} <br/>
+            </small>
+          </ui-select-choices>
+        </ui-select>
+      </div>
     </div>
-    <div class="widget-foot">
-      <!-- Footer goes here -->
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="appointmentDate">Appointment Date</label>
+
+      <div class="col-sm-6">
+        <input class="form-control" name="appointmentDate"
+               id="appointmentDate" ng-model="appointment.appointment_date" type="date" required/>
+      </div>
     </div>
-  </div>
-</div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="visitStartTime">Appointment Starts At</label>
+
+      <div class="col-sm-6">
+        <input class="form-control" name="visitStartTime"
+               id="visitStartTime" ng-model="appointment.visit_start_time" type="time" required/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="visitEndTime">Appointment Ends At</label>
+
+      <div class="col-sm-6">
+        <input class="form-control" name="visitEndTime"
+               id="visitEndTime" ng-model="appointment.visit_end_time" type="time" required/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="representing">Representing</label>
+
+      <div class="col-sm-6">
+        <input class="form-control" name="representing" id="representing"
+               ng-model="appointment.representing" type="text"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="purpose">Purpose of Visit</label>
+
+      <div class="col-sm-6">
+        <textarea name="purpose" id="purpose" class="form-control" required></textarea>
+      </div>
+    </div>
+
+    <hr/>
+
+    <div class="col-sm-offset-2 col-sm-10">
+      <button class="btn btn-primary"
+              ng-class="{ 'disabled btn-danger' : appointmentForm.$invalid }" ng-if="!appointment._id">
+        Create Appointment
+      </button>
+      <button class="btn btn-primary"
+              ng-class="{ 'disabled btn-danger' : appointmentForm.$invalid }" ng-if="appointment._id">
+        Edit Appointment {{appointment.appointment_id}}
+      </button>
+    </div>
+  </form>
+</fieldset>
