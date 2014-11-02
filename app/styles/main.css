@@ -83,3 +83,6 @@
 .barcode.code128 .b10 {
     width: 10px;
 }
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
