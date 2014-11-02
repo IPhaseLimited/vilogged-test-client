@@ -8,10 +8,18 @@
  * Controller of the viLoggedClientApp
  */
 angular.module('viLoggedClientApp')
+  .config(function($stateProvider) {
+    $stateProvider
+      .state('settings', {
+        parent: 'root.index',
+        url: '/settings',
+        data: {
+          label: 'System Settings'
+        },
+        templateUrl: 'views/settings/index.html',
+        controller: 'SettingsCtrl'
+      })
+  })
   .controller('SettingsCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+
   });
