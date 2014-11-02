@@ -36,9 +36,11 @@
             <td>{{ appointment.visit_end_time }}</td>
             <td>
               <a ui-sref="visitor-check-in({ appointment_id: appointment._id })"
-                 class="btn btn-xs btn-success" ng-if="!appointment.check_in">Check In</a>
+                 class="btn btn-xs btn-success" ng-if="!appointment.check_in && canCheckInOrCheckOut">Check In</a>
               <a ui-sref="visitor-check-out({ appointment_id: appointment._id })"
-                 class="btn btn-xs btn-success" ng-if="appointment.check_in">Check Out</a>
+                 class="btn btn-xs btn-success" ng-if="appointment.check_in && canCheckInOrCheckOut">Check Out</a>
+              <a ui-sref="edit-appointment({ appointment_id: appointment._id })"
+                 class="btn btn-xs btn-success" ng-if="!appointment.check_in">Edit</a>
             </td>
           </tr>
         </tbody>
