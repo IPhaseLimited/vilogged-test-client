@@ -13,24 +13,36 @@ angular.module('viLoggedClientApp')
       .state('visitors', {
         parent: 'root.index',
         url: '/visitors',
+        data: {
+          label: 'Visitors List'
+        },
         templateUrl: 'views/visitors/index.html',
         controller: 'VisitorsCtrl'
       })
       .state('create-visitor-profile', {
         parent: 'root.index',
         url: '/visitors/add',
+        data: {
+          label: 'Add Visitor'
+        },
         templateUrl: 'views/visitors/form.html',
         controller: 'VisitorFormCtrl'
       })
       .state('edit-visitor-profile', {
         parent: 'root.index',
         url: '/visitors/:visitor_id/edit',
+        data: {
+          label: 'Edit Visitor\'s record'
+        },
         templateUrl: 'views/visitors/form.html',
         controller: 'VisitorFormCtrl'
       })
       .state('show-visitor', {
         parent: 'root.index',
         url: '/visitors/:visitor_id',
+        data: {
+          label: 'Visitor\'s Detail'
+        },
         templateUrl: 'views/visitors/detail.html',
         controller: 'VisitorDetailCtrl'
       })
@@ -64,7 +76,7 @@ angular.module('viLoggedClientApp')
       });
 
     $scope.setFiles = function(element, field) {
-      $scope.$apply(function(scope) {
+      $scope.$apply(function() {
 
         var fileToUpload = element.files[0];
         if (fileToUpload.type.match('image*')) {
@@ -130,7 +142,7 @@ angular.module('viLoggedClientApp')
       $scope.validationErrors = validationService.validateFields(validationParams, $scope.visitor);
       if (!Object.keys($scope.validationErrors).length) {
         visitorService.save($scope.visitor)
-          .then(function (response) {
+          .then(function () {
             $scope.visitor = angular.copy($scope.default);
             $state.go('visitors')
           })
