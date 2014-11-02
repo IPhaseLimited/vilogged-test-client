@@ -8,7 +8,7 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('authorizationService', function authorizationService(userService) {
+  .service('authorizationService', function authorizationService($q, userService, appointmentService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var currentUser = userService.user;
 
@@ -17,7 +17,7 @@ angular.module('viLoggedClientApp')
     }
 
     this.canEditAppointment = function(appointment) {
-      return parseInt(appointment.host.id) === parseInt(currentUser.id);
+      return parseInt(appointment.host.id) === parseInt(currentUser.id) || currentUser.is_superuser;
     };
 
     this.canViewAppointment = function(appointment) {
@@ -28,7 +28,7 @@ angular.module('viLoggedClientApp')
       return visitor.group_type !== 'Banned';
     };
 
-    this.canEditProfile = function(user) {
+    this.canEditProfile = function(userId) {
       return user.id === currentUser.id || currentUser.is_superuser;
     };
 
