@@ -16,4 +16,5 @@ app/scripts/db.js
 config/development.json
 config/production.json
 config/test.json
-/app/.brackets.json
+app/.brackets.json
+app/fixtures/entrance.json

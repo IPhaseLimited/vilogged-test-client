@@ -8,42 +8,25 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('entranceService', function entranceService($q, $http) {
+  .service('entranceService', function entranceService($q, $http, db, storageService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
+    var DB_NAME = db.ENTRANCE;
 
     function getAllEntrance() {
-      var deferred = $q.defer();
-      $http.get('scripts/fixtures/entrance.json')
-        .success(function(entrance) {
-          deferred.resolve(entrance)
-        })
-        .error(function(reason) {
-          deferred.reject(reason);
-        });
-
-      return deferred.promise;
+      return storageService.all(DB_NAME)
     }
 
     function getEntrance(id) {
-      var deferred = $q.defer();
-      getAllEntrance()
-        .then(function(entrance) {
-          var user = {};
-          var filtered = entrance
-            .filter(function(row) {
-              return parseInt(row.id) === parseInt(id);
-            });
-          if (filtered > 0) {
-            user = filtered[0];
-          }
-          deferred.resolve(entrance);
-        })
-        .catch(function(reason) {
-          deferred.reject(reason);
-        });
+      return storageService.find(DB_NAME, id);
+    }
 
-      return deferred.promise;
+    this.save = function(entrance) {
+      return storageService.save(DB_NAME, entrance);
     };
+
+    this.remove = function(id) {
+      return storageService.remove(DB_NAME, id);
+    }
 
     this.all = getAllEntrance;
     this.get = getEntrance;
