@@ -91,6 +91,29 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     }
 
+    this.updatePassword = function(password, id) {
+      var deferred = $q.defer();
+      if (id !== undefined || id !== null) {
+        $http.put(config.api.backend+'/api/v1/users/change-password/'+id, password)
+          .success(function(response) {
+            deferred.resolve(response);
+          })
+          .error(function(reason) {
+            deferred.reject(reason);
+          });
+      } else {
+        $http.put(config.api.backend+'api/v1/user/change-password', password)
+          .success(function(response) {
+            deferred.resolve(response);
+          })
+          .error(function(reason) {
+            deferred.reject(reason);
+          });
+      }
+
+      return deferred.promise
+    };
+
     this.all = getAllUsers;
     this.get = getUser;
     this.currentUser = getCurrentUser;
