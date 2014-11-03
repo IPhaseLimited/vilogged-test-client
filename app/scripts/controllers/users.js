@@ -125,7 +125,7 @@ angular.module('viLoggedClientApp')
       });
 
     if (!$scope.currentUser.is_superuser) {
-      $state.go("users");
+      $state.go("home");
     }
 
     $scope.createUserAccount = function () {
@@ -143,8 +143,14 @@ angular.module('viLoggedClientApp')
         });
     }
   })
-  .controller('ChangePasswordCtrl', function($scope, $sate, $stateParams) {
+  .controller('ChangePasswordCtrl', function($scope, $sate, $stateParams, userService) {
     $scope.userPassword = {};
 
-
+    $scope.changeAccountPassword = function() {
+      userService.updatePassword($scope.userPassword)
+        .then(function(response) {
+          $state.go("home");
+        })
+        .catch(function(reason) {})
+    }
   });
