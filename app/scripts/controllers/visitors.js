@@ -25,7 +25,7 @@ angular.module('viLoggedClientApp')
         data: {
           label: 'Add Visitor'
         },
-        templateUrl: 'views/visitors/form.html',
+        templateUrl: 'views/visitors/widget-form.html',
         controller: 'VisitorFormCtrl'
       })
       .state('edit-visitor-profile', {
@@ -34,7 +34,7 @@ angular.module('viLoggedClientApp')
         data: {
           label: 'Edit Visitor\'s record'
         },
-        templateUrl: 'views/visitors/form.html',
+        templateUrl: 'views/visitors/widget-form.html',
         controller: 'VisitorFormCtrl'
       })
       .state('show-visitor', {
