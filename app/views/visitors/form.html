@@ -219,11 +219,11 @@
   <label for="visitorGroup" class="col-sm-2 control-label">Visitor Group</label>
 
   <div class="col-sm-6">
-    <select class="form-control col-sm-6" ng-model="visitor.group_id" name="visitorGroup"
+    <select class="form-control col-sm-6" ng-model="visitor.group_type" name="visitorGroup"
             id="visitorGroup">
       <option value=""></option>
-      <option value="visitorGroup._id" ng-repeat="visitorGroup in visitorGroups">
-        {{ visitorGroup.group_name }}
+      <option value="visitorGroup" ng-repeat="visitorGroup in visitorGroups">
+        {{ visitorGroup }}
       </option>
     </select>
   </div>
