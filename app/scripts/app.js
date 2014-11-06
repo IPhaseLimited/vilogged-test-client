@@ -1,19 +1,20 @@
 'use strict';
 
 angular.module('viLoggedClientApp', [
-    'ui.bootstrap',
-    'ui.router',
-    'ui.select',
-    'pouchdb',
-    'config',
-    'nvd3ChartDirectives',
-    'angular-growl',
-    'ngAnimate',
-    'ngCookies',
-    'db',
-    'db.names'
-  ])
-  .run(function($cookieStore, $rootScope, $state, $http, $location, loginService, userService, storageService) {
+  'ui.bootstrap',
+  'ui.router',
+  'ui.select',
+  'pouchdb',
+  'config',
+  'nvd3ChartDirectives',
+  'angular-growl',
+  'ngAnimate',
+  'ngCookies',
+  'db',
+  'db.names',
+  'MessageCenterModule'
+])
+  .run(function ($cookieStore, $rootScope, $state, $http, $location, loginService, userService, storageService) {
     $rootScope.pageTitle = 'Visitor Management System';
     $rootScope.$on('$stateChangeSuccess', function () {
       if (angular.isDefined($location.search().disable_login) && $location.search().disable_login === 'true') {
@@ -28,7 +29,7 @@ angular.module('viLoggedClientApp', [
         $state.go('login');
       }
 
-      if(angular.isDefined($state.$current.self.data)){
+      if (angular.isDefined($state.$current.self.data)) {
         $rootScope.pageTitle =
           angular.isDefined($state.$current.self.data.label) ? $state.$current.self.data.label : $rootScope.pageTitle;
       }
@@ -42,12 +43,12 @@ angular.module('viLoggedClientApp', [
       }
     });
   })
-  .config(function($httpProvider) {
+  .config(function ($httpProvider) {
     $httpProvider.interceptors.push([
       '$cookieStore',
-      function($cookieStore) {
+      function ($cookieStore) {
         return {
-          'request': function(config) {
+          'request': function (config) {
             if ($cookieStore.get('vi-token')) {
               $httpProvider.defaults.headers.common['Authorization'] = 'Token ' + $cookieStore.get('vi-token');
             }
@@ -57,15 +58,15 @@ angular.module('viLoggedClientApp', [
       }
     ]);
   })
-  .config(function($compileProvider) {
+  .config(function ($compileProvider) {
     // to bypass Chrome app CSP for images.
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(chrome-extension):/);
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file|blob):|data:image\//);
   })
-  .config(function(uiSelectConfig) {
-      uiSelectConfig.theme = 'bootstrap';
-    })
-  .config(function(growlProvider) {
+  .config(function (uiSelectConfig) {
+    uiSelectConfig.theme = 'bootstrap';
+  })
+  .config(function (growlProvider) {
     growlProvider.globalTimeToLive({
       success: 5000,
       error: 5000,
