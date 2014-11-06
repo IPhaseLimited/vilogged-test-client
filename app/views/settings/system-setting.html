@@ -1,0 +1,56 @@
+<form class="form-horizontal" ng-submit="saveServerSetting()" name="serverSettingForm">
+  <fieldset>
+    <legend>System Setting</legend>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="offlineMode">Offline Mode</label>
+
+      <div class="col-sm-6">
+        <input class="form-control" name="offlineMode" id="offlineMode" required type="text"
+               ng-model="settings.systemSetting.offline_mode"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="sync_interval">Sync Interval</label>
+
+      <div class="col-sm-6">
+        <input class="form-control" name="sync_interval" id="sync_interval" required type="text"
+               ng-model="settings.systemSetting.sync_interval"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="smsApiUrl">SMS Api Url</label>
+
+      <div class="col-sm-6">
+        <input class="form-control" name="smsApiUrl" id="smsApiUrl" required type="text"
+               ng-model="settings.systemSetting.sms_api_url"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="sms_api_username">Server Url</label>
+
+      <div class="col-sm-6">
+        <input class="form-control" name="sms_api_username" id="sms_api_username" required
+               ng-model="settings.systemSetting.sms_api_username" type="text"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="sms_api_password">Server Url</label>
+
+      <div class="col-sm-6">
+        <input class="form-control" name="sms_api_password" id="sms_api_password" required
+               ng-model="settings.systemSetting.sms_api_password" type="password"/>
+      </div>
+    </div>
+
+    <hr/>
+
+    <div class="col-sm-offset-2 col-sm-6">
+      <button class="btn btn-primary"><i class="fa fa-cog"></i> Save System Setting</button>
+    </div>
+  </fieldset>
+</form>
