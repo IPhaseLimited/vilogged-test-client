@@ -10,14 +10,14 @@
 angular.module('viLoggedClientApp')
   .service('userService', function userService($q, $http, config, $cookieStore) {
     // AngularJS will instantiate a singleton by calling "new" on this function
-     function getAllUsers() {
+    function getAllUsers() {
       var deferred = $q.defer();
-      $http.get(config.api.backend+'/api/v1/users/')
-      //$http.get(config.api.backend+'/scripts/fixtures/users.json')
-        .success(function(users) {
+      $http.get(config.api.backend + '/api/v1/users/')
+        //$http.get(config.api.backend+'/scripts/fixtures/users.json')
+        .success(function (users) {
           deferred.resolve(users)
         })
-        .error(function(reason) {
+        .error(function (reason) {
           deferred.reject(reason);
         });
 
@@ -26,11 +26,11 @@ angular.module('viLoggedClientApp')
 
     function getUser(id) {
       var deferred = $q.defer();
-      $http.get(config.api.backend+'/api/v1/user/'+id+'/')
-        .then(function(response) {
+      $http.get(config.api.backend + '/api/v1/user/' + id + '/')
+        .then(function (response) {
           deferred.resolve(response.data);
         })
-        .catch(function(reason) {
+        .catch(function (reason) {
           deferred.reject(reason);
         });
       return deferred.promise;
@@ -38,11 +38,11 @@ angular.module('viLoggedClientApp')
 
     function getCurrentUser() {
       var deferred = $q.defer();
-      $http.get(config.api.backend+'/api/v1/current-user/')
-        .success(function(user) {
+      $http.get(config.api.backend + '/api/v1/current-user/')
+        .success(function (user) {
           deferred.resolve(user);
         })
-        .error(function(reason) {
+        .error(function (reason) {
           deferred.reject(reason);
         });
       return deferred.promise;
@@ -51,11 +51,11 @@ angular.module('viLoggedClientApp')
     function saveUserAccount(user) {
       var deferred = $q.defer();
       if (!user.id) {
-        $http.post(config.api.backend+'/api/v1/user/', user)
-          .success(function(response) {
+        $http.post(config.api.backend + '/api/v1/user/', user)
+          .success(function (response) {
             deferred.resolve(response);
           })
-          .error(function(reason) {
+          .error(function (reason) {
             deferred.reject(reason);
           });
       } else {
@@ -66,11 +66,11 @@ angular.module('viLoggedClientApp')
 
     function updateUser(user) {
       var deferred = $q.defer();
-      $http.put(config.api.backend+'/api/v1/user/'+user.id+'/', user)
-        .success(function(response) {
+      $http.put(config.api.backend + '/api/v1/user/' + user.id + '/', user)
+        .success(function (response) {
           deferred.resolve(response);
         })
-        .error(function(reason) {
+        .error(function (reason) {
           deferred.reject(reason);
         });
       return deferred.promise;
@@ -82,14 +82,14 @@ angular.module('viLoggedClientApp')
         .then(function (response) {
           response.is_active = !response.is_active;
           updateUserAccount(id, response)
-            .then(function(response) {
+            .then(function (response) {
               deferred.resolve(response);
             })
-            .catch(function(reason) {
+            .catch(function (reason) {
               deferred.reject(reason);
             });
         })
-        .catch(function(reason) {
+        .catch(function (reason) {
           deferred.reject(reason);
         });
       return deferred.promise;
@@ -97,39 +97,28 @@ angular.module('viLoggedClientApp')
 
     function removeUser(id) {
       var deferred = $q.defer();
-      $http.delete(config.api.backend+'/api/v1/user/'+id+'/')
-        .success(function(response) {
+      $http.delete(config.api.backend + '/api/v1/user/' + id + '/')
+        .success(function (response) {
           deferred.resolve(response);
         })
-        .error(function(reason) {
+        .error(function (reason) {
           deferred.reject(reason);
         });
 
       return deferred.promise;
     }
 
-    this.updatePassword = function(password, id) {
+    this.updatePassword = function (password) {
       var deferred = $q.defer();
-      if (id !== undefined || id !== null) {
-        $http.put(config.api.backend+'/api/v1/users/change-password/'+id, password)
-          .success(function(response) {
-            deferred.resolve(response);
-          })
-          .error(function(reason) {
-            deferred.reject(reason);
-          });
-      } else {
-        $http.put(config.api.backend+'api/v1/user/change-password', password)
-          .success(function(response) {
-            deferred.resolve(response);
-          })
-          .error(function(reason) {
-            deferred.reject(reason);
-          });
-      }
-
+      $http.post(config.api.backend + '/api/v1/user/set/password', password)
+        .success(function (response) {
+          deferred.resolve(response);
+        })
+        .error(function (reason) {
+          deferred.reject(reason);
+        });
       return deferred.promise
-    };
+    }
 
     this.all = getAllUsers;
     this.get = getUser;
@@ -138,4 +127,5 @@ angular.module('viLoggedClientApp')
     this.user = $cookieStore.get('current-user');
     this.toggleUserActivationStatus = toggleUserAccountActive;
     this.remove = removeUser;
-  });
+  })
+;
