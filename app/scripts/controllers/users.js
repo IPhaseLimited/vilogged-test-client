@@ -8,7 +8,7 @@
  * Controller of the viloggedClientApp
  */
 angular.module('viLoggedClientApp')
-  .config(function($stateProvider) {
+  .config(function ($stateProvider) {
     $stateProvider
       .state('profile', {
         parent: 'root.index',
@@ -17,7 +17,7 @@ angular.module('viLoggedClientApp')
         controller: 'UserProfileCtrl'
       })
   })
-  .config(function($stateProvider) {
+  .config(function ($stateProvider) {
     $stateProvider
       .state('users', {
         parent: 'root.index',
@@ -26,7 +26,7 @@ angular.module('viLoggedClientApp')
         controller: 'UsersCtrl'
       })
   })
-  .config(function($stateProvider) {
+  .config(function ($stateProvider) {
     $stateProvider
       .state('createUser', {
         parent: 'root.index',
@@ -35,7 +35,7 @@ angular.module('viLoggedClientApp')
         controller: 'UserFormCtrl'
       })
   })
-  .config(function($stateProvider) {
+  .config(function ($stateProvider) {
     $stateProvider
       .state('editUser', {
         parent: 'root.index',
@@ -44,7 +44,7 @@ angular.module('viLoggedClientApp')
         controller: 'UserFormCtrl'
       })
   })
-  .config(function($stateProvider) {
+  .config(function ($stateProvider) {
     $stateProvider
       .state('change-password', {
         parent: 'root.index',
@@ -53,11 +53,11 @@ angular.module('viLoggedClientApp')
         controller: 'ChangePasswordCtrl'
       })
   })
-  .controller('UserProfileCtrl', function($scope, $interval, userService, appointmentService) {
+  .controller('UserProfileCtrl', function ($scope, $interval, userService, appointmentService, messageCenterService) {
     $scope.currentUser = userService.user;
 
     appointmentService.getAppointmentsByUser($scope.currentUser)
-      .then(function(response) {
+      .then(function (response) {
         $scope.numberOfAppointments = response.length;
       })
       .catch(function (reason) {
@@ -65,42 +65,59 @@ angular.module('viLoggedClientApp')
       });
 
     appointmentService.getUpcomingAppointments($scope.currentUser)
-      .then(function(response) {
+      .then(function (response) {
         $scope.upcomingAppointments = response;
         $scope.upcomingAppointmentCount = response.length;
         console.log($scope.upcomingAppointmentCount)
       })
-      .catch(function(reason) {
+      .catch(function (reason) {
         console.log(reason);
       });
 
     appointmentService.getAppointmentsAwaitingApproval($scope.currentUser)
-      .then(function(response) {
+      .then(function (response) {
         $scope.appointmentsAwaitingApproval = response;
         $scope.appointmentsAwaitingApprovalCount = response.length;
       })
-      .catch(function(reason) {
+      .catch(function (reason) {
         console.log(reason);
       });
   })
-  .controller('UsersCtrl', function ($scope, userService) {
-    userService.all()
-      .then(function(response) {
-        $scope.users = response;
-      })
-      .catch(function(reason) {
-        console.log(reason);
-      });
+  .controller('UsersCtrl', function ($scope, userService, messageCenterService) {
+    function getUsers() {
+      userService.all()
+        .then(function (response) {
+          $scope.users = response;
+        })
+        .catch(function (reason) {
+          messageCenterService.add('danger', 'An error occurred while loading users.',
+            {status: messageCenterService.status.permanent});
+        });
+    }
+
+    getUsers();
 
     $scope.toggleActive = function (id) {
       userService.toggleUserActivationStatus(id)
-        .then(function(response){
-          console.log(response);
+        .then(function (response) {
+          getUsers();
+          messageCenterService.add('success', 'User account activated successfully.',
+            {status: messageCenterService.status.permanent});
         });
     };
 
+    //TODO:: flash message
     $scope.deleteAccount = function (id) {
+      if (userService.user.id === id) {
+        return;
+      }
       userService.remove(id)
+        .then(function (response) {
+          getUsers();
+        })
+        .catch(function (reason) {
+          console.log(reason);
+        });
     }
   })
   .controller('UserFormCtrl', function ($scope, $state, $stateParams, userService, companyDepartmentsService) {
@@ -110,6 +127,7 @@ angular.module('viLoggedClientApp')
     if ($stateParams.user_id) {
       userService.get($stateParams.user_id)
         .then(function (response) {
+          //console.log(response);
           $scope.user = response;
         })
         .catch(function (reason) {
@@ -134,23 +152,26 @@ angular.module('viLoggedClientApp')
         $scope.user.user_profile.work_phone = $scope.user.user_profile.work_phone || null;
       }
 
+      //TODO:: flash messages
       userService.save($scope.user)
-        .then(function() {
+        .then(function () {
+          console.log('here');
           $state.go("users");
         })
-        .catch(function(reason) {
+        .catch(function (reason) {
           console.log(reason);
         });
     }
   })
-  .controller('ChangePasswordCtrl', function($scope, $sate, $stateParams, userService) {
+  .controller('ChangePasswordCtrl', function ($scope, $state, $stateParams, userService) {
     $scope.userPassword = {};
 
-    $scope.changeAccountPassword = function() {
+    $scope.changeAccountPassword = function () {
       userService.updatePassword($scope.userPassword)
-        .then(function(response) {
+        .then(function (response) {
           $state.go("home");
         })
-        .catch(function(reason) {})
+        .catch(function (reason) {
+        })
     }
   });
