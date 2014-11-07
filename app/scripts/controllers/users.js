@@ -166,6 +166,7 @@ angular.module('viLoggedClientApp')
   .controller('ChangePasswordCtrl', function ($scope, $state, $stateParams, userService) {
     $scope.userPassword = {};
 
+    //todo:: flash message
     $scope.changeAccountPassword = function () {
       userService.updatePassword($scope.userPassword)
         .then(function (response) {
