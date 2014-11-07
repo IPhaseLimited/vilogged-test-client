@@ -50,19 +50,23 @@ angular.module('viLoggedClientApp')
 
     function saveUserAccount(user) {
       var deferred = $q.defer();
-      $http.post(config.api.backend+'/api/v1/user/', user)
-        .success(function(response) {
-          deferred.resolve(response);
-        })
-        .error(function(reason) {
-          deferred.reject(reason);
-        });
+      if (!user.id) {
+        $http.post(config.api.backend+'/api/v1/user/', user)
+          .success(function(response) {
+            deferred.resolve(response);
+          })
+          .error(function(reason) {
+            deferred.reject(reason);
+          });
+      } else {
+        return updateUser(user);
+      }
       return deferred.promise;
     }
 
-    function updateUserAccount(id, user) {
+    function updateUser(user) {
       var deferred = $q.defer();
-      $http.put(config.api.backend+'/api/v1/user/'+id, user)
+      $http.put(config.api.backend+'/api/v1/user/'+user.id+'/', user)
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -88,6 +92,19 @@ angular.module('viLoggedClientApp')
         .catch(function(reason) {
           deferred.reject(reason);
         });
+      return deferred.promise;
+    }
+
+    function removeUser(id) {
+      var deferred = $q.defer();
+      $http.delete(config.api.backend+'/api/v1/user/'+id+'/')
+        .success(function(response) {
+          deferred.resolve(response);
+        })
+        .error(function(reason) {
+          deferred.reject(reason);
+        });
+
       return deferred.promise;
     }
 
@@ -120,4 +137,5 @@ angular.module('viLoggedClientApp')
     this.save = saveUserAccount;
     this.user = $cookieStore.get('current-user');
     this.toggleUserActivationStatus = toggleUserAccountActive;
+    this.remove = removeUser;
   });
