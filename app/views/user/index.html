@@ -9,6 +9,8 @@
   </div>
   <div class="widget-content">
     <div class="padd">
+      <div mc-messages></div>
+
       <div class="row">
         <table class="table table-condensed table-bordered">
           <thead>
@@ -29,15 +31,17 @@
               <td>{{ user.user_profile.department }}</td>
               <td>{{ user.user_profile.work_phone }}</td>
               <td>
-                <a class="btn btn-success btn-xs" href="#"><i class="fa fa-edit"></i> Edit</a>
-                <a class="btn btn-primary btn-xs" ng-show="user.is_active" ng-click="toggleActive(user.id)">
+                <a class="btn btn-success btn-xs" ui-sref="editUser({user_id: user.id})"><i class="fa fa-edit"></i> Edit</a>
+                <a class="btn btn-primary btn-xs" ng-show="user.is_active"
+                   ng-click="toggleActive(user.id)">
                   <i class="fa fa-times-circle"></i> Deactivate Account
                 </a>
-                <a class="btn btn-primary btn-xs" ng-show="!user.is_active" ng-click="toggleActive(user.id)">
+                <a class="btn btn-primary btn-xs" ng-show="!user.is_active"
+                   ng-click="toggleActive(user.id)">
                   <i class="fa fa-check-circle"></i> Activate Account
                 </a>
 
-                <form action="" ng-submit="deleteAccount($index)" style="display: inline">
+                <form action="" ng-submit="deleteAccount(user.id)" style="display: inline">
                   <button class="btn btn-danger btn-xs"><i class="fa fa-minus-circle"></i> Delete</button>
                 </form>
               </td>
