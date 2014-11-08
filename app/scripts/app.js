@@ -11,12 +11,20 @@ angular.module('viLoggedClientApp', [
     'ngAnimate',
     'ngCookies',
     'db',
-    'db.names',
-    'MessageCenterModule'
+    'db.names'
   ])
-  .run(function($cookieStore, $rootScope, $state, $http, $location, loginService, userService) {
+  .run(function($cookieStore, $rootScope, $state, $http, $location, loginService, userService, syncService, $interval) {
+    syncService.startReplication();
+    $rootScope.syncPromises = {};
     $rootScope.pageTitle = 'Visitor Management System';
+
     $rootScope.$on('$stateChangeSuccess', function () {
+      var syncPromises = Object.keys($rootScope.syncPromises);
+      if (syncPromises.length > 0) {
+        syncPromises.forEach(function(key) {
+          $interval.cancel($rootScope.syncPromises[key]);
+        });
+      }
       if (angular.isDefined($location.search().disable_login) && $location.search().disable_login === 'true') {
         $cookieStore.put('no-login', 1);
       }
