@@ -47,16 +47,41 @@ angular.module('viLoggedClientApp')
         controller: 'VisitorDetailCtrl'
       })
   })
-  .controller('VisitorsCtrl', function ($scope, visitorService) {
+  .controller('VisitorsCtrl', function ($scope, visitorService, $interval) {
     $scope.visitors = [];
+    var DELAY = 300; //30ms
+    var busy = false;
+    function getVisitors() {
+      visitorService.all()
+        .then(function (response) {
+          busy = false;
+          $scope.visitors = response;
+        })
+        .catch(function (reason) {
+          busy = false;
+          console.log(reason);
+        });
+    }
+    getVisitors();
 
-    visitorService.all()
-      .then(function (response) {
-        $scope.visitors = response;
-      })
-      .catch(function (reason) {
+    $scope.syncPromises['visitors'] = $interval(function() {
+      if (!busy) {
+        busy = true;
+        visitorService.changes()
+          .then(function(reponse) {
+            if (reponse.update) {
+              getVisitors();
+            } else {
+              busy = false;
+            }
+          })
+          .catch(function(reason) {
+            busy = false;
+            console.log(reason);
+          });
+      }
 
-      });
+    }, DELAY);
   })
   .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, visitorService, validationService, $window,
                                            countryStateService, guestGroupConstant) {
