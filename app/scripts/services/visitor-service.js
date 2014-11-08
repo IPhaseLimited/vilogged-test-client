@@ -8,13 +8,22 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('visitorService', function visitorService($q, storageService, db) {
+  .service('visitorService', function visitorService($q, storageService, db, syncService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var DB_NAME = db.VISITORS;
 
-    var findByField = function(field, value) {
+    function findByField(field, value) {
       return storageService.findByField(DB_NAME, field, value);
-    };
+    }
+
+    function getAllVisitors() {
+      return storageService.all(DB_NAME);
+    }
+
+    function getChanges() {
+      return syncService.getChanges(DB_NAME);
+    }
+
 
     this.findByField = findByField;
 
@@ -24,10 +33,6 @@ angular.module('viLoggedClientApp')
 
     this.get = function(id) {
       return storageService.find(DB_NAME, id);
-    };
-
-    var getAllVisitors = function() {
-      return storageService.all(DB_NAME);
     };
 
     this.findByVisitorPassCode = function(visitorPassCode) {
@@ -48,5 +53,6 @@ angular.module('viLoggedClientApp')
     };
 
     this.all = getAllVisitors;
+    this.changes = getChanges;
     this.DBNAME = DB_NAME;
   });
