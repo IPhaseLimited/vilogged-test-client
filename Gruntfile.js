@@ -462,7 +462,6 @@ module.exports = function(grunt) {
       'clean:server',
       'wiredep',
       'ngconstant:development',
-      'fixtures',
       'concurrent:server',
       'autoprefixer',
       'connect:livereload',
@@ -491,8 +490,7 @@ module.exports = function(grunt) {
     var common = [
       'clean:dist',
       'wiredep',
-      'chromeManifest:dist',
-      'fixtures'
+      'chromeManifest:dist'
     ];
 
     var release = [
