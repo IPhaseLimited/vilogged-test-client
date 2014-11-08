@@ -77,7 +77,8 @@
       <label for="work_phone" class="control-label col-sm-2">Work Phone</label>
 
       <div class="col-sm-6">
-        <input class="form-control" type="text" name="work_phone" id="work_phone" ng-model="user.work_phone"/>
+        <input class="form-control" type="text" name="work_phone" id="work_phone"
+               ng-model="user.user_profile.work_phone"/>
       </div>
     </div>
 
@@ -115,8 +116,13 @@
     <hr/>
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-6">
-        <button class="btn btn-primary" ng-class="{'disabled btn-danger': userAccount.$invalid}">
+        <button class="btn btn-primary" ng-class="{'disabled btn-danger': userAccount.$invalid}"
+                ng-if="!user.id">
           Create User Account
+        </button>
+        <button class="btn btn-primary" ng-class="{'disabled btn-danger': userAccount.$invalid}"
+                ng-if="user.id">
+          Edit User Account
         </button>
       </div>
     </div>

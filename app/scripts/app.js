@@ -11,7 +11,8 @@ angular.module('viLoggedClientApp', [
     'ngAnimate',
     'ngCookies',
     'db',
-    'db.names'
+    'db.names',
+    'MessageCenterModule'
   ])
   .run(function($cookieStore, $rootScope, $state, $http, $location, loginService, userService) {
     $rootScope.pageTitle = 'Visitor Management System';
@@ -28,7 +29,7 @@ angular.module('viLoggedClientApp', [
         $state.go('login');
       }
 
-      if(angular.isDefined($state.$current.self.data)){
+      if (angular.isDefined($state.$current.self.data)) {
         $rootScope.pageTitle =
           angular.isDefined($state.$current.self.data.label) ? $state.$current.self.data.label : $rootScope.pageTitle;
       }

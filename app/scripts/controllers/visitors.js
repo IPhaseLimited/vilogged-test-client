@@ -25,7 +25,7 @@ angular.module('viLoggedClientApp')
         data: {
           label: 'Add Visitor'
         },
-        templateUrl: 'views/visitors/form.html',
+        templateUrl: 'views/visitors/widget-form.html',
         controller: 'VisitorFormCtrl'
       })
       .state('edit-visitor-profile', {
@@ -34,7 +34,7 @@ angular.module('viLoggedClientApp')
         data: {
           label: 'Edit Visitor\'s record'
         },
-        templateUrl: 'views/visitors/form.html',
+        templateUrl: 'views/visitors/widget-form.html',
         controller: 'VisitorFormCtrl'
       })
       .state('show-visitor', {
@@ -59,12 +59,15 @@ angular.module('viLoggedClientApp')
       });
   })
   .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, visitorService, validationService, $window,
-                                           countryStateService) {
+                                           countryStateService, guestGroupConstant) {
     $scope.visitors = [];
+    $scope.visitor = {};
     $scope.countryState = {};
     $scope.countries = [];
     $scope.states = [];
     $scope.lgas = [];
+    $scope.visitor.group_type = 'normal';
+    $scope.visitorGroups = guestGroupConstant;
 
     countryStateService.all()
       .then(function(response) {
@@ -139,6 +142,7 @@ angular.module('viLoggedClientApp')
       if (!angular.isDefined($scope.visitor.visitor_pass_code)) {
         $scope.visitor.visitor_pass_code = new Date().getTime();
       }
+
       $scope.validationErrors = validationService.validateFields(validationParams, $scope.visitor);
       if (!Object.keys($scope.validationErrors).length) {
         visitorService.save($scope.visitor)
@@ -163,6 +167,20 @@ angular.module('viLoggedClientApp')
       if ($scope.countryState[country].states[state]) {
         $scope.lgas = $scope.countryState[country].states[state].lga.sort();
       }
+    };
+
+    $scope.getResidentialStates = function(country) {
+      $scope.visitor.visitor_location.residential_state = '';
+      $scope.locationStates = Object.keys($scope.countryState[country].states).sort();
+    };
+
+    $scope.getResidentialLGAS = function(state, country) {
+      $scope.visitor.visitor_location.residential_lga = '';
+      if ($scope.countryState[country].states[state]) {
+        $scope.lgas = $scope.countryState[country].states[state].lga.sort();
+      }
+
+      console.log($scope.lgas)
     };
   })
   .controller('VisitorDetailCtrl', function ($scope, $stateParams, visitorService) {
