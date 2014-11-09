@@ -21,7 +21,26 @@ angular.module('viLoggedClientApp')
         controller: 'LogoutCtrl'
       });
   })
-  .controller('LoginCtrl', function ($scope, $state, loginService) {
+  .controller('LoginCtrl', function ($scope, $state, loginService, visitorService) {
+    $scope.displayVisitorLogin = true;
+
+    $scope.toggleLoginScreen = function() {
+      $scope.displayVisitorLogin = !$scope.displayVisitorLogin;
+    };
+
+    $scope.visitor = {};
+    $scope.visitorLogin = function() {
+      visitorService.findByPassCodeOrPhone($scope.visitor.identity)
+        .then(function(response) {
+          loginService.visitorLogin($scope.visitor);
+          $state.go("show-visitor");
+        })
+        .catch(function(reason) {
+          loginService.visitorLogin($scope.visitor);
+          $state.go("create-visitor-profile");
+        })
+    };
+
     $scope.credentials = {};
     $scope.login = function() {
       loginService.login($scope.credentials)

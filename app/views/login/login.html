@@ -31,56 +31,36 @@
         <div class="widget worange">
           <!-- Widget head -->
           <div class="widget-head">
-            <i class="fa fa-lock"></i> Login
+            <div class="row">
+              <div class="col-md-6">
+                <i class="fa fa-lock"></i> Login
+              </div>
+              <div class="col-md-6">
+                <a class="btn btn-warning btn btn-xs pull-right" ng-click="toggleLoginScreen()"
+                   ng-if="displayVisitorLogin">
+                  <i class="fa"></i> User Login
+                </a>
+                <a class="btn btn-primary btn btn-xs pull-right" ng-click="toggleLoginScreen()"
+                   ng-if="!displayVisitorLogin">
+                  Guest Login
+                </a>
+              </div>
+            </div>
           </div>
 
           <div class="widget-content">
             <div class="padd">
               <!-- Login form -->
 
-                <div class="alert fade in alert alert-danger" style="text-align: center;" ng-show="loginError">
-                  {{ errorMessages }}
-                  <button data-dismiss="alert" class="close" type="button" ng-click="loginError=!loginError">×</button>
-                </div>
+              <div class="alert fade in alert alert-danger" style="text-align: center;" ng-show="loginError">
+                {{ errorMessages }}
+                <button data-dismiss="alert" class="close" type="button" ng-click="loginError=!loginError">×</button>
+              </div>
 
-              <form class="form-horizontal" method="post">
-                <!-- Email -->
-                <div class="form-group">
-                  <label class="control-label col-lg-3" for="username">Username</label>
-                  <div class="col-lg-9">
-                    <input type="text" class="form-control" id="username" placeholder="Username" name="username" ng-model="credentials.username">
-                  </div>
-                </div>
-                <!-- Password -->
-                <div class="form-group">
-                  <label class="control-label col-lg-3" for="inputPassword">Password</label>
-                  <div class="col-lg-9">
-                    <input type="password" class="form-control" id="inputPassword" placeholder="Password" name="password" ng-model="credentials.password">
-                  </div>
-                </div>
-                <!-- Remember me checkbox and sign in button -->
-                <div class="form-group">
-                  <div class="col-lg-9 col-lg-offset-3">
-                    <div class="checkbox">
-                      <label>
-                        <input type="checkbox"> Remember me
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-9 col-lg-offset-3">
-                  <button type="submit" class="btn btn-info btn-sm" ng-click="login()">Sign in</button>
-                  <button type="reset" class="btn btn-default btn-sm">Reset</button>
-                </div>
-                <br />
-
-              </form>
+              <div ng-include="'/views/login/guest-login.html'" ng-if="displayVisitorLogin"></div>
+              <div ng-include="'/views/login/user-login.html'" ng-if="!displayVisitorLogin"></div>
 
             </div>
-          </div>
-
-          <div class="widget-foot">
-            Not Registered? <a ui-sref="user-registration">Register here</a>
           </div>
         </div>
       </div>

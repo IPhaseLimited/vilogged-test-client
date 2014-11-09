@@ -1,0 +1,14 @@
+<form>
+  <div class="form-group">
+    <label for="identity">Phone Number or Pass Code</label>
+
+    <input class="form-control" type="text" name="identity" id="identity"
+             ng-model="visitor.identity" required/>
+  </div>
+
+  <div class="">
+    <button type="submit" class="btn btn-info btn-sm col-sm-6" ng-click="visitorLogin()">Sign in</button>
+    <button type="reset" class="btn btn-danger btn-sm col-sm-6">Reset</button>
+  </div>
+  <div class="clearfix"></div>
+</form>
