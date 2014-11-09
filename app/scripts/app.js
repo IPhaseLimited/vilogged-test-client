@@ -18,7 +18,6 @@ angular.module('viLoggedClientApp', [
                 $interval, storageService) {
     syncService.startReplication();
     $rootScope.syncPromises = {};
-  .run(function($cookieStore, $rootScope, $state, $http, $location, loginService, userService) {
     $rootScope.pageTitle = 'Visitor Management System';
 
     $rootScope.$on('$stateChangeSuccess', function () {
