@@ -8,7 +8,8 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('storageService', function storageService($q, $window, utility, collections, pouchStorageService, couchDbService) {
+  .service('storageService', function storageService($q, $window, utility, collections, pouchStorageService,
+                                                     couchDbService, db) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     /**
@@ -239,16 +240,16 @@ angular.module('viLoggedClientApp')
     };
 
     var setDatabase = function(table, data) {
-      return couchDbService.bulkDocs(table, _batches);
+      return couchDbService.bulkDocs(table, data);
       //return pouchStorageService.bulkDocs(table, data);
     };
 
     var compactDatabases = function() {
       var promises = [];
-      for (var i in collections) {
-        var dbName = collections[i];
-        promises.push(pouchStorageService.compact(dbName));
-      }
+      var dbNames = Object.keys(db);
+      dbNames.forEach(function(key) {
+        promises.push(couchDbService.compact(db[key]));
+      });
       return $q.all(promises);
     };
 
