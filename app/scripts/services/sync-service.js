@@ -9,6 +9,7 @@
  */
 angular.module('viLoggedClientApp')
   .service('syncService', function syncService($q, $http, pouchdb, config, db, $cookieStore) {
+    var dbNames = db;
     // AngularJS will instantiate a singleton by calling "new" on this function
     /*var db = pouchdb.create('visitors');
     db.replicate.to(config.api.localDB+'/visitors', {live: true})
@@ -117,20 +118,20 @@ angular.module('viLoggedClientApp')
     }
 
     function startUpReplication() {
-      (Object.keys(db)).forEach(function(key) {
-        var DB_NAME = db[key];
+      (Object.keys(dbNames)).forEach(function(key) {
+        var DB_NAME = dbNames[key];
         replicateFrom(DB_NAME)
           .then(function() {
             replicateTo(DB_NAME)
               .then(function() {
 
               })
-              .catch(function() {
-
+              .catch(function(reason) {
+                console.log(reason);
               });
           })
           .catch(function(reason) {
-
+            console.log(reason);
           });
       });
     }
