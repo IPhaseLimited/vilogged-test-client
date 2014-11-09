@@ -88,7 +88,7 @@
       <div class="col-sm-6">
         <select class="form-control" name="department" id="department" ng-model="user.user_profile.department">
           <option value=""></option>
-          <option value="{{ department._id }}" ng-repeat="department in departments">{{ department_name }}</option>
+          <option value="{{ department }}" ng-repeat="department in departments">{{ department.department_name }}</option>
         </select>
       </div>
     </div>
