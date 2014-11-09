@@ -1,0 +1,28 @@
+<form method="post">
+  <!-- Email -->
+  <div class="form-group">
+    <label for="username">Username</label>
+
+    <input type="text" class="form-control" id="username" placeholder="Username" name="username"
+           ng-model="credentials.username">
+  </div>
+  <!-- Password -->
+  <div class="form-group">
+    <label for="inputPassword">Password</label>
+
+    <input type="password" class="form-control" id="inputPassword" placeholder="Password"
+           name="password" ng-model="credentials.password">
+  </div>
+  <!-- Remember me checkbox and sign in button -->
+  <div class="checkbox">
+    <label>
+      <input type="checkbox"> Remember me
+    </label>
+  </div>
+  <div>
+    <button type="submit" class="btn btn-info btn-sm col-sm-6" ng-click="login()">Sign in</button>
+    <button type="reset" class="btn btn-danger btn-sm col-sm-6">Reset</button>
+  </div>
+  <br/>
+
+</form>

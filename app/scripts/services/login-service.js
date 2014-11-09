@@ -58,12 +58,20 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     }
 
+    function visitorLogin(credential) {
+      if (credential.identity) {
+        $cookieStore.put('vi-visitor-credential', credential.identity);
+      }
+    }
+
     function logout() {
       $cookieStore.remove('vi-token');
       $cookieStore.remove('no-login');
       $cookieStore.remove('current-user');
+      $cookieStore.remove('vi-visitor-credential');
     }
 
     this.login = login;
+    this.visitorLogin = visitorLogin;
     this.logout = logout;
   });
