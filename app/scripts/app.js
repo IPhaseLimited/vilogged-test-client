@@ -21,12 +21,16 @@ angular.module('viLoggedClientApp', [
     $rootScope.pageTitle = 'Visitor Management System';
 
     $rootScope.$on('$stateChangeSuccess', function () {
-      var syncPromises = Object.keys($rootScope.syncPromises);
-      if (syncPromises.length > 0) {
-        syncPromises.forEach(function(key) {
-          $interval.cancel($rootScope.syncPromises[key]);
-        });
+
+      if ($rootScope) {
+        var syncPromises = Object.keys($rootScope.syncPromises);
+        if (syncPromises.length > 0) {
+          syncPromises.forEach(function(key) {
+            $interval.cancel($rootScope.syncPromises[key]);
+          });
+        }
       }
+
       if (angular.isDefined($location.search().disable_login) && $location.search().disable_login === 'true') {
         $cookieStore.put('no-login', 1);
       }
