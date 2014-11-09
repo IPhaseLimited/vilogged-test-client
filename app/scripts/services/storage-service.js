@@ -10,6 +10,8 @@
 angular.module('viLoggedClientApp')
   .service('storageService', function storageService($q, $window, utility, collections, pouchStorageService,
                                                      couchDbService, db) {
+
+    var dataManagementService = couchDbService;
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     /**
@@ -24,14 +26,14 @@ angular.module('viLoggedClientApp')
       if(!data.hasOwnProperty('uuid')){
         throw 'data should have a uuid or primary key field.';
       }
-      return couchDbService.put(table, data)
+      return dataManagementService.put(table, data)
         .then(function(result) {
           return result.id;
         });
     };
 
     var getData = function(key) {
-      return couchDbService.allDocs(key);
+      return dataManagementService.allDocs(key);
       //return pouchStorageService.allDocs(key);
     };
     /**
@@ -44,7 +46,7 @@ angular.module('viLoggedClientApp')
      * @returns {promise|Function|promise|promise|promise|*}
      */
     var removeRecordFromTable = function(tableName, uuid){
-      return couchDbService.get(tableName, uuid)
+      return dataManagementService.get(tableName, uuid)
         .then(function(doc) {
           return couchDbService.remove(tableName, uuid, doc._rev);
         });
@@ -57,7 +59,7 @@ angular.module('viLoggedClientApp')
      * @returns {*|boolean|Array|Promise|string}
      */
     var removeData = function(key) {
-      return pouchStorageService.destroy(key);
+      return dataManagementService.destroy(key);
     };
 
     /**
@@ -69,7 +71,7 @@ angular.module('viLoggedClientApp')
       var promises = [];
       for(var i in collections){
         var dbName  = collections[i];
-        promises.push(pouchStorageService.destroy(dbName));
+        promises.push(dataManagementService.destroy(dbName));
       }
       return $q.all(promises);
     };
@@ -105,7 +107,7 @@ angular.module('viLoggedClientApp')
         data.modified = utility.getDateTime();
       }
 
-      return couchDbService.get(table, data.uuid)
+      return dataManagementService.get(table, data.uuid)
         .then(function(doc) {
           data._rev = doc._rev;
           return setData(table, data);
@@ -141,7 +143,7 @@ angular.module('viLoggedClientApp')
     var getFromTableByKey = function(table, key) {
       //key = String(key);//force conversion to string
       //return pouchStorageService.get(table, key);
-      return couchDbService.get(table, key);
+      return dataManagementService.get(table, key);
     };
 
     /**
@@ -235,20 +237,18 @@ angular.module('viLoggedClientApp')
       for (var i = batches.length - 1; i >= 0; i--) {
         _batches.push(validateBatch(batches[i]));
       }
-      return couchDbService.bulkDocs(table, _batches);
-      //return pouchStorageService.bulkDocs(table, _batches);
+      return dataManagementService.bulkDocs(table, _batches);
     };
 
     var setDatabase = function(table, data) {
-      return couchDbService.bulkDocs(table, data);
-      //return pouchStorageService.bulkDocs(table, data);
+      return dataManagementService.bulkDocs(table, data);
     };
 
     var compactDatabases = function() {
       var promises = [];
       var dbNames = Object.keys(db);
       dbNames.forEach(function(key) {
-        promises.push(couchDbService.compact(db[key]));
+        promises.push(dataManagementService.compact(db[key]));
       });
       return $q.all(promises);
     };
@@ -257,7 +257,7 @@ angular.module('viLoggedClientApp')
       var promises = [];
       for (var i in collections) {
         var dbName = collections[i];
-        promises.push(pouchStorageService.viewCleanup(dbName));
+        promises.push(dataManagementService.viewCleanup(dbName));
       }
       return $q.all(promises);
     };
