@@ -1,20 +1,20 @@
 'use strict';
 
 angular.module('viLoggedClientApp', [
-  'ui.bootstrap',
-  'ui.router',
-  'ui.select',
-  'pouchdb',
-  'config',
-  'nvd3ChartDirectives',
-  'angular-growl',
-  'ngAnimate',
-  'ngCookies',
-  'db',
-  'db.names',
-  'MessageCenterModule'
-])
-  .run(function ($cookieStore, $rootScope, $state, $http, $location, loginService, userService, storageService) {
+    'ui.bootstrap',
+    'ui.router',
+    'ui.select',
+    'pouchdb',
+    'config',
+    'nvd3ChartDirectives',
+    'angular-growl',
+    'ngAnimate',
+    'ngCookies',
+    'db',
+    'db.names',
+    'MessageCenterModule'
+  ])
+  .run(function($cookieStore, $rootScope, $state, $http, $location, loginService, userService) {
     $rootScope.pageTitle = 'Visitor Management System';
     $rootScope.$on('$stateChangeSuccess', function () {
       if (angular.isDefined($location.search().disable_login) && $location.search().disable_login === 'true') {
@@ -25,7 +25,9 @@ angular.module('viLoggedClientApp', [
         $cookieStore.put('no-login', 0);
       }
 
-      if (!$cookieStore.get('vi-token') && ($cookieStore.get('no-login') === 0 || $cookieStore.get('no-login') === undefined)) {
+      var userLoginStatus =
+        !$cookieStore.get('vi-token') && ($cookieStore.get('no-login') === 0 || $cookieStore.get('no-login') === undefined);
+      if (userLoginStatus && !$cookieStore.get('vi-visitor-credential')) {
         $state.go('login');
       }
 
@@ -43,12 +45,12 @@ angular.module('viLoggedClientApp', [
       }
     });
   })
-  .config(function ($httpProvider) {
+  .config(function($httpProvider) {
     $httpProvider.interceptors.push([
       '$cookieStore',
-      function ($cookieStore) {
+      function($cookieStore) {
         return {
-          'request': function (config) {
+          'request': function(config) {
             if ($cookieStore.get('vi-token')) {
               $httpProvider.defaults.headers.common['Authorization'] = 'Token ' + $cookieStore.get('vi-token');
             }
@@ -58,15 +60,15 @@ angular.module('viLoggedClientApp', [
       }
     ]);
   })
-  .config(function ($compileProvider) {
+  .config(function($compileProvider) {
     // to bypass Chrome app CSP for images.
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(chrome-extension):/);
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file|blob):|data:image\//);
   })
-  .config(function (uiSelectConfig) {
-    uiSelectConfig.theme = 'bootstrap';
-  })
-  .config(function (growlProvider) {
+  .config(function(uiSelectConfig) {
+      uiSelectConfig.theme = 'bootstrap';
+    })
+  .config(function(growlProvider) {
     growlProvider.globalTimeToLive({
       success: 5000,
       error: 5000,
