@@ -1,48 +1,4 @@
 'use strict';
-
-function formController($scope, $state, companyEntranceService, $stateParams, $modalInstance, _id, validationService) {
-  var id = angular.isDefined(_id) ? _id : $stateParams.id;
-  $scope.companyEntrance = {};
-  if (angular.isDefined($modalInstance)) {
-    $scope.dismiss = $modalInstance.dismiss;
-  }
-
-  if (id !== undefined && id !== null) {
-    companyEntranceService.get(id)
-      .then(function(response) {
-        $scope.companyEntrance = response;
-        console.log(response);
-      })
-      .catch(function(reason) {
-        console.error(reason)
-      });
-  }
-
-  $scope.save = function() {
-
-    var validationParams = {
-      entrance_name: validationService.BASIC
-    };
-    $scope.validationErrors = validationService.validateFields(validationParams, $scope.companyDepartments);
-    if (Object.keys( $scope.validationErrors).length === 0) {
-      companyEntranceService.save($scope.companyDepartments)
-        .then(function () {
-          if (angular.isDefined($modalInstance)) {
-            $modalInstance.close(true);
-          } else {
-            $state.go('company-departments');
-          }
-        })
-        .catch(function (reason) {
-          if (angular.isDefined($modalInstance)) {
-            $modalInstance.close(true);
-          }
-          console.log(reason);
-        });
-    }
-  }
-}
-
 angular.module('viLoggedClientApp')
   .config(function($stateProvider){
     $stateProvider
