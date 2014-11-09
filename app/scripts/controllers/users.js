@@ -120,6 +120,7 @@ angular.module('viLoggedClientApp')
   .controller('UserFormCtrl', function ($scope, $state, $stateParams, userService, companyDepartmentsService) {
     $scope.currentUser = userService.user;
     $scope.user = {};
+    $scope.user.user_profile = {};
 
     if ($stateParams.user_id) {
       userService.get($stateParams.user_id)
@@ -150,6 +151,9 @@ angular.module('viLoggedClientApp')
       }
 
       //TODO:: flash messages
+      if (toString.call($scope.user.user_profile.department) === '[object String]') {
+        $scope.user.user_profile.department = JSON.parse($scope.user.user_profile.department);
+      }
       userService.save($scope.user)
         .then(function () {
           console.log('here');
