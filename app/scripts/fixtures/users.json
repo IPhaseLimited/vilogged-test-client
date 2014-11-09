@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "username": "admin",
+    "email": "admin@ekonzult.com",
+    "first_name": "System",
+    "last_name": "Administrator",
+    "is_staff": true,
+    "is_active": true,
+    "is_superuser": true,
+    "user_profile": {
+      "user_id": 1,
+      "phone": "080678765989871",
+      "home_phone": "",
+      "work_phone": "",
+      "department": null,
+      "id": 1
+    }
+  },
+  {
+    "id": 2,
+    "username": "sam",
+    "email": "sam@ekonzult.com",
+    "first_name": "Samson",
+    "last_name": "Quaye",
+    "is_staff": true,
+    "is_active": true,
+    "is_superuser": false,
+    "user_profile": {
+      "user_id": 2,
+      "phone": "080678765989872",
+      "home_phone": "",
+      "work_phone": "",
+      "department": null,
+      "id": 2
+    }
+  },
+  {
+    "id": 3,
+    "username": "musa",
+    "email": "musa@ekonzult.com",
+    "first_name": "Musa",
+    "last_name": "Musa",
+    "is_staff": true,
+    "is_active": true,
+    "is_superuser": false,
+    "user_profile": {
+      "user_id": 3,
+      "phone": "080678765989873",
+      "home_phone": "",
+      "work_phone": "",
+      "department": null,
+      "id": 3
+    }
+  },
+  {
+    "id": 4,
+    "username": "ese",
+    "email": "ese@ekonzult.com4",
+    "first_name": "Ese",
+    "last_name": "Shakarho",
+    "is_staff": true,
+    "is_active": true,
+    "is_superuser": false,
+    "user_profile": {
+      "user_id": 4,
+      "phone": "080678765989874",
+      "home_phone": "",
+      "work_phone": "",
+      "department": null,
+      "id": 4
+    }
+  }
+]

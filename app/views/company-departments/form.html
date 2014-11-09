@@ -1,0 +1,20 @@
+<div>
+  <form name="departmentForm" novalidate>
+    <div class="form-group" >
+      <label for="department_name">Department Name</label> <span class="text-danger bold">*</span>
+      <input id="department_name" class="form-control" ng-model="companyDepartments.department_name" required>
+      <div class="text-danger bold" ng-show="(validationErrors).department_name.length">
+        <ul ng-repeat="error in (validationErrors).department_name">
+          <li>{{ error }}</li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="form-group">
+      <label for="description">Description</label>
+      <input id="description" class="form-control" ng-model="companyDepartments.description">
+    </div>
+
+    <button class="btn btn-primary" ng-click="save()">Save</button>
+  </form>
+</div>

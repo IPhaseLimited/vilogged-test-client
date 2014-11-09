@@ -1,0 +1,59 @@
+<a id="top"></a>
+<div growl></div>
+<div ui-view="header"></div>
+<div class="content">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-dropdown"><a href="#">Navigation</a></div>
+
+    <!--- Sidebar navigation -->
+    <!-- If the main navigation has sub navigation, then add the class "has_sub" to "li" of main navigation. -->
+    <div ui-view="sidebar"></div>
+  </div>
+
+  <!-- Sidebar ends -->
+
+  <!-- Main bar -->
+  <div class="mainbar">
+
+    <!-- Page heading -->
+    <div class="page-head">
+      <h2 class="pull-left"><i class="fa fa-home"></i> Dashboard</h2>
+
+      <!-- Breadcrumb -->
+     <div ui-view="breadcrumbs"></div>
+
+      <div class="clearfix"></div>
+
+    </div>
+    <!-- Page heading ends -->
+
+
+    <!-- Matter -->
+
+    <div class="matter">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+
+            <div ui-view="content">
+              <div ui-view></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Matter ends -->
+
+  </div>
+
+  <!-- Mainbar ends -->
+  <div class="clearfix"></div>
+
+</div>
+<div ui-view="footer"></div>
+
+

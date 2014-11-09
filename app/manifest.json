@@ -1,0 +1,35 @@
+{
+  "name": "viLoggedClient",
+  "description": "Visitor Management System",
+  "version": "0.1.0",
+  "manifest_version": 2,
+  "permissions": [
+    {
+      "fileSystem": [
+        "write",
+        "retainEntries",
+        "directory"
+      ]
+    },
+    "fullscreen",
+    "geolocation",
+    "storage",
+    "unlimitedStorage",
+    "http://localhost/*",
+    "https://www.google-analytics.com/*"
+  ],
+  "icons": {
+    "16": "images/icon-16.png",
+    "128": "images/icon-128.png"
+  },
+  "app": {
+    "background": {
+      "scripts": [
+        "scripts/main.js",
+        "scripts/chromereload.js"
+      ]
+    }
+  },
+  "default_locale": "en",
+  "author": "Musa Musa"
+}

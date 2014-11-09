@@ -1,0 +1,200 @@
+<div class="row">
+  <div class="col-sm-6">
+    <div class="widget">
+      <div class="widget-head">
+        <div class="pull-left">User Account</div>
+        <div class="widget-icons pull-right">
+          <a class="btn btn-primary btn-xs" ui-sref="editUser({user_id: user.id})"><i class="fa fa-edit"></i> Edit</a>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="widget-content">
+        <div class="padd">
+          <div class="row">
+            <div class="col-sm-8">
+              <table class="table-condensed table">
+                <tr>
+                  <th>Name</th>
+                  <td>{{ currentUser.first_name + ' ' + currentUser.last_name }}</td>
+                </tr>
+                <tr>
+                  <th>Email</th>
+                  <td ng-if="currentUser.email">
+                    {{ currentUser.email }}
+                  </td>
+                  <td ng-if="!currentUser.email"> Nil</td>
+                </tr>
+                <tr>
+                  <th>Phone</th>
+                  <td ng-if="currentUser.user_profile.phone">
+                    {{ currentUser.user_profile.phone }}
+                  </td>
+                  <td ng-if="!currentUser.user_profile.phone"> Nil</td>
+                </tr>
+                <tr>
+                  <th>Home Phone</th>
+                  <td ng-if="currentUser.user_profile.home_phone">
+                    {{ currentUser.user_profile.home_phone }}
+                  </td>
+                  <td ng-if="!currentUser.user_profile.home_phone"> Nil</td>
+                </tr>
+                <tr>
+                  <th>Office Phone</th>
+                  <td ng-if="currentUser.user_profile.work_phone">
+                    {{ currentUser.user_profile.work_phone }}
+                  </td>
+                  <td ng-if="!currentUser.user_profile.work_phone"> Nil</td>
+                </tr>
+              </table>
+            </div>
+            <div class="col-sm-4">
+              <img ng-if="((appointment).visitor).image !== undefined" ng-src="{{ appointment.visitor.image }}" alt=""
+                   class="img-responsive"/>
+              <img ng-if="!((appointment).visitor).image" src="img/place_holderjpg" alt=""
+                   class="img-responsive"/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="widget-foot">
+        <!-- Footer goes here -->
+      </div>
+    </div>
+  </div>
+
+  <!--  reports Summary starts here -->
+  <div class="col-sm-6">
+    <div class="widget">
+      <div class="widget-head">
+        <div class="pull-left">Appointment Statistics</div>
+        <div class="widget-icons pull-right">
+
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="widget-content">
+        <div class="padd">
+          <table class="table table-condensed table-responsive">
+            <tr>
+              <th class="col-sm-8">Number of Unattended Appointments</th>
+              <td class="col-sm-4" ng-if="appointmentsAwaitingApprovalCount ">
+                {{ appointmentsAwaitingApprovalCount | number }}
+              </td>
+              <td class="col-sm-4" ng-if="!appointmentsAwaitingApprovalCount ">0</td>
+            </tr>
+            <tr>
+              <th class="col-sm-8">Number of Upcoming Appointments</th>
+              <td class="col-sm-4" ng-if="upcomingAppointmentCount ">{{ upcomingAppointmentCount | number }}</td>
+              <td class="col-sm-4" ng-if="!upcomingAppointmentCount ">0</td>
+            </tr>
+            <tr class="text-danger">
+              <th class="col-sm-8">Total Number of Appointments</th>
+              <td class="col-sm-4" ng-if="numberOfAppointments">{{ numberOfAppointments | number }}</td>
+              <td class="col-sm-4" ng-if="!numberOfAppointments">0</td>
+            </tr>
+          </table>
+        </div>
+        <div class="widget-foot">
+          <!-- Footer goes here -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--report summary ends here-->
+</div>
+
+<div class="row">
+  <!--Upcoming appointments start here-->
+  <div class="col-sm-6">
+    <div class="widget">
+      <div class="widget-head">
+        <div class="pull-left">Upcoming Appointments</div>
+        <div class="widget-icons pull-right">
+
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="widget-content">
+        <div class="padd">
+          <div class="alert alert-info" ng-if="!upcomingAppointmentCount">
+            <p>You have no upcoming appointments</p>
+          </div>
+        </div>
+
+        <table class="table table-condensed table-bordered" ng-if="upcomingAppointmentCount">
+          <thead>
+          <tr>
+            <th>S/N</th>
+            <th>Visitor Name</th>
+            <th>Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="appointment in upcomingAppointments | limitTo:5">
+            <td>{{ $index+1 }}</td>
+            <td>{{ appointment.visitor.first_name + " " + appointment.visitor.last_name }}</td>
+            <td>{{ appointment.appointment_date | date: 'EEE, MMM d, y' }}</td>
+            <td>{{ appointment.visit_start_time }}</td>
+            <td>{{ appointment.visit_end_time }}</td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="widget-foot">
+          <!-- Footer goes here -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--upcoming appointment end here-->
+
+  <!--awaiting approval list starts here-->
+  <div class="col-sm-6">
+    <div class="widget">
+      <div class="widget-head">
+        <div class="pull-left">Awaiting Approval List</div>
+        <div class="widget-icons pull-right">
+
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="widget-content">
+        <div class="padd">
+          <div class="widget-content">
+            <div class="padd">
+              <div class="alert alert-info" ng-if="!appointmentsAwaitingApprovalCount">
+                <p>You have no appointment awaiting your approval</p>
+              </div>
+            </div>
+
+            <table class="table table-condensed table-bordered" ng-if="appointmentsAwaitingApprovalCount">
+              <thead>
+              <tr>
+                <th>S/N</th>
+                <th>Visitor Name</th>
+                <th>Date</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="appointment in appointmentsAwaitingApproval | limitTo: 5 | orderBy: appointment_date">
+                <td>{{ $index+1 }}</td>
+                <td>{{ appointment.visitor.first_name + " " + appointment.visitor.last_name }}</td>
+                <td>{{ appointment.appointment_date | date: 'EEE, MMM d, y' }}</td>
+                <td>{{ appointment.visit_start_time }}</td>
+                <td>{{ appointment.visit_end_time }}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="widget-foot">
+            <!-- Footer goes here -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--awaiting approval list end here-->
+  </div>
+</div>
