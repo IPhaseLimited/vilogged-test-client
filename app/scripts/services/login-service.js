@@ -8,7 +8,7 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('loginService', function loginService($q, userService, $cookieStore, $http, config, $rootScope) {
+  .service('loginService', function loginService($q, $cookieStore, $http, $rootScope, userService, config, visitorService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     function login(credentials) {
@@ -59,9 +59,30 @@ angular.module('viLoggedClientApp')
     }
 
     function visitorLogin(credential) {
+      var ERROR_MESSAGE = 'Phone number or passcode didn\'t match. Please try again or create a visitor account.';
+      var deferred = $q.defer();
+      var loginResponse = {
+        loginMessage: {},
+        loginRawResponse: {},
+        status: ''
+      };
       if (credential.identity) {
-        $cookieStore.put('vi-visitor-credential', credential.identity);
+        visitorService.findByPassCodeOrPhone(credential.identity)
+          .then(function (response) {
+            loginResponse.status = 200;
+            loginResponse.loginMessage = 'Login was successful';
+            loginResponse.loginRawResponse = response;
+            $cookieStore.put('vi-visitor-credential', response);
+            deferred.resolve(loginResponse);
+          })
+          .catch(function (reason) {
+            loginResponse.status = 401;
+            loginResponse.loginMessage = ERROR_MESSAGE;
+            deferred.reject(loginResponse);
+          })
       }
+
+      return deferred.promise;
     }
 
     function logout() {
