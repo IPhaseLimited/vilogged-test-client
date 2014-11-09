@@ -17,8 +17,9 @@ angular.module('viLoggedClientApp')
         'controller': 'SettingFormCtrl'
       })
   })
-  .controller('SettingFormCtrl', function ($scope) {
-    $scope.currentPage = 'server setting';
+  .controller('SettingFormCtrl', function ($scope, utility) {
+    $scope.currentPage = 'server-setting';
+    $scope.pageTile = utility.toTitleCase('Server Setting');
     $scope.currentPageTemplateUrl = '/views/settings/server-setting.html';
 
     $scope.settings = {
@@ -29,20 +30,23 @@ angular.module('viLoggedClientApp')
 
     $scope.setCurrentPage = function(page) {
       switch (page) {
-        case 'server setting':
-              $scope.currentPage = 'server setting';
+        case 'server-setting':
+              $scope.currentPage = 'server-setting';
               $scope.currentPageTemplateUrl = '/views/settings/server-setting.html';
               break;
-        case 'database setting':
-              $scope.currentPage = 'database setting';
+        case 'database-setting':
+              $scope.currentPage = 'database-setting';
+              $scope.pageTile = utility.toTitleCase('database setting');
               $scope.currentPageTemplateUrl = '/views/settings/database-setting.html';
               break;
-        case 'system setting':
-              $scope.currentPage = 'system setting';
+        case 'system-setting':
+              $scope.currentPage = 'system-setting';
+              $scope.pageTile = utility.toTitleCase('system setting');
               $scope.currentPageTemplateUrl = '/views/settings/system-setting.html';
               break;
         default:
-              $scope.currentPage = 'server setting';
+              $scope.currentPage = 'server-setting';
+              $scope.pageTile = utility.toTitleCase('server setting');
               $scope.currentPageTemplateUrl = '/views/settings/server-setting.html';
               break;
       }
