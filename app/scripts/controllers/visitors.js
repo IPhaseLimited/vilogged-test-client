@@ -213,7 +213,6 @@ angular.module('viLoggedClientApp')
       .then(function (response) {
         console.log(response);
         $scope.visitor = response;
-        $scope.title = $scope.visitor.firstName + ' ' + $scope.visitor.lastName + '\'s Detail';
       })
       .catch(function (reason) {
         console.log(reason);
