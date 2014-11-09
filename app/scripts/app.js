@@ -11,7 +11,8 @@ angular.module('viLoggedClientApp', [
     'ngAnimate',
     'ngCookies',
     'db',
-    'db.names'
+    'db.names',
+    'ngResource'
   ])
   .run(function($cookieStore, $rootScope, $state, $http, $location, loginService, userService, syncService, $interval) {
     syncService.startReplication();
