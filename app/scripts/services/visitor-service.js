@@ -59,7 +59,12 @@ angular.module('viLoggedClientApp')
           var filtered = response.filter(function (row) {
             return (String(row.visitor_pass_code) === String(value)) || (String(row.visitor_phone) === String(value));
           });
-          !filtered.length ? deferred.reject(filtered) : deferred.resolve(filtered);
+
+          if (filtered.length > 0) {
+            deferred.resolve(filtered[0]);
+          } else {
+            deferred.reject(filtered);
+          }
         })
         .catch(function(reason) {
           deferred.reject(reason);
