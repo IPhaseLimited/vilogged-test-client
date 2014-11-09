@@ -35,7 +35,7 @@ angular.module('viLoggedClientApp')
         update: false,
         lastSeq: lastSeq
       };
-      $http.get(config.api.couchDB+'/'+db+'/_changes?since='+lastSeq)
+      $http.get(config.api.localDB+'/'+db+'/_changes?since='+lastSeq)
         .success(function(response) {
           if (response.last_seq > lastSeq) {
             $cookieStore.put(db, response.last_seq);
@@ -57,8 +57,8 @@ angular.module('viLoggedClientApp')
       var syncParams = {
         continuous: true,
         create_target: true,
-        source: config.api.couchDB+'/'+db,
-        target: db
+        target: config.api.couchDB+'/'+db,
+        source: db
       };
       $http.post(config.api.localDB+'/_replicate', syncParams)
         .success(function(response) {
@@ -87,8 +87,8 @@ angular.module('viLoggedClientApp')
       var syncParams = {
         continuous: true,
         create_target: true,
-        target: config.api.couchDB+'/'+db,
-        source: db
+        source: config.api.couchDB+'/'+db,
+        target: db
       };
       $http.post(config.api.localDB+'/_replicate', syncParams)
         .success(function(response) {
@@ -121,7 +121,13 @@ angular.module('viLoggedClientApp')
         var DB_NAME = db[key];
         replicateFrom(DB_NAME)
           .then(function() {
+            replicateTo(DB_NAME)
+              .then(function() {
 
+              })
+              .catch(function() {
+
+              });
           })
           .catch(function(reason) {
 
