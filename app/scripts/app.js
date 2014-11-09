@@ -14,7 +14,8 @@ angular.module('viLoggedClientApp', [
     'db.names',
     'ngResource'
   ])
-  .run(function($cookieStore, $rootScope, $state, $http, $location, loginService, userService, syncService, $interval) {
+  .run(function($cookieStore, $rootScope, $state, $http, $location, loginService, userService, syncService,
+                $interval, storageService) {
     syncService.startReplication();
     $rootScope.syncPromises = {};
     $rootScope.pageTitle = 'Visitor Management System';
@@ -51,6 +52,15 @@ angular.module('viLoggedClientApp', [
         loginService.logout();
       }
     });
+    $interval(function(){
+      storageService.compactDatabases()
+        .then(function(response) {
+          console.log(response);
+        })
+        .catch(function(reason) {
+          console.log(reason);
+        });
+    }, 1000000);
   })
   .config(function($httpProvider) {
     $httpProvider.interceptors.push([
