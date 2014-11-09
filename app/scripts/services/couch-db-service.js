@@ -36,22 +36,18 @@ angular.module('viLoggedClientApp')
     };
 
     this.destroy = function(db) {
-      db = pouchdb.create(db);
-      return db.destroy();
+      return couchDbFactory.deleteDB({_db: db}).$promise
+        .then(function() {
+          return couchDbFactory.createDB({_db: db});
+        });
     };
 
     this.bulkDocs = function(db, docs) {
       return couchDbFactory.bulkDocs({_db: db}, {docs: docs}).$promise;
     };
 
-    this.getRemoteDB = function(dbName){
-      var REMOTE_URI = [config.api.url, '/', dbName].join('');
-      return pouchdb.create(REMOTE_URI);
-    };
-
     this.compact = function(db){
-      db = pouchdb.create(db);
-      return db.compact();
+      return couchDbFactory.compact({_db: db, _action: '_compact'}).$promise;
     };
 
     this.viewCleanup = function(db){
