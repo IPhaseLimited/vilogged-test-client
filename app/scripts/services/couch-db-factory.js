@@ -41,6 +41,13 @@ angular.module('viLoggedClientApp')
           method: 'DELETE',
           withCredentials: true
         },
+        compact: {
+          method: 'POST',
+          withCredentials: true,
+          params: {
+            _action: '_compact'
+          }
+        },
         view: {
           method: 'GET',
           withCredentials: true,
