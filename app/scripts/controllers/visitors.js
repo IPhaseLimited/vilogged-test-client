@@ -13,9 +13,6 @@ angular.module('viLoggedClientApp')
       .state('visitors', {
         parent: 'root.index',
         url: '/visitors',
-        data: {
-          label: 'Visitors List'
-        },
         templateUrl: 'views/visitors/index.html',
         controller: 'VisitorsCtrl'
       })
@@ -39,9 +36,6 @@ angular.module('viLoggedClientApp')
       .state('show-visitor', {
         parent: 'root.index',
         url: '/visitors/:visitor_id',
-        data: {
-          label: 'Visitor\'s Detail'
-        },
         templateUrl: 'views/visitors/detail.html',
         controller: 'VisitorDetailCtrl'
       })
