@@ -1,6 +1,93 @@
+<div class="row">
+  <div class="col-sm-6">
+    <div class="widget">
+      <div class="widget-head">
+        <div class="pull-left">My Profile</div>
+        <div class="widget-icons pull-right">
+
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="widget-content">
+        <div class="padd">
+          <div class="row">
+            <div class="col-sm-8">
+              <div class="row">
+                <div class="col-sm-6">Pass Code</div>
+                <div class="col-sm-6">{{ visitor.visitor_pass_code }}</div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">First Name</div>
+                <div class="col-sm-6">{{ visitor.first_name }}</div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">Last Name</div>
+                <div class="col-sm-6">{{ visitor.last_name }}</div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">Visitor Phone</div>
+                <div class="col-sm-6">{{ visitor.visitor_phone }}</div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">Email</div>
+                <div class="col-sm-6">{{ visitor.visitor_email }}</div>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <img src="{{ visitor.image }}" alt="" class="img-thumbnail img-responsive"/>
+            </div>
+          </div>
+        </div>
+        <div class="widget-foot">
+          <!-- Footer goes here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6">
+    <div class="widget">
+      <div class="widget-head">
+        <div class="pull-left">Upcoming Appointments</div>
+        <div class="widget-icons pull-right">
+
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="widget-content">
+        <div class="padd">
+          <table class="table table-condensed table-responsive table-bordered">
+            <thead>
+            <tr>
+              <th>S/N</th>
+              <th>Date of Appointment</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="widget-foot">
+          <!-- Footer goes here -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="widget">
   <div class="widget-head">
-    <div class="pull-left">{{ title }}</div>
+    <div class="pull-left">Appointment Histories</div>
     <div class="widget-icons pull-right">
 
     </div>
@@ -8,27 +95,7 @@
   </div>
   <div class="widget-content">
     <div class="padd">
-      <div class="row">
-        <div class="col-sm-8">
-          <table class="table table-condensed table-responsive">
-            <tr>
-              <th>Name</th>
-              <td>{{ visitor.first_name + ' ' + visitor.last_name }}</td>
-            </tr>
-            <tr>
-              <th></th>
-              <td></td>
-            </tr>
-            <tr>
-              <th></th>
-              <td></td>
-            </tr>
-          </table>
-        </div>
-        <div class="col-sm-4">
-          <img ng-src="{{visitor.image}}" alt="" height="250"/>
-        </div>
-      </div>
+
     </div>
     <div class="widget-foot">
       <!-- Footer goes here -->
