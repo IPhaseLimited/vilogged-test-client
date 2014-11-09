@@ -22,18 +22,17 @@ angular.module('viLoggedClientApp')
       .state('create-visitor-profile', {
         parent: 'root.index',
         url: '/visitors/add',
-        data: {
-          label: 'Add Visitor'
-        },
+        templateUrl: 'views/visitors/widget-form.html',
+        controller: 'VisitorFormCtrl'
+      })
+      .state('visitor-registration', {
+        url: '/visitors/register',
         templateUrl: 'views/visitors/widget-form.html',
         controller: 'VisitorFormCtrl'
       })
       .state('edit-visitor-profile', {
         parent: 'root.index',
         url: '/visitors/:visitor_id/edit',
-        data: {
-          label: 'Edit Visitor\'s record'
-        },
         templateUrl: 'views/visitors/widget-form.html',
         controller: 'VisitorFormCtrl'
       })
@@ -148,7 +147,12 @@ angular.module('viLoggedClientApp')
         visitorService.save($scope.visitor)
           .then(function () {
             $scope.visitor = angular.copy($scope.default);
-            $state.go('visitors')
+            if (angular.isObject(userService.user)) {
+              $state.go('visitors');
+            } else {
+              loginService.visitorLogin($scope.visitor);
+              $state.go('show-visitor({})');
+            }
           })
           .catch(function (reason) {
             console.log(reason);
