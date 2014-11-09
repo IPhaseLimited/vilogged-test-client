@@ -83,15 +83,14 @@ angular.module('viLoggedClientApp')
         console.log(reason);
       });
   })
-  .controller('UsersCtrl', function ($scope, userService, messageCenterService) {
+  .controller('UsersCtrl', function ($scope, userService) {
     function getUsers() {
       userService.all()
         .then(function (response) {
           $scope.users = response;
         })
         .catch(function (reason) {
-          messageCenterService.add('danger', 'An error occurred while loading users.',
-            {status: messageCenterService.status.permanent});
+
         });
     }
 
@@ -101,8 +100,6 @@ angular.module('viLoggedClientApp')
       userService.toggleUserActivationStatus(id)
         .then(function (response) {
           getUsers();
-          messageCenterService.add('success', 'User account activated successfully.',
-            {status: messageCenterService.status.permanent});
         });
     };
 
