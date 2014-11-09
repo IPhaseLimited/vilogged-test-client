@@ -8,7 +8,7 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('storageService', function storageService($q, $window, utility, collections, pouchStorageService) {
+  .service('storageService', function storageService($q, $window, utility, collections, pouchStorageService, couchDbService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     /**
@@ -23,14 +23,15 @@ angular.module('viLoggedClientApp')
       if(!data.hasOwnProperty('uuid')){
         throw 'data should have a uuid or primary key field.';
       }
-      return pouchStorageService.put(table, data)
+      return couchDbService.put(table, data)
         .then(function(result) {
           return result.id;
         });
     };
 
     var getData = function(key) {
-      return pouchStorageService.allDocs(key);
+      return couchDbService.allDocs(key);
+      //return pouchStorageService.allDocs(key);
     };
     /**
      * This function removes a given record with the given uuid from the given
@@ -42,9 +43,9 @@ angular.module('viLoggedClientApp')
      * @returns {promise|Function|promise|promise|promise|*}
      */
     var removeRecordFromTable = function(tableName, uuid){
-      return pouchStorageService.get(tableName, uuid)
+      return couchDbService.get(tableName, uuid)
         .then(function(doc) {
-          return pouchStorageService.remove(tableName, uuid, doc._rev);
+          return couchDbService.remove(tableName, uuid, doc._rev);
         });
     };
 
@@ -103,7 +104,7 @@ angular.module('viLoggedClientApp')
         data.modified = utility.getDateTime();
       }
 
-      return pouchStorageService.get(table, data.uuid)
+      return couchDbService.get(table, data.uuid)
         .then(function(doc) {
           data._rev = doc._rev;
           return setData(table, data);
@@ -137,8 +138,9 @@ angular.module('viLoggedClientApp')
     };
 
     var getFromTableByKey = function(table, key) {
-      key = String(key);//force conversion to string
-      return pouchStorageService.get(table, key);
+      //key = String(key);//force conversion to string
+      //return pouchStorageService.get(table, key);
+      return couchDbService.get(table, key);
     };
 
     /**
@@ -203,7 +205,7 @@ angular.module('viLoggedClientApp')
            .filter(function(row) {
               return String(row[field]) === value;
            });
-           
+
            deferred.resolve(filtered);
         })
         .catch(function(reason) {
@@ -232,12 +234,13 @@ angular.module('viLoggedClientApp')
       for (var i = batches.length - 1; i >= 0; i--) {
         _batches.push(validateBatch(batches[i]));
       }
-
-      return pouchStorageService.bulkDocs(table, _batches);
+      return couchDbService.bulkDocs(table, _batches);
+      //return pouchStorageService.bulkDocs(table, _batches);
     };
 
     var setDatabase = function(table, data) {
-      return pouchStorageService.bulkDocs(table, data);
+      return couchDbService.bulkDocs(table, _batches);
+      //return pouchStorageService.bulkDocs(table, data);
     };
 
     var compactDatabases = function() {
