@@ -35,7 +35,9 @@ angular.module('viLoggedClientApp', [
         $cookieStore.put('no-login', 0);
       }
 
-      if (!$cookieStore.get('vi-token') && ($cookieStore.get('no-login') === 0 || $cookieStore.get('no-login') === undefined)) {
+      var userLoginStatus =
+        !$cookieStore.get('vi-token') && ($cookieStore.get('no-login') === 0 || $cookieStore.get('no-login') === undefined);
+      if (userLoginStatus && !$cookieStore.get('vi-visitor-credential')) {
         $state.go('login');
       }
 

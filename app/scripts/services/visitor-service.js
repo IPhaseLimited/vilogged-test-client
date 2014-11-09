@@ -52,6 +52,22 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     };
 
+    this.findByPassCodeOrPhone = function (value) {
+      var deferred = $q.defer();
+      getAllVisitors()
+        .then(function (response) {
+          var filtered = response.filter(function (row) {
+            return (String(row.visitor_pass_code) === String(value)) || (String(row.visitor_phone) === String(value));
+          });
+          !filtered.length ? deferred.reject(filtered) : deferred.resolve(filtered);
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
+        });
+
+      return deferred.promise;
+    };
+
     this.all = getAllVisitors;
     this.changes = getChanges;
     this.DBNAME = DB_NAME;
