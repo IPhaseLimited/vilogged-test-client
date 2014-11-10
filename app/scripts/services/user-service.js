@@ -118,7 +118,7 @@ angular.module('viLoggedClientApp')
           deferred.reject(reason);
         });
       return deferred.promise
-    }
+    };
 
     this.all = getAllUsers;
     this.get = getUser;
@@ -127,5 +127,4 @@ angular.module('viLoggedClientApp')
     this.user = $cookieStore.get('current-user');
     this.toggleUserActivationStatus = toggleUserAccountActive;
     this.remove = removeUser;
-  })
-;
+  });
