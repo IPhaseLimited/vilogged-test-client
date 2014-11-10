@@ -39,9 +39,18 @@ angular.module('viLoggedClientApp', [
         $cookieStore.put('no-login', 0);
       }
 
+      if ($state.$current.name === 'visitor-registration') {
+        loginService.anonymousLogin()
+      }
+
       var userLoginStatus =
         !$cookieStore.get('vi-token') && ($cookieStore.get('no-login') === 0 || $cookieStore.get('no-login') === undefined);
-      if (userLoginStatus && !$cookieStore.get('vi-visitor-credential')) {
+      if (userLoginStatus && !$cookieStore.get('vi-visitor-credential') && !$cookieStore.get('vi-anonymous-token')) {
+        $state.go('login');
+      }
+
+      if ($cookieStore.get('vi-anonymous-token') && $state.$current.name !== 'visitor-registration') {
+        loginService.logout();
         $state.go('login');
       }
 
@@ -49,11 +58,13 @@ angular.module('viLoggedClientApp', [
         $rootScope.pageTitle =
           angular.isDefined($state.$current.self.data.label) ? $state.$current.self.data.label : $rootScope.pageTitle;
       }
+
       if (angular.isDefined(userService.user)) {
         $rootScope.user = userService.user;
       } else {
         $rootScope = $cookieStore.get('current-user');
       }
+
       if ($state.$current.name === 'login') {
         loginService.logout();
       }
