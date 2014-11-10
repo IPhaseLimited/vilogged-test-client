@@ -12,6 +12,7 @@ angular.module('viLoggedClientApp', [
     'ngCookies',
     'db',
     'db.names',
+    'webcam',
     'ngResource'
   ])
   .run(function($cookieStore, $rootScope, $state, $http, $location, loginService, userService, syncService,
