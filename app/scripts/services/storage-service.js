@@ -9,9 +9,18 @@
  */
 angular.module('viLoggedClientApp')
   .service('storageService', function storageService($q, $window, utility, collections, pouchStorageService,
-                                                     couchDbService, db) {
+                                                     couchDbService, db, userService) {
 
     var dataManagementService = couchDbService;
+    var currentUser = userService.user;
+    var DEFAULT_TIME = '0000-00-00T00:00:00.000Z';
+    var DEFAULT_USER = {
+      id: 1
+    };
+
+    if (!currentUser) {
+      currentUser = DEFAULT_USER;
+    }
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     /**
@@ -89,6 +98,7 @@ angular.module('viLoggedClientApp')
       }
       data.uuid = utility.uuidGenerator();
       data.created = data.modified = utility.getDateTime();
+      data.created_by = currentUser.id;
       return setData(table, data);
     };
 
@@ -105,6 +115,7 @@ angular.module('viLoggedClientApp')
       }
       if(updateDateModified !== false){
         data.modified = utility.getDateTime();
+        data.modified_by = currentUser.id;
       }
 
       return dataManagementService.get(table, data.uuid)
@@ -223,6 +234,7 @@ angular.module('viLoggedClientApp')
       if (!utility.has(batch, 'uuid')) {
         batch.uuid = utility.uuidGenerator();
         batch.created = now;
+        batch.created_by = currentUser.id;
       }
       batch.modified = now;
       return batch;
