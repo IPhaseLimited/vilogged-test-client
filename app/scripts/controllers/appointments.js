@@ -41,6 +41,11 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/appointments/check-in.html',
         controller: 'CheckInCtrl'
       })
+      .state('print-visitor-label', {
+        url: '/appointments/?appointment_id',
+        templateUrl: 'views/appointments/visitor-pass.html',
+        controller: 'VisitorPassCtrl'
+      })
       .state('visitor-check-out', {
         parent: 'root.index',
         url: '/appointments/:appointment_id/check-out',
@@ -49,7 +54,7 @@ angular.module('viLoggedClientApp')
       })
   })
   .controller('AppointmentCtrl', function ($scope, appointmentService, authorizationService) {
-    $scope.canCheckInOrCheckOutVisitor = authorizationService.canCheckInOrCheckOutVisitor();
+    //$scope.canCheckInOrCheckOutVisitor = authorizationService.canCheckInOrCheckOutVisitor();
 
     appointmentService.all()
       .then(function (response) {
@@ -210,12 +215,24 @@ angular.module('viLoggedClientApp')
 
     $scope.checkVisitorIn = function () {
       $scope.appointment.checked_in = utility.getDateTime();
+      $scope.appointment.label_code = utility.generateRandomInteger();
       appointmentService.save($scope.appointment)
         .then(function (response) {
-          $scope.appointment = angular.copy($scope.default);
-          $state.go('appointments');
+          $state.go('print-visitor-label', { appointment_id: $scope.appointment._id });
         })
         .catch(function (reason) {
         });
     };
+  })
+  .controller('VisitorPassCtrl', function($scope, $state, $stateParams, appointmentService) {
+    $scope.appointment = {};
+    console.log($stateParams.appointment_id);
+
+    appointmentService.get($stateParams.appointment_id)
+      .then(function (response) {
+        $scope.appointment = response;
+      })
+      .catch(function (reason) {
+        console.log(reason);
+      })
   });
