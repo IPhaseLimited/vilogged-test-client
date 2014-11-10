@@ -23,7 +23,7 @@ angular.module('viLoggedClientApp')
         controller: 'VisitorFormCtrl'
       })
       .state('visitor-registration', {
-        url: '/visitors/register',
+        url: '/register',
         templateUrl: 'views/visitors/widget-form.html',
         controller: 'VisitorFormCtrl'
       })
@@ -76,7 +76,7 @@ angular.module('viLoggedClientApp')
 
     }, DELAY);
   })
-  .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, visitorService, validationService, $window,
+  .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, $rootScope, visitorService, validationService, $window,
                                            countryStateService, guestGroupConstant) {
     $scope.visitors = [];
     $scope.visitor = {};
@@ -147,12 +147,19 @@ angular.module('viLoggedClientApp')
       emailValidation.unique = true;
       emailValidation.dbName = visitorService.DBNAME;
       emailValidation.dataList = $scope.visitors;
+
+      var phoneNumberValidation = validationService.BASIC;
+      phoneNumberValidation.unique = true;
+      phoneNumberValidation.dbName = visitorService.DBNAME;
+      phoneNumberValidation.pattern = '/^[0-9]';
+
       var validationParams = {
         first_name: validationService.BASIC,
         last_name: validationService.BASIC,
         lga_of_origin: validationService.BASIC,
         state_of_origin: validationService.BASIC,
         nationality: validationService.BASIC,
+        visitor_phone: phoneNumberValidation,
         visitor_email: emailValidation
       };
 
@@ -165,12 +172,10 @@ angular.module('viLoggedClientApp')
       if (!Object.keys($scope.validationErrors).length) {
         visitorService.save($scope.visitor)
           .then(function () {
-            $scope.visitor = angular.copy($scope.default);
-            if (angular.isObject(userService.user)) {
+            if (userService.user) {
               $state.go('visitors');
             } else {
-              loginService.visitorLogin($scope.visitor);
-              $state.go('show-visitor({})');
+              $state.go('login');
             }
           })
           .catch(function (reason) {

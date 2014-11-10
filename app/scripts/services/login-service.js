@@ -85,14 +85,20 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     }
 
+    function anonymousLogin() {
+      $cookieStore.put('vi-anonymous-token', Date.now())
+    }
+
     function logout() {
       $cookieStore.remove('vi-token');
       $cookieStore.remove('no-login');
       $cookieStore.remove('current-user');
       $cookieStore.remove('vi-visitor-credential');
+      $cookieStore.remove('vi-anonymous-token');
     }
 
     this.login = login;
     this.visitorLogin = visitorLogin;
+    this.anonymousLogin = anonymousLogin;
     this.logout = logout;
   });
