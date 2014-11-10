@@ -18,6 +18,8 @@
           <th>Visitor's Email</th>
           <th>Visitor's Phone</th>
           <th>Company Name</th>
+          <th>Created Date</th>
+          <th>Modified Date</th>
           <th></th>
         </tr>
         </thead>
@@ -28,6 +30,8 @@
           <td>{{ visitor.visitor_email }}</td>
           <td>{{ visitor.visitor_phone }}</td>
           <td>{{ visitor.company_name }}</td>
+          <td>{{ visitor.created }}</td>
+          <td>{{ visitor.modified | date:'yyyy' }}</td>
           <td>
             <a class="btn btn-primary btn-xs"
                ui-sref="edit-visitor-profile({visitor_id: visitor.uuid})"
