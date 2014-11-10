@@ -36,12 +36,15 @@
                 <i class="fa fa-lock"></i> Login
               </div>
               <div class="col-md-6">
-                <a class="btn btn-warning btn btn-xs pull-right" ng-click="toggleLoginScreen()"
-                   ng-if="displayVisitorLogin">
+                <a class="btn btn-warning btn btn-xs pull-right" ng-click="displayVisitorLogin=!displayVisitorLogin"
+                   ng-show="displayVisitorLogin">
                   <i class="fa"></i> User Login
                 </a>
-                <a class="btn btn-primary btn btn-xs pull-right" ng-click="toggleLoginScreen()"
-                   ng-if="!displayVisitorLogin">
+                <a class="btn btn-primary btn btn-xs pull-right" ui-sref="visitor-registration" ng-show="displayVisitorLogin">
+                  Create Guest Profile
+                </a>
+                <a class="btn btn-primary btn btn-xs pull-right" ng-click="displayVisitorLogin=!displayVisitorLogin"
+                   ng-show="!displayVisitorLogin">
                   Guest Login
                 </a>
               </div>
@@ -53,14 +56,14 @@
               <!-- Login form -->
 
               <div class="alert fade in alert alert-danger" style="text-align: center;" ng-show="loginError">
-                {{ errorMessages }}
                 <button data-dismiss="alert" class="close" type="button" ng-click="loginError=!loginError">×</button>
+                {{ errorMessages }}
               </div>
 
               <div ng-show="displayVisitorLogin">
-                <form>
+                <form novalidate="" name="visitorLoginForm">
                   <div class="form-group">
-                    <label for="identity">Phone Number or Pass Code</label>
+                    <label for="identity">Phone Number or Pass Code <span class="text-danger">*</span></label>
 
                     <input class="form-control" type="text" name="identity" id="identity"
                            ng-model="visitorCredential.identity" required/>
@@ -68,7 +71,7 @@
 
                   <div class="">
                     <button type="submit" class="btn btn-info btn-sm col-sm-6" ng-click="visitorLogin()">Sign in</button>
-                    <button type="reset" class="btn btn-danger btn-sm col-sm-6">Reset</button>
+                    <button type="reset" class="btn btn-primary btn-sm col-sm-6">Reset</button>
                   </div>
                   <div class="clearfix"></div>
                 </form>
