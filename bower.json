@@ -2,7 +2,7 @@
   "name": "vi-logged-client",
   "version": "0.1.0",
   "dependencies": {
-    "angular": "~1.2.20",
+    "angular": "~1.2.6",
     "angular-bootstrap": "0.11.0",
     "font-awesome": "~4.1.0",
     "angular-ui-router": "0.2.10",
