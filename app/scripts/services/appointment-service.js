@@ -19,66 +19,105 @@ angular.module('viLoggedClientApp')
     function getAppointmentsByUser(user) {
       var deferred = $q.defer();
       getAllAppointments(DB_NAME)
-        .then(function(response){
+        .then(function (response) {
           var filtered = response
-            .filter(function(appointment) {
+            .filter(function (appointment) {
               return appointment.host.id === user.id;
             });
 
           deferred.resolve(filtered);
         })
-        .catch(function(reason) {
+        .catch(function (reason) {
           deferred.reject(reason);
         });
 
       return deferred.promise;
     }
 
-    this.save = function(object) {
+    function save(object) {
       return storageService.save(DB_NAME, object);
-    };
+    }
 
-    this.get = function(id) {
-      return storageService.find(DB_NAME, id);
-    };
-
-    this.all = getAllAppointments;
-
-    this.getAppointmentsByUser = getAppointmentsByUser;
-
-    this.getUpcomingAppointments = function(user) {
+    function getUserUpcomingAppointments(user) {
       var deferred = $q.defer();
       getAppointmentsByUser(user)
-        .then(function(response) {
+        .then(function (response) {
           var filtered = response
-            .filter(function(appointment) {
+            .filter(function (appointment) {
               return appointment.is_approved &&
-              new Date(appointment.appointment_date).getTime() > new Date().getTime() &&
-                !appointment.is_expired;
+                new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.is_expired;
             });
         })
-        .catch(function(reason) {
+        .catch(function (reason) {
           deferred.resolve(reason);
         });
 
       return deferred.promise;
-    };
+    }
 
-    this.getAppointmentsAwaitingApproval = function(user) {
+    function get(id) {
+      return storageService.find(DB_NAME, id);
+    }
+
+    function getAppointmentsAwaitingApproval(user) {
       var deferred = $q.defer();
       getAppointmentsByUser(user)
-        .then(function(response) {
+        .then(function (response) {
           var filtered = response
-            .filter(function(appointment) {
+            .filter(function (appointment) {
               return !appointment.is_approved && !appointment.is_expired;
             });
 
           deferred.resolve(filtered);
         }).
-        catch(function(reason) {
+        catch(function (reason) {
           deferred.reject(reason);
         });
 
       return deferred.promise;
     }
+
+    function getAppointmentsByVisitor(visitor_id) {
+      var deferred = $q.defer();
+      getAllAppointments(DB_NAME)
+        .then(function (response) {
+          var filtered = response
+            .filter(function (appointment) {
+              return appointment.visitor.id === visitor_id;
+            });
+
+          deferred.resolve(filtered);
+        })
+        .catch(function (reason) {
+          deferred.reject(reason);
+        });
+
+      return deferred.promise;
+    }
+
+    function getVisitorUpcomingAppointments(visitor_id) {
+      var deferred = $q.defer();
+      getAppointmentsByUser(visitor_id)
+        .then(function (response) {
+          var filtered = response
+            .filter(function (appointment) {
+              return appointment.is_approved &&
+                new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.is_expired;
+            });
+        })
+        .catch(function (reason) {
+          deferred.resolve(reason);
+        });
+
+      return deferred.promise;
+    }
+
+    this.get = get;
+    this.all = getAllAppointments;
+    this.getAppointmentsByUser = getAppointmentsByUser;
+    this.save = save;
+    this.getUserUpcomingAppointments = getUserUpcomingAppointments;
+    this.getAppointmentsAwaitingApproval = getAppointmentsAwaitingApproval;
+    this.getVisitorUpcomingAppointments = getVisitorUpcomingAppointments;
+    this.getAppointmentsByVisitor = getAppointmentsByVisitor;
   });

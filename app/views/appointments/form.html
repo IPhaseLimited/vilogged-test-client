@@ -22,26 +22,12 @@
     </div>
 
     <div class="form-group" ng-if="!host">
-      <label class="control-label col-sm-2" for="host">Host</label>
+      <label class="control-label col-sm-2" for="hostNumber">Host Phone Number</label>
 
       <div class="col-sm-6">
-        <ui-select ng-model="appointment.host" theme="select2" ng-disabled="disabled" class="select2">
-          <ui-select-match placeholder="Select your appointment host">
-            {{$select.selected.first_name}}
-          </ui-select-match>
-          <ui-select-choices refresh="refreshHostsList($select.search)"
-                             refresh-delay="0" repeat="host in hosts | propsFilter: {
-                                   first_name: $select.search,
-                                   last_name: $select.search,
-                                   user_profile.phone: $select.search}">
-            <div>{{host.first_name + ' ' + host.last_name}}</div>
-            <small>
-              Email: {{host.email}} <br/>
-              Phone: <span>{{((host).user_profile).phone}}</span> <br/>
-              Home Phone: {{ ((host).user_profile).home_phone }} <br/>
-            </small>
-          </ui-select-choices>
-        </ui-select>
+        <input class="form-control" name="hostNumber" id="hostNumber" ng-model="host_number" type="text"
+               ng-change="lookUpHost()" required/>
+        <pre>{{host_number}}</pre>
       </div>
     </div>
 

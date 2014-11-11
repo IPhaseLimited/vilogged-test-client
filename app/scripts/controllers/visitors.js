@@ -219,13 +219,30 @@ angular.module('viLoggedClientApp')
       console.log($scope.lgas)
     };
   })
-  .controller('VisitorDetailCtrl', function ($scope, $stateParams, visitorService) {
+  .controller('VisitorDetailCtrl', function ($scope, $stateParams, visitorService, appointmentService) {
     $scope.visitor = {};
+    $scope.appointments = [];
+    $scope.upcomingAppointments = [];
 
     visitorService.get($stateParams.visitor_id)
       .then(function (response) {
-        console.log(response);
         $scope.visitor = response;
+      })
+      .catch(function (reason) {
+        console.log(reason);
+      });
+
+    appointmentService.getVisitorUpcomingAppointments($stateParams.visitor_id)
+      .then(function (response) {
+        $scope.appointments = response;
+      })
+      .catch(function (reason) {
+        console.log(reason);
+      });
+
+    appointmentService.getAppointmentsByVisitor($stateParams.visitor_id)
+      .then(function (response) {
+        $scope.upcomingAppointments = response;
       })
       .catch(function (reason) {
         console.log(reason);

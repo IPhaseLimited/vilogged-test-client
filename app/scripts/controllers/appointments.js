@@ -64,10 +64,26 @@ angular.module('viLoggedClientApp')
         console.log(reason)
       });
   })
-  .controller('AppointmentFormCtrl', function ($scope, $stateParams, $state, visitorService,
+  .controller('AppointmentFormCtrl', function ($scope, $stateParams, $state, $timeout, visitorService,
                                                userService, appointmentService, utility, authorizationService) {
     $scope.appointment = {};
     $scope.default = {};
+    $scope.editValue = '';
+    $scope.some = '';
+
+    $scope.onEditChange = function() {
+console.log($scope.editValue)
+      //if(timeout) $timeout.cancel();
+      //var timeout = $timeout(function ($scope.host_number) {
+      //  userService.findUserBy('phone', host_number)
+      //    .then(function (response) {
+      //      $scope.appointment.host = response;
+      //    })
+      //    .catch(function (reason) {
+      //      console.log(reason);
+      //    });
+      //}, 350)
+    };
 
     if ($stateParams.appointment_id !== null && $stateParams.appointment_id !== undefined) {
       appointmentService.get($stateParams.appointment_id)
@@ -122,6 +138,8 @@ angular.module('viLoggedClientApp')
     };
 
     $scope.createAppointment = function () {
+      console.log($scope.appointment)
+
       if (angular.isDefined($scope.visitor) && $scope.visitor !== null) {
         $scope.appointment.visitor = angular.copy($scope.visitor);
       }
@@ -136,14 +154,14 @@ angular.module('viLoggedClientApp')
       $scope.appointment.check_in = null;
       $scope.appointment.check_out = null;
 
-      appointmentService.save($scope.appointment)
-        .then(function (response) {
-          $scope.appointment = angular.copy($scope.default);
-          $state.go('appointments');
-        })
-        .catch(function (reason) {
-          console.log(reason);
-        });
+      //appointmentService.save($scope.appointment)
+      //  .then(function (response) {
+      //    $scope.appointment = angular.copy($scope.default);
+      //    $state.go('appointments');
+      //  })
+      //  .catch(function (reason) {
+      //    console.log(reason);
+      //  });
     };
   })
   .controller('CheckInCtrl', function ($scope, $state, $stateParams, $q,
