@@ -34,7 +34,8 @@
               </div>
             </div>
             <div class="col-sm-4">
-              <img src="{{ visitor.image }}" alt="" class="img-thumbnail img-responsive"/>
+              <img ng-src="{{ visitor.image }}" alt="" class="img-thumbnail img-responsive"  ng-if="!visitor.image"/>
+              <img src="../../img/place_holder.jpg" alt="" class="img-thumbnail img-responsive" ng-if="!visitor.image"/>
             </div>
           </div>
         </div>

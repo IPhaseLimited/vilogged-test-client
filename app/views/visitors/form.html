@@ -1,241 +1,271 @@
 <form class="form-horizontal" name="visitorForm" novalidate>
-<fieldset>
+  <fieldset>
 
-<legend>Personal Information</legend>
+    <legend>Personal Information</legend>
 
-<div class="row">
-  <div class="col-sm-8">
-    <div class="form-group">
-      <label class="control-label col-sm-3" for="firstName">First Name</label>
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="form-group">
+          <label class="control-label col-sm-3" for="firstName">First Name<span class="text-danger">*</span></label>
 
-      <div class="col-sm-9">
-        <input type="text" class="form-control" id="firstName" name="firstName" ng-model="visitor.first_name" required>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="firstName" name="firstName" ng-model="visitor.first_name"
+                   required>
+
+            <div class="text-danger bold" ng-show="(validationErrors).first_name.length">
+        <span ng-repeat="error in (validationErrors).first_name">
+          {{ error }}<br>
+        </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName" class="col-sm-3 control-label">Last Name<span class="text-danger">*</span></label>
+
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="lastName" name="lastName" ng-model="visitor.last_name" required>
+
+            <div class="text-danger bold" ng-show="(validationErrors).last_name.length">
+        <span ng-repeat="error in (validationErrors).last_name">
+          {{ error }}<br>
+        </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="birthDate" class="col-sm-3 control-label">Birth Date</label>
+
+          <div class="col-sm-9">
+            <input type="date" class="form-control" id="birthDate" name="birthDate" ng-model="visitor.birth_date">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="nationality" class="col-sm-3 control-label">Nationality</label>
+
+          <div class="col-sm-9">
+            <!--input type="text" class="form-control" id="nationality" name="nationality" ng-model="visitor.nationality"-->
+            <select class="form-control" id="nationality" ng-change="getStates(visitor.nationality)" name="nationality"
+                    ng-model="visitor.nationality">
+              <option value=""></option>
+              <option ng-repeat="country in countries" value="{{ country  }}"> {{ countryState[country].name }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="stateOfOrigin" class="col-sm-3 control-label">State of Origin</label>
+
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="stateOfOrigin" name="stateOfOrigin"
+                   ng-model="visitor.state_of_origin" ng-if="visitor.nationality !== 'nigeria'">
+            <select class="form-control" id="stateOfOrigin"
+                    ng-change="getLGAs(visitor.state_of_origin, visitor.nationality)" name="nationality"
+                    ng-model="visitor.state_of_origin"
+                    ng-if="visitor.nationality === 'nigeria'">
+              <option value=""></option>
+              <option ng-repeat="state in states track by $index" value="{{ state  }}">
+                {{ countryState[visitor.nationality].states[state].name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="lga" class="col-sm-3 control-label">Origin City/LGA</label>
+
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="lga" name="lga" ng-model="visitor.lga_of_origin"
+                   ng-if="visitor.nationality !== 'nigeria'">
+
+            <select class="form-control" id="lga" name="nationality" ng-model="visitor.lga_of_origin"
+                    ng-if="visitor.nationality === 'nigeria'">
+              <option value=""></option>
+              <option ng-repeat="lga in lgas track by $index" value="{{ lga  }}"> {{ lga }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="image" class="col-sm-3 control-label">Image</label>
+
+          <div class="col-sm-6">
+            <input id="image" type="file" ng-model-instant
+                   onchange="angular.element(this).scope().setFiles(this, 'image')">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="fingerprint" class="col-sm-3 control-label">Fingerprint Image</label>
+
+          <div class="col-sm-6">
+            <input type="file" id="fingerprint" ng-model-instant
+                   onchange="angular.element(this).scope().setFiles(this, 'fingerprint')">
+          </div>
+        </div>
       </div>
-      <div class="clearfix"></div>
-      <div class="text-danger bold text-center" ng-show="(validationErrors).first_name.length">
-              <span ng-repeat="error in (validationErrors).first_name">
-                {{ error }}<br>
-              </span>
+      <div class="col-sm-4" ng-if="visitor.image">
+        <img ng-src="visitor.image" alt="" width="200" height="150"/>
+      </div>
+    </div>
+
+    <legend>Contact Information</legend>
+
+    <div class="form-group">
+      <label for="visitorEmail" class="col-sm-2 control-label">Visitor's Email<span class="text-danger">*</span></label>
+
+      <div class="col-sm-6">
+        <input type="text" class="form-control" id="visitorEmail" name="visitorEmail" ng-model="visitor.visitor_email">
+
+        <div class="text-danger bold" ng-show="(validationErrors).visitor_email.length">
+    <span ng-repeat="error in (validationErrors).visitor_email">
+      {{ error }}<br>
+    </span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <label for="visitorPhone" class="col-sm-2 control-label">Visitor's Phone<span class="text-danger">*</span></label>
+
+      <div class="col-sm-6">
+        <input type="text" class="form-control" id="visitorPhone" name="visitorPhone" ng-model="visitor.visitor_phone">
+
+        <div class="text-danger bold" ng-show="(validationErrors).visitor_email.length">
+          <span ng-repeat="error in (validationErrors).visitor_phone">
+            {{ error }}<br>
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <label for="contactAddress" class="col-sm-2 control-label">Contact Address<span class="text-danger">*</span></label>
+
+      <div class="col-sm-6">
+        <textarea type="text" id="contactAddress" class="form-control" name="contactAddress"
+                  data-ng-model="visitor.visitor_location.contact_address"></textarea>
+
+        <div class="text-danger bold" ng-show="(validationErrors).contact_address.length">
+        <span ng-repeat="error in (validationErrors).contact_address">
+          {{ error }}<br>
+        </span>
+        </div>
       </div>
     </div>
 
     <div class="form-group">
-      <label for="lastName" class="col-sm-3 control-label">Last Name</label>
+      <label for="cCountry" class="col-sm-2 control-label">Country<span class="text-danger">*</span></label>
 
-      <div class="col-sm-9">
-        <input type="text" class="form-control" id="lastName" name="lastName" ng-model="visitor.last_name" required>
-      </div>
-      <div class="clearfix"></div>
-      <div class="text-danger bold text-center" ng-show="(validationErrors).last_name.length">
-              <span ng-repeat="error in (validationErrors).last_name">
-                {{ error }}<br>
-              </span>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="birthDate" class="col-sm-3 control-label">Birth Date</label>
-
-      <div class="col-sm-9">
-        <input type="date" class="form-control" id="birthDate" name="birthDate" ng-model="visitor.birth_date">
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="nationality" class="col-sm-3 control-label">Nationality</label>
-
-      <div class="col-sm-9">
-        <!--input type="text" class="form-control" id="nationality" name="nationality" ng-model="visitor.nationality"-->
-        <select class="form-control" id="nationality" ng-change="getStates(visitor.nationality)" name="nationality"
-                ng-model="visitor.nationality">
+      <div class="col-sm-6">
+        <select name="cCountry" id="cCountry" ng-model="visitor.visitor_location.residential_country"
+                class="form-control" ng-change="getResidentialStates(visitor.visitor_location.residential_country)">
           <option value=""></option>
-          <option ng-repeat="country in countries" value="{{ country  }}"> {{ countryState[country].name }}</option>
+          <option value="{{ country }}" ng-repeat="country in countries track by $index">
+            {{ countryState[country].name }}
+          </option>
         </select>
+
+        <div class="text-danger bold" ng-show="(validationErrors).residential_country.length">
+        <span ng-repeat="error in (validationErrors).residential_country">
+          {{ error }}<br>
+        </span>
+        </div>
       </div>
     </div>
 
     <div class="form-group">
-      <label for="stateOfOrigin" class="col-sm-3 control-label">State of Origin</label>
+      <label for="cstate" class="col-sm-2 control-label">State<span class="text-danger">*</span></label>
 
-      <div class="col-sm-9">
-        <input type="text" class="form-control" id="stateOfOrigin" name="stateOfOrigin"
-               ng-model="visitor.state_of_origin" ng-if="visitor.nationality !== 'nigeria'">
-        <select class="form-control" id="stateOfOrigin"
-                ng-change="getLGAs(visitor.state_of_origin, visitor.nationality)" name="nationality"
-                ng-model="visitor.state_of_origin"
-                ng-if="visitor.nationality === 'nigeria'">
+      <div class="col-sm-6">
+        <select name="cstate" id="cstate" class="form-control"
+                ng-change="getResidentialLGAS(visitor.visitor_location.residential_state, visitor.visitor_location.residential_country)"
+                ng-if="visitor.visitor_location.residential_country === 'nigeria'"
+                ng-model="visitor.visitor_location.residential_state">
           <option value=""></option>
-          <option ng-repeat="state in states track by $index" value="{{ state  }}">
-            {{ countryState[visitor.nationality].states[state].name }}
+          <option value="{{ state }}"
+                  ng-repeat="state in locationStates track by $index">
+            {{ countryState[visitor.visitor_location.residential_country].states[state].name }}
+          </option>
+        </select>
+        <input type="text" id="cstate"
+               class="form-control" name="cstate"
+               data-ng-model="visitor.visitor_location.residential_state"
+               ng-if="visitor.visitor_location.residential_country !== 'nigeria'">
+        <div class="text-danger bold" ng-show="(validationErrors).residential_state.length">
+        <span ng-repeat="error in (validationErrors).residential_state">
+          {{ error }}<br>
+        </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="clga" class="col-sm-2 control-label">City/LGA<span class="text-danger">*</span></label>
+
+      <div class="col-sm-6">
+        <select class="form-control" id="clga" name="clga" ng-model="visitor.visitor_location.residential_lga"
+                ng-if="visitor.visitor_location.residential_country === 'nigeria'">
+          <option value=""></option>
+          <option ng-repeat="lga in lgas track by $index" value="{{ lga }}"> {{ lga }}</option>
+        </select>
+        <input type="text" id="clga"
+               class="form-control" name="clga"
+               data-ng-model="visitor.visitor_location.residential_lga"
+               ng-if="visitor.visitor_location.residential_country !== 'nigeria'">
+        <div class="text-danger bold" ng-show="(validationErrors).residential_lga.length">
+        <span ng-repeat="error in (validationErrors).residential_lga">
+          {{ error }}<br>
+        </span>
+        </div>
+      </div>
+    </div>
+
+    <legend>Company Information</legend>
+
+    <div class="form-group">
+      <label for="companyName" class="col-sm-2 control-label">Company Name</label>
+
+      <div class="col-sm-6">
+        <input type="text" class="form-control"
+               id="companyName" name="companyName" ng-model="visitor.company_name">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="companyAddress" class="col-sm-2 control-label">Company Address</label>
+
+      <div class="col-sm-6">
+        <textarea id="companyAddress" class="form-control"
+                  name="companyAddress" data-ng-model="visitor.company_address"></textarea>
+      </div>
+    </div>
+
+    <div class="form-group" ng-if="visitor._id">
+      <label for="visitorGroup" class="col-sm-2 control-label">Visitor Group</label>
+
+      <div class="col-sm-6">
+        <select class="form-control col-sm-6" ng-model="visitor.group_type" name="visitorGroup"
+                id="visitorGroup">
+          <option value=""></option>
+          <option value="visitorGroup" ng-repeat="visitorGroup in visitorGroups">
+            {{ visitorGroup }}
           </option>
         </select>
       </div>
     </div>
 
-    <div class="form-group">
-      <label for="lga" class="col-sm-3 control-label">Origin City/LGA</label>
+    <hr/>
 
-      <div class="col-sm-9">
-        <input type="text" class="form-control" id="lga" name="lga" ng-model="visitor.lga_of_origin"
-               ng-if="visitor.nationality !== 'nigeria'">
-
-        <select class="form-control" id="lga" name="nationality" ng-model="visitor.lga_of_origin"
-                ng-if="visitor.nationality === 'nigeria'">
-          <option value=""></option>
-          <option ng-repeat="lga in lgas track by $index" value="{{ lga  }}"> {{ lga }}</option>
-        </select>
-      </div>
+    <div class="col-sm-offset-2 col-sm-10">
+      <button class="btn btn-primary" ng-click="createProfile()">
+        Create Visitor Profile
+      </button>
     </div>
-
-    <div class="form-group">
-      <label for="image" class="col-sm-3 control-label">Image</label>
-
-      <div class="col-sm-6">
-        <input id="image" type="file" ng-model-instant onchange="angular.element(this).scope().setFiles(this, 'image')">
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="fingerprint" class="col-sm-3 control-label">Fingerprint Image</label>
-
-      <div class="col-sm-6">
-        <input type="file" id="fingerprint" ng-model-instant
-               onchange="angular.element(this).scope().setFiles(this, 'fingerprint')">
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-4" ng-if="visitor.image">
-    <img  ng-src="visitor.image" alt="" width="200" height="150"/>
-  </div>
-</div>
-
-<legend>Contact Information</legend>
-
-<div class="form-group">
-  <label for="visitorEmail" class="col-sm-2 control-label">Visitor's Email</label>
-
-  <div class="col-sm-6">
-    <input type="text" class="form-control" id="visitorEmail" name="visitorEmail" ng-model="visitor.visitor_email">
-  </div>
-  <div class="clearfix"></div>
-  <div class="text-danger bold text-center" ng-show="(validationErrors).visitor_email.length">
-              <span ng-repeat="error in (validationErrors).visitor_email">
-                {{ error }}<br>
-              </span>
-  </div>
-
-</div>
-
-<div class="form-group">
-  <label for="visitorPhone" class="col-sm-2 control-label">Visitor's Phone</label>
-
-  <div class="col-sm-6">
-    <input type="text" class="form-control" id="visitorPhone" name="visitorPhone" ng-model="visitor.visitor_phone">
-  </div>
-</div>
-
-<div class="form-group">
-  <label for="contactAddress" class="col-sm-2 control-label">Contact Address</label>
-
-  <div class="col-sm-6">
-    <textarea type="text" id="contactAddress" class="form-control" name="contactAddress"
-              data-ng-model="visitor.visitor_location.contact_address"></textarea>
-  </div>
-</div>
-
-<div class="form-group">
-  <label for="cCountry" class="col-sm-2 control-label">Country</label>
-
-  <div class="col-sm-6">
-    <select name="cCountry" id="cCountry" ng-model="visitor.visitor_location.residential_country"
-            class="form-control" ng-change="getResidentialStates(visitor.visitor_location.residential_country)">
-      <option value=""></option>
-      <option value="{{ country }}" ng-repeat="country in countries track by $index">
-        {{ countryState[country].name }}
-      </option>
-    </select>
-
-  </div>
-</div>
-
-<div class="form-group">
-  <label for="cstate" class="col-sm-2 control-label">State</label>
-
-  <div class="col-sm-6">
-    <select name="cstate" id="cstate" class="form-control"
-            ng-change="getResidentialLGAS(visitor.visitor_location.residential_state, visitor.visitor_location.residential_country)"
-            ng-if="visitor.visitor_location.residential_country === 'nigeria'"
-            ng-model="visitor.visitor_location.residential_state">
-      <option value=""></option>
-      <option value="{{ state }}"
-              ng-repeat="state in locationStates track by $index">
-        {{ countryState[visitor.visitor_location.residential_country].states[state].name }}
-      </option>
-    </select>
-    <input type="text" id="cstate"
-           class="form-control" name="cstate"
-           data-ng-model="visitor.visitor_location.residential_state"
-           ng-if="visitor.visitor_location.residential_country !== 'nigeria'">
-  </div>
-</div>
-
-<div class="form-group">
-  <label for="clga" class="col-sm-2 control-label">City/LGA</label>
-
-  <div class="col-sm-6">
-    <select class="form-control" id="clga" name="clga" ng-model="visitor.visitor_location.residential_lga"
-            ng-if="visitor.visitor_location.residential_country === 'nigeria'">
-      <option value=""></option>
-      <option ng-repeat="lga in lgas track by $index" value="{{ lga }}"> {{ lga }}</option>
-    </select>
-    <input type="text" id="clga"
-           class="form-control" name="clga"
-           data-ng-model="visitor.visitor_location.residential_lga"
-           ng-if="visitor.visitor_location.residential_country !== 'nigeria'">
-  </div>
-</div>
-
-<legend>Company Information</legend>
-
-<div class="form-group">
-  <label for="companyName" class="col-sm-2 control-label">Company Name</label>
-
-  <div class="col-sm-6">
-    <input type="text" class="form-control"
-           id="companyName" name="companyName" ng-model="visitor.company_name">
-  </div>
-</div>
-
-<div class="form-group">
-  <label for="companyAddress" class="col-sm-2 control-label">Company Address</label>
-
-  <div class="col-sm-6">
-    <textarea id="companyAddress" class="form-control"
-              name="companyAddress" data-ng-model="visitor.company_address"></textarea>
-  </div>
-</div>
-
-<div class="form-group" ng-if="visitor._id">
-  <label for="visitorGroup" class="col-sm-2 control-label">Visitor Group</label>
-
-  <div class="col-sm-6">
-    <select class="form-control col-sm-6" ng-model="visitor.group_type" name="visitorGroup"
-            id="visitorGroup">
-      <option value=""></option>
-      <option value="visitorGroup" ng-repeat="visitorGroup in visitorGroups">
-        {{ visitorGroup }}
-      </option>
-    </select>
-  </div>
-</div>
-
-<hr/>
-
-<div class="col-sm-offset-2 col-sm-10">
-  <button class="btn btn-primary" ng-class="{ 'disabled btn-danger' : visitorForm.$invalid }" ng-click="createProfile()">
-    Create Visitor Profile
-  </button>
-</div>
-</fieldset>
+  </fieldset>
 
 </form>

@@ -24,10 +24,6 @@ angular.module('viLoggedClientApp')
   .controller('LoginCtrl', function ($scope, $state, loginService, visitorService) {
     $scope.displayVisitorLogin = true;
 
-    $scope.toggleLoginScreen = function() {
-      $scope.displayVisitorLogin = !$scope.displayVisitorLogin;
-    };
-
     $scope.visitorCredential = {};
     $scope.visitorLogin = function() {
       loginService.visitorLogin($scope.visitorCredential)
@@ -39,7 +35,6 @@ angular.module('viLoggedClientApp')
           $scope.loginError = true;
           $scope.errorMessages = reason.loginMessage;
           $scope.visitorCredential.identity = '';
-          console.log(reason);
         })
     };
 

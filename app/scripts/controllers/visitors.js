@@ -23,7 +23,7 @@ angular.module('viLoggedClientApp')
         controller: 'VisitorFormCtrl'
       })
       .state('visitor-registration', {
-        url: '/visitors/register',
+        url: '/register',
         templateUrl: 'views/visitors/widget-form.html',
         controller: 'VisitorFormCtrl'
       })
@@ -76,8 +76,8 @@ angular.module('viLoggedClientApp')
 
     }, DELAY);
   })
-  .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, visitorService, validationService, $window,
-                                           countryStateService, guestGroupConstant) {
+  .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, $rootScope, $window, visitorService, validationService,
+                                           countryStateService, guestGroupConstant, userService) {
     $scope.visitors = [];
     $scope.visitor = {};
     $scope.countryState = {};
@@ -141,19 +141,34 @@ angular.module('viLoggedClientApp')
     }
 
     $scope.createProfile = function () {
+      console.log($scope.visitor)
       //TODO:: Complete validations
       var emailValidation = validationService.EMAIL;
       emailValidation.required = true;
       emailValidation.unique = true;
       emailValidation.dbName = visitorService.DBNAME;
       emailValidation.dataList = $scope.visitors;
+
+      var phoneNumberValidation = validationService.BASIC;
+      phoneNumberValidation.unique = true;
+      phoneNumberValidation.dbName = visitorService.DBNAME;
+      phoneNumberValidation.pattern = '/^[0-9]/';
+
+
+      var visitor_location = {
+        contact_address: validationService.BASIC,
+        residential_country: validationService.BASIC,
+        residential_lga: validationService.BASIC,
+        residential_state: validationService.BASIC
+      };
+
+
       var validationParams = {
         first_name: validationService.BASIC,
         last_name: validationService.BASIC,
-        lga_of_origin: validationService.BASIC,
-        state_of_origin: validationService.BASIC,
-        nationality: validationService.BASIC,
-        visitor_email: emailValidation
+        visitor_phone: phoneNumberValidation,
+        visitor_email: emailValidation,
+        visitor_location: visitor_location
       };
 
       //TODO:: Work on a better generator for visitor's pass code possibly a service
@@ -165,12 +180,10 @@ angular.module('viLoggedClientApp')
       if (!Object.keys($scope.validationErrors).length) {
         visitorService.save($scope.visitor)
           .then(function () {
-            $scope.visitor = angular.copy($scope.default);
-            if (angular.isObject(userService.user)) {
+            if (userService.user) {
               $state.go('visitors');
             } else {
-              loginService.visitorLogin($scope.visitor);
-              $state.go('show-visitor({})');
+              $state.go('login');
             }
           })
           .catch(function (reason) {
