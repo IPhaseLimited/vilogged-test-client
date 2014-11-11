@@ -34,7 +34,7 @@
               </div>
             </div>
             <div class="col-sm-4">
-              <img ng-src="{{ visitor.image }}" alt="" class="img-thumbnail img-responsive"  ng-if="!visitor.image"/>
+              <img ng-src="{{ visitor.image }}" alt="" class="img-thumbnail img-responsive"  ng-if="visitor.image"/>
               <img src="../../img/place_holder.jpg" alt="" class="img-thumbnail img-responsive" ng-if="!visitor.image"/>
             </div>
           </div>
@@ -51,13 +51,18 @@
       <div class="widget-head">
         <div class="pull-left">Upcoming Appointments</div>
         <div class="widget-icons pull-right">
-
+          <a class="btn btn-primary btn-xs" ui-sref="create-appointment-visitor({visitor_id: visitor._id})">
+            <span class="fa fa-plus-circle"></span> Create Appointment
+          </a>
         </div>
         <div class="clearfix"></div>
       </div>
       <div class="widget-content">
         <div class="padd">
-          <table class="table table-condensed table-responsive table-bordered">
+          <div class="alert alert-info" ng-if="!upcomingAppointments.length">
+            You have no upcoming appointments.
+          </div>
+          <table class="table table-condensed table-responsive table-bordered" ng-if="upcomingAppointments.length">
             <thead>
             <tr>
               <th>S/N</th>
@@ -68,11 +73,11 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+            <tr ng-repeat="upcomingAppointment in upcomingAppointments">
+              <td>{{ $index+1 }}</td>
+              <td>{{ upcomingAppointment.appointment_date }}</td>
+              <td>{{ upcomingAppointment.visit_start_time }}</td>
+              <td>{{ upcomingAppointment.visit_end_time }}</td>
               <td></td>
             </tr>
             </tbody>
@@ -90,13 +95,38 @@
   <div class="widget-head">
     <div class="pull-left">Appointment Histories</div>
     <div class="widget-icons pull-right">
-
+      <a class="btn btn-primary btn-xs" ui-sref="create-appointment-visitor({visitor_id: visitor._id})">
+        <span class=" fa fa-plus-circle"></span> Create Appointment
+      </a>
     </div>
     <div class="clearfix"></div>
   </div>
   <div class="widget-content">
     <div class="padd">
+      <div class="alert alert-info" ng-if="!appointments.length">
+        You have no appointments created
+      </div>
 
+      <table class="table table-condensed table-responsive table-bordered" ng-if="upcomingAppointments.length">
+        <thead>
+        <tr>
+          <th>S/N</th>
+          <th>Date of Appointment</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="appointment in appointments">
+          <td>{{ $index+1 }}</td>
+          <td>{{ appointment.appointment_date }}</td>
+          <td>{{ appointment.visit_start_time }}</td>
+          <td>{{ appointment.visit_end_time }}</td>
+          <td></td>
+        </tr>
+        </tbody>
+      </table>
     </div>
     <div class="widget-foot">
       <!-- Footer goes here -->
