@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col-sm-8">
         <div class="form-group">
-          <label class="control-label col-sm-3" for="firstName">First Name</label>
+          <label class="control-label col-sm-3" for="firstName">First Name<span class="text-danger">*</span></label>
 
           <div class="col-sm-9">
             <input type="text" class="form-control" id="firstName" name="firstName" ng-model="visitor.first_name"
@@ -21,7 +21,7 @@
         </div>
 
         <div class="form-group">
-          <label for="lastName" class="col-sm-3 control-label">Last Name</label>
+          <label for="lastName" class="col-sm-3 control-label">Last Name<span class="text-danger">*</span></label>
 
           <div class="col-sm-9">
             <input type="text" class="form-control" id="lastName" name="lastName" ng-model="visitor.last_name" required>
@@ -114,7 +114,7 @@
     <legend>Contact Information</legend>
 
     <div class="form-group">
-      <label for="visitorEmail" class="col-sm-2 control-label">Visitor's Email</label>
+      <label for="visitorEmail" class="col-sm-2 control-label">Visitor's Email<span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
         <input type="text" class="form-control" id="visitorEmail" name="visitorEmail" ng-model="visitor.visitor_email">
@@ -129,7 +129,7 @@
     </div>
 
     <div class="form-group">
-      <label for="visitorPhone" class="col-sm-2 control-label">Visitor's Phone</label>
+      <label for="visitorPhone" class="col-sm-2 control-label">Visitor's Phone<span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
         <input type="text" class="form-control" id="visitorPhone" name="visitorPhone" ng-model="visitor.visitor_phone">
@@ -144,16 +144,22 @@
     </div>
 
     <div class="form-group">
-      <label for="contactAddress" class="col-sm-2 control-label">Contact Address</label>
+      <label for="contactAddress" class="col-sm-2 control-label">Contact Address<span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
         <textarea type="text" id="contactAddress" class="form-control" name="contactAddress"
                   data-ng-model="visitor.visitor_location.contact_address"></textarea>
+
+        <div class="text-danger bold" ng-show="(validationErrors).contact_address.length">
+        <span ng-repeat="error in (validationErrors).contact_address">
+          {{ error }}<br>
+        </span>
+        </div>
       </div>
     </div>
 
     <div class="form-group">
-      <label for="cCountry" class="col-sm-2 control-label">Country</label>
+      <label for="cCountry" class="col-sm-2 control-label">Country<span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
         <select name="cCountry" id="cCountry" ng-model="visitor.visitor_location.residential_country"
@@ -164,11 +170,16 @@
           </option>
         </select>
 
+        <div class="text-danger bold" ng-show="(validationErrors).residential_country.length">
+        <span ng-repeat="error in (validationErrors).residential_country">
+          {{ error }}<br>
+        </span>
+        </div>
       </div>
     </div>
 
     <div class="form-group">
-      <label for="cstate" class="col-sm-2 control-label">State</label>
+      <label for="cstate" class="col-sm-2 control-label">State<span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
         <select name="cstate" id="cstate" class="form-control"
@@ -185,11 +196,16 @@
                class="form-control" name="cstate"
                data-ng-model="visitor.visitor_location.residential_state"
                ng-if="visitor.visitor_location.residential_country !== 'nigeria'">
+        <div class="text-danger bold" ng-show="(validationErrors).residential_state.length">
+        <span ng-repeat="error in (validationErrors).residential_state">
+          {{ error }}<br>
+        </span>
+        </div>
       </div>
     </div>
 
     <div class="form-group">
-      <label for="clga" class="col-sm-2 control-label">City/LGA</label>
+      <label for="clga" class="col-sm-2 control-label">City/LGA<span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
         <select class="form-control" id="clga" name="clga" ng-model="visitor.visitor_location.residential_lga"
@@ -201,6 +217,11 @@
                class="form-control" name="clga"
                data-ng-model="visitor.visitor_location.residential_lga"
                ng-if="visitor.visitor_location.residential_country !== 'nigeria'">
+        <div class="text-danger bold" ng-show="(validationErrors).residential_lga.length">
+        <span ng-repeat="error in (validationErrors).residential_lga">
+          {{ error }}<br>
+        </span>
+        </div>
       </div>
     </div>
 
