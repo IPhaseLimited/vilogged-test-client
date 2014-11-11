@@ -33,8 +33,9 @@
                 <div class="col-sm-6">{{ visitor.visitor_email }}</div>
               </div>
             </div>
-            <div class="col-sm-4" ng-show="visitor.image">
-              <img ng-src="{{ visitor.image }}" alt="" class="img-thumbnail img-responsive"/>
+            <div class="col-sm-4">
+              <img ng-src="{{ visitor.image }}" alt="" class="img-thumbnail img-responsive"  ng-if="!visitor.image"/>
+              <img src="../../img/place_holder.jpg" alt="" class="img-thumbnail img-responsive" ng-if="!visitor.image"/>
             </div>
           </div>
         </div>
