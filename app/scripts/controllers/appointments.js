@@ -68,11 +68,11 @@ angular.module('viLoggedClientApp')
                                                userService, appointmentService, utility, authorizationService) {
     $scope.appointment = {};
     $scope.default = {};
-    $scope.editValue = '';
+    $scope.host_number = '';
     $scope.some = '';
 
-    $scope.onEditChange = function() {
-console.log($scope.editValue)
+    $scope.lookUpHost = function() {
+console.log($scope.host_number)
       //if(timeout) $timeout.cancel();
       //var timeout = $timeout(function ($scope.host_number) {
       //  userService.findUserBy('phone', host_number)
