@@ -129,6 +129,16 @@
         </tr>
         </tbody>
       </table>
+      <div class="row">
+        <div class="col-sm-6" style="padding-top: 15px;">
+          Showing Page: {{visitorAppointmentCurrentPage}} of {{visitorAppointmentNumPages}}
+        </div>
+        <div class="col-sm-6">
+          <pagination total-items="totalAppointments" ng-model="appointmentsCurrentPage" max-size="maxSize"
+                      class="pagination-sm pull-right" boundary-links="true" rotate="false"
+                      items-per-page="appointmentsPerPage"></pagination>
+        </div>
+      </div>
     </div>
     <div class="widget-foot">
       <!-- Footer goes here -->
