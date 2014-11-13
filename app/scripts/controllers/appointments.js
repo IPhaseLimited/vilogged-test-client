@@ -71,18 +71,14 @@ angular.module('viLoggedClientApp')
     $scope.host_number = '';
     $scope.some = '';
 
-    $scope.lookUpHost = function() {
-console.log($scope.host_number)
-      //if(timeout) $timeout.cancel();
-      //var timeout = $timeout(function ($scope.host_number) {
-      //  userService.findUserBy('phone', host_number)
-      //    .then(function (response) {
-      //      $scope.appointment.host = response;
-      //    })
-      //    .catch(function (reason) {
-      //      console.log(reason);
-      //    });
-      //}, 350)
+    $scope.lookupHost = function(hostNumber) {
+      userService.findUserBy('phone', hostNumber)
+        .then(function (response) {
+          $scope.appointment.host = response;
+        })
+        .catch(function (reason) {
+          console.log(reason);
+        });
     };
 
     if ($stateParams.appointment_id !== null && $stateParams.appointment_id !== undefined) {
