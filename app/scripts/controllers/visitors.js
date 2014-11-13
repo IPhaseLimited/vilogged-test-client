@@ -148,7 +148,6 @@ angular.module('viLoggedClientApp')
     }
 
     $scope.createProfile = function () {
-      //TODO:: Complete validations
       var emailValidation = validationService.EMAIL;
       emailValidation.required = true;
       emailValidation.unique = true;
@@ -177,7 +176,6 @@ angular.module('viLoggedClientApp')
         visitor_location: visitor_location
       };
 
-      //TODO:: Work on a better generator for visitor's pass code possibly a service
       if (!angular.isDefined($scope.visitor.visitor_pass_code)) {
         $scope.visitor.visitor_pass_code = new Date().getTime();
       }
@@ -242,6 +240,9 @@ angular.module('viLoggedClientApp')
     $scope.visitor = {};
     $scope.appointments = [];
     $scope.upcomingAppointments = [];
+    $scope.appointmentsCurrentPage = 1;
+    $scope.appointmentsPerPage = 10;
+    $scope.maxSize = 5;
 
     visitorService.get($stateParams.visitor_id)
       .then(function (response) {
@@ -253,7 +254,7 @@ angular.module('viLoggedClientApp')
 
     appointmentService.getVisitorUpcomingAppointments($stateParams.visitor_id)
       .then(function (response) {
-        $scope.appointments = response;
+        $scope.upcomingAppointments = response;
       })
       .catch(function (reason) {
         console.log(reason);
@@ -261,7 +262,10 @@ angular.module('viLoggedClientApp')
 
     appointmentService.getAppointmentsByVisitor($stateParams.visitor_id)
       .then(function (response) {
-        $scope.upcomingAppointments = response;
+        $scope.appointments = response;
+        $scope.totalAppointments = $scope.appointments.length;
+        $scope.appointmentNumPages =
+          Math.ceil($scope.totalAppointments/$scope.appointmentsPerPage);
       })
       .catch(function (reason) {
         console.log(reason);
