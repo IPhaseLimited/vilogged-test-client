@@ -134,15 +134,11 @@ angular.module('viLoggedClientApp')
     };
 
     $scope.createAppointment = function () {
-      var appointmentValidationParams = {
+      var validationParams = {
         appointment_date: validationService.BASIC,
         appointment_visit_start_time: validationService.BASIC,
         appointment_visit_end_time: validationService.BASIC,
         purpose: validationService.BASIC
-      };
-
-      var validateParams = {
-        appointment: appointmentValidationParams
       };
 
       if (angular.isDefined($scope.visitor) && $scope.visitor !== null) {
@@ -159,14 +155,17 @@ angular.module('viLoggedClientApp')
       $scope.appointment.check_in = null;
       $scope.appointment.check_out = null;
 
-      appointmentService.save($scope.appointment)
-        .then(function (response) {
-          $scope.appointment = angular.copy($scope.default);
-          $state.go('appointments');
-        })
-        .catch(function (reason) {
-          console.log(reason);
-        });
+      $scope.validationErrors = validationService.validateFields(validationParams, $scope.appointments);
+      if (!Object.keys($scope.validationErrors).length) {
+        appointmentService.save($scope.appointment)
+          .then(function (response) {
+            $scope.appointment = angular.copy($scope.default);
+            $state.go('appointments');
+          })
+          .catch(function (reason) {
+            console.log(reason);
+          });
+      }
     };
   })
   .controller('CheckInCtrl', function ($scope, $state, $stateParams, $q,
