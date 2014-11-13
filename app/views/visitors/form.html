@@ -1,4 +1,4 @@
-<form class="form-horizontal" name="visitorForm" novalidate>
+<form class="form-horizontal" name="visitorForm" ng-submit="createProfile()" novalidate>
   <fieldset>
 
     <legend>Personal Information</legend>
@@ -262,7 +262,7 @@
     <hr/>
 
     <div class="col-sm-offset-2 col-sm-10">
-      <button class="btn btn-primary" ng-click="createProfile()">
+      <button class="btn btn-primary">
         Create Visitor Profile
       </button>
     </div>
