@@ -10,50 +10,66 @@
   <div class="widget-content">
     <div class="padd">
 
-      <table class="table table-striped table-condensed table-responsive table-bordered" ng-if="visitors.length">
-        <thead>
-        <tr>
-          <th>S/N</th>
-          <th>Visitor's Names</th>
-          <th>Visitor's Email</th>
-          <th>Visitor's Phone</th>
-          <th>Company Name</th>
-          <th>Created Date</th>
-          <th>Modified Date</th>
-          <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr data-ng-repeat="visitor in visitors">
-          <td>{{ $index + 1 }}</td>
-          <td>{{ visitor.first_name }} {{ visitor.last_name }}</td>
-          <td>{{ visitor.visitor_email }}</td>
-          <td>{{ visitor.visitor_phone }}</td>
-          <td>{{ visitor.company_name }}</td>
-          <td>{{ visitor.created |date: 'dd MMM, yyyy' }}</td>
-          <td>{{ visitor.modified | date:'dd MMM, yyyy' }}</td>
-          <td>
-            <a class="btn btn-primary btn-xs"
-               ui-sref="edit-visitor-profile({visitor_id: visitor.uuid})"
-               title="Edit {{ visitor.first_name }}'s details">
-              <i class="fa fa-edit"></i> Edit
-            </a>
+      <div flash-alert active-class="in alert" class="alert fade">
+        <span class="alert-message">{{flash.message}}</span>
+      </div>
 
-            <a class="btn btn-success btn-xs"
-               ui-sref="show-visitor({visitor_id: visitor._id})"
-               title="View {{ visitor.first_name }}'s details">
-              <i class="fa fa-eye"></i> View
-            </a>
+      <div ng-if="visitors.length">
+        <table class="table table-striped table-condensed table-responsive table-bordered">
+          <thead>
+          <tr>
+            <th>S/N</th>
+            <th>Visitor's Names</th>
+            <th>Visitor's Email</th>
+            <th>Visitor's Phone</th>
+            <th>Company Name</th>
+            <th>Group Type</th>
+            <th>Created Date</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr data-ng-repeat="visitor in visitors | paginationOffset:currentPage:itemsPerPage | orderBy: 'first_name'">
+            <td>{{ $index + 1 }}</td>
+            <td>{{ visitor.first_name }} {{ visitor.last_name }}</td>
+            <td>{{ visitor.visitor_email }}</td>
+            <td>{{ visitor.visitor_phone }}</td>
+            <td>{{ visitor.company_name }}</td>
+            <td>{{ visitor.group_type }}</td>
+            <td>{{ visitor.created |date: 'dd MMM, yyyy' }}</td>
+            <td>
+              <!--<a class="btn btn-primary btn-xs"-->
+              <!--ui-sref="edit-visitor-profile({visitor_id: visitor.uuid})"-->
+              <!--title="Edit {{ visitor.first_name }}'s details">-->
+              <!--<i class="fa fa-edit"></i> Edit-->
+              <!--</a>-->
 
-            <a class="btn btn-success btn-xs"
-               ui-sref="create-appointment-visitor({visitor_id: visitor.uuid})"
-               title="Create appointment">
-              <i class="fa fa-plus-circle"></i> Create Appointment
-            </a>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+              <a class="btn btn-success btn-xs"
+                 ui-sref="show-visitor({visitor_id: visitor._id})"
+                 title="View {{ visitor.first_name }}'s details">
+                <i class="fa fa-eye"></i> View
+              </a>
+
+              <a class="btn btn-success btn-xs"
+                 ui-sref="create-appointment-visitor({visitor_id: visitor.uuid})"
+                 title="Create appointment">
+                <i class="fa fa-plus-circle"></i> Create Appointment
+              </a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <br/>
+        <div class="row">
+          <div class="col-sm-6" style="padding-top: 15px;">
+            Showing Page: {{currentPage}} of {{numPages}}
+          </div>
+          <div class="col-sm-6">
+            <pagination total-items="totalItems" ng-model="currentPage" max-size="maxSize" class="pagination-sm pull-right"
+                        boundary-links="true" rotate="false" items-per-page="itemsPerPage"></pagination>
+          </div>
+        </div>
+      </div>
 
       <div class="alert alert-info" ng-if="!visitors.length">
         <p>
