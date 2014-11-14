@@ -13,7 +13,9 @@ angular.module('viLoggedClientApp', [
     'db',
     'db.names',
     'webcam',
-    'ngResource'
+    'ngResource',
+    'angular-flash.service',
+    'angular-flash.flash-alert-directive'
   ])
   .run(function($cookieStore, $rootScope, $state, $http, $location, loginService, userService, syncService,
                 $interval, storageService) {
@@ -110,4 +112,10 @@ angular.module('viLoggedClientApp', [
       warning: 5000,
       info: 5000
     });
+  })
+  .config(function(flashProvider) {
+    flashProvider.errorClassnames.push('alert-danger');
+    flashProvider.warnClassnames.push('alert-warn');
+    flashProvider.infoClassnames.push('alert-info');
+    flashProvider.successClassnames.push('alert-success');
   });

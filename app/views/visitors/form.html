@@ -1,4 +1,4 @@
-<form class="form-horizontal" name="visitorForm" novalidate>
+<form class="form-horizontal" name="visitorForm" ng-submit="createProfile()" novalidate>
   <fieldset>
 
     <legend>Personal Information</legend>
@@ -106,8 +106,8 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-4" ng-if="visitor.image">
-        <img ng-src="visitor.image" alt="" width="200" height="150"/>
+      <div class="col-sm-4">
+        <img ng-src="visitor.image" ng-if="visitor.image" alt="" width="200" height="150"/>
       </div>
     </div>
 
@@ -262,7 +262,7 @@
     <hr/>
 
     <div class="col-sm-offset-2 col-sm-10">
-      <button class="btn btn-primary" ng-click="createProfile()">
+      <button class="btn btn-primary">
         Create Visitor Profile
       </button>
     </div>

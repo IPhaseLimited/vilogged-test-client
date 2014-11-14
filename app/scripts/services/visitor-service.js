@@ -24,6 +24,28 @@ angular.module('viLoggedClientApp')
       return syncService.getChanges(DB_NAME);
     }
 
+    function visitorsGroupByCompanyName() {
+      var deferred = $q.defer();
+      getAllVisitors()
+        .then(function(response) {
+          var visitors = {};
+          for (var i=0; i<=response.length; i++) {
+            var visitor = response[i];
+            var companies = Object.keys('company_name');
+            if (companies[visitor.company_name] === undefined) {
+              visitors[visitor.company_name] = [];
+              visitors[visitor.company_name].push(visitor);
+            } else {
+              visitors[visitor.company_name].push(visitor);
+            }
+          }
+          deferred.resolve(visitors);
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
+        });
+      return deferred.promise;
+    }
 
     this.findByField = findByField;
 
@@ -75,5 +97,6 @@ angular.module('viLoggedClientApp')
 
     this.all = getAllVisitors;
     this.changes = getChanges;
+    this.getVisitorsGroupedByCompany = visitorsGroupByCompanyName;
     this.DBNAME = DB_NAME;
   });

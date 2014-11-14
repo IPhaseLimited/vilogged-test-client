@@ -44,18 +44,26 @@ angular.module('viLoggedClientApp')
     $scope.visitors = [];
     var DELAY = 300; //30ms
     var busy = false;
+
     function getVisitors() {
       visitorService.all()
         .then(function (response) {
           busy = false;
           $scope.visitors = response;
+          $scope.totalItems = $scope.visitors.length;
+          $scope.numPages = Math.ceil($scope.totalItems/$scope.itemsPerPage);
         })
         .catch(function (reason) {
           busy = false;
           console.log(reason);
+          console.log('some message')
         });
     }
     getVisitors();
+
+    $scope.currentPage = 1;
+    $scope.maxSize = 5;
+    $scope.itemsPerPage = 10;
 
     $scope.syncPromises['visitors'] = $interval(function() {
       if (!busy) {
@@ -77,14 +85,13 @@ angular.module('viLoggedClientApp')
     }, DELAY);
   })
   .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, $rootScope, $window, visitorService, validationService,
-                                           countryStateService, guestGroupConstant, userService) {
+                                           countryStateService, guestGroupConstant, userService, flash) {
     $scope.visitors = [];
     $scope.visitor = {};
     $scope.countryState = {};
     $scope.countries = [];
     $scope.states = [];
     $scope.lgas = [];
-    $scope.visitor.group_type = 'normal';
     $scope.visitorGroups = guestGroupConstant;
 
     countryStateService.all()
@@ -141,8 +148,6 @@ angular.module('viLoggedClientApp')
     }
 
     $scope.createProfile = function () {
-      console.log($scope.visitor)
-      //TODO:: Complete validations
       var emailValidation = validationService.EMAIL;
       emailValidation.required = true;
       emailValidation.unique = true;
@@ -171,9 +176,13 @@ angular.module('viLoggedClientApp')
         visitor_location: visitor_location
       };
 
-      //TODO:: Work on a better generator for visitor's pass code possibly a service
       if (!angular.isDefined($scope.visitor.visitor_pass_code)) {
         $scope.visitor.visitor_pass_code = new Date().getTime();
+      }
+
+      if (!angular.isDefined($scope.visitor.group_type) || $scope.visitor.group_type === '')
+      {
+        $scope.visitor.group_type = 'normal';
       }
 
       $scope.validationErrors = validationService.validateFields(validationParams, $scope.visitor);
@@ -181,12 +190,20 @@ angular.module('viLoggedClientApp')
         visitorService.save($scope.visitor)
           .then(function () {
             if (userService.user) {
+              flash.success= $scope.visitor._id ? 'Visitor profile was successfully updated' : 'Visitor profile successfully created.';
               $state.go('visitors');
             } else {
-              $state.go('login');
+              if (!angular.isDefined($scope.visitor._id)) {
+                flash.success = 'Your profile was successfully created.';
+                $state.go('login');
+              } else {
+                flash.success = 'Your profile was successfully updated.';
+                $state.go('show-visitor', {visitor_id: $scope.visitor._id});
+              }
             }
           })
           .catch(function (reason) {
+            flash.error = 'An error occurred while saving visitor\'s profile';
             console.log(reason);
           });
       }
@@ -223,6 +240,9 @@ angular.module('viLoggedClientApp')
     $scope.visitor = {};
     $scope.appointments = [];
     $scope.upcomingAppointments = [];
+    $scope.appointmentsCurrentPage = 1;
+    $scope.appointmentsPerPage = 10;
+    $scope.maxSize = 5;
 
     visitorService.get($stateParams.visitor_id)
       .then(function (response) {
@@ -234,7 +254,7 @@ angular.module('viLoggedClientApp')
 
     appointmentService.getVisitorUpcomingAppointments($stateParams.visitor_id)
       .then(function (response) {
-        $scope.appointments = response;
+        $scope.upcomingAppointments = response;
       })
       .catch(function (reason) {
         console.log(reason);
@@ -242,7 +262,10 @@ angular.module('viLoggedClientApp')
 
     appointmentService.getAppointmentsByVisitor($stateParams.visitor_id)
       .then(function (response) {
-        $scope.upcomingAppointments = response;
+        $scope.appointments = response;
+        $scope.totalAppointments = $scope.appointments.length;
+        $scope.appointmentNumPages =
+          Math.ceil($scope.totalAppointments/$scope.appointmentsPerPage);
       })
       .catch(function (reason) {
         console.log(reason);
