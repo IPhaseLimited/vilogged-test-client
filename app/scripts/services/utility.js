@@ -172,4 +172,20 @@ angular.module('viLoggedClientApp')
       return (str||"").replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     };
 
+    /**
+     * calculates the timestamp for a particular date and time (if given)
+     * @param date Date to calculate timestamp
+     * @param time Time to calculate timestamp
+     * @returns {number} Timestamp
+     */
+    this.getTimeStamp = function (date, time) {
+      var timeStamp = new Date(date);
+      if (angular.isDefined(time)) {
+        var timeArray = time.split(':');
+        timeStamp.setHours(timeArray[0]);
+        timeStamp.setMinutes(timeArray[1]);
+      }
+      return timeStamp.getTime();
+    }
+
   });
