@@ -162,8 +162,8 @@ angular.module('viLoggedClientApp')
         .then(function (response) {
           var appointments = response
             .filter(function(appointment) {
-              var appointmentDate = utility.getTimeStamp(appointment.appointment_date);
-              return appointmentDate >= weekStartedOn || appointmentDate <= weekEndedOn;
+              var appointmentTimeStamp = utility.getTimeStamp(appointment.appointment_date);
+              return appointmentTimeStamp >= weekStartedOn || appointmentTimeStamp <= weekEndedOn;
             });
           deferred.resolve(appointments);
         })
