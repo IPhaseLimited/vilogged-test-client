@@ -147,7 +147,7 @@
       <label for="contactAddress" class="col-sm-2 control-label">Contact Address<span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
-        <textarea type="text" id="contactAddress" class="form-control" name="contactAddress"
+        <textarea id="contactAddress" class="form-control" name="contactAddress"
                   data-ng-model="visitor.visitor_location.contact_address"></textarea>
 
         <div class="text-danger bold" ng-show="(validationErrors).contact_address.length">
@@ -252,7 +252,7 @@
         <select class="form-control col-sm-6" ng-model="visitor.group_type" name="visitorGroup"
                 id="visitorGroup">
           <option value=""></option>
-          <option value="visitorGroup" ng-repeat="visitorGroup in visitorGroups">
+          <option value="{{ visitorGroup }}" ng-repeat="visitorGroup in visitorGroups">
             {{ visitorGroup }}
           </option>
         </select>
