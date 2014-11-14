@@ -29,10 +29,9 @@ angular.module('viLoggedClientApp')
       getAllVisitors()
         .then(function(response) {
           var visitors = {};
-          for (var i=0; i<=response.length; i++) {
+          for (var i=0; i<response.length; i++) {
             var visitor = response[i];
-            var companies = Object.keys('company_name');
-            if (companies[visitor.company_name] === undefined) {
+            if (!visitors.hasOwnProperty(visitor.company_name)) {
               visitors[visitor.company_name] = [];
               visitors[visitor.company_name].push(visitor);
             } else {
