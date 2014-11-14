@@ -4,7 +4,9 @@
       <div class="widget-head">
         <div class="pull-left">My Profile</div>
         <div class="widget-icons pull-right">
-
+          <a class="btn btn-primary btn-xs" ui-sref="edit-visitor-profile({visitor_id: visitor._id})">
+            <i class="fa fa-edit"></i>Edit
+          </a>
         </div>
         <div class="clearfix"></div>
       </div>
@@ -73,7 +75,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="upcomingAppointment in upcomingAppointments">
+            <tr ng-repeat="upcomingAppointment in upcomingAppointments | limitTo: 5">
               <td>{{ $index+1 }}</td>
               <td>{{ upcomingAppointment.appointment_date }}</td>
               <td>{{ upcomingAppointment.visit_start_time }}</td>
@@ -127,6 +129,16 @@
         </tr>
         </tbody>
       </table>
+      <div class="row">
+        <div class="col-sm-6" style="padding-top: 15px;">
+          Showing Page: {{visitorAppointmentCurrentPage}} of {{visitorAppointmentNumPages}}
+        </div>
+        <div class="col-sm-6">
+          <pagination total-items="totalAppointments" ng-model="appointmentsCurrentPage" max-size="maxSize"
+                      class="pagination-sm pull-right" boundary-links="true" rotate="false"
+                      items-per-page="appointmentsPerPage"></pagination>
+        </div>
+      </div>
     </div>
     <div class="widget-foot">
       <!-- Footer goes here -->

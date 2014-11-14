@@ -1,1 +1,123 @@
-<p>This is reports</p>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="widget">
+      <div class="widget-head">
+        <div class="pull-left">Appointments in Progress</div>
+        <div class="widget-icons pull-right">
+
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="widget-content">
+        <div class="padd">
+          <div class="alert alert-info" ng-if="!currentAppointments.length">
+            <p>There are no appointments in progress</p>
+          </div>
+          <div ng-if="currentAppointments.length">
+            <table class="table table-condensed table-responsive table-bordered">
+              <thead>
+              <tr>
+                <th>S/N</th>
+                <th>Visitor's Name</th>
+                <th>Host's Name</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="currentAppointment in currentAppointments  | paginationOffset:currentPage:itemsPerPage | orderBy: 'start_time'">
+                <td>{{ $index + 1 }}</td>
+                <td>{{ currentAppointment.visitor.first_name }} {{ currentAppointment.visitor.last_name }}</td>
+                <td>{{ currentAppointment.host.first_name }} {{ currentAppointment.host.last_name }}</td>
+                <td>{{ currentAppointment.start_time }}</td>
+                <td>{{ currentAppointment.end_time }}</td>
+              </tr>
+              </tbody>
+            </table>
+            <div class="row">
+              <div class="col-sm-6" style="padding-top: 15px;">
+                Showing Page: {{currentPage}} of {{numPages}}
+              </div>
+              <div class="col-sm-6">
+                <pagination total-items="totalItems" ng-model="currentPage" max-size="maxSize"
+                            class="pagination-sm pull-right"
+                            boundary-links="true" rotate="false" items-per-page="itemsPerPage"></pagination>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="widget-foot">
+          <!-- Footer goes here -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-6">
+    <div class="widget">
+      <div class="widget-head">
+        <div class="pull-left">Visitors Grouped By Company</div>
+        <div class="widget-icons pull-right">
+
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="widget-content">
+        <div class="padd">
+          <table class="table table-bordered table-condensed">
+            <thead>
+            <tr>
+              <th>Company Name</th>
+              <th>No of registered visitors</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="(companyName, visitors) in visitorsGroupedByCompany">
+              <td>{{companyName}}</td>
+              <td>{{visitors.length}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="widget-foot">
+          <!-- Footer goes here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6">
+    <div class="widget">
+      <div class="widget-head">
+        <div class="pull-left">Number of Appointments Over Time</div>
+        <div class="widget-icons pull-right">
+
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="widget-content">
+        <div class="padd">
+          <table class="table table-condensed table-bordered table-responsive">
+            <tr>
+              <td>Number of Appointments for Today</td>
+              <td>{{ numberOfAppointmentsForToday }}</td>
+            </tr>
+            <tr>
+              <td>Number of Appointments for this week</td>
+              <td>{{ numberOfAppointmentsForThisWeek }}</td>
+            </tr>
+            <tr>
+              <td>Number of Appointments for this month</td>
+              <td>{{ numberOfAppointmentsForThisMonth }}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="widget-foot">
+          <!-- Footer goes here -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

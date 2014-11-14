@@ -1,4 +1,4 @@
-<form class="form-horizontal" name="visitorForm" novalidate>
+<form class="form-horizontal" name="visitorForm" ng-submit="createProfile()" novalidate>
   <fieldset>
 
     <legend>Personal Information</legend>
@@ -106,8 +106,8 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-4" ng-if="visitor.image">
-        <img ng-src="visitor.image" alt="" width="200" height="150"/>
+      <div class="col-sm-4">
+        <img ng-src="visitor.image" ng-if="visitor.image" alt="" width="200" height="150"/>
       </div>
     </div>
 
@@ -147,7 +147,7 @@
       <label for="contactAddress" class="col-sm-2 control-label">Contact Address<span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
-        <textarea type="text" id="contactAddress" class="form-control" name="contactAddress"
+        <textarea id="contactAddress" class="form-control" name="contactAddress"
                   data-ng-model="visitor.visitor_location.contact_address"></textarea>
 
         <div class="text-danger bold" ng-show="(validationErrors).contact_address.length">
@@ -252,7 +252,7 @@
         <select class="form-control col-sm-6" ng-model="visitor.group_type" name="visitorGroup"
                 id="visitorGroup">
           <option value=""></option>
-          <option value="visitorGroup" ng-repeat="visitorGroup in visitorGroups">
+          <option value="{{ visitorGroup }}" ng-repeat="visitorGroup in visitorGroups">
             {{ visitorGroup }}
           </option>
         </select>
@@ -262,7 +262,7 @@
     <hr/>
 
     <div class="col-sm-offset-2 col-sm-10">
-      <button class="btn btn-primary" ng-click="createProfile()">
+      <button class="btn btn-primary">
         Create Visitor Profile
       </button>
     </div>

@@ -35,8 +35,8 @@ angular.module('viLoggedClientApp')
       },
       template: '<div class="camera"><video class="camera" autoplay="" /><div ng-transclude></div></div>',
       link: function(scope, element, attrs) {
-        var w = attrs.width || 320,
-          h = attrs.height || 200;
+        var w = attrs.width || 280,
+          h = attrs.height || 300;
 
         if (!cameraService.hasUserMedia) return;
         var userMedia = cameraService.getUserMedia(),
