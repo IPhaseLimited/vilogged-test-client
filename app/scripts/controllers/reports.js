@@ -22,9 +22,15 @@ angular.module('viLoggedClientApp')
       });
   })
   .controller('ReportsCtrl', function ($scope, appointmentService, visitorService) {
+    $scope.maxSize = 5;
+    $scope.currentPage = 1;
+    $scope.itemsPerPage = 10;
+
     appointmentService.getCurrentAppointments()
       .then(function (response) {
         $scope.currentAppointments = response;
+        $scope.totalItems = response.length;
+        $scope.numPages = $scope.totalItems/$scope.itemsPerPage;
       })
       .catch(function (reason) {
         console.log(reason);
