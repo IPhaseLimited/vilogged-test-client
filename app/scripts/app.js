@@ -25,7 +25,7 @@ angular.module('viLoggedClientApp', [
 
     $rootScope.$on('$stateChangeSuccess', function () {
 
-      if ($rootScope) {
+      if ($rootScope.syncPromises) {
         var syncPromises = Object.keys($rootScope.syncPromises);
         if (syncPromises.length > 0) {
           syncPromises.forEach(function(key) {
