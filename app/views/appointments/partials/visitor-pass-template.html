@@ -1,0 +1,19 @@
+
+<div style="width: 388px; height: 200px; border: 2px solid #000; padding-left: 10px; padding-right: 10px; margin-bottom: 20px;">
+  <div style="font-size: 150%; font-weight: bold; text-align: center">Visitor Pass</div>
+  <div>
+    <div style="float: left; width: 40%;">
+      <div style="width: 95%; background: #cccccc; margin-top: 5%; margin-bottom: 5%; height: 100px">
+        <img ng-src="{{ appointment.visitor.image }}" alt="" width="100%" height="100px"/>
+      </div>
+    </div>
+    <div style="float: right; width: 55%;">
+      <div style="font-size: 110%; margin-bottom: 10px">Name: {{ appointment.visitor.first_name }} {{ appointment.visitor.last_name }}</div>
+      <div style="font-size: 80%;">Host: {{ appointment.host.first_name }} {{ appointment.host.last_name }}</div>
+      <div style="font-size: 80%;">Department: {{ appointment.host.department.department_name }}</div>
+      <div style="font-size: 90%; font-weight: bold">Pass Code: {{ appointment.label_code }}</div>
+    </div>
+    <div style="clear: both"></div>
+  </div>
+  <div barcode-generator="{{ appointment.label_code }}" style="height:30px; margin-top: 20px;"></div>
+</div>

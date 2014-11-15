@@ -8,4 +8,4 @@
  * Constant in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .constant('guestGroupConstant', ["Banned","VIP" , "Normal"]);
+  .constant('guestGroupConstant', ["Banned", "VIP" , "Normal"]);

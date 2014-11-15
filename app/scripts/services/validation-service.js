@@ -134,7 +134,8 @@ angular.module('viLoggedClientApp')
           var emailValidation = params[key].type === 'email' ? validateEmail(fieldData, params[key]) : [];
           var usernameValidation = params[key].type === 'username' ? validateUsername(fieldData, params[key]) : [];
           var intValidation = params[key].type === 'int' ? validateInt(fieldData, params[key]) : [];
-          var updatedMessages = messages.concat(required, lengthValidation, emailValidation, usernameValidation);
+          var updatedMessages = messages.concat(required, lengthValidation, emailValidation,
+            usernameValidation, intValidation);
 
           if (updatedMessages.length > 0) {
             errors[key] = updatedMessages;

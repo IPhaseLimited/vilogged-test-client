@@ -9,68 +9,129 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/appointments',
         templateUrl: 'views/appointments/index.html',
-        controller: 'AppointmentCtrl'
+        controller: 'AppointmentCtrl',
+        data: {
+          requiredPermission: 'is_active',
+          label: 'Create Appointment'
+        }
+      })
+      .state('show-appointment', {
+        parent: 'root.index',
+        url: '/appointments/:appointment_id',
+        templateUrl: 'views/appointments/detail.html',
+        controller: 'AppointmentDetailCtrl',
+        data: {
+          label: 'Appointment Detail'
+        }
       })
       .state('create-appointment-visitor', {
         parent: 'root.index',
         url: '/appointments/add/:visitor_id',
         templateUrl: 'views/appointments/form.html',
-        controller: 'AppointmentFormCtrl'
+        controller: 'AppointmentFormCtrl',
+        data: {
+          label: 'Create Appointment'
+        }
       })
       .state('create-appointment-host', {
         parent: 'root.index',
         url: '/appointments/add/:host_id',
         templateUrl: 'views/appointments/form.html',
-        controller: 'AppointmentFormCtrl'
+        controller: 'AppointmentFormCtrl',
+        data: {
+          requiredPermission: 'is_active',
+          label: 'Create Appointment'
+        }
       })
       .state('create-appointment', {
         parent: 'root.index',
         url: '/appointments/add/',
         templateUrl: 'views/appointments/form.html',
-        controller: 'AppointmentFormCtrl'
+        controller: 'AppointmentFormCtrl',
+        data: {
+          requiredPermission: 'is_staff',
+          label: 'Create Appointment'
+        }
       })
       .state('edit-appointment', {
         parent: 'root.index',
         url: '/appointments/:appointment_id/edit/',
         templateUrl: 'views/appointments/form.html',
-        controller: 'AppointmentFormCtrl'
+        controller: 'AppointmentFormCtrl',
+        data: {
+          requiredPermission: 'is_active',
+          label: 'Edit Appointment'
+        }
       })
       .state('visitor-check-in', {
         parent: 'root.index',
         url: '/appointments/:appointment_id/check-in',
         templateUrl: 'views/appointments/check-in.html',
-        controller: 'CheckInCtrl'
+        controller: 'CheckInCtrl',
+        data: {
+          requiredPermission: 'is_staff',
+          label: 'Check Visitor In'
+        }
+      })
+      .state('print-visitor-label', {
+        url: '/appointments/?appointment_id',
+        templateUrl: 'views/appointments/visitor-pass.html',
+        controller: 'VisitorPassCtrl',
+        data: {
+          requiredPermission: 'is_staff',
+          label: 'Print Visitor Tag'
+        }
       })
       .state('visitor-check-out', {
         parent: 'root.index',
         url: '/appointments/:appointment_id/check-out',
         templateUrl: 'views/appointments/check-out.html',
-        controller: 'CheckInCtrl'
+        controller: 'CheckInCtrl',
+        data: {
+          requiredPermission: 'is_staff',
+          label: 'Check Visitor Out'
+        }
       })
   })
-  .controller('AppointmentCtrl', function ($scope, appointmentService, authorizationService) {
-    $scope.canCheckInOrCheckOutVisitor = authorizationService.canCheckInOrCheckOutVisitor();
-
+  .controller('AppointmentCtrl', function ($scope, appointmentService) {
     appointmentService.all()
       .then(function (response) {
         $scope.appointments = response;
       })
       .catch(function (reason) {
-        console.log(reason)
+        console.log(reason);
       });
   })
-  .controller('AppointmentFormCtrl', function ($scope, $stateParams, $state, visitorService,
+  .controller('AppointmentDetailCtrl', function ($scope, $stateParams, appointmentService) {
+    appointmentService.get($stateParams.appointment_id)
+      .then(function (response) {
+        $scope.appointment = response;
+      })
+      .catch(function (reason) {
+        console.log(reason);
+      });
+  })
+  .controller('AppointmentFormCtrl', function ($scope, $stateParams, $state, $timeout, visitorService,
                                                userService, appointmentService, utility, authorizationService) {
     $scope.appointment = {};
     $scope.default = {};
+    $scope.host_number = '';
+    $scope.some = '';
+
+    $scope.lookupHost = function(hostNumber) {
+      userService.findUserBy('phone', hostNumber)
+        .then(function (response) {
+          $scope.appointment.host = response;
+        })
+        .catch(function (reason) {
+          console.log(reason);
+        });
+    };
 
     if ($stateParams.appointment_id !== null && $stateParams.appointment_id !== undefined) {
       appointmentService.get($stateParams.appointment_id)
         .then(function(response) {
           $scope.appointment = response;
-          if (!authorizationService.canEditAppointment($scope.appointment)) {
-            $state.go("appointments");
-          }
         })
         .catch(function(reason) {
           console.log(reason);
@@ -117,6 +178,13 @@ angular.module('viLoggedClientApp')
     };
 
     $scope.createAppointment = function () {
+      var validationParams = {
+        appointment_date: validationService.BASIC,
+        appointment_visit_start_time: validationService.BASIC,
+        appointment_visit_end_time: validationService.BASIC,
+        purpose: validationService.BASIC
+      };
+
       if (angular.isDefined($scope.visitor) && $scope.visitor !== null) {
         $scope.appointment.visitor = angular.copy($scope.visitor);
       }
@@ -131,14 +199,18 @@ angular.module('viLoggedClientApp')
       $scope.appointment.check_in = null;
       $scope.appointment.check_out = null;
 
-      appointmentService.save($scope.appointment)
-        .then(function (response) {
-          $scope.appointment = angular.copy($scope.default);
-          $state.go('appointments');
-        })
-        .catch(function (reason) {
-          console.log(reason);
-        });
+      $scope.validationErrors = validationService.validateFields(validationParams, $scope.appointments);
+      if (!Object.keys($scope.validationErrors).length) {
+        appointmentService.save($scope.appointment)
+          .then(function (response) {
+            $scope.appointment = angular.copy($scope.default);
+            //TODO:: implement notification service here
+            $state.go('appointments');
+          })
+          .catch(function (reason) {
+            console.log(reason);
+          });
+      }
     };
   })
   .controller('CheckInCtrl', function ($scope, $state, $stateParams, $q,
@@ -210,12 +282,25 @@ angular.module('viLoggedClientApp')
 
     $scope.checkVisitorIn = function () {
       $scope.appointment.checked_in = utility.getDateTime();
+      $scope.appointment.label_code = utility.generateRandomInteger();
       appointmentService.save($scope.appointment)
         .then(function (response) {
-          $scope.appointment = angular.copy($scope.default);
-          $state.go('appointments');
+          //TODO:: implement notification service
+          $state.go('print-visitor-label', { appointment_id: $scope.appointment._id });
         })
         .catch(function (reason) {
         });
     };
+  })
+  .controller('VisitorPassCtrl', function($scope, $state, $stateParams, appointmentService) {
+    $scope.appointment = {};
+    console.log($stateParams.appointment_id);
+
+    appointmentService.get($stateParams.appointment_id)
+      .then(function (response) {
+        $scope.appointment = response;
+      })
+      .catch(function (reason) {
+        console.log(reason);
+      })
   });

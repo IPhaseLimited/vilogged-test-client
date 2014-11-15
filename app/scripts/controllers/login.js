@@ -24,20 +24,17 @@ angular.module('viLoggedClientApp')
   .controller('LoginCtrl', function ($scope, $state, loginService, visitorService) {
     $scope.displayVisitorLogin = true;
 
-    $scope.toggleLoginScreen = function() {
-      $scope.displayVisitorLogin = !$scope.displayVisitorLogin;
-    };
-
-    $scope.visitor = {};
+    $scope.visitorCredential = {};
     $scope.visitorLogin = function() {
-      visitorService.findByPassCodeOrPhone($scope.visitor.identity)
-        .then(function(response) {
-          loginService.visitorLogin($scope.visitor);
-          $state.go("show-visitor");
+      loginService.visitorLogin($scope.visitorCredential)
+        .then(function (response) {
+          $scope.loginError = false;
+          $state.go('show-visitor', {visitor_id: response.loginRawResponse._id})
         })
-        .catch(function(reason) {
-          loginService.visitorLogin($scope.visitor);
-          $state.go("create-visitor-profile");
+        .catch(function (reason) {
+          $scope.loginError = true;
+          $scope.errorMessages = reason.loginMessage;
+          $scope.visitorCredential.identity = '';
         })
     };
 

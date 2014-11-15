@@ -81,7 +81,7 @@ angular.module('viLoggedClientApp')
       getUser(id)
         .then(function (response) {
           response.is_active = !response.is_active;
-          updateUserAccount(id, response)
+          updateUser(id, response)
             .then(function (response) {
               deferred.resolve(response);
             })
@@ -108,7 +108,7 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     }
 
-    this.updatePassword = function (password) {
+    function updatePassword(password) {
       var deferred = $q.defer();
       $http.post(config.api.backend + '/api/v1/user/set/password', password)
         .success(function (response) {
@@ -117,7 +117,19 @@ angular.module('viLoggedClientApp')
         .error(function (reason) {
           deferred.reject(reason);
         });
-      return deferred.promise
+      return deferred.promise;
+    }
+
+    function findUserBy(field, value) {
+      var deferred = $q.defer();
+      $http.get(config.api.backend + '/api/v1/user/?' + field + '=' + value)
+        .success(function (response) {
+          deferred.resolve(response);
+        })
+        .error(function (reason) {
+          deferred.reject(reason);
+        });
+      return deferred.promise;
     }
 
     this.all = getAllUsers;
@@ -127,5 +139,6 @@ angular.module('viLoggedClientApp')
     this.user = $cookieStore.get('current-user');
     this.toggleUserActivationStatus = toggleUserAccountActive;
     this.remove = removeUser;
-  })
-;
+    this.updatePassword = updatePassword;
+    this.findUserBy = findUserBy;
+  });

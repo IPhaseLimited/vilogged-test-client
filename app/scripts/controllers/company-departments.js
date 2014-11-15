@@ -80,8 +80,10 @@ angular.module('viLoggedClientApp')
       companyDepartmentsService.all()
         .then(function (departments) {
           $scope.departments = departments;
+          busy = false;
         })
         .catch(function (reason) {
+          busy = false;
           console.log(reason);
         });
     }
