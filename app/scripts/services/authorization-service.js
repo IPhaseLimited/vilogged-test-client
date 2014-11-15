@@ -12,6 +12,10 @@ angular.module('viLoggedClientApp')
     // AngularJS will instantiate a singleton by calling "new" on this function
     var currentUser = userService.user;
 
+    function authorize(requiredPermission) {
+      return currentUser[requiredPermission];
+    }
+
     function canPerformAdminActions() {
       return currentUser.is_superuser;
     }
@@ -36,6 +40,7 @@ angular.module('viLoggedClientApp')
       return currentUser.is_staff || currentUser.is_superuser;
     };
 
+    this.authorize = authorize;
     this.canModifyUser = canPerformAdminActions;
     this.canModifyDepartment = canPerformAdminActions;
     this.canModifyEntrance =  canPerformAdminActions;

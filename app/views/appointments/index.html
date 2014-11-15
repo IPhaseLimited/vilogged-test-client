@@ -41,6 +41,7 @@
                  class="btn btn-xs btn-success" ng-if="appointment.check_in">Check Out</a>
               <a ui-sref="edit-appointment({ appointment_id: appointment._id })"
                  class="btn btn-xs btn-success" ng-if="!appointment.check_in">Edit</a>
+              <a ui-sref="show-appointment({appointment_id: appointment._id})" class="btn btn-xs btn-success">View</a>
             </td>
           </tr>
         </tbody>

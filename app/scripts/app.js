@@ -17,8 +17,8 @@ angular.module('viLoggedClientApp', [
     'angular-flash.service',
     'angular-flash.flash-alert-directive'
   ])
-  .run(function($cookieStore, $rootScope, $state, $http, $location, loginService, userService, syncService,
-                $interval, storageService) {
+  .run(function($cookieStore, $rootScope, $state, $http, $location, $interval,loginService, userService, syncService,
+                 storageService, authorizationService) {
     syncService.startReplication();
     $rootScope.syncPromises = {};
     $rootScope.pageTitle = 'Visitor Management System';
@@ -48,6 +48,7 @@ angular.module('viLoggedClientApp', [
 
       var userLoginStatus =
         !$cookieStore.get('vi-token') && ($cookieStore.get('no-login') === 0 || $cookieStore.get('no-login') === undefined);
+
       if (userLoginStatus && !$cookieStore.get('vi-visitor-credential') && !$cookieStore.get('vi-anonymous-token')) {
         $state.go('login');
       }
@@ -55,6 +56,13 @@ angular.module('viLoggedClientApp', [
       if ($cookieStore.get('vi-anonymous-token') && $state.$current.name !== 'visitor-registration') {
         loginService.logout();
         $state.go('login');
+      }
+
+      if ($state.current.data.requiredPermission !== undefined) {
+        var authorized = authorizationService.authorize($state.current.data.requiredPermission);
+        if (!authorized) {
+          $state.go('access-rejected');
+        }
       }
 
       if (angular.isDefined($state.$current.self.data)) {

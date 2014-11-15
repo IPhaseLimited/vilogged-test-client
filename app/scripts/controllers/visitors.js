@@ -84,8 +84,8 @@ angular.module('viLoggedClientApp')
 
     }, DELAY);
   })
-  .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, $rootScope, $window, visitorService, validationService,
-                                           countryStateService, guestGroupConstant, userService, flash) {
+  .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, $rootScope, $window, visitorService,
+                                           validationService, countryStateService, guestGroupConstant, userService, flash) {
     $scope.visitors = [];
     $scope.visitor = {};
     $scope.countryState = {};

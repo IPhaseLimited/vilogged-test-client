@@ -12,31 +12,29 @@
         <div class="padd">
           <div class="row">
             <div class="col-sm-8">
-              <table class="table-condensed table">
-                <tr>
-                  <th>Name</th>
-                  <td>{{ ((appointment).visitor).first_name + ' ' + ((appointment).visitor).last_name }}</td>
-                </tr>
-                <tr>
-                  <th>Birth Date</th>
-                  <td>{{ ((appointment).visitor).birth_date | date: 'MMM d, y' }}</td>
-                </tr>
-              </table>
-              <table class="table table-condensed table-striped">
-                <tr>
-                  <th>Contact Phone</th>
-                  <th>Contact Email</th>
-                </tr>
-                <tr>
-                  <td>{{ ((appointment).visitor).visitor_phone}}</td>
-                  <td>{{ ((appointment).visitor).visitor_email}}</td>
-                </tr>
-              </table>
+              <div class="row">
+                <div class="col-sm-6"><strong>Name</strong></div>
+                <div class="col-sm-6">{{ ((appointment).visitor).first_name + ' ' + ((appointment).visitor).last_name
+                  }}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6"><strong>Birth Date</strong></div>
+                <div class="col-sm-6">{{ ((appointment).visitor).birth_date | date: 'MMM d, y' }}</div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6"><strong>Contact Phone</strong></div>
+                <div class="col-sm-6"><strong>Contact Email</strong></div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">{{ ((appointment).visitor).visitor_phone}}</div>
+                <div class="col-sm-6">{{ ((appointment).visitor).visitor_email}}</div>
+              </div>
             </div>
             <div class="col-sm-4">
-              <img ng-if="((appointment).visitor).image !== undefined" ng-src="appointment.visitor.image" alt=""
+              <img ng-if="((appointment).visitor).image !== undefined" ng-src="{{appointment.visitor.image}}" alt=""
                    class="img-responsive"/>
-              <img ng-if="!((appointment).visitor).image" ng-src="img/place_holderjpg" alt=""
+              <img ng-if="!((appointment).visitor).image" ng-src="img/place_holder.jpg" alt=""
                    class="img-responsive"/>
             </div>
           </div>
@@ -61,29 +59,23 @@
         <div class="padd">
           <div class="row">
             <div class="col-sm-8">
-              <table class="table-condensed table">
-                <tr>
-                  <th>Name</th>
-                  <td>{{ ((appointment).host).first_name + ' ' + ((appointment).host).last_name }}</td>
-                </tr>
-                <tr>
-                  <th>Department</th>
-                  <td ng-if="(((appointment).host).user_profile).department">
-                    {{ (((appointment).host).user_profile).department }}
-                  </td>
-                  <td ng-if="!(((appointment).host).user_profile).department"> Nil</td>
-                </tr>
-              </table>
-              <table class="table table-condensed">
-                <tr>
-                  <th col-size="3">Contact Phone</th>
-                </tr>
-                <tr>
-                  <td>{{ (((appointment).host).user_profile).phone }}</td>
-                  <td>{{ (((appointment).host).user_profile).home_phone }}</td>
-                  <td>{{ (((appointment).host).user_profile).work_phone }}</td>
-                </tr>
-              </table>
+              <div class="row">
+                <div class="col-sm-6"><strong>Name</strong></div>
+                <div class="col-sm-6">{{ ((appointment).host).first_name + ' ' + ((appointment).host).last_name }}</div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6"><strong>Department</strong></div>
+                <div ng-if="(((appointment).host).user_profile).department" class="col-sm-6">
+                  {{ (((appointment).host).user_profile).department }}
+                </div>
+                <div ng-if="!(((appointment).host).user_profile).department" class="col-sm-6"> Nil</div>
+              </div>
+              <div col-sm-12><strong>Contact Phone</strong></div>
+              <div class="row">
+                <div class="col-sm-4">{{ (((appointment).host).user_profile).phone }}</div>
+                <div class="col-sm-4">{{ (((appointment).host).user_profile).home_phone }}</div>
+                <div class="col-sm-4">{{ (((appointment).host).user_profile).work_phone }}</div>
+              </div>
             </div>
             <div class="col-sm-4">
               <img ng-if="((appointment).visitor).image !== undefined" ng-src="{{ appointment.visitor.image }}" alt=""
@@ -105,7 +97,7 @@
   <div class="widget-head">
     <div class="pull-left">Appointment Detail</div>
     <div class="widget-icons pull-right">
-      <a class="btn btn-primary btn-xs" href="">
+      <a class="btn btn-primary btn-xs" ui-sref="edit-appointment({appointment_id: appointment._id})">
         <i class="fa fa-edit"></i> Edit Appointment
       </a>
     </div>
@@ -113,6 +105,20 @@
   </div>
   <div class="widget-content">
     <div class="padd">
+      <div class="row">
+        <div class="col-sm-6">
+          <h3>Purpose of Visit</h3>
+          <hr/>
+          <p ng-show="appointment.purpose">{{ appointment.purpose }}</p>
+          <p ng-show="!appointment.purpose">None</p>
+        </div>
+        <div class="col-sm-6">
+          <h3>Representing</h3>
+          <hr/>
+          <p ng-show="appointment.purpose">{{ appointment.representing }}</p>
+          <p ng-show="!appointment.purpose">None</p>
+        </div>
+      </div>
       <table class="table table-condensed">
         <tr>
           <th>Appointment Date</th>
@@ -120,11 +126,9 @@
           <th>End Time</th>
           <th>Approval Status</th>
           <th>Pass Code</th>
-          <th>Purpose of Visit</th>
-          <th>Representing</th>
         </tr>
         <tr>
-          <td>{{ appointment.appointment_date }}</td>
+          <td>{{ appointment.appointment_date | date: 'MMM d, y' }}</td>
           <td>{{ appointment.visit_start_time }}</td>
           <td>{{ appointment.visit_end_time }}</td>
           <td>
@@ -132,8 +136,6 @@
             <span ng-if="appointment.approval_status !== undefined">{{ appointment.approval_status }}</span>
           </td>
           <td>{{ appointment.label_code }}</td>
-          <td>{{ appointment.purpose }}</td>
-          <td>{{ appointment.representing }}</td>
         </tr>
       </table>
     </div>
@@ -142,6 +144,7 @@
     </div>
   </div>
 </div>
+
 
 <div class="widget">
   <div class="widget-head">
@@ -229,22 +232,8 @@
 
         <!-- Item management section -->
         <legend>
-          Restricted Items
-          <a class="btn btn-info btn-xs pull-right" ng-click="addItem()">
-            <i class="fa fa-plus-circle"></i>
-            Add Item
-          </a>
+          Items Not Allowed
         </legend>
-        <div class="form-group">
-          <div class="col-sm-offset-2 col-sm-10">
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" ng-model="item" ng-click="checkItemScope()"> Prohibited Items available?
-              </label>
-            </div>
-          </div>
-        </div>
-
         <div ng-if="item">
 
           <div ng-repeat="row in appointment.restricted_items">
@@ -281,11 +270,15 @@
           </div>
         </div>
 
-
+        <a class="btn btn-info col-sm-offset-9 pull-right" ng-click="addItem()">
+          <i class="fa fa-plus-circle"></i>
+          Add Item
+        </a>
+        <div class="clearfix"></div>
 
         <hr/>
         <div class="form-group">
-          <button class="btn btn-success col-sm-offset-10">
+          <button class="btn btn-success col-sm-offset-9 pull-right">
             <i class="fa fa-check-circle"></i> Check Guest In & Print Pass
           </button>
         </div>
