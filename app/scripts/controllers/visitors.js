@@ -45,8 +45,7 @@ angular.module('viLoggedClientApp')
           }
         },
         data: {
-          label: '',
-          requiredPermission: 'is_active'
+          label: ''
         }
       })
       .state('edit-visitor-profile', {
