@@ -33,7 +33,7 @@ angular.module('viLoggedClientApp')
           return d.promise;
         }
       },
-      template: '<div class="camera"><video class="camera" autoplay="" /><div ng-transclude></div></div>',
+      template: '<div class="camera"><video class="camera" autoplay="" width="300px" /><div ng-transclude></div></div>',
       link: function(scope, element, attrs) {
         var w = attrs.width || 280,
           h = attrs.height || 300;
