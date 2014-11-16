@@ -40,21 +40,16 @@ angular.module('viLoggedClientApp')
         controller: 'VisitorDetailCtrl'
       })
   })
-  .controller('VisitorsCtrl', function ($scope, visitorService, $interval) {
+  .controller('VisitorsCtrl', function ($scope, visitorService) {
     $scope.visitors = [];
-    var DELAY = 300; //30ms
-    var busy = false;
-
-    function getVisitors() {
+        function getVisitors() {
       visitorService.all()
         .then(function (response) {
-          busy = false;
           $scope.visitors = response;
           $scope.totalItems = $scope.visitors.length;
           $scope.numPages = Math.ceil($scope.totalItems/$scope.itemsPerPage);
         })
         .catch(function (reason) {
-          busy = false;
           console.log(reason);
           console.log('some message')
         });
@@ -64,25 +59,6 @@ angular.module('viLoggedClientApp')
     $scope.currentPage = 1;
     $scope.maxSize = 5;
     $scope.itemsPerPage = 10;
-
-    $scope.syncPromises['visitors'] = $interval(function() {
-      if (!busy) {
-        busy = true;
-        visitorService.changes()
-          .then(function(reponse) {
-            if (reponse.update) {
-              getVisitors();
-            } else {
-              busy = false;
-            }
-          })
-          .catch(function(reason) {
-            busy = false;
-            console.log(reason);
-          });
-      }
-
-    }, DELAY);
   })
   .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, $rootScope, $window, visitorService,
                                            validationService, countryStateService, guestGroupConstant, userService, flash) {
