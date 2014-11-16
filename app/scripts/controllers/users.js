@@ -53,9 +53,8 @@ angular.module('viLoggedClientApp')
         controller: 'ChangePasswordCtrl'
       })
   })
-  .controller('UserProfileCtrl', function ($scope, $interval, userService, appointmentService, messageCenterService) {
+  .controller('UserProfileCtrl', function ($scope, $interval, userService, appointmentService) {
     $scope.currentUser = userService.user;
-
     appointmentService.getAppointmentsByUser($scope.currentUser)
       .then(function (response) {
         $scope.numberOfAppointments = response.length;
@@ -83,9 +82,9 @@ angular.module('viLoggedClientApp')
         console.log(reason);
       });
   })
-  .controller('UsersCtrl', function ($scope, userService) {
+  .controller('UsersCtrl', function ($scope, userService, notificationService) {
     function getUsers() {
-      userService.all()
+      userService.usersNested()
         .then(function (response) {
           $scope.users = response;
         })
@@ -108,12 +107,20 @@ angular.module('viLoggedClientApp')
       if (userService.user.id === id) {
         return;
       }
-      userService.remove(id)
-        .then(function (response) {
-          getUsers();
-        })
-        .catch(function (reason) {
-          console.log(reason);
+      var dialogParams = {
+        modalHeader: 'Delete User?',
+        modalBodyText: 'are you sure you want to delete the following?'
+      };
+
+      notificationService.modal.confirm(dialogParams)
+        .then(function() {
+          userService.remove(id)
+            .then(function (response) {
+              getUsers();
+            })
+            .catch(function (reason) {
+              console.log(reason);
+            });
         });
     }
   })
