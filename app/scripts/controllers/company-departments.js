@@ -60,19 +60,31 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/company-departments',
         templateUrl: 'views/company-departments/index.html',
-        controller: 'CompanyDepartmentsCtrl'
+        controller: 'CompanyDepartmentsCtrl',
+        data: {
+          requiredPermission: 'is_superuser',
+          label: 'Departments'
+        }
       })
       .state('add-company-department', {
         parent: 'root.index',
         url: '/company-departments/add',
         templateUrl: 'views/company-departments/widget-form.html',
-        controller: 'CompanyDepartmentsFormCtrl'
+        controller: 'CompanyDepartmentsFormCtrl',
+        data: {
+          requiredPermission: 'is_superuser',
+          label: 'Add Department'
+        }
       })
       .state('edit-company-department', {
         parent: 'root.index',
         url: '/company-departments/:id',
         templateUrl: 'views/company-departments/widget-form.html',
-        controller: 'CompanyDepartmentsFormCtrl'
+        controller: 'CompanyDepartmentsFormCtrl',
+        data: {
+          requiredPermission: 'is_superuser',
+          label: 'Edit Department'
+        }
       });
   })
   .controller('CompanyDepartmentsCtrl', function ($scope, companyDepartmentsService, $modal, notificationService, $interval) {

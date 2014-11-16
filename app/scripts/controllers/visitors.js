@@ -14,7 +14,11 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/visitors',
         templateUrl: 'views/visitors/index.html',
-        controller: 'VisitorsCtrl'
+        controller: 'VisitorsCtrl',
+        data: {
+          label: 'Visitors',
+          requiredPermission: 'is_active'
+        }
       })
       .state('create-visitor-profile', {
         parent: 'root.index',
@@ -25,6 +29,10 @@ angular.module('viLoggedClientApp')
           countryState: function(countryStateService) {
             return countryStateService.all();
           }
+        },
+        data: {
+          label: '',
+          requiredPermission: 'is_active'
         }
       })
       .state('visitor-registration', {
@@ -35,6 +43,9 @@ angular.module('viLoggedClientApp')
           countryState: function(countryStateService) {
             return countryStateService.all();
           }
+        },
+        data: {
+          label: ''
         }
       })
       .state('edit-visitor-profile', {
@@ -46,13 +57,21 @@ angular.module('viLoggedClientApp')
           countryState: function(countryStateService) {
             return countryStateService.all();
           }
+        },
+        data: {
+          label: '',
+          requiredPermission: 'is_active'
         }
       })
       .state('show-visitor', {
         parent: 'root.index',
         url: '/visitors/:visitor_id',
         templateUrl: 'views/visitors/detail.html',
-        controller: 'VisitorDetailCtrl'
+        controller: 'VisitorDetailCtrl',
+        data: {
+          label: '',
+          requiredPermission: 'is_active'
+        }
       })
   })
   .controller('VisitorsCtrl', function ($scope, visitorService, visitorsLocationService) {
@@ -87,6 +106,23 @@ angular.module('viLoggedClientApp')
     $scope.visitorGroups = guestGroupConstant;
     $scope.countryState = countryState;
     $scope.countries = Object.keys(countryState);
+
+    //Open date dropdown
+    $scope.open = function($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+
+      $scope.opened = !$scope.opened;
+    };
+
+    $scope.maxDate = function() {
+      return moment().subtract(15, 'years').calendar();
+    };
+
+    //disable weekends on calendar
+    $scope.disabled = function(date, mode) {
+      return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+    };
 
     $scope.setFiles = function(element, field) {
       $scope.$apply(function() {
@@ -199,6 +235,7 @@ angular.module('viLoggedClientApp')
         $scope.validationErrors[key] = validateLocation[key];
       });
       if (!Object.keys($scope.validationErrors).length) {
+        $scope.visitor.image = $scope.takenImg;
         visitorService.save($scope.visitor)
           .then(function (response) {
             $scope.visitor = response;

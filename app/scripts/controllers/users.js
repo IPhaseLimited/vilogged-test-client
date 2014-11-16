@@ -14,7 +14,11 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/profile',
         templateUrl: 'views/user/user-profile.html',
-        controller: 'UserProfileCtrl'
+        controller: 'UserProfileCtrl',
+        data: {
+          label: '',
+          requiredPermission: 'is_superuser'
+        }
       })
   })
   .config(function ($stateProvider) {
@@ -23,7 +27,11 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/users',
         templateUrl: 'views/user/index.html',
-        controller: 'UsersCtrl'
+        controller: 'UsersCtrl',
+        data: {
+          label: '',
+          requiredPermission: 'is_superuser'
+        }
       })
   })
   .config(function ($stateProvider) {
@@ -32,7 +40,11 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/user/add',
         templateUrl: 'views/user/widget-form.html',
-        controller: 'UserFormCtrl'
+        controller: 'UserFormCtrl',
+        data: {
+          label: '',
+          requiredPermission: 'is_superuser'
+        }
       })
   })
   .config(function ($stateProvider) {
@@ -41,7 +53,11 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/user/:user_id/edit',
         templateUrl: 'views/user/widget-form.html',
-        controller: 'UserFormCtrl'
+        controller: 'UserFormCtrl',
+        data: {
+          label: '',
+          requiredPermission: 'is_superuser'
+        }
       })
   })
   .config(function ($stateProvider) {
@@ -50,7 +66,11 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/users/change-password',
         templateUrl: 'views/user/user-change-password.html',
-        controller: 'ChangePasswordCtrl'
+        controller: 'ChangePasswordCtrl',
+        data: {
+          label: '',
+          requiredPermission: 'is_superuser'
+        }
       })
   })
   .controller('UserProfileCtrl', function ($scope, $interval, userService, appointmentService) {
