@@ -32,8 +32,8 @@
           <tr data-ng-repeat="visitor in visitors | paginationOffset:currentPage:itemsPerPage | orderBy: 'first_name'">
             <td>{{ $index + 1 }}</td>
             <td>{{ visitor.first_name }} {{ visitor.last_name }}</td>
-            <td>{{ visitor.visitor_email }}</td>
-            <td>{{ visitor.visitor_phone }}</td>
+            <td>{{ visitor.visitors_email }}</td>
+            <td>{{ visitor.visitors_phone }}</td>
             <td>{{ visitor.company_name }}</td>
             <td>{{ visitor.group_type }}</td>
             <td>{{ visitor.created |date: 'dd MMM, yyyy' }}</td>
@@ -45,7 +45,7 @@
               <!--</a>-->
 
               <a class="btn btn-success btn-xs"
-                 ui-sref="show-visitor({visitor_id: visitor._id})"
+                 ui-sref="show-visitor({visitor_id: visitor.uuid})"
                  title="View {{ visitor.first_name }}'s details">
                 <i class="fa fa-eye"></i> View
               </a>
