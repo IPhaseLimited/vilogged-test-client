@@ -107,6 +107,23 @@ angular.module('viLoggedClientApp')
     $scope.countryState = countryState;
     $scope.countries = Object.keys(countryState);
 
+    //Open date dropdown
+    $scope.open = function($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+
+      $scope.opened = !$scope.opened;
+    };
+
+    $scope.maxDate = function() {
+      return moment().subtract(15, 'years').calendar();
+    };
+
+    //disable weekends on calendar
+    $scope.disabled = function(date, mode) {
+      return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+    };
+
     $scope.setFiles = function(element, field) {
       $scope.$apply(function() {
 
@@ -218,6 +235,7 @@ angular.module('viLoggedClientApp')
         $scope.validationErrors[key] = validateLocation[key];
       });
       if (!Object.keys($scope.validationErrors).length) {
+        $scope.visitor.image = $scope.takenImg;
         visitorService.save($scope.visitor)
           .then(function (response) {
             $scope.visitor = response;
