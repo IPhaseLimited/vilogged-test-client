@@ -32,18 +32,22 @@ angular.module('viLoggedClientApp')
      * @private
      */
     var setData = function (table, data) {
+      var deferred = $q.defer();
       if(!data.hasOwnProperty('uuid')){
-        throw 'data should have a uuid or primary key field.';
+        deferred.reject('data should have a uuid or primary key field.');
       }
-      return dataManagementService.put(table, data)
+      dataManagementService.put(table, data)
         .then(function(result) {
-          return result.id;
+          deferred.resolve(result);
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
         });
+      return deferred.promise;
     };
 
     var getData = function(key) {
       return dataManagementService.allDocs(key);
-      //return pouchStorageService.allDocs(key);
     };
     /**
      * This function removes a given record with the given uuid from the given
