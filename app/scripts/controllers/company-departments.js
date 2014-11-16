@@ -43,8 +43,11 @@ function formController($scope, $state, companyDepartmentsService, $stateParams,
         })
         .catch(function (reason) {
           if (angular.isDefined($modalInstance)) {
-            $modalInstance.close(true);
+            //$modalInstance.close(true);
           }
+          (Object.keys(reason)).forEach(function(key) {
+            $scope.validationErrors[key] = reason[key];
+          });
           console.log(reason);
         });
     }
