@@ -45,16 +45,16 @@ angular.module('viLoggedClientApp', [
         $state.go('login');
       }
 
-      if ($state.current.data.requiredPermission !== undefined) {
-        var authorized = authorizationService.authorize($state.current.data.requiredPermission);
-        if (!authorized) {
-          $state.go('access-rejected');
-        }
-      }
-
       if (angular.isDefined($state.$current.self.data)) {
         $rootScope.pageTitle =
           angular.isDefined($state.$current.self.data.label) ? $state.$current.self.data.label : $rootScope.pageTitle;
+
+        if ($state.current.data.requiredPermission !== undefined) {
+          var authorized = authorizationService.authorize($state.current.data.requiredPermission);
+          if (!authorized) {
+            $state.go('access-rejected');
+          }
+        }
       }
 
       if (angular.isDefined(userService.user)) {
