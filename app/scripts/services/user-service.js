@@ -12,7 +12,7 @@ angular.module('viLoggedClientApp')
     // AngularJS will instantiate a singleton by calling "new" on this function
     function getAllUsers() {
       var deferred = $q.defer();
-      $http.get(config.api.backend + '/api/v1/users/')
+      $http.get(config.api.backend + '/api/v1/users/nested/')
         //$http.get(config.api.backend+'/scripts/fixtures/users.json')
         .success(function (users) {
           deferred.resolve(users)
