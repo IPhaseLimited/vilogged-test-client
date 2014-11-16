@@ -35,13 +35,13 @@
               <td>{{ department.department_name }}</td>
               <td>{{ department.description }}</td>
               <td>
-                <a class="hidden-xs pointer btn btn-info btn-xs" ng-click="addDepartment(department._id)">
+                <a class="hidden-xs pointer btn btn-info btn-xs" ng-click="addDepartment(department.uuid)">
                   <i class="fa fa-edit"></i> Edit
                 </a>
-                <a class="visible-xs pointer btn btn-info btn-xs" ui-sref="edit-company-department({id: department._id})">
+                <a class="visible-xs pointer btn btn-info btn-xs" ui-sref="edit-company-department({id: department.uuid})">
                   <i class="fa fa-edit"></i> Edit
                 </a>
-                <a ng-click="remove(department._id)" class="btn btn-danger btn-xs">
+                <a ng-click="remove(department.uuid)" class="btn btn-danger btn-xs">
                   <i class="fa fa-times-circle"></i> Delete
                 </a>
               </td>
