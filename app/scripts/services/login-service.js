@@ -35,6 +35,7 @@ angular.module('viLoggedClientApp')
                 deferred.resolve(loginResponse);
               })
               .catch(function(reason) {
+                loginResponse.loginMessage = reason;
                 deferred.resolve(loginResponse);
               });
           })
