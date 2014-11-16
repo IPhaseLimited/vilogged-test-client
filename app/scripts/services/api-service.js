@@ -14,12 +14,19 @@ angular.module('viLoggedClientApp')
     this.put = function(db, data) {
       var deferred = $q.defer();
       //return apiFactory.put({_db:db, _param: data.uuid}, data).$promise;
-      $http.put(BASE_URL + db, data)
+      $http.post(BASE_URL + db + '/' + data.uuid, data)
         .success(function(response) {
           deferred.resolve(response);
         })
-        .error(function(reason) {
-          deferred.reject(reason);
+        .error(function() {
+          $http.put(BASE_URL + db + '/' + data.uuid, data)
+            .success(function(response) {
+              deferred.resolve(response);
+            })
+            .error(function(reason) {
+              deferred.reject(reason);
+            });
+          return deferred.promise;
         });
 
       return deferred.promise;
