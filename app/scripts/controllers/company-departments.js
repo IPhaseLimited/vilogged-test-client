@@ -73,40 +73,17 @@ angular.module('viLoggedClientApp')
       });
   })
   .controller('CompanyDepartmentsCtrl', function ($scope, companyDepartmentsService, $modal, notificationService, $interval) {
-    var DELAY = 300; //30ms
-    var busy = false;
     $scope.departments = [];
     function getDepartments() {
       companyDepartmentsService.all()
         .then(function (departments) {
           $scope.departments = departments;
-          busy = false;
         })
         .catch(function (reason) {
-          busy = false;
           console.log(reason);
         });
     }
     getDepartments();
-
-    $scope.syncPromises['departments'] = $interval(function() {
-      if (!busy) {
-        busy = true;
-        companyDepartmentsService.changes()
-          .then(function(reponse) {
-            if (reponse.update) {
-              getDepartments();
-            } else {
-              busy = false;
-            }
-          })
-          .catch(function(reason) {
-            busy = false;
-            console.log(reason);
-          });
-      }
-
-    }, DELAY);
 
     $scope.remove = function(id) {
 
