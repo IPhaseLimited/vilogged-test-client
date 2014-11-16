@@ -16,7 +16,7 @@
             <div class="col-sm-8">
               <div class="row">
                 <div class="col-sm-6">Pass Code</div>
-                <div class="col-sm-6">{{ visitor.visitor_pass_code }}</div>
+                <div class="col-sm-6">{{ visitor.visitors_pass_code }}</div>
               </div>
               <div class="row">
                 <div class="col-sm-6">First Name</div>
@@ -34,10 +34,14 @@
                 <div class="col-sm-6">Email</div>
                 <div class="col-sm-6">{{ visitor.visitors_email }}</div>
               </div>
+              <div class="row">
+                <div class="col-sm-6">Company</div>
+                <div class="col-sm-6">{{ visitor.company_name }}</div>
+              </div>
             </div>
             <div class="col-sm-4">
               <img ng-src="{{ visitor.image }}" alt="" class="img-thumbnail img-responsive"  ng-if="visitor.image"/>
-              <img src="../../img/place_holder.jpg" alt="" class="img-thumbnail img-responsive" ng-if="!visitor.image"/>
+              <img src="img/place_holder.jpg" alt="" class="img-thumbnail img-responsive" ng-if="!visitor.image"/>
             </div>
           </div>
         </div>
