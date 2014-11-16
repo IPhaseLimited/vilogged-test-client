@@ -6,7 +6,8 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/entrance',
         data: {
-          label: 'Entrance List'
+          label: 'Entrance List',
+          requiredPermission: 'is_superuser'
         },
         templateUrl: 'views/entrance/index.html',
         controller: 'CompanyEntranceCtrl'
@@ -15,7 +16,8 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/entrance/add',
         data: {
-          label: 'Add Entrance'
+          label: 'Add Entrance',
+          requiredPermission: 'is_superuser'
         },
         templateUrl: 'views/entrance/widget-form.html',
         controller: 'EntranceFormCtrl'
@@ -24,7 +26,8 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/entrance/:entrance_id/edit',
         data: {
-          label: 'Add Entrance'
+          label: 'Add Entrance',
+          requiredPermission: 'is_superuser'
         },
         templateUrl: 'views/entrance/widget-form.html',
         controller: 'EntranceFormCtrl'
