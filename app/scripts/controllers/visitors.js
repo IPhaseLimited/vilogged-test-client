@@ -14,7 +14,11 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/visitors',
         templateUrl: 'views/visitors/index.html',
-        controller: 'VisitorsCtrl'
+        controller: 'VisitorsCtrl',
+        data: {
+          label: 'Visitors',
+          requiredPermission: 'is_active'
+        }
       })
       .state('create-visitor-profile', {
         parent: 'root.index',
@@ -25,6 +29,10 @@ angular.module('viLoggedClientApp')
           countryState: function(countryStateService) {
             return countryStateService.all();
           }
+        },
+        data: {
+          label: '',
+          requiredPermission: 'is_active'
         }
       })
       .state('visitor-registration', {
@@ -35,6 +43,10 @@ angular.module('viLoggedClientApp')
           countryState: function(countryStateService) {
             return countryStateService.all();
           }
+        },
+        data: {
+          label: '',
+          requiredPermission: 'is_active'
         }
       })
       .state('edit-visitor-profile', {
@@ -46,13 +58,21 @@ angular.module('viLoggedClientApp')
           countryState: function(countryStateService) {
             return countryStateService.all();
           }
+        },
+        data: {
+          label: '',
+          requiredPermission: 'is_active'
         }
       })
       .state('show-visitor', {
         parent: 'root.index',
         url: '/visitors/:visitor_id',
         templateUrl: 'views/visitors/detail.html',
-        controller: 'VisitorDetailCtrl'
+        controller: 'VisitorDetailCtrl',
+        data: {
+          label: '',
+          requiredPermission: 'is_active'
+        }
       })
   })
   .controller('VisitorsCtrl', function ($scope, visitorService, visitorsLocationService) {
