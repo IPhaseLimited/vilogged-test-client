@@ -17,23 +17,10 @@ angular.module('viLoggedClientApp', [
     'angular-flash.service',
     'angular-flash.flash-alert-directive'
   ])
-  .run(function($cookieStore, $rootScope, $state, $http, $location, $interval,loginService, userService, syncService,
-                 storageService, authorizationService) {
-    syncService.startReplication();
-    $rootScope.syncPromises = {};
+  .run(function($cookieStore, $rootScope, $state, $http, $location, $interval,loginService, userService, authorizationService) {
+
     $rootScope.pageTitle = 'Visitor Management System';
-
     $rootScope.$on('$stateChangeSuccess', function () {
-
-      if ($rootScope) {
-        var syncPromises = Object.keys($rootScope.syncPromises);
-        if (syncPromises.length > 0) {
-          syncPromises.forEach(function(key) {
-            $interval.cancel($rootScope.syncPromises[key]);
-          });
-        }
-      }
-
       if (angular.isDefined($location.search().disable_login) && $location.search().disable_login === 'true') {
         $cookieStore.put('no-login', 1);
       }
@@ -58,37 +45,28 @@ angular.module('viLoggedClientApp', [
         $state.go('login');
       }
 
-      if ($state.current.data.requiredPermission !== undefined) {
-        var authorized = authorizationService.authorize($state.current.data.requiredPermission);
-        if (!authorized) {
-          $state.go('access-rejected');
-        }
-      }
-
       if (angular.isDefined($state.$current.self.data)) {
         $rootScope.pageTitle =
           angular.isDefined($state.$current.self.data.label) ? $state.$current.self.data.label : $rootScope.pageTitle;
+
+        if ($state.current.data.requiredPermission !== undefined) {
+          var authorized = authorizationService.authorize($state.current.data.requiredPermission);
+          if (!authorized) {
+            $state.go('access-rejected');
+          }
+        }
       }
 
       if (angular.isDefined(userService.user)) {
         $rootScope.user = userService.user;
       } else {
-        $rootScope = $cookieStore.get('current-user');
+        $rootScope.user = $cookieStore.get('current-user');
       }
 
       if ($state.$current.name === 'login') {
         loginService.logout();
       }
     });
-    $interval(function(){
-      storageService.compactDatabases()
-        .then(function(response) {
-          console.log(response);
-        })
-        .catch(function(reason) {
-          console.log(reason);
-        });
-    }, 1000000);
   })
   .config(function($httpProvider) {
     $httpProvider.interceptors.push([
