@@ -53,6 +53,6 @@ angular.module('viLoggedClientApp')
     }
   })
   .controller('LogoutCtrl', function ($scope, $state, loginService) {
-    $state.go('login');
     loginService.logout();
+    $state.go('login');
   });
