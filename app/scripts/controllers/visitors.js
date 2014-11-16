@@ -66,7 +66,6 @@ angular.module('viLoggedClientApp')
         })
         .catch(function (reason) {
           console.log(reason);
-          console.log('some message')
         });
     }
     getVisitors();
@@ -140,6 +139,11 @@ angular.module('viLoggedClientApp')
             .then(function(response) {
               if (response.length) {
                 $scope.visitorsLocation = response[0];
+
+                $scope.locationStates = Object.keys($scope.countryState[$scope.visitorsLocation.residential_country].states).sort();
+                if ($scope.countryState[$scope.visitorsLocation.residential_country].states[$scope.visitorsLocation.residential_state]) {
+                  $scope.locationLgas = $scope.countryState[$scope.visitorsLocation.residential_country].states[$scope.visitorsLocation.residential_state].lga.sort();
+                }
               }
 
             })
@@ -165,22 +169,21 @@ angular.module('viLoggedClientApp')
       phoneNumberValidation.dbName = visitorService.DBNAME;
       phoneNumberValidation.pattern = '/^[0-9]/';
 
+      var validationParams = {
+        first_name: validationService.BASIC,
+        last_name: validationService.BASIC,
+        visitors_phone: phoneNumberValidation,
+        visitors_email: emailValidation
+      };
 
-      var visitor_location = {
+      var validationParams2 = {
         contact_address: validationService.BASIC,
         residential_country: validationService.BASIC,
         residential_lga: validationService.BASIC,
         residential_state: validationService.BASIC
       };
 
-
-      var validationParams = {
-        first_name: validationService.BASIC,
-        last_name: validationService.BASIC,
-        visitors_phone: phoneNumberValidation,
-        visitors_email: emailValidation,
-        visitor_location: visitor_location
-      };
+      var validateLocation = validationService.validateFields(validationParams2, $scope.visitorsLocation);
 
       if (!angular.isDefined($scope.visitor.visitors_pass_code)) {
         $scope.visitor.visitors_pass_code = new Date().getTime();
@@ -192,15 +195,22 @@ angular.module('viLoggedClientApp')
       }
 
       $scope.validationErrors = validationService.validateFields(validationParams, $scope.visitor);
+      (Object.keys(validateLocation)).forEach(function(key) {
+        $scope.validationErrors[key] = validateLocation[key];
+      });
       if (!Object.keys($scope.validationErrors).length) {
         visitorService.save($scope.visitor)
           .then(function (response) {
             $scope.visitor = response;
+
             function afterRegistration() {
+
               if (userService.user) {
+
                 flash.success= $scope.visitor.uuid ? 'Visitor profile was successfully updated' : 'Visitor profile successfully created.';
                 $state.go('visitors');
               } else {
+
                 if (!angular.isDefined($scope.visitor.uuid)) {
                   flash.success = 'Your profile was successfully created.';
                   $state.go('login');
@@ -208,6 +218,7 @@ angular.module('viLoggedClientApp')
                   flash.success = 'Your profile was successfully updated.';
                   $state.go('show-visitor', {visitor_id: $scope.visitor.uuid});
                 }
+
               }
             }
 
@@ -251,14 +262,13 @@ angular.module('viLoggedClientApp')
     $scope.getResidentialLGAS = function(state, country) {
       $scope.visitorsLocation.residential_lga = '';
       if ($scope.countryState[country].states[state]) {
-        $scope.lgas = $scope.countryState[country].states[state].lga.sort();
+        $scope.locationLgas = $scope.countryState[country].states[state].lga.sort();
       }
-
-      console.log($scope.lgas)
     };
   })
-  .controller('VisitorDetailCtrl', function ($scope, $stateParams, visitorService, appointmentService) {
+  .controller('VisitorDetailCtrl', function ($scope, $stateParams, visitorService, appointmentService, visitorsLocationService) {
     $scope.visitor = {};
+    $scope.visitorsLocation = {};
     $scope.appointments = [];
     $scope.upcomingAppointments = [];
     $scope.appointmentsCurrentPage = 1;
@@ -268,6 +278,18 @@ angular.module('viLoggedClientApp')
     visitorService.get($stateParams.visitor_id)
       .then(function (response) {
         $scope.visitor = response;
+      if (response.uuid) {
+        visitorsLocationService.findByField('visitor_id', response.uuid)
+          .then(function(response) {
+            if (response.length) {
+              $scope.visitorsLocation = response[0];
+            }
+          })
+          .catch(function(reason) {
+            console.log(reason);
+          });
+      }
+
       })
       .catch(function (reason) {
         console.log(reason);
