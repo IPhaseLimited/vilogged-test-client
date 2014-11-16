@@ -70,11 +70,11 @@ angular.module('viLoggedClientApp', [
   })
   .config(function($httpProvider) {
     $httpProvider.interceptors.push([
-      '$cookieStore',
-      function($cookieStore) {
+      '$cookieStore', '$location',
+      function($cookieStore, $location) {
         return {
           'request': function(config) {
-            if ($cookieStore.get('vi-token')) {
+            if ($cookieStore.get('vi-token') && $location.path() !== '/login') {
               $httpProvider.defaults.headers.common['Authorization'] = 'Token ' + $cookieStore.get('vi-token');
             }
             return config;

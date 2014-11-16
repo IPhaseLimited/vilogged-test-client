@@ -9,9 +9,9 @@
  */
 angular.module('viLoggedClientApp')
   .service('storageService', function storageService($q, $window, utility, collections, pouchStorageService,
-                                                     couchDbService, db, userService) {
+                                                     couchDbService, db, userService, apiService) {
 
-    var dataManagementService = couchDbService;
+    var dataManagementService = apiService;
     var currentUser = userService.user;
     var DEFAULT_TIME = '0000-00-00T00:00:00.000Z';
     var DEFAULT_USER = {
