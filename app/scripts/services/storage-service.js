@@ -61,7 +61,7 @@ angular.module('viLoggedClientApp')
     var removeRecordFromTable = function(tableName, uuid){
       return dataManagementService.get(tableName, uuid)
         .then(function(doc) {
-          return couchDbService.remove(tableName, uuid, doc._rev);
+          return dataManagementService.remove(tableName, uuid, doc._rev);
         });
     };
 
