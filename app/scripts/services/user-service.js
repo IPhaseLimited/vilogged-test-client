@@ -132,6 +132,19 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     }
 
+    function listNestedUsers() {
+      var deferred = $q.defer();
+
+      $http.get(config.api.backend + '/api/v1/users/nested')
+        .success(function (response) {
+          deferred.resolve(response);
+        })
+        .error(function (reason) {
+          deferred.reject(reason);
+        });
+      return deferred.promise;
+    }
+
     this.all = getAllUsers;
     this.get = getUser;
     this.currentUser = getCurrentUser;
@@ -141,4 +154,6 @@ angular.module('viLoggedClientApp')
     this.remove = removeUser;
     this.updatePassword = updatePassword;
     this.findUserBy = findUserBy;
+    this.usersNested = listNestedUsers
+
   });
