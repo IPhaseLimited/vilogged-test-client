@@ -38,7 +38,7 @@
           <label for="birthDate" class="col-sm-3 control-label">Birth Date</label>
 
           <div class="col-sm-9">
-            <input type="date" class="form-control" id="birthDate" name="birthDate" ng-model="visitor.birth_of_date">
+            <input type="date" class="form-control" id="birthDate" name="birthDate" ng-model="visitor.date_of_birth">
           </div>
         </div>
 
@@ -67,7 +67,7 @@
                     ng-if="visitor.nationality === 'nigeria'">
               <option value=""></option>
 
-              <option ng-seleted="state === visitor.state_of_origin" ng-repeat="state in states track by $index" value="{{ state  }}">
+              <option ng-selected="state === visitor.state_of_origin" ng-repeat="state in states track by $index" value="{{ state  }}">
                 {{ countryState[visitor.nationality].states[state].name }}
               </option>
             </select>
@@ -166,7 +166,7 @@
         <select id="cCountry" ng-model="visitorsLocation.residential_country"
                 class="form-control" ng-change="getResidentialStates(visitorsLocation.residential_country)">
           <option value=""></option>
-          <option value="{{ country }}" ng-repeat="country in countries track by $index">
+          <option ng-selected="country === visitorsLocation.residential_country" value="{{ country }}" ng-repeat="country in countries track by $index">
             {{ countryState[country].name }}
           </option>
         </select>
@@ -212,7 +212,7 @@
         <select class="form-control" id="clga" name="clga" ng-model="visitorsLocation.residential_lga"
                 ng-if="visitorsLocation.residential_country === 'nigeria'">
           <option value=""></option>
-          <option ng-repeat="lga in lgas track by $index" value="{{ lga }}"> {{ lga }}</option>
+          <option ng-selected="lga === visitorsLocation.residential_lga" ng-repeat="lga in locationLgas track by $index" value="{{ lga }}"> {{ lga }}</option>
         </select>
         <input type="text" id="clga"
                class="form-control" name="clga"
