@@ -34,16 +34,16 @@
                 <a class="btn btn-success btn-xs" ui-sref="editUser({user_id: user.id})"><i class="fa fa-edit"></i> Edit</a>
                 <a class="btn btn-primary btn-xs" ng-show="user.is_active"
                    ng-click="toggleActive(user.id)">
-                  <i class="fa fa-times-circle"></i> Deactivate Account
+                  <i class="fa fa-times-circle"></i> Deactivate
                 </a>
                 <a class="btn btn-primary btn-xs" ng-show="!user.is_active"
                    ng-click="toggleActive(user.id)">
-                  <i class="fa fa-check-circle"></i> Activate Account
+                  <i class="fa fa-check-circle"></i> Activate
                 </a>
 
-                <form action="" ng-submit="deleteAccount(user.id)" style="display: inline">
-                  <button class="btn btn-danger btn-xs"><i class="fa fa-minus-circle"></i> Delete</button>
-                </form>
+                <a class="btn btn-danger btn-xs" ng-click="deleteAccount(user.id)">
+                  <i class="fa fa-minus-circle"></i> Delete
+                </a>
               </td>
             </tr>
           </tbody>
