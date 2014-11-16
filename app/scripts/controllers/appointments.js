@@ -93,16 +93,32 @@ angular.module('viLoggedClientApp')
         }
       })
   })
-  .controller('AppointmentCtrl', function ($scope, appointmentService) {
+  .controller('AppointmentCtrl', function ($scope, appointmentService, utility) {
+    $scope.currentPage = 1;
+    $scope.maxSize = 5;
+    $scope.itemsPerPage = 10;
+
+    $scope.isAppointmentUpcoming = function (appointmentDate) {
+      var appointmentTimeStamp = utility.getTimeStamp(appointmentDate);
+      return new Date().getTime() < appointmentTimeStamp;
+    };
+
+    $scope.isAppointmentExpired = function (appointmentDate) {
+      var appointmentTimeStamp = utility.getTimeStamp(appointmentDate);
+      return new Date().getTime() > appointmentTimeStamp;
+    };
+
     appointmentService.all()
       .then(function (response) {
         $scope.appointments = response;
+        $scope.totalItems = $scope.appointments.length;
+        $scope.numPages = Math.ceil($scope.totalItems/$scope.itemsPerPage);
       })
       .catch(function (reason) {
         console.log(reason);
       });
   })
-  .controller('AppointmentDetailCtrl', function ($scope, $stateParams, appointmentService) {
+  .controller('AppointmentDetailCtrl', function ($scope, $stateParams, appointmentService, utility) {
     appointmentService.get($stateParams.appointment_id)
       .then(function (response) {
         $scope.appointment = response;
@@ -110,6 +126,17 @@ angular.module('viLoggedClientApp')
       .catch(function (reason) {
         console.log(reason);
       });
+
+
+    $scope.isAppointmentUpcoming = function (appointmentDate) {
+      var appointmentTimeStamp = utility.getTimeStamp(appointmentDate);
+      return new Date().getTime() < appointmentTimeStamp;
+    };
+
+    $scope.isAppointmentExpired = function (appointmentDate) {
+      var appointmentTimeStamp = utility.getTimeStamp(appointmentDate);
+      return new Date().getTime() > appointmentTimeStamp;
+    };
   })
   .controller('AppointmentFormCtrl', function ($scope, $stateParams, $state, $timeout, visitorService,
                                                userService, appointmentService, utility, authorizationService) {
@@ -216,9 +243,6 @@ angular.module('viLoggedClientApp')
   .controller('CheckInCtrl', function ($scope, $state, $stateParams, $q,
                                        visitorService, appointmentService, entranceService,
                                        vehicleTypeConstant, notificationService, utility, authorizationService) {
-    if (!authorizationService.canCheckInOrCheckOutVisitor) {
-      $state.go("appointments");
-    }
     $scope.appointment = {};
     $scope.appointment.restricted_items = [{
       item_code: '',
@@ -281,7 +305,7 @@ angular.module('viLoggedClientApp')
     };
 
     $scope.checkVisitorIn = function () {
-      $scope.appointment.checked_in = utility.getDateTime();
+      $scope.appointment.check_in = utility.getDateTime();
       $scope.appointment.label_code = utility.generateRandomInteger();
       appointmentService.save($scope.appointment)
         .then(function (response) {
