@@ -152,7 +152,7 @@ angular.module('viLoggedClientApp')
 
       //TODO:: flash messages
       if (toString.call($scope.user.user_profile.department) === '[object String]') {
-        $scope.user.user_profile.department = JSON.parse($scope.user.user_profile.department);
+        //$scope.user.user_profile.department = JSON.parse($scope.user.user_profile.department);
       }
       userService.save($scope.user)
         .then(function () {
