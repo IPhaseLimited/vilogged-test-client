@@ -14,8 +14,9 @@
         </p>
       </div>
 
-      <table class="table table-responsive table-condensed table-bordered table-striped" ng-if="appointments.length">
-        <thead>
+      <div ng-if="appointments.length">
+        <table class="table table-responsive table-condensed table-bordered table-striped">
+          <thead>
           <tr>
             <th>S/N</th>
             <th>Visitor Name</th>
@@ -25,9 +26,10 @@
             <th>Ends Time</th>
             <th></th>
           </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="appointment in appointments">
+          </thead>
+          <tbody>
+          <tr ng-repeat="appointment in appointments"
+              ng-class="{'text-danger': expired(appointment.appointment_date), 'text-success': upcoming(appointment.appointment_date)}">
             <td>{{ $index+1 }}</td>
             <td>{{ ((appointment).visitor).first_name + ' ' + ((appointment).visitor).last_name }}</td>
             <td>{{ ((appointment).host).first_name + ' ' + ((appointment).host).last_name }}</td>
@@ -35,17 +37,31 @@
             <td>{{ appointment.visit_start_time }}</td>
             <td>{{ appointment.visit_end_time }}</td>
             <td>
-              <a ui-sref="visitor-check-in({ appointment_id: appointment._id })"
-                 class="btn btn-xs btn-success" ng-if="!appointment.check_in">Check In</a>
-              <a ui-sref="visitor-check-out({ appointment_id: appointment._id })"
-                 class="btn btn-xs btn-success" ng-if="appointment.check_in">Check Out</a>
-              <a ui-sref="edit-appointment({ appointment_id: appointment._id })"
-                 class="btn btn-xs btn-success" ng-if="!appointment.check_in">Edit</a>
+              <a ui-sref="visitor-check-in({ appointment_id: appointment._id })" class="btn btn-xs btn-success"
+                 ng-if="!appointment.check_in" ng-show="isAppointmentUpcoming(appointment.appointment_date)">Check In</a>
+              <a ui-sref="visitor-check-out({ appointment_id: appointment._id })" class="btn btn-xs btn-success"
+                 ng-if="appointment.check_in" ng-show="isAppointmentUpcoming(appointment.appointment_date)">Check Out</a>
+              <a ui-sref="edit-appointment({ appointment_id: appointment._id })" class="btn btn-xs btn-success"
+                 ng-if="!appointment.check_in" ng-show="isAppointmentUpcoming(appointment.appointment_date)">Edit</a>
               <a ui-sref="show-appointment({appointment_id: appointment._id})" class="btn btn-xs btn-success">View</a>
+              <span class="label label-danger" ng-show="isAppointmentExpired(appointment.appointment_date)">
+                Expired Appointment
+              </span>
             </td>
           </tr>
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+        <br/>
+        <div class="row">
+          <div class="col-sm-6" style="padding-top: 15px;">
+            Showing Page: {{currentPage}} of {{numPages}}
+          </div>
+          <div class="col-sm-6">
+            <pagination total-items="totalItems" ng-model="currentPage" max-size="maxSize" class="pagination-sm pull-right"
+                        boundary-links="true" rotate="false" items-per-page="itemsPerPage"></pagination>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="widget-foot">
       <!-- Footer goes here -->
