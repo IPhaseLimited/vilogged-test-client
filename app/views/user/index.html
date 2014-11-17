@@ -23,6 +23,7 @@
               <th>S/N</th>
               <th>Name</th>
               <th>Username</th>
+              <th>Email</th>
               <th>Department</th>
               <th>Office Phone</th>
               <th></th>
@@ -32,9 +33,10 @@
             <tr ng-repeat="user in users | limitTo:10">
               <td>{{ $index + 1 }}</td>
               <td>{{ user.first_name + ' ' + user.last_name }}</td>
+              <td>{{ user.email }}</td>
               <td>{{ user.username }}</td>
               <td>{{ user.user_profile.department.department_name }}</td>
-              <td>{{ user.user_profile.work_phone }}</td>
+              <td>{{ user.user_profile.phone }}</td>
               <td>
                 <a class="btn btn-success btn-xs" ui-sref="editUser({user_id: user.id})"><i class="fa fa-edit"></i> Edit</a>
                 <a class="btn btn-primary btn-xs" ng-show="user.is_active"
