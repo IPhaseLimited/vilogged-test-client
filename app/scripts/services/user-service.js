@@ -12,8 +12,7 @@ angular.module('viLoggedClientApp')
     // AngularJS will instantiate a singleton by calling "new" on this function
     function getAllUsers() {
       var deferred = $q.defer();
-      $http.get(config.api.backend + '/api/v1/users/nested/')
-        //$http.get(config.api.backend+'/scripts/fixtures/users.json')
+      $http.get(config.api.backend + '/api/v1/users/')
         .success(function (users) {
           deferred.resolve(users)
         })
@@ -45,6 +44,36 @@ angular.module('viLoggedClientApp')
         .error(function (reason) {
           deferred.reject(reason);
         });
+      return deferred.promise;
+    }
+
+    function getUserByPhone(value) {
+      var deferred = $q.defer();
+
+      var promises = [
+        findUserBy('user_profile__phone', value),
+        findUserBy('user_profile__home_phone', value),
+        findUserBy('user_profile__work_phone', value)
+      ];
+
+      $q.all(promises)
+        .then(function(response) {
+          if (response[0].length || response[1].length || response[2].length) {
+            if (response[0].length) {
+              deferred.resolve(response[0]);
+            } else if (response[1].length) {
+              deferred.resolve(response[1]);
+            } else {
+              deferred.resolve(response[2]);
+            }
+          } else {
+            deferred.reject({message: 'no match found'});
+          }
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
+        });
+
       return deferred.promise;
     }
 
@@ -154,6 +183,6 @@ angular.module('viLoggedClientApp')
     this.remove = removeUser;
     this.updatePassword = updatePassword;
     this.findUserBy = findUserBy;
-    this.usersNested = listNestedUsers
-
+    this.usersNested = listNestedUsers;
+    this.getUserByPhone = getUserByPhone;
   });
