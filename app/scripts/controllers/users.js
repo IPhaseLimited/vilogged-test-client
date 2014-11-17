@@ -16,8 +16,11 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/user/user-profile.html',
         controller: 'UserProfileCtrl',
         data: {
-          label: '',
+          label: 'User Profile',
           requiredPermission: 'is_superuser'
+        },
+        ncyBreadcrumb: {
+          label: 'User Profile'
         }
       })
   })
@@ -29,8 +32,11 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/user/index.html',
         controller: 'UsersCtrl',
         data: {
-          label: '',
+          label: 'Users',
           requiredPermission: 'is_superuser'
+        },
+        ncyBreadcrumb: {
+          label: 'Users'
         }
       })
   })
@@ -42,8 +48,11 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/user/widget-form.html',
         controller: 'UserFormCtrl',
         data: {
-          label: '',
+          label: 'Create User Account',
           requiredPermission: 'is_superuser'
+        },
+        ncyBreadcrumb: {
+          label: 'Create User Account'
         }
       })
   })
@@ -55,8 +64,11 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/user/widget-form.html',
         controller: 'UserFormCtrl',
         data: {
-          label: '',
+          label: 'Edit User\'s Account',
           requiredPermission: 'is_superuser'
+        },
+        ncyBreadcrumb: {
+          label: 'Edit User\'s Account'
         }
       })
   })
@@ -68,8 +80,11 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/user/user-change-password.html',
         controller: 'ChangePasswordCtrl',
         data: {
-          label: '',
+          label: 'Change Password',
           requiredPermission: 'is_superuser'
+        },
+        ncyBreadcrumb: {
+          label: 'Change Password'
         }
       })
   })
