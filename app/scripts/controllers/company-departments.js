@@ -64,6 +64,9 @@ angular.module('viLoggedClientApp')
         data: {
           requiredPermission: 'is_superuser',
           label: 'Departments'
+        },
+        ncyBreadcrumb: {
+          label: 'Departments'
         }
       })
       .state('add-company-department', {
@@ -74,6 +77,9 @@ angular.module('viLoggedClientApp')
         data: {
           requiredPermission: 'is_superuser',
           label: 'Add Department'
+        },
+        ncyBreadcrumb: {
+          label: 'Add Department'
         }
       })
       .state('edit-company-department', {
@@ -83,6 +89,9 @@ angular.module('viLoggedClientApp')
         controller: 'CompanyDepartmentsFormCtrl',
         data: {
           requiredPermission: 'is_superuser',
+          label: 'Edit Department'
+        },
+        ncyBreadcrumb: {
           label: 'Edit Department'
         }
       });
