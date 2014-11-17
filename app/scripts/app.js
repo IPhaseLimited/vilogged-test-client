@@ -57,7 +57,6 @@ angular.module('viLoggedClientApp', [
       if ($state.$current.name === 'login') {
         loginService.logout($rootScope.user);
       }
-      console.log($rootScope.user);
 
     });
   })
