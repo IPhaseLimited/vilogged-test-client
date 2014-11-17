@@ -119,7 +119,7 @@ angular.module('viLoggedClientApp')
       });
   })
   .controller('AppointmentDetailCtrl', function ($scope, $stateParams, appointmentService, utility) {
-    appointmentService.get($stateParams.appointment_id)
+    appointmentService.getNested($stateParams.appointment_id)
       .then(function (response) {
         $scope.appointment = response;
       })
@@ -279,7 +279,7 @@ angular.module('viLoggedClientApp')
       .catch(function (reason) {
       });
 
-    appointmentService.get($stateParams.appointment_id)
+    appointmentService.getNested($stateParams.appointment_id)
       .then(function (response) {
         $scope.appointment = response;
         if (angular.isUndefined($scope.appointment.restricted_items)) {
