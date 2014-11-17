@@ -138,99 +138,102 @@ angular.module('viLoggedClientApp')
       return new Date().getTime() > appointmentTimeStamp;
     };
   })
-  .controller('AppointmentFormCtrl', function ($scope, $stateParams, $state, $timeout, visitorService,
-                                               userService, appointmentService, utility, authorizationService) {
+  .controller('AppointmentFormCtrl', function ($scope, $stateParams, $state, $timeout, $filter, visitorService,
+                                               userService, appointmentService, utility, validationService) {
     $scope.appointment = {};
-    $scope.default = {};
-    $scope.host_number = '';
-    $scope.some = '';
+    $scope.visit_start_time = new Date();
+    $scope.visit_end_time = new Date();
+    $scope.appointment_host = {};
+    $scope.appointment_visitor = {};
 
-    $scope.lookupHost = function(hostNumber) {
-      userService.findUserBy('phone', hostNumber)
-        .then(function (response) {
-          $scope.appointment.host = response;
-        })
-        .catch(function (reason) {
-          console.log(reason);
-        });
+    $scope.appointmentDate = {
+      opened: false,
+      open: function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        this.opened = true
+      }
     };
 
-    if ($stateParams.appointment_id !== null && $stateParams.appointment_id !== undefined) {
-      appointmentService.get($stateParams.appointment_id)
-        .then(function(response) {
-          $scope.appointment = response;
-        })
-        .catch(function(reason) {
-          console.log(reason);
-        });
-    }
-
-    if (angular.isDefined($stateParams.visitor_id)) {
-      visitorService.get($stateParams.visitor_id)
-        .then(function (response) {
-          $scope.visitor = response;
-        })
-        .catch(function (reason) {
-        });
-    }
-
-    if (angular.isDefined($stateParams.host_id)) {
-      visitorService.get($stateParams.host_id)
-        .then(function (response) {
-          $scope.host = response;
-        })
-        .catch(function (reason) {
-          console.log(reason);
-        });
-    }
-
-    $scope.refreshHostsList = function () {
-      userService.all()
-        .then(function (response) {
-          $scope.hosts = response;
-        })
-        .catch(function (reason) {
-          console.log(reason);
-        });
+    $scope.disabled = function(date, mode) {
+      return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
     };
 
-    $scope.refreshVisitorsList = function () {
-      visitorService.all()
-        .then(function (response) {
-          $scope.visitors = response;
-        })
-        .catch(function (reason) {
-          console.log(reason);
-        })
+    $scope.hostLookUp = {
+      refreshHostsList: function (phone) {
+        userService.getUserByPhone(phone)
+          .then(function (response) {
+            $scope.hosts = response;
+          })
+          .catch(function (reason) {
+            console.log(reason);
+          });
+      },
+      listHosts: function() {
+        userService.all()
+          .then(function(response) {
+            $scope.hosts = response;
+          })
+          .catch(function (reason) {
+            console.log(reason);
+          })
+      }
     };
+
+    $scope.visitorLookUp = {
+      refreshVisitorsList: function(visitorPhone) {
+        visitorService.findByPhone(visitorPhone)
+          .then(function (response) {
+            $scope.visitors = response;
+          })
+          .catch(function (reason) {
+            console.log(reason);
+          })
+      },
+      listVisitors: function () {
+        visitorService.all()
+          .then(function (response) {
+            $scope.visitors = response;
+          })
+          .catch(function (reason) {
+            console.log(reason);
+          })
+      }
+    };
+
+    if (!$scope.user.is_staff && $scope.user.is_active) $scope.appointment_host = $scope.user;
+
+    if ($scope.user.is_staff) $scope.hostLookUp.listHosts();
+
+    if ($scope.user.is_active) $scope.visitorLookUp.listVisitors();
 
     $scope.createAppointment = function () {
-      var validationParams = {
-        appointment_date: validationService.BASIC,
-        appointment_visit_start_time: validationService.BASIC,
-        appointment_visit_end_time: validationService.BASIC,
-        purpose: validationService.BASIC
-      };
-
-      if (angular.isDefined($scope.visitor) && $scope.visitor !== null) {
-        $scope.appointment.visitor = angular.copy($scope.visitor);
-      }
-
-      if (angular.isDefined($scope.host) && $scope.host !== null) {
-        $scope.appointment.host = angular.copy($scope.host);
-      }
-
       $scope.appointment.label_code = utility.generateRandomInteger();
       $scope.appointment.appointment_date = new Date($scope.appointment.appointment_date).toJSON();
       $scope.appointment.is_expired = false;
       $scope.appointment.check_in = null;
       $scope.appointment.check_out = null;
 
-      $scope.validationErrors = validationService.validateFields(validationParams, $scope.appointments);
+      $scope.appointment.visit_start_time = $filter('date')($scope.visit_start_time, 'hh:mm a');
+      $scope.appointment.visit_end_time = $filter('date')($scope.visit_end_time, 'hh:mm a');
+
+      $scope.appointment.host_id = $scope.appointment_host.selected.id;
+      $scope.appointment.visitor_id = $scope.appointment_visitor.selected.uuid;
+
+      var validationParams = {
+        appointment_date: validationService.BASIC,
+        visit_start_time: validationService.BASIC,
+        visit_end_time: validationService.BASIC,
+        purpose: validationService.BASIC,
+        host_id: validationService.BASIC,
+        visitor_id: validationService.BASIC
+      };
+
+      $scope.validationErrors = validationService.validateFields(validationParams, $scope.appointment);
       if (!Object.keys($scope.validationErrors).length) {
         appointmentService.save($scope.appointment)
           .then(function (response) {
-            $scope.appointment = angular.copy($scope.default);
             //TODO:: implement notification service here
             $state.go('appointments');
           })
