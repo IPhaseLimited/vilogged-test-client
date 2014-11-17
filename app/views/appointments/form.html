@@ -69,7 +69,8 @@
 
             <div class="col-sm-6">
               <input class="form-control" name="hostNumber" id="hostNumber" ng-model="host_number" type="text"
-                     ng-blur="lookupHost(host_number)" required/>
+                     ng-change="getHost(host_number)" required/>
+              {{ appointment_host.selected.first_name }} {{ appointment_host.selected.last_name }}
             </div>
           </div>
 
