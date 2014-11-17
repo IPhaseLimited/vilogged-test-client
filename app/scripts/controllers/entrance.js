@@ -10,7 +10,11 @@ angular.module('viLoggedClientApp')
           requiredPermission: 'is_superuser'
         },
         templateUrl: 'views/entrance/index.html',
-        controller: 'CompanyEntranceCtrl'
+        controller: 'CompanyEntranceCtrl',
+        ncyBreadcrumb: {
+          label: 'Entrance',
+          parent: 'Home'
+        }
       })
       .state('add-company-entrance', {
         parent: 'root.index',
@@ -20,7 +24,11 @@ angular.module('viLoggedClientApp')
           requiredPermission: 'is_superuser'
         },
         templateUrl: 'views/entrance/widget-form.html',
-        controller: 'EntranceFormCtrl'
+        controller: 'EntranceFormCtrl',
+        ncyBreadcrumb: {
+          label: 'Create Entrance',
+          parent: 'Entrance'
+        }
       })
       .state('edit-company-entrance', {
         parent: 'root.index',
@@ -30,7 +38,11 @@ angular.module('viLoggedClientApp')
           requiredPermission: 'is_superuser'
         },
         templateUrl: 'views/entrance/widget-form.html',
-        controller: 'EntranceFormCtrl'
+        controller: 'EntranceFormCtrl',
+        ncyBreadcrumb: {
+          label: 'Edit Entrance',
+          parent: 'Entrance'
+        }
       })
   })
   .controller('CompanyEntranceCtrl', function ($scope, entranceService) {

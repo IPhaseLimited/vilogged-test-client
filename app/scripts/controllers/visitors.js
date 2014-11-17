@@ -18,6 +18,9 @@ angular.module('viLoggedClientApp')
         data: {
           label: 'Visitors',
           requiredPermission: 'is_active'
+        },
+        ncyBreadcrumb: {
+          label: 'Visitors'
         }
       })
       .state('create-visitor-profile', {
@@ -33,6 +36,10 @@ angular.module('viLoggedClientApp')
         data: {
           label: 'Create Visitor',
           requiredPermission: 'is_active'
+        },
+        ncyBreadcrumb: {
+          label: 'Create Visitor Profile',
+          parent: 'visitors'
         }
       })
       .state('visitor-registration', {
@@ -61,6 +68,10 @@ angular.module('viLoggedClientApp')
         data: {
           label: 'Edit Profile',
           requiredPermission: 'is_active'
+        },
+        ncyBreadcrumb: {
+          label: 'Edit Visitor\'s Profile',
+          parent: 'Visitors'
         }
       })
       .state('show-visitor', {
@@ -71,8 +82,12 @@ angular.module('viLoggedClientApp')
         data: {
           label: 'Details',
           requiredPermission: 'is_active'
-        }
-      })
+        },
+        ncyBreadcrumb: {
+          label: 'Visitor\'s Detail',
+          parent: 'Visitors'
+          }
+      });
   })
   .controller('VisitorsCtrl', function ($scope, visitorService, visitorsLocationService) {
     $scope.visitors = [];

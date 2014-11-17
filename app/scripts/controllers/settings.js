@@ -18,6 +18,10 @@ angular.module('viLoggedClientApp')
         data: {
           label: 'Settings Page',
           requiredPermission: 'is_superuser'
+        },
+        ncyBreadcrumb: {
+          label: 'Settings',
+          parent: 'Home'
         }
       })
   })

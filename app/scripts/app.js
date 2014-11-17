@@ -1,23 +1,24 @@
 'use strict';
 
 angular.module('viLoggedClientApp', [
-    'ui.bootstrap',
-    'ui.router',
-    'ui.select',
-    'pouchdb',
-    'config',
-    'nvd3ChartDirectives',
-    'angular-growl',
-    'ngAnimate',
-    'ngCookies',
-    'db',
-    'db.names',
-    'webcam',
-    'ngResource',
-    'angular-flash.service',
-    'angular-flash.flash-alert-directive'
-  ])
-  .run(function($cookieStore, $rootScope, $state, $http, $location, $interval,loginService, userService, authorizationService) {
+  'ui.bootstrap',
+  'ui.router',
+  'ui.select',
+  'pouchdb',
+  'config',
+  'nvd3ChartDirectives',
+  'angular-growl',
+  'ngAnimate',
+  'ngCookies',
+  'db',
+  'db.names',
+  'webcam',
+  'ngResource',
+  'angular-flash.service',
+  'angular-flash.flash-alert-directive',
+  'ncy-angular-breadcrumb'
+])
+  .run(function ($cookieStore, $rootScope, $state, $http, $location, $interval, loginService, userService, authorizationService) {
 
     $rootScope.pageTitle = 'Visitor Management System';
     $rootScope.$on('$stateChangeSuccess', function () {
@@ -61,12 +62,12 @@ angular.module('viLoggedClientApp', [
 
     });
   })
-  .config(function($httpProvider) {
+  .config(function ($httpProvider) {
     $httpProvider.interceptors.push([
       '$cookieStore', '$location',
-      function($cookieStore, $location) {
+      function ($cookieStore, $location) {
         return {
-          'request': function(config) {
+          'request': function (config) {
             if ($cookieStore.get('vi-token') && $location.path() !== '/login') {
               $httpProvider.defaults.headers.common['Authorization'] = 'Token ' + $cookieStore.get('vi-token');
             }
@@ -76,15 +77,15 @@ angular.module('viLoggedClientApp', [
       }
     ]);
   })
-  .config(function($compileProvider) {
+  .config(function ($compileProvider) {
     // to bypass Chrome app CSP for images.
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(chrome-extension):/);
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file|blob):|data:image\//);
   })
-  .config(function(uiSelectConfig) {
-      uiSelectConfig.theme = 'bootstrap';
-    })
-  .config(function(growlProvider) {
+  .config(function (uiSelectConfig) {
+    uiSelectConfig.theme = 'bootstrap';
+  })
+  .config(function (growlProvider) {
     growlProvider.globalTimeToLive({
       success: 5000,
       error: 5000,
@@ -92,9 +93,15 @@ angular.module('viLoggedClientApp', [
       info: 5000
     });
   })
-  .config(function(flashProvider) {
+  .config(function (flashProvider) {
     flashProvider.errorClassnames.push('alert-danger');
     flashProvider.warnClassnames.push('alert-warn');
     flashProvider.infoClassnames.push('alert-info');
     flashProvider.successClassnames.push('alert-success');
+  })
+  .config(function ($breadcrumbProvider) {
+    $breadcrumbProvider.setOptions({
+      prefixStateName: 'home',
+      template: 'bootstrap2'
+    })
   });

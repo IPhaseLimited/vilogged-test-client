@@ -11,6 +11,9 @@ angular.module('viLoggedClientApp')
       controller: function($state, $scope) {
 
 
+      },
+      ncyBreadcrumb: {
+        label: 'Home'
       }
     })
       .state('home.index', {
