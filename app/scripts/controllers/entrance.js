@@ -12,7 +12,8 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/entrance/index.html',
         controller: 'CompanyEntranceCtrl',
         ncyBreadcrumb: {
-          label: 'Entrance'
+          label: 'Entrance',
+          parent: 'Home'
         }
       })
       .state('add-company-entrance', {
@@ -25,7 +26,8 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/entrance/widget-form.html',
         controller: 'EntranceFormCtrl',
         ncyBreadcrumb: {
-          label: 'Create Entrance'
+          label: 'Create Entrance',
+          parent: 'Entrance'
         }
       })
       .state('edit-company-entrance', {
@@ -38,7 +40,8 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/entrance/widget-form.html',
         controller: 'EntranceFormCtrl',
         ncyBreadcrumb: {
-          label: 'Edit Entrance'
+          label: 'Edit Entrance',
+          parent: 'Entrance'
         }
       })
   })
