@@ -2,7 +2,9 @@
   <div class="widget-head">
     <div class="pull-left"></div>
     <div class="widget-icons pull-right">
-      <a class="btn btn-primary" ui-sref="create-appointment"><i class="fa fa-plus-circle"></i> Create Appointment</a>
+      <a class="btn btn-primary" ui-sref="create-appointment" ng-show="user.is_staff">
+        <i class="fa fa-plus-circle"></i> Create Appointment
+      </a>
     </div>
     <div class="clearfix"></div>
   </div>
@@ -38,11 +40,11 @@
             <td>{{ appointment.visit_end_time }}</td>
             <td>
               <a ui-sref="visitor-check-in({ appointment_id: appointment._id })" class="btn btn-xs btn-success"
-                 ng-if="!appointment.check_in" ng-show="isAppointmentUpcoming(appointment.appointment_date)">Check In</a>
+                 ng-if="!appointment.check_in" ng-show="isAppointmentUpcoming(appointment.appointment_date) && user.is_staff">Check In</a>
               <a ui-sref="visitor-check-out({ appointment_id: appointment._id })" class="btn btn-xs btn-success"
-                 ng-if="appointment.check_in" ng-show="isAppointmentUpcoming(appointment.appointment_date)">Check Out</a>
+                 ng-if="appointment.check_in" ng-show="isAppointmentUpcoming(appointment.appointment_date) && user.is_staff">Check Out</a>
               <a ui-sref="edit-appointment({ appointment_id: appointment._id })" class="btn btn-xs btn-success"
-                 ng-if="!appointment.check_in" ng-show="isAppointmentUpcoming(appointment.appointment_date)">Edit</a>
+                 ng-if="!appointment.check_in" ng-show="isAppointmentUpcoming(appointment.appointment_date)  && user.is_staff">Edit</a>
               <a ui-sref="show-appointment({appointment_id: appointment._id})" class="btn btn-xs btn-success">View</a>
               <span class="label label-danger" ng-show="isAppointmentExpired(appointment.appointment_date)">
                 Expired Appointment
