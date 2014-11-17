@@ -18,8 +18,7 @@ angular.module('viLoggedClientApp')
             templateUrl: 'views/index/breadcrumbs.html'
           },
           'sidebar': {
-            templateUrl: 'views/index/sidebar.html',
-            controller: 'MenuCtrl'
+            templateUrl: 'views/index/sidebar.html'
           },
           'content': {},
           'footer': {
@@ -27,7 +26,4 @@ angular.module('viLoggedClientApp')
           }
         }
       })
-  })
-  .controller('MenuCtrl', function($scope, userService) {
-    $scope.currentUser = userService.user;
   });
