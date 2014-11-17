@@ -35,21 +35,17 @@
         </div>
 
         <div class="form-group">
-          <label for="birthDate" class="col-sm-3 control-label">Birth Date</label>
+          <label class="col-sm-3 control-label">Birth Date</label>
 
           <div class="col-sm-9">
-            <input type="date" class="form-control" id="birthDate" name="birthDate" ng-model="visitor.date_of_birth">
-            <!--<p class="input-group">-->
-              <!--<input type="text" class="form-control" datepicker-popup="mm/dd/yyyy" is-open="opened" min-date="minDate"-->
-                     <!--max-date="'maxDate()'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)"-->
-                     <!--ng-required="true" close-text="Close" id="birthDate" name="birthDate"-->
-                     <!--ng-model="visitor.date_of_birth"/>-->
-              <!--<span class="input-group-btn">-->
-                <!--<button type="button" class="btn btn-default" ng-click="open($event)">-->
-                  <!--<i class="glyphicon glyphicon-calendar"></i>-->
-                <!--</button>-->
-              <!--</span>-->
-            <!--</p>-->
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="visitor.date_of_birth" datepicker-popup is-open="dob.opened"/>
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="dob.open($event)">
+                <i class="glyphicon glyphicon-calendar"></i>
+              </button>
+            </span>
+            </div>
           </div>
         </div>
 
@@ -57,7 +53,6 @@
           <label for="nationality" class="col-sm-3 control-label">Nationality</label>
 
           <div class="col-sm-9">
-            <!--input type="text" class="form-control" id="nationality" name="nationality" ng-model="visitor.nationality"-->
             <select class="form-control" id="nationality" ng-change="getStates(visitor.nationality)" name="nationality"
                     ng-model="visitor.nationality">
               <option value=""></option>
