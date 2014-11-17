@@ -8,26 +8,49 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('appointmentService', function appointmentService($q, storageService, utility, db) {
+  .service('appointmentService', function appointmentService($q, storageService, utility, db, $http, config) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var DB_NAME = db.APPOINTMENTS;
+    var BASE_URL = config.api.backend + config.api.backendCommon + '/';
 
     function getAllAppointments() {
-      return storageService.all(DB_NAME);
+      //return storageService.all(DB_NAME);
+
+      var deferred = $q.defer();
+
+      $http.get(BASE_URL + DB_NAME + '/nested/')
+        .success(function(response) {
+          deferred.resolve(response);
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
+        });
+
+      return deferred.promise;
+    }
+
+    function findByField(field, value) {
+      var deferred = $q.defer();
+
+      $http.get(BASE_URL + DB_NAME + '/?' + field + '=' + value)
+        .success(function(response) {
+          deferred.resolve(response);
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
+        });
+
+      return deferred.promise;
     }
 
     function getAppointmentsByUser(user) {
       var deferred = $q.defer();
-      getAllAppointments(DB_NAME)
-        .then(function (response) {
-          var filtered = response
-            .filter(function (appointment) {
-              return appointment.host.id === user.id;
-            });
 
-          deferred.resolve(filtered);
+      findByField('host_id', user.id)
+        .then(function (response) {
+          deferred.resolve(response);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
 
@@ -58,6 +81,21 @@ angular.module('viLoggedClientApp')
 
     function get(id) {
       return storageService.find(DB_NAME, id);
+    }
+
+
+    function getNested(id) {
+      var deferred = $q.defer();
+
+      $http.get(BASE_URL + DB_NAME + '/nested/'+id)
+        .success(function(response) {
+          deferred.resolve(response);
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
+        });
+
+      return deferred.promise;
     }
 
     function getAppointmentsAwaitingApproval(user) {
@@ -182,6 +220,7 @@ angular.module('viLoggedClientApp')
     }
 
     this.get = get;
+    this.getNested = getNested;
     this.all = getAllAppointments;
     this.save = save;
     this.getUserUpcomingAppointments = getUserUpcomingAppointments;
