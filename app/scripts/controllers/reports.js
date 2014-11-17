@@ -20,7 +20,8 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/reports/index.html',
         controller: 'ReportsCtrl',
         ncyBreadcrumb: {
-          label: 'Reports'
+          label: 'Reports',
+          parent: 'Home'
         }
       });
   })
