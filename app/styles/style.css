@@ -1814,9 +1814,9 @@ footer .copy{
 }
 
 /* widget btn */
-.btn {
+.widget-head .btn {
   text-shadow: none !important;
-  /*color: #fff !important;*/
+  color: #fff !important;
 }
 
 /* select2 */
