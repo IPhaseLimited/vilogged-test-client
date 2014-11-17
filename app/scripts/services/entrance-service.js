@@ -10,7 +10,7 @@
 angular.module('viLoggedClientApp')
   .service('entranceService', function entranceService($q, $http, db, storageService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
-    var DB_NAME = db.ENTRANCE;
+    var DB_NAME = db.ENTRANCE.replace(/_/, '-');
 
     function getAllEntrance() {
       return storageService.all(DB_NAME)
