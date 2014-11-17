@@ -1,37 +1,37 @@
 <ul id="nav">
 
   <!-- Main menu with font awesome icon -->
-  <li id="li-home"><a href="/"><i class="fa fa-home" ng-show="currentUser.is_staff"></i> Dashboard</a>
+  <li id="li-home"><a href="/"><i class="fa fa-home" ng-show="user.is_staff"></i> Dashboard</a>
   </li>
-  <li class="" id="li-appointments" ng-show="currentUser.is_active">
+  <li class="" id="li-appointments" ng-show="user.is_active">
     <a ui-sref="appointments">
       <i class="fa fa-list-alt"></i> Appointments
     </a>
   </li>
-  <li id="li-visitors" ng-show="currentUser.is_staff">
+  <li id="li-visitors" ng-show="user.is_staff">
     <a ui-sref="visitors">
       <i class="fa fa-male"></i> Visitors
     </a>
   </li>
-  <li id="li-department" ng-show="currentUser.is_superuser">
+  <li id="li-department" ng-show="user.is_superuser">
     <a ui-sref="company-departments">
       <i class="fa fa-institution"></i> Departments
     </a>
   </li>
-  <li id="li-staff" ng-show="currentUser.is_superuser">
+  <li id="li-staff" ng-show="user.is_superuser">
     <a ui-sref="users">
       <i class="fa fa-users"></i> Users
     </a>
   </li>
-  <li id="li-entrance" ng-show="currentUser.is_superuser">
+  <li id="li-entrance" ng-show="user.is_superuser">
     <a ui-sref="entrance">
       <i class="fa fa-table"></i> Company Entrance
     </a>
   </li>
-  <li id="li-reports" ng-show="currentUser.is_superuser">
+  <li id="li-reports" ng-show="user.is_superuser">
     <a ui-sref="reports"><i class="fa fa-bar-chart-o"></i> Reports</a>
   </li>
-  <li id="li-system-settings" ng-show="currentUser.is_superuser">
+  <li id="li-system-settings" ng-show="user.is_superuser">
     <a ui-sref="settings"><i class="fa fa-wrench"></i> Settings</a>
   </li>
 
