@@ -144,7 +144,7 @@ angular.module('viLoggedClientApp')
         });
     }
   })
-  .controller('UserFormCtrl', function ($scope, $state, $stateParams, userService, companyDepartmentsService) {
+  .controller('UserFormCtrl', function ($scope, $state, $stateParams, userService, companyDepartmentsService, flash) {
     $scope.currentUser = userService.user;
     $scope.user = {};
     $scope.user.user_profile = {};
@@ -177,13 +177,14 @@ angular.module('viLoggedClientApp')
         $scope.user.user_profile.work_phone = $scope.user.user_profile.work_phone || null;
       }
 
-      //TODO:: flash messages
       if (toString.call($scope.user.user_profile.department) === '[object String]') {
         //$scope.user.user_profile.department = JSON.parse($scope.user.user_profile.department);
       }
       userService.save($scope.user)
         .then(function () {
-          console.log('here');
+          !$stateParams.user_id
+            ? flash.success = 'User account was successfully created.'
+            : flash.success = 'User account was successfully updated.';
           $state.go("users");
         })
         .catch(function (reason) {

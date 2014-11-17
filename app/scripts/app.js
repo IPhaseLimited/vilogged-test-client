@@ -45,7 +45,8 @@ angular.module('viLoggedClientApp', [
         if ($state.current.data.requiredPermission !== undefined) {
           var authorized = authorizationService.authorize($state.current.data.requiredPermission);
           if (!authorized) {
-            $state.go('access-rejected');
+            console.log('not authorized');
+            //$state.go('access-rejected');
           }
         }
       }
