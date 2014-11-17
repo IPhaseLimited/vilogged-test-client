@@ -251,7 +251,7 @@ angular.module('viLoggedClientApp')
 
     $scope.createAppointment = function () {
       $scope.appointment.label_code = utility.generateRandomInteger();
-      $scope.appointment.appointment_date = new Date($scope.appointment.appointment_date).toJSON();
+      $scope.appointment.appointment_date =$filter('date')($scope.appointment.appointment_date, 'yyyy-MM-dd');
       $scope.appointment.is_expired = false;
       $scope.appointment.check_in = null;
       $scope.appointment.check_out = null;
@@ -279,6 +279,9 @@ angular.module('viLoggedClientApp')
             $state.go('appointments');
           })
           .catch(function (reason) {
+            Object.keys(reason).forEach(function(key) {
+              $scope.validationErrors[key] = reason[key];
+            });
             console.log(reason);
           });
       }
