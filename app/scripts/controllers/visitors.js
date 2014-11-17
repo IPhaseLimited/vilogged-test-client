@@ -18,6 +18,9 @@ angular.module('viLoggedClientApp')
         data: {
           label: 'Visitors',
           requiredPermission: 'is_active'
+        },
+        ncyBreadcrumb: {
+          label: 'Visitors'
         }
       })
       .state('create-visitor-profile', {
@@ -33,6 +36,9 @@ angular.module('viLoggedClientApp')
         data: {
           label: 'Create Visitor',
           requiredPermission: 'is_active'
+        },
+        ncyBreadcrumb: {
+          label: 'Create Visitor Profile'
         }
       })
       .state('visitor-registration', {
@@ -46,6 +52,9 @@ angular.module('viLoggedClientApp')
         },
         data: {
           label: 'Register'
+        },
+        ncyBreadcrumb: {
+          label: 'Visitor Registration'
         }
       })
       .state('edit-visitor-profile', {
@@ -61,6 +70,9 @@ angular.module('viLoggedClientApp')
         data: {
           label: 'Edit Profile',
           requiredPermission: 'is_active'
+        },
+        ncyBreadcrumb: {
+          label: 'Edit Visitor\'s Profile'
         }
       })
       .state('show-visitor', {
@@ -71,6 +83,9 @@ angular.module('viLoggedClientApp')
         data: {
           label: 'Details',
           requiredPermission: 'is_active'
+        },
+        ncyBreadcrumb: {
+          label: 'Visitor\'s Detail'
         }
       })
   })
