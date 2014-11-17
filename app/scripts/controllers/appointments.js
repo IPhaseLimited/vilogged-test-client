@@ -160,6 +160,18 @@ angular.module('viLoggedClientApp')
       return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
     };
 
+    $scope.getHost = function(hostPhone) {
+      if (timeout) timeout.cancel();
+      var timeout = $timeout(userService.getUserByPhone(hostPhone)
+        .then(function(response) {
+          $scope.appointment_host.selected = response[0];
+          console.log(response[0]);
+        })
+        .catch(function(reason) {
+          console.log(reason);
+        }), 1000);
+    };
+
     $scope.hostLookUp = {
       refreshHostsList: function (phone) {
         userService.getUserByPhone(phone)
@@ -202,11 +214,13 @@ angular.module('viLoggedClientApp')
       }
     };
 
-    if (!$scope.user.is_staff && $scope.user.is_active) $scope.appointment_host = $scope.user;
+    if (angular.isDefined($scope.user)) {
+      if (!$scope.user.is_staff && $scope.user.is_active) $scope.appointment_host = $scope.user;
 
-    if ($scope.user.is_staff) $scope.hostLookUp.listHosts();
+      if ($scope.user.is_staff) $scope.hostLookUp.listHosts();
 
-    if ($scope.user.is_active) $scope.visitorLookUp.listVisitors();
+      if ($scope.user.is_active) $scope.visitorLookUp.listVisitors();
+    }
 
     $scope.createAppointment = function () {
       $scope.appointment.label_code = utility.generateRandomInteger();
