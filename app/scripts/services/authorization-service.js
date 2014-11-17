@@ -8,7 +8,7 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('authorizationService', function authorizationService($q, userService) {
+  .service('authorizationService', function authorizationService($q, $rootScope, userService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var currentUser = userService.user;
 
