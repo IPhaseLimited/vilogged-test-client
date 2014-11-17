@@ -29,7 +29,7 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/visitors/widget-form.html',
         controller: 'VisitorFormCtrl',
         resolve: {
-          countryState: function(countryStateService) {
+          countryState: function (countryStateService) {
             return countryStateService.all();
           }
         },
@@ -47,7 +47,7 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/visitors/widget-form.html',
         controller: 'VisitorFormCtrl',
         resolve: {
-          countryState: function(countryStateService) {
+          countryState: function (countryStateService) {
             return countryStateService.all();
           }
         },
@@ -61,7 +61,7 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/visitors/widget-form.html',
         controller: 'VisitorFormCtrl',
         resolve: {
-          countryState: function(countryStateService) {
+          countryState: function (countryStateService) {
             return countryStateService.all();
           }
         },
@@ -84,24 +84,24 @@ angular.module('viLoggedClientApp')
           requiredPermission: 'is_active'
         },
         ncyBreadcrumb: {
-          label: 'Visitor\'s Detail',
-          parent: 'Visitors'
-          }
+          label: 'Visitor\'s Detail'
+        }
       });
   })
   .controller('VisitorsCtrl', function ($scope, visitorService, visitorsLocationService) {
     $scope.visitors = [];
-        function getVisitors() {
+    function getVisitors() {
       visitorService.all()
         .then(function (response) {
           $scope.visitors = response;
           $scope.totalItems = $scope.visitors.length;
-          $scope.numPages = Math.ceil($scope.totalItems/$scope.itemsPerPage);
+          $scope.numPages = Math.ceil($scope.totalItems / $scope.itemsPerPage);
         })
         .catch(function (reason) {
           console.log(reason);
         });
     }
+
     getVisitors();
 
     $scope.currentPage = 1;
@@ -127,7 +127,7 @@ angular.module('viLoggedClientApp')
 
     $scope.dob = {
       opened: false,
-      open: function($event) {
+      open: function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
 
@@ -136,14 +136,13 @@ angular.module('viLoggedClientApp')
     };
 
 
-
-    $scope.setFiles = function(element, field) {
-      $scope.$apply(function() {
+    $scope.setFiles = function (element, field) {
+      $scope.$apply(function () {
 
         var fileToUpload = element.files[0];
         if (fileToUpload.type.match('image*')) {
           var reader = new $window.FileReader();
-          reader.onload = function(theFile) {
+          reader.onload = function (theFile) {
             $scope.visitor[field] = theFile.target.result;
           };
           reader.readAsDataURL(fileToUpload);
@@ -182,7 +181,7 @@ angular.module('viLoggedClientApp')
             }
           }
           visitorsLocationService.findByField('visitor_id', response.uuid)
-            .then(function(response) {
+            .then(function (response) {
               if (response.length) {
                 $scope.visitorsLocation = response[0];
 
@@ -193,7 +192,7 @@ angular.module('viLoggedClientApp')
               }
 
             })
-            .catch(function(reason) {
+            .catch(function (reason) {
               console.log(reason);
             });
           $scope.title = 'Edit ' + $scope.visitor.firstName + '\'s Profile';
@@ -229,13 +228,12 @@ angular.module('viLoggedClientApp')
         $scope.visitor.visitors_pass_code = new Date().getTime();
       }
 
-      if (!angular.isDefined($scope.visitor.group_type) || $scope.visitor.group_type === '')
-      {
+      if (!angular.isDefined($scope.visitor.group_type) || $scope.visitor.group_type === '') {
         $scope.visitor.group_type = 'normal';
       }
 
       $scope.validationErrors = validationService.validateFields(validationParams, $scope.visitor);
-      (Object.keys(validateLocation)).forEach(function(key) {
+      (Object.keys(validateLocation)).forEach(function (key) {
         $scope.validationErrors[key] = validateLocation[key];
       });
       if (!Object.keys($scope.validationErrors).length) {
@@ -248,7 +246,7 @@ angular.module('viLoggedClientApp')
 
               if (userService.user) {
 
-                flash.success= $scope.visitor.uuid ? 'Visitor profile was successfully updated' : 'Visitor profile successfully created.';
+                flash.success = $scope.visitor.uuid ? 'Visitor profile was successfully updated' : 'Visitor profile successfully created.';
                 $state.go('visitors');
               } else {
 
@@ -265,11 +263,11 @@ angular.module('viLoggedClientApp')
 
             $scope.visitorsLocation.visitor_id = response.uuid;
             visitorsLocationService.save($scope.visitorsLocation)
-              .then(function() {
+              .then(function () {
                 afterRegistration();
               })
-              .catch(function(reason) {
-                Object.keys(reason).forEach(function(key) {
+              .catch(function (reason) {
+                Object.keys(reason).forEach(function (key) {
                   $scope.validationErrors[key] = reason[key];
                 });
                 //afterRegistration();
@@ -283,24 +281,24 @@ angular.module('viLoggedClientApp')
 
     };
 
-    $scope.getStates = function(country) {
+    $scope.getStates = function (country) {
       $scope.visitor.state_of_origin = '';
       $scope.states = Object.keys($scope.countryState[country].states).sort();
     };
 
-    $scope.getLGAs = function(state, country) {
+    $scope.getLGAs = function (state, country) {
       $scope.visitor.lga_of_origin = '';
       if ($scope.countryState[country].states[state]) {
         $scope.lgas = $scope.countryState[country].states[state].lga.sort();
       }
     };
 
-    $scope.getResidentialStates = function(country) {
+    $scope.getResidentialStates = function (country) {
       $scope.visitorsLocation.residential_state = '';
       $scope.locationStates = Object.keys($scope.countryState[country].states).sort();
     };
 
-    $scope.getResidentialLGAS = function(state, country) {
+    $scope.getResidentialLGAS = function (state, country) {
       $scope.visitorsLocation.residential_lga = '';
       if ($scope.countryState[country].states[state]) {
         $scope.locationLgas = $scope.countryState[country].states[state].lga.sort();
@@ -319,17 +317,17 @@ angular.module('viLoggedClientApp')
     visitorService.get($stateParams.visitor_id)
       .then(function (response) {
         $scope.visitor = response;
-      if (response.uuid) {
-        visitorsLocationService.findByField('visitor_id', response.uuid)
-          .then(function(response) {
-            if (response.length) {
-              $scope.visitorsLocation = response[0];
-            }
-          })
-          .catch(function(reason) {
-            console.log(reason);
-          });
-      }
+        if (response.uuid) {
+          visitorsLocationService.findByField('visitor_id', response.uuid)
+            .then(function (response) {
+              if (response.length) {
+                $scope.visitorsLocation = response[0];
+              }
+            })
+            .catch(function (reason) {
+              console.log(reason);
+            });
+        }
 
       })
       .catch(function (reason) {
@@ -349,7 +347,7 @@ angular.module('viLoggedClientApp')
         $scope.appointments = response;
         $scope.totalAppointments = $scope.appointments.length;
         $scope.appointmentNumPages =
-          Math.ceil($scope.totalAppointments/$scope.appointmentsPerPage);
+          Math.ceil($scope.totalAppointments / $scope.appointmentsPerPage);
       })
       .catch(function (reason) {
         console.log(reason);
