@@ -13,6 +13,9 @@ angular.module('viLoggedClientApp')
         data: {
           requiredPermission: 'is_active',
           label: 'Create Appointment'
+        },
+        ncyBreadcrumb: {
+          label: 'Create Appointment'
         }
       })
       .state('show-appointment', {
@@ -22,6 +25,9 @@ angular.module('viLoggedClientApp')
         controller: 'AppointmentDetailCtrl',
         data: {
           label: 'Appointment Detail'
+        },
+        ncyBreadcrumb: {
+          label: 'Appointment Detail'
         }
       })
       .state('create-appointment-visitor', {
@@ -30,6 +36,9 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/appointments/form.html',
         controller: 'AppointmentFormCtrl',
         data: {
+          label: 'Create Appointment'
+        },
+        ncyBreadcrumb: {
           label: 'Create Appointment'
         }
       })
@@ -41,6 +50,9 @@ angular.module('viLoggedClientApp')
         data: {
           requiredPermission: 'is_active',
           label: 'Create Appointment'
+        },
+        ncyBreadcrumb: {
+          label: 'Create Appointment'
         }
       })
       .state('create-appointment', {
@@ -50,6 +62,9 @@ angular.module('viLoggedClientApp')
         controller: 'AppointmentFormCtrl',
         data: {
           requiredPermission: 'is_staff',
+          label: 'Create Appointment'
+        },
+        ncyBreadcrumb: {
           label: 'Create Appointment'
         }
       })
@@ -61,6 +76,9 @@ angular.module('viLoggedClientApp')
         data: {
           requiredPermission: 'is_active',
           label: 'Edit Appointment'
+        },
+        ncyBreadcrumb: {
+          label: 'Edit Appointment'
         }
       })
       .state('visitor-check-in', {
@@ -71,6 +89,9 @@ angular.module('viLoggedClientApp')
         data: {
           requiredPermission: 'is_staff',
           label: 'Check Visitor In'
+        },
+        ncyBreadcrumb: {
+          label: 'Check Visitor In'
         }
       })
       .state('print-visitor-label', {
@@ -79,6 +100,9 @@ angular.module('viLoggedClientApp')
         controller: 'VisitorPassCtrl',
         data: {
           requiredPermission: 'is_staff',
+          label: 'Print Visitor Tag'
+        },
+        ncyBreadcrumb: {
           label: 'Print Visitor Tag'
         }
       })
@@ -89,6 +113,9 @@ angular.module('viLoggedClientApp')
         controller: 'CheckInCtrl',
         data: {
           requiredPermission: 'is_staff',
+          label: 'Check Visitor Out'
+        },
+        ncyBreadcrumb: {
           label: 'Check Visitor Out'
         }
       })
