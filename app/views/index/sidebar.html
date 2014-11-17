@@ -1,7 +1,7 @@
 <ul id="nav">
 
   <!-- Main menu with font awesome icon -->
-  <li id="li-home"><a href="/"><i class="fa fa-home" ng-show="user.is_staff"></i> Dashboard</a>
+  <li id="li-home" ng-show="user.is_staff"><a href="/"><i class="fa fa-home"></i> Dashboard</a>
   </li>
   <li class="" id="li-appointments" ng-show="user.is_active">
     <a ui-sref="appointments">
