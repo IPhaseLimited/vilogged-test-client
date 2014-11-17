@@ -112,7 +112,6 @@ angular.module('viLoggedClientApp')
 
     $scope.dob = {
       opened: false,
-      date: moment().endOf('day').toDate(),
       open: function($event) {
         $event.preventDefault();
         $event.stopPropagation();

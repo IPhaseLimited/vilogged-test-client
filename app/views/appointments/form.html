@@ -1,114 +1,175 @@
 <div class="widget">
-    <div class="widget-head">
-      <div class="pull-left">My Profile</div>
-      <div class="widget-icons pull-right">
-        <a class="btn btn-primary btn-xs" ui-sref="edit-visitor-profile({visitor_id: visitor._id})">
-          <i class="fa fa-edit"></i>Edit
-        </a>
-      </div>
-      <div class="clearfix"></div>
+  <div class="widget-head">
+    <div class="pull-left">Create Appointments</div>
+    <div class="widget-icons pull-right">
+      <a class="btn btn-danger btn-xs" ui-sref="appointments">
+        <i class="fa fa-times"></i>Cancel
+      </a>
     </div>
-    <div class="widget-content">
-      <div class="padd">
-        <fieldset>
-          <legend ng-if="!appointment._id">Create Appointment</legend>
-          <legend ng-if="appointment._id">Edit Appointment</legend>
-          <form class="form-horizontal" name="appointmentForm" ng-submit="createAppointment()" novalidate>
+    <div class="clearfix"></div>
+  </div>
+  <div class="widget-content">
+    <div class="padd">
+      <fieldset>
+        <legend ng-if="!appointment._id">Create Appointment</legend>
+        <legend ng-if="appointment._id">Edit Appointment</legend>
+        <form class="form-horizontal" name="appointmentForm" ng-submit="createAppointment()" novalidate>
 
-            <div class="form-group" ng-if="!visitor">
-              <label class="control-label col-sm-2" for="visitor">Visitor  <span class="text-danger">*</span></label>
+          <div ng-show="user.is_superuser || user.is_staff" class="form-group">
+            <label class="control-label col-sm-2">
+              Host Name <span class="text-danger">*</span>
+            </label>
 
-              <div class="col-sm-6" id="visitor">
-                <ui-select ng-model="appointment.visitor" theme="select2" ng-disabled="disabled" class="select2">
-                  <ui-select-match placeholder="Select your appointment visitor">{{$select.selected.first_name}}</ui-select-match>
-                  <ui-select-choices refresh="refreshVisitorsList($select.search)"
-                                     refresh-delay="0" repeat="visitor in visitors track by $index">
-                    <div> {{vistor.first_name}}  {{visitor.last_name}}</div>
-                    <small>
-                      email: {{visitor.email}}
-                      phone: <span>{{visitor.phone}}</span>
-                    </small>
-                  </ui-select-choices>
-                </ui-select>
+            <div class="col-sm-6">
+              <ui-select ng-model="appointment_host.selected" theme="select2">
+                <ui-select-match placeholder="Select a host in the list or search with his phone number...">
+                  {{$select.selected.first_name + ' ' + $select.selected.last_name}}
+                </ui-select-match>
+                <ui-select-choices refresh="hostLookUp.refreshHostsList($select.search)"
+                                   refresh-delay="1000" repeat="host in hosts track by $index | filter: phone">
+                  <div> {{host.first_name}} {{host.last_name}}</div>
+                </ui-select-choices>
+              </ui-select>
+              <div class="text-danger bold" ng-show="(validationErrors).host_id.length">
+                <spn ng-repeat="error in validationErrors.host_id">
+                  {{ error }}<br/>
+                </spn>
               </div>
             </div>
+          </div>
 
-            <div class="form-group" ng-if="!host">
-              <label class="control-label col-sm-2" for="hostNumber">Host Phone Number  <span class="text-danger">*</span></label>
+          <div ng-show="user.is_active" class="form-group">
+            <label class="control-label col-sm-2">
+              Visitor Name <span class="text-danger">*</span>
+            </label>
 
-              <div class="col-sm-6">
-                <input class="form-control" name="hostNumber" id="hostNumber" ng-model="host_number" type="text"
-                       ng-blur="lookupHost(host_number)" required/>
+            <div class="col-sm-6">
+              <ui-select ng-model="appointment_visitor.selected" theme="select2">
+                <ui-select-match placeholder="Select a visitor in the list or search with his phone number...">
+                  {{$select.selected.first_name + ' ' + $select.selected.last_name}}
+                </ui-select-match>
+                <ui-select-choices refresh="visitorLookUp.refreshVisitorsList($select.search)"
+                                   refresh-delay="1000" repeat="visitor in visitors track by $index | filter: phone">
+                  <div> {{visitor.first_name}} {{visitor.last_name}}</div>
+                </ui-select-choices>
+              </ui-select>
+              <div class="text-danger bold" ng-show="(validationErrors).visitor_id.length">
+                <spn ng-repeat="error in validationErrors.visitor_id">
+                  {{ error }}<br/>
+                </spn>
               </div>
             </div>
+          </div>
 
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="appointmentDate">
-                Appointment Date <span class="text-danger">*</span>
-              </label>
+          <!--visitor host check-->
+          <div class="form-group" ng-show="!user.is_active">
+            <label class="control-label col-sm-2" for="hostNumber">
+              Host Phone Number  <span class="text-danger">*</span>
+            </label>
 
-              <div class="col-sm-6">
-                <input class="form-control" name="appointmentDate"
-                       id="appointmentDate" ng-model="appointment.appointment_date" type="date" required/>
+            <div class="col-sm-6">
+              <input class="form-control" name="hostNumber" id="hostNumber" ng-model="host_number" type="text"
+                     ng-change="getHost(host_number)" required/>
+              {{ appointment_host.selected.first_name }} {{ appointment_host.selected.last_name }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="appointmentDate">
+              Appointment Date <span class="text-danger">*</span>
+            </label>
+
+            <div class="col-sm-6">
+              <div class="input-group">
+                <input type="text" class="form-control" ng-model="appointment.appointment_date"
+                       datepicker-popup is-open="appointmentDate.opened" id="appointmentDate" name="appointmentDate"
+                       date-disabled="disabled(date, mode)"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="appointmentDate.open($event)">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </button>
+                </span>
+                <div class="text-danger bold" ng-show="(validationErrors).appointment_date.length">
+                  <spn ng-repeat="error in validationErrors.appointment_date">
+                    {{ error }}<br/>
+                  </spn>
+                </div>
               </div>
             </div>
+          </div>
 
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="visitStartTime">
-                Appointment Starts At <span class="text-danger">*</span>
-              </label>
+          <div class="form-group">
+            <label class="control-label col-sm-2" >
+              Appointment Starts At <span class="text-danger">*</span>
+            </label>
 
-              <div class="col-sm-6">
-                <input class="form-control" name="visitStartTime"
-                       id="visitStartTime" ng-model="appointment.visit_start_time" type="time" required/>
+            <div class="col-sm-6">
+              <timepicker ng-model="visit_start_time" hour-step="1" minute-step="1"></timepicker>
+              <div class="text-danger bold" ng-show="(validationErrors).visit_start_time.length">
+                <spn ng-repeat="error in validationErrors.visit_start_time">
+                  {{ error }}<br/>
+                </spn>
               </div>
             </div>
+          </div>
 
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="visitEndTime">
-                Appointment Ends At <span class="text-danger">*</span>
-              </label>
+          <div class="form-group">
+            <label class="control-label col-sm-2">
+              Appointment Ends At <span class="text-danger">*</span>
+            </label>
 
-              <div class="col-sm-6">
-                <input class="form-control" name="visitEndTime"
-                       id="visitEndTime" ng-model="appointment.visit_end_time" type="time" required/>
+            <div class="col-sm-6">
+              <timepicker ng-model="visit_end_time" hour-step="1" minute-step="1"></timepicker>
+              <div class="text-danger bold" ng-show="(validationErrors).visit_end_time.length">
+              <spn ng-repeat="error in validationErrors.visit_end_time">
+                {{ error }}<br/>
+              </spn>
+            </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="representing">Representing</label>
+
+            <div class="col-sm-6">
+              <input class="form-control" name="representing" id="representing"
+                     ng-model="appointment.representing" type="text"/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="purpose">Purpose of Visit <span
+              class="text-danger">*</span></label>
+
+            <div class="col-sm-6">
+              <textarea name="purpose" id="purpose" class="form-control" ng-model="appointment.purpose"
+                        required></textarea>
+              <div class="text-danger bold" ng-show="(validationErrors).purpose.length">
+                <spn ng-repeat="error in validationErrors.purpose">
+                  {{ error }}<br/>
+                </spn>
               </div>
             </div>
+          </div>
 
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="representing">Representing</label>
+          <hr/>
 
-              <div class="col-sm-6">
-                <input class="form-control" name="representing" id="representing"
-                       ng-model="appointment.representing" type="text"/>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="purpose">Purpose of Visit <span class="text-danger">*</span></label>
-
-              <div class="col-sm-6">
-                <textarea name="purpose" id="purpose" class="form-control" ng-model="appointment.purpose" required></textarea>
-              </div>
-            </div>
-
-            <hr/>
-
-            <div class="col-sm-offset-2 col-sm-10">
-              <button class="btn btn-primary"
-                      ng-class="{ 'disabled btn-danger' : appointmentForm.$invalid }" ng-if="!appointment._id">
-                Create Appointment
-              </button>
-              <button class="btn btn-primary"
-                      ng-class="{ 'disabled btn-danger' : appointmentForm.$invalid }" ng-if="appointment._id">
-                Edit Appointment {{appointment.appointment_id}}
-              </button>
-            </div>
-          </form>
-        </fieldset>
-      </div>
-      <div class="widget-foot">
-        <!-- Footer goes here -->
-      </div>
+          <div class="col-sm-offset-2 col-sm-10">
+            <button class="btn btn-primary"
+                    ng-if="!appointment._id">
+              <i class="fa fa-plus-circle"></i> Create Appointment
+            </button>
+            <button class="btn btn-primary"
+                    ng-if="appointment._id">
+              <i class="fa fa-edit"></i> Edit Appointment {{appointment.appointment_id}}
+            </button>
+            <a class="btn btn-danger" ui-sref="appointments"><i class="fa fa-times"></i> Cancel</a>
+          </div>
+        </form>
+      </fieldset>
+    </div>
+    <div class="widget-foot">
+      <!-- Footer goes here -->
     </div>
   </div>
+</div>
