@@ -14,27 +14,27 @@
             <div class="col-sm-8">
               <div class="row">
                 <div class="col-sm-6"><strong>Name</strong></div>
-                <div class="col-sm-6">{{ ((appointment).visitor).first_name + ' ' + ((appointment).visitor).last_name
+                <div class="col-sm-6">{{ ((appointment).visitor_id).first_name + ' ' + ((appointment).visitor_id).last_name
                   }}
                 </div>
               </div>
               <div class="row">
                 <div class="col-sm-6"><strong>Birth Date</strong></div>
-                <div class="col-sm-6">{{ ((appointment).visitor).birth_date | date: 'MMM d, y' }}</div>
+                <div class="col-sm-6">{{ ((appointment).visitor_id).date_of_birth | date: 'MMM d, y' }}</div>
               </div>
               <div class="row">
                 <div class="col-sm-6"><strong>Contact Phone</strong></div>
                 <div class="col-sm-6"><strong>Contact Email</strong></div>
               </div>
               <div class="row">
-                <div class="col-sm-6">{{ ((appointment).visitor).visitor_phone}}</div>
-                <div class="col-sm-6">{{ ((appointment).visitor).visitor_email}}</div>
+                <div class="col-sm-6">{{ ((appointment).visitor_id).visitors_phone}}</div>
+                <div class="col-sm-6">{{ ((appointment).visitor_id).visitors_email}}</div>
               </div>
             </div>
             <div class="col-sm-4">
-              <img ng-if="((appointment).visitor).image !== undefined" ng-src="{{ appointment.visitor.image }}" alt=""
+              <img ng-if="((appointment).visitor_id).image !== undefined" ng-src="{{ appointment.visitor.image }}" alt=""
                    class="img-responsive"/>
-              <img ng-if="!((appointment).visitor).image" ng-src="img/place_holder.jpg" alt=""
+              <img ng-if="!((appointment).visitor_id).image" ng-src="img/place_holder.jpg" alt=""
                    class="img-responsive"/>
             </div>
           </div>
@@ -61,26 +61,34 @@
             <div class="col-sm-8">
               <div class="row">
                 <div class="col-sm-6"><strong>Name</strong></div>
-                <div class="col-sm-6">{{ ((appointment).host).first_name + ' ' + ((appointment).host).last_name }}</div>
+                <div class="col-sm-6">{{ ((appointment).host_id).first_name + ' ' + ((appointment).host_id).last_name }}</div>
               </div>
               <div class="row">
                 <div class="col-sm-6"><strong>Department</strong></div>
-                <div ng-if="(((appointment).host).user_profile).department" class="col-sm-6">
-                  {{ (((appointment).host).user_profile).department }}
+                <div ng-if="(((appointment).host_id).user_profile).department" class="col-sm-6">
+                  {{ (((appointment).host_id).user_profile).department.department_name }}
                 </div>
-                <div ng-if="!(((appointment).host).user_profile).department" class="col-sm-6"> Nil</div>
+                <div ng-if="!(((appointment).host_id).user_profile).department" class="col-sm-6"> Nil</div>
               </div>
               <div col-sm-12><strong>Contact Phone</strong></div>
               <div class="row">
-                <div class="col-sm-4">{{ (((appointment).host).user_profile).phone }}</div>
-                <div class="col-sm-4">{{ (((appointment).host).user_profile).home_phone }}</div>
-                <div class="col-sm-4">{{ (((appointment).host).user_profile).work_phone }}</div>
+                <div class="col-sm-12">
+                  <span ng-if="(((appointment).host_id).user_profile).phone ">
+                    {{ (((appointment).host_id).user_profile).phone }}
+                  </span>
+                  <span ng-if="(((appointment).host_id).user_profile).home_phone">
+                    {{ (((appointment).host_id).user_profile).home_phone }}
+                  </span>
+                  <span ng-if="(((appointment).host_id).user_profile).work_phone">
+                    {{ (((appointment).host_id).user_profile).work_phone }}
+                  </span>
+                </div>
               </div>
             </div>
             <div class="col-sm-4">
-              <img ng-if="((appointment).visitor).image !== undefined" ng-src="{{ appointment.visitor.image }}" alt=""
+              <img ng-if="((appointment).visitor_id).image !== undefined" ng-src="{{ appointment.visitor.image }}" alt=""
                    class="img-responsive"/>
-              <img ng-if="!((appointment).visitor).image" ng-src="img/place_holder.jpg" alt=""
+              <img ng-if="!((appointment).visitor_id).image" ng-src="img/place_holder.jpg" alt=""
                    class="img-responsive"/>
             </div>
           </div>

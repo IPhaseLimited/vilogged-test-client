@@ -26,6 +26,7 @@
             <th>Date</th>
             <th>Start Time</th>
             <th>Ends Time</th>
+            <th>Approved</th>
             <th></th>
           </tr>
           </thead>
@@ -33,19 +34,20 @@
           <tr ng-repeat="appointment in appointments"
               ng-class="{'text-danger': expired(appointment.appointment_date), 'text-success': upcoming(appointment.appointment_date)}">
             <td>{{ $index+1 }}</td>
-            <td>{{ ((appointment).visitor).first_name + ' ' + ((appointment).visitor).last_name }}</td>
-            <td>{{ ((appointment).host).first_name + ' ' + ((appointment).host).last_name }}</td>
+            <td>{{ ((appointment).visitor_id).first_name + ' ' + ((appointment).visitor_id).last_name }}</td>
+            <td>{{ ((appointment).host_id).first_name + ' ' + ((appointment).host_id).last_name }}</td>
             <td>{{ appointment.appointment_date | date:'EEE, MMM d, y' }}</td>
             <td>{{ appointment.visit_start_time }}</td>
             <td>{{ appointment.visit_end_time }}</td>
+            <td class="text-center"><i class="fa " ng-class="{'fa-fa-check-circle text-success bold' : appointment.is_approved, 'fa-ban text-danger bold' : !appointment.is_approved}"></i></td>
             <td>
-              <a ui-sref="visitor-check-in({ appointment_id: appointment._id })" class="btn btn-xs btn-success"
+              <a ui-sref="visitor-check-in({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
                  ng-if="!appointment.check_in" ng-show="isAppointmentUpcoming(appointment.appointment_date) && user.is_staff">Check In</a>
-              <a ui-sref="visitor-check-out({ appointment_id: appointment._id })" class="btn btn-xs btn-success"
+              <a ui-sref="visitor-check-out({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
                  ng-if="appointment.check_in" ng-show="isAppointmentUpcoming(appointment.appointment_date) && user.is_staff">Check Out</a>
-              <a ui-sref="edit-appointment({ appointment_id: appointment._id })" class="btn btn-xs btn-success"
+              <a ui-sref="edit-appointment({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
                  ng-if="!appointment.check_in" ng-show="isAppointmentUpcoming(appointment.appointment_date)  && user.is_staff">Edit</a>
-              <a ui-sref="show-appointment({appointment_id: appointment._id})" class="btn btn-xs btn-success">View</a>
+              <a ui-sref="show-appointment({appointment_id: appointment.uuid})" class="btn btn-xs btn-success">View</a>
               <span class="label label-danger" ng-show="isAppointmentExpired(appointment.appointment_date)">
                 Expired Appointment
               </span>
