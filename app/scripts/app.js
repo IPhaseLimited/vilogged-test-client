@@ -21,13 +21,6 @@ angular.module('viLoggedClientApp', [
 
     $rootScope.pageTitle = 'Visitor Management System';
     $rootScope.$on('$stateChangeSuccess', function () {
-      if (angular.isDefined($location.search().disable_login) && $location.search().disable_login === 'true') {
-        $cookieStore.put('no-login', 1);
-      }
-
-      if (angular.isDefined($location.search().disable_login) && $location.search().disable_login === 'false') {
-        $cookieStore.put('no-login', 0);
-      }
 
       if ($state.$current.name === 'visitor-registration') {
         loginService.anonymousLogin()
@@ -57,15 +50,15 @@ angular.module('viLoggedClientApp', [
         }
       }
 
-      if (angular.isDefined(userService.user)) {
-        $rootScope.user = userService.user;
-      } else {
+      if (angular.isUndefined($rootScope.user)) {
         $rootScope.user = $cookieStore.get('current-user');
       }
 
       if ($state.$current.name === 'login') {
-        loginService.logout();
+        loginService.logout($rootScope.user);
       }
+      console.log($rootScope.user);
+
     });
   })
   .config(function($httpProvider) {
