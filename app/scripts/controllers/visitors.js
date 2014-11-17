@@ -31,7 +31,7 @@ angular.module('viLoggedClientApp')
           }
         },
         data: {
-          label: '',
+          label: 'Create Visitor',
           requiredPermission: 'is_active'
         }
       })
@@ -45,7 +45,7 @@ angular.module('viLoggedClientApp')
           }
         },
         data: {
-          label: ''
+          label: 'Register'
         }
       })
       .state('edit-visitor-profile', {
@@ -59,7 +59,7 @@ angular.module('viLoggedClientApp')
           }
         },
         data: {
-          label: '',
+          label: 'Edit Profile',
           requiredPermission: 'is_active'
         }
       })
@@ -69,7 +69,7 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/visitors/detail.html',
         controller: 'VisitorDetailCtrl',
         data: {
-          label: '',
+          label: 'Details',
           requiredPermission: 'is_active'
         }
       })
