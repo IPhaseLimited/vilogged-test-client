@@ -1823,3 +1823,8 @@ footer .copy{
 .select2 {
   width: 470px;
 }
+
+.breadcrumb {
+  padding: 0;
+  margin-bottom: 0;
+}
