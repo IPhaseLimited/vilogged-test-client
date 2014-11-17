@@ -107,22 +107,21 @@ angular.module('viLoggedClientApp')
     $scope.countryState = countryState;
     $scope.countries = Object.keys(countryState);
 
-    //Open date dropdown
-    $scope.open = function($event) {
-      $event.preventDefault();
-      $event.stopPropagation();
 
-      $scope.opened = !$scope.opened;
+    // Disable weekend selection
+
+    $scope.dob = {
+      opened: false,
+      date: moment().endOf('day').toDate(),
+      open: function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        this.opened = true;
+      }
     };
 
-    $scope.maxDate = function() {
-      return moment().subtract(15, 'years').calendar();
-    };
 
-    //disable weekends on calendar
-    $scope.disabled = function(date, mode) {
-      return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
-    };
 
     $scope.setFiles = function(element, field) {
       $scope.$apply(function() {
@@ -139,10 +138,7 @@ angular.module('viLoggedClientApp')
       });
     };
 
-    visitorService.all()
-      .then(function (response) {
-        $scope.visitors = response;
-      });
+
     $scope.visitor = {};
     $scope.visitor_location = {};
     $scope.vehicle = {};
@@ -196,13 +192,7 @@ angular.module('viLoggedClientApp')
     $scope.createProfile = function () {
       var emailValidation = validationService.EMAIL;
       emailValidation.required = true;
-      emailValidation.unique = true;
-      emailValidation.dbName = visitorService.DBNAME;
-      emailValidation.dataList = $scope.visitors;
-
       var phoneNumberValidation = validationService.BASIC;
-      phoneNumberValidation.unique = true;
-      phoneNumberValidation.dbName = visitorService.DBNAME;
       phoneNumberValidation.pattern = '/^[0-9]/';
 
       var validationParams = {
