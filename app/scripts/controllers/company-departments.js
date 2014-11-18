@@ -66,8 +66,7 @@ angular.module('viLoggedClientApp')
           label: 'Departments'
         },
         ncyBreadcrumb: {
-          label: 'Departments',
-          parent: 'Home'
+          label: 'Departments'
         }
       })
       .state('add-company-department', {
@@ -80,8 +79,7 @@ angular.module('viLoggedClientApp')
           label: 'Add Department'
         },
         ncyBreadcrumb: {
-          label: 'Add Department',
-          parent: 'Department'
+          label: 'Add Department'
         }
       })
       .state('edit-company-department', {
@@ -94,8 +92,7 @@ angular.module('viLoggedClientApp')
           label: 'Edit Department'
         },
         ncyBreadcrumb: {
-          label: 'Edit Department',
-          parent: 'Department'
+          label: 'Edit Department'
         }
       });
   })
