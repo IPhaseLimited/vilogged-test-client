@@ -71,7 +71,10 @@
               <input class="form-control" name="hostNumber" id="hostNumber" ng-model="host_number" type="text"
                      ng-blur="getHost(host_number)"
                      ng-focus="clearError('host_id')" required/>
-              {{ appointment_host.selected.first_name }} {{ appointment_host.selected.last_name }}
+
+              <span class="text-success bold" ng-show="appointment_host.selected">
+                Host Name: {{ appointment_host.selected.first_name }} {{ appointment_host.selected.last_name }}
+              </span>
 
               <div class="text-danger bold" ng-show="(customErrors).host_id.length">
                 <span>
