@@ -16,6 +16,10 @@
         </p>
       </div>
 
+      <div flash-alert active-class="in" class="alert fade" ng-show="flash.message">
+        <span class="alert-message">{{flash.message}}</span>
+      </div>
+
       <div ng-if="appointments.length">
         <table class="table table-responsive table-condensed table-bordered table-striped">
           <thead>
