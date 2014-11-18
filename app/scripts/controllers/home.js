@@ -8,10 +8,7 @@ angular.module('viLoggedClientApp')
       parent: 'root.index',
       url: '/',
       templateUrl: 'views/home/index.html',
-      controller: function($state, $scope) {
-
-
-      },
+      controller: 'MainCtrl',
       ncyBreadcrumb: {
         label: 'Home'
       }
@@ -30,4 +27,7 @@ angular.module('viLoggedClientApp')
           }
         }
       })
+  })
+  .controller('MainCtrl', function ($scope, appointmentService) {
+
   });
