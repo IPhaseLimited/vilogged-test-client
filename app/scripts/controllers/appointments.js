@@ -188,8 +188,8 @@ angular.module('viLoggedClientApp')
     };
 
     $scope.getHost = function(hostPhone) {
-      if (timeout) timeout.cancel();
-      var timeout = $timeout(userService.getUserByPhone(hostPhone)
+      if (timer) $timeout.cancel(timer);
+      var timer = $timeout(userService.getUserByPhone(hostPhone)
         .then(function(response) {
           $scope.appointment_host.selected = response[0];
           console.log(response[0]);
