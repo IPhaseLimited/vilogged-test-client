@@ -70,7 +70,10 @@
             <div class="col-sm-6">
               <input class="form-control" name="hostNumber" id="hostNumber" ng-model="host_number" type="text"
                      ng-change="getHost(host_number)" required/>
-              {{ appointment_host.selected.first_name }} {{ appointment_host.selected.last_name }}
+              <span class="text-success bold" ng-show="appointment_host.selected">
+                Host Name: {{ appointment_host.selected.first_name }} {{ appointment_host.selected.last_name }}
+              </span>
+              <span class="text-danger bold" ng-show="error">{{ error | uppercase }}</span>
             </div>
           </div>
 

@@ -166,7 +166,7 @@ angular.module('viLoggedClientApp')
     };
   })
   .controller('AppointmentFormCtrl', function ($scope, $stateParams, $state, $timeout, $filter, visitorService,
-                                               userService, appointmentService, utility, validationService) {
+                                               userService, appointmentService, utility, validationService, flash) {
     $scope.appointment = {};
     $scope.visit_start_time = new Date();
     $scope.visit_end_time = new Date();
@@ -188,15 +188,24 @@ angular.module('viLoggedClientApp')
     };
 
     $scope.getHost = function(hostPhone) {
-      if (timeout) timeout.cancel();
-      var timeout = $timeout(userService.getUserByPhone(hostPhone)
-        .then(function(response) {
-          $scope.appointment_host.selected = response[0];
-          console.log(response[0]);
-        })
-        .catch(function(reason) {
-          console.log(reason);
-        }), 1000);
+      if (timer) $timeout.cancel(timer);
+      var timer = $timeout(function () {
+        userService.getUserByPhone(hostPhone)
+          .then(function(response) {
+            if (response[0]) {
+              $scope.appointment_host.selected = response[0];
+            } else if (response[1]) {
+              $scope.appointment_host.selected = response[1];
+            } else {
+              $scope.appointment_host.selected = response[2];
+            }
+            $scope.error = undefined;
+          })
+          .catch(function(reason) {
+            $scope.error = reason.message;
+            $scope.appointment_host = {};
+          })
+        }, 1000);
     };
 
     $scope.hostLookUp = {
@@ -249,12 +258,32 @@ angular.module('viLoggedClientApp')
       if ($scope.user.is_active) $scope.visitorLookUp.listVisitors();
     }
 
+    if ($stateParams.visitor_id) {
+      visitorService.get($stateParams.visitor_id)
+        .then(function(response) {
+          $scope.appointment_visitor.selected = response;
+        })
+        .catch(function(reason) {
+          console.log(reason);
+        })
+    }
+
+    if ($stateParams.host_id) {
+      userService.get($stateParams.host_id)
+        .then(function(response) {
+          $scope.appointment_host.selected = response;
+        })
+        .catch(function(reason) {
+          console.log(reason);
+        })
+    }
+
     $scope.createAppointment = function () {
       $scope.appointment.label_code = utility.generateRandomInteger();
       $scope.appointment.appointment_date =$filter('date')($scope.appointment.appointment_date, 'yyyy-MM-dd');
-      $scope.appointment.is_expired = false;
-      $scope.appointment.check_in = null;
-      $scope.appointment.check_out = null;
+      $scope.appointment.expired = false;
+      $scope.appointment.checked_in = null;
+      $scope.appointment.checked_out = null;
 
       $scope.appointment.visit_start_time = $filter('date')($scope.visit_start_time, 'hh:mm a');
       $scope.appointment.visit_end_time = $filter('date')($scope.visit_end_time, 'hh:mm a');
@@ -275,8 +304,8 @@ angular.module('viLoggedClientApp')
       if (!Object.keys($scope.validationErrors).length) {
         appointmentService.save($scope.appointment)
           .then(function (response) {
-            //TODO:: implement notification service here
-            $state.go('appointments');
+            flash.success('Appointment was successfully created');
+            user.is_active ? $state.go('appointments') : $state.go('visitors', {visitor_id: $stateParams.visitor_id});
           })
           .catch(function (reason) {
             Object.keys(reason).forEach(function(key) {
