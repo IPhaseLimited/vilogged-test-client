@@ -98,11 +98,10 @@ angular.module('viLoggedClientApp')
         console.log(reason);
       });
 
-    appointmentService.getUpcomingAppointments($scope.currentUser)
+    appointmentService.getUserUpcomingAppointments($scope.currentUser)
       .then(function (response) {
         $scope.upcomingAppointments = response;
         $scope.upcomingAppointmentCount = response.length;
-        console.log($scope.upcomingAppointmentCount)
       })
       .catch(function (reason) {
         console.log(reason);
