@@ -34,7 +34,7 @@ angular.module('viLoggedClientApp')
         })
         .catch(function (reason) {
           $scope.loginError = true;
-          $scope.errorMessages = reason;
+          $scope.errorMessages = reason.loginMessage;
           $scope.visitorCredential.identity = '';
         })
     };
