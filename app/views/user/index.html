@@ -18,6 +18,7 @@
               <th>S/N</th>
               <th>Name</th>
               <th>Username</th>
+              <th>Role</th>
               <th>Department</th>
               <th>Office Phone</th>
               <th></th>
@@ -28,7 +29,13 @@
               <td>{{ $index + 1 }}</td>
               <td>{{ user.first_name + ' ' + user.last_name }}</td>
               <td>{{ user.username }}</td>
-              <td>{{ user.user_profile.department }}</td>
+              <td>
+                <span ng-show="user.is_superuser">Superuser</span>
+                <span ng-show="!user.is_superuser && user.is_staff">Admin</span>
+                <span ng-show="!user.is_superuser && !user.is_staff && user.is_active">Staff</span>
+                <span ng-show="!user.is_superuser && !user.is_staff && !user.is_active">Not Active</span>
+              </td>
+              <td>{{ user.user_profile.department.department_name }}</td>
               <td>{{ user.user_profile.work_phone }}</td>
               <td>
                 <a class="btn btn-success btn-xs" ui-sref="editUser({user_id: user.id})"><i class="fa fa-edit"></i> Edit</a>
