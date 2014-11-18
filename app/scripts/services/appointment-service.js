@@ -140,7 +140,7 @@ angular.module('viLoggedClientApp')
         .then(function (response) {
           var filtered = response
             .filter(function (appointment) {
-              return appointment.visitor.id === visitor_id;
+              return appointment.visitor_id.id === visitor_id;
             });
 
           deferred.resolve(filtered);
