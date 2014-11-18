@@ -172,6 +172,11 @@ angular.module('viLoggedClientApp')
     $scope.visit_end_time = new Date();
     $scope.appointment_host = {};
     $scope.appointment_visitor = {};
+    $scope.customErrors = {};
+
+    $scope.clearError = function(key) {
+      delete $scope.customErrors[key];
+    };
 
     $scope.appointmentDate = {
       opened: false,
@@ -183,29 +188,38 @@ angular.module('viLoggedClientApp')
       }
     };
 
+
+
     $scope.disabled = function(date, mode) {
       return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
     };
 
     $scope.getHost = function(hostPhone) {
-      if (timeout) timeout.cancel();
-      var timeout = $timeout(userService.getUserByPhone(hostPhone)
+      if (!hostPhone) {
+        return;
+      }
+      userService.getUserByPhone(hostPhone)
         .then(function(response) {
           $scope.appointment_host.selected = response[0];
           console.log(response[0]);
         })
         .catch(function(reason) {
+          $scope.customErrors['host_id'] = reason.message;
           console.log(reason);
-        }), 1000);
+        });
     };
 
     $scope.hostLookUp = {
       refreshHostsList: function (phone) {
+        if (!phone) {
+          return;
+        }
         userService.getUserByPhone(phone)
           .then(function (response) {
             $scope.hosts = response;
           })
           .catch(function (reason) {
+            $scope.customErrors['host_id'] = reason.message;
             console.log(reason);
           });
       },
@@ -259,8 +273,8 @@ angular.module('viLoggedClientApp')
       $scope.appointment.visit_start_time = $filter('date')($scope.visit_start_time, 'hh:mm a');
       $scope.appointment.visit_end_time = $filter('date')($scope.visit_end_time, 'hh:mm a');
 
-      $scope.appointment.host_id = $scope.appointment_host.selected.id;
-      $scope.appointment.visitor_id = $scope.appointment_visitor.selected.uuid;
+      $scope.appointment.host_id = angular.isDefined($scope.appointment_host.selected) ? $scope.appointment_host.selected.id : undefined;
+      $scope.appointment.visitor_id = angular.isDefined($scope.appointment_visitor.selected) ? $scope.appointment_visitor.selected.uuid : undefined;
 
       var validationParams = {
         appointment_date: validationService.BASIC,
