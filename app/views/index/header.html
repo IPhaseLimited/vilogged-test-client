@@ -15,24 +15,24 @@
     <!-- Navigation starts -->
     <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
 
-      <ul class="nav navbar-nav">
+      <!--<ul class="nav navbar-nav">
 
-        <!-- Upload to server link. Class "dropdown-big" creates big dropdown -->
+        &lt;!&ndash; Upload to server link. Class "dropdown-big" creates big dropdown &ndash;&gt;
 
-        <!-- Sync to server link -->
+        &lt;!&ndash; Sync to server link &ndash;&gt;
         <li class="dropdown dropdown-big">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="label label-danger"><i class="fa fa-refresh"></i></span> Sync with Server</a>
-          <!-- Dropdown -->
+          &lt;!&ndash; Dropdown &ndash;&gt;
           <ul class="dropdown-menu">
             <li>
-              <!-- Using "icon-spin" class to rotate icon. -->
+              &lt;!&ndash; Using "icon-spin" class to rotate icon. &ndash;&gt;
               <p><span class="label label-info"><i class="fa fa-cloud"></i></span> Syncing Members Lists to Server</p>
               <hr />
               <p><span class="label label-warning"><i class="fa fa-cloud"></i></span> Syncing Bookmarks Lists to Cloud</p>
 
               <hr />
 
-              <!-- Dropdown menu footer -->
+              &lt;!&ndash; Dropdown menu footer &ndash;&gt;
               <div class="drop-foot">
                 <a href="#">View All</a>
               </div>
@@ -41,7 +41,7 @@
           </ul>
         </li>
 
-      </ul>
+      </ul>-->
 
       <!-- Search form -->
       <form class="navbar-form navbar-left" role="search">
@@ -58,7 +58,10 @@
 
           <!-- Dropdown menu -->
           <ul class="dropdown-menu">
-            <li><a ui-sref="profile"><i class="fa fa-user"></i> Profile</a></li>
+            <li>
+              <a ng-if="!user.is_vistor" ui-sref="profile"><i class="fa fa-user"></i> Profile</a>
+              <a ng-if="user.is_vistor" ui-sref="show-visitor({visitor_id: user.id})"><i class="fa fa-user"></i> Profile</a>
+            </li>
             <li ng-show="user.is_active"><a ui-sref="change-password"><i class="fa fa-key"></i> Change Password</a></li>
             <li ng-show="user.is_superuser"><a ui-sref="settings"><i class="fa fa-cogs"></i> Settings</a></li>
             <li><a ui-sref="logout"><i class="fa fa-sign-out"></i> Logout</a></li>
@@ -91,30 +94,30 @@
       <div class="col-md-4">
 
         <!-- Buttons -->
-        <ul class="nav nav-pills">
+        <!--<ul class="nav nav-pills">
 
-          <!-- Comment button with number of latest comments count -->
+          &lt;!&ndash; Comment button with number of latest comments count &ndash;&gt;
           <li class="dropdown dropdown-big">
             <a class="dropdown-toggle" href="#" data-toggle="dropdown">
               <i class="fa fa-comments"></i> Chats <span   class="label label-info">6</span>
             </a>
           </li>
 
-          <!-- Message button with number of latest messages count-->
+          &lt;!&ndash; Message button with number of latest messages count&ndash;&gt;
           <li class="dropdown dropdown-big">
             <a class="dropdown-toggle" href="#" data-toggle="dropdown">
               <i class="fa fa-envelope"></i> Inbox <span class="label label-primary">6</span>
             </a>
           </li>
 
-          <!-- Members button with number of latest members count -->
+          &lt;!&ndash; Members button with number of latest members count &ndash;&gt;
           <li class="dropdown dropdown-big">
             <a class="dropdown-toggle" href="#" data-toggle="dropdown">
               <i class="fa fa-user"></i> Users <span   class="label label-success">6</span>
             </a>
           </li>
 
-        </ul>
+        </ul>-->
 
       </div>
 
