@@ -108,7 +108,7 @@ angular.module('viLoggedClientApp')
         console.log(reason);
       });
 
-    appointmentService.getAppointmentsAwaitingApproval($scope.currentUser)
+    appointmentService.getUserAppointmentsAwaitingApproval($scope.currentUser)
       .then(function (response) {
         $scope.appointmentsAwaitingApproval = response;
         $scope.appointmentsAwaitingApprovalCount = response.length;

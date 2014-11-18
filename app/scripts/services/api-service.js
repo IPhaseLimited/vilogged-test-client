@@ -35,7 +35,7 @@ angular.module('viLoggedClientApp')
     this.post = function(db, data) {
       //return apiFactory.post({_db:db}, data).$promise;
       var deferred = $q.defer();
-      $http.post(BASE_URL + db, data)
+      $http.post(BASE_URL + db + '/', data)
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -53,7 +53,7 @@ angular.module('viLoggedClientApp')
       }).$promise;*/
 
       var deferred = $q.defer();
-      $http.get(BASE_URL + db)
+      $http.get(BASE_URL + db + '/')
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -68,7 +68,7 @@ angular.module('viLoggedClientApp')
       //return apiFactory.get({_db: db, _param: id}).$promise;
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + db + '/'+ id)
+      $http.get(BASE_URL + db + '/'+ id + '/')
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -83,7 +83,7 @@ angular.module('viLoggedClientApp')
       //return apiFactory.remove({_db: db, _param: id}).$promise;
       var deferred = $q.defer();
 
-      $http.delete(BASE_URL + db + '/'+ id)
+      $http.delete(BASE_URL + db + '/'+ id + '/')
         .success(function(response) {
           deferred.resolve(response);
         })
