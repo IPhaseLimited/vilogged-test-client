@@ -154,7 +154,8 @@ angular.module('viLoggedClientApp')
 
     function getVisitorUpcomingAppointments(visitor_id) {
       var deferred = $q.defer();
-      getAppointmentsByUser(visitor_id)
+
+      findByField('visitor_id__uuid', visitor_id)
         .then(function (response) {
           var filtered = response
             .filter(function (appointment) {
@@ -166,6 +167,7 @@ angular.module('viLoggedClientApp')
         .catch(function (reason) {
           deferred.reject(reason);
         });
+
 
       return deferred.promise;
     }
