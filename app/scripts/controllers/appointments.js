@@ -281,7 +281,7 @@ angular.module('viLoggedClientApp')
     $scope.createAppointment = function () {
       $scope.appointment.label_code = utility.generateRandomInteger();
       $scope.appointment.appointment_date =$filter('date')($scope.appointment.appointment_date, 'yyyy-MM-dd');
-      $scope.appointment.expired = false;
+      $scope.appointment.is_expired = false;
       $scope.appointment.checked_in = null;
       $scope.appointment.checked_out = null;
 
@@ -304,8 +304,8 @@ angular.module('viLoggedClientApp')
       if (!Object.keys($scope.validationErrors).length) {
         appointmentService.save($scope.appointment)
           .then(function (response) {
-            flash.success('Appointment was successfully created');
-            user.is_active ? $state.go('appointments') : $state.go('visitors', {visitor_id: $stateParams.visitor_id});
+            flash.success = 'Appointment was successfully created';
+            $scope.user.is_active ? $state.go('appointments') : $state.go('visitors', {visitor_id: $stateParams.visitor_id});
           })
           .catch(function (reason) {
             Object.keys(reason).forEach(function(key) {
