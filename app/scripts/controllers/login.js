@@ -21,7 +21,7 @@ angular.module('viLoggedClientApp')
         controller: 'LogoutCtrl'
       });
   })
-  .controller('LoginCtrl', function ($scope, $state, loginService, visitorService) {
+  .controller('LoginCtrl', function ($scope, $state, loginService) {
     $scope.displayVisitorLogin = true;
 
     $scope.visitorCredential = {};
@@ -30,11 +30,11 @@ angular.module('viLoggedClientApp')
         .then(function (response) {
           $scope.loginError = false;
           //FIXME:: fix redirection on login
-          $state.go('show-visitor', {visitor_id: response.loginRawResponse.id})
+          $state.go('show-visitor', {visitor_id: response.loginRawResponse.uuid})
         })
         .catch(function (reason) {
           $scope.loginError = true;
-          $scope.errorMessages = reason.loginMessage;
+          $scope.errorMessages = reason;
           $scope.visitorCredential.identity = '';
         })
     };
