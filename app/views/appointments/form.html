@@ -31,9 +31,9 @@
                 </ui-select-choices>
               </ui-select>
               <div class="text-danger bold" ng-show="(validationErrors).host_id.length">
-                <spn ng-repeat="error in validationErrors.host_id">
+                <span ng-repeat="error in validationErrors.host_id">
                   {{ error }}<br/>
-                </spn>
+                </span>
               </div>
             </div>
           </div>
@@ -54,9 +54,9 @@
                 </ui-select-choices>
               </ui-select>
               <div class="text-danger bold" ng-show="(validationErrors).visitor_id.length">
-                <spn ng-repeat="error in validationErrors.visitor_id">
+                <span ng-repeat="error in validationErrors.visitor_id">
                   {{ error }}<br/>
-                </spn>
+                </span>
               </div>
             </div>
           </div>
@@ -69,8 +69,15 @@
 
             <div class="col-sm-6">
               <input class="form-control" name="hostNumber" id="hostNumber" ng-model="host_number" type="text"
-                     ng-change="getHost(host_number)" required/>
+                     ng-blur="getHost(host_number)"
+                     ng-focus="clearError('host_id')" required/>
               {{ appointment_host.selected.first_name }} {{ appointment_host.selected.last_name }}
+
+              <div class="text-danger bold" ng-show="(customErrors).host_id.length">
+                <span>
+                  {{ customErrors.host_id }}<br/>
+                </span>
+              </div>
             </div>
           </div>
 
@@ -89,11 +96,11 @@
                     <i class="glyphicon glyphicon-calendar"></i>
                   </button>
                 </span>
-                <div class="text-danger bold" ng-show="(validationErrors).appointment_date.length">
-                  <spn ng-repeat="error in validationErrors.appointment_date">
+              </div>
+              <div class="text-danger bold" ng-show="(validationErrors).appointment_date.length">
+                  <span ng-repeat="error in validationErrors.appointment_date">
                     {{ error }}<br/>
-                  </spn>
-                </div>
+                  </span>
               </div>
             </div>
           </div>
@@ -106,9 +113,9 @@
             <div class="col-sm-6">
               <timepicker ng-model="visit_start_time" hour-step="1" minute-step="1"></timepicker>
               <div class="text-danger bold" ng-show="(validationErrors).visit_start_time.length">
-                <spn ng-repeat="error in validationErrors.visit_start_time">
+                <span ng-repeat="error in validationErrors.visit_start_time">
                   {{ error }}<br/>
-                </spn>
+                </span>
               </div>
             </div>
           </div>
@@ -121,9 +128,9 @@
             <div class="col-sm-6">
               <timepicker ng-model="visit_end_time" hour-step="1" minute-step="1"></timepicker>
               <div class="text-danger bold" ng-show="(validationErrors).visit_end_time.length">
-              <spn ng-repeat="error in validationErrors.visit_end_time">
+              <span ng-repeat="error in validationErrors.visit_end_time">
                 {{ error }}<br/>
-              </spn>
+              </span>
             </div>
             </div>
           </div>
@@ -145,9 +152,9 @@
               <textarea name="purpose" id="purpose" class="form-control" ng-model="appointment.purpose"
                         required></textarea>
               <div class="text-danger bold" ng-show="(validationErrors).purpose.length">
-                <spn ng-repeat="error in validationErrors.purpose">
+                <span ng-repeat="error in validationErrors.purpose">
                   {{ error }}<br/>
-                </spn>
+                </span>
               </div>
             </div>
           </div>
