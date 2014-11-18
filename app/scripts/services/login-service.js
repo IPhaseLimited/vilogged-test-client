@@ -96,7 +96,8 @@ angular.module('viLoggedClientApp')
         is_superuser: false,
         is_active: false,
         is_staff: false,
-        id: visitor.uuid
+        id: visitor.uuid,
+        is_vistor: true
       }
     }
 
