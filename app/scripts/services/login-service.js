@@ -73,7 +73,8 @@ angular.module('viLoggedClientApp')
             loginResponse.status = 200;
             loginResponse.loginMessage = 'Login was successful';
             loginResponse.loginRawResponse = response;
-            $cookieStore.put('vi-visitor-credential', response);
+            $rootScope.user = toUser(response);
+            $cookieStore.put('vi-visitor', $rootScope.user );
             deferred.resolve(loginResponse);
           })
           .catch(function (reason) {
@@ -86,6 +87,19 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     }
 
+    function toUser(visitor) {
+      return {
+        last_name: visitor.last_name,
+        first_name: visitor.first_name,
+        username: visitor.visitors_pass_code,
+        email: visitor.visitors_email,
+        is_superuser: false,
+        is_active: false,
+        is_staff: false,
+        id: visitor.uuid
+      }
+    }
+
     function anonymousLogin() {
       $cookieStore.put('vi-anonymous-token', Date.now())
     }
@@ -94,7 +108,7 @@ angular.module('viLoggedClientApp')
       $cookieStore.remove('vi-token');
       $cookieStore.remove('no-login');
       $cookieStore.remove('current-user');
-      $cookieStore.remove('vi-visitor-credential');
+      $cookieStore.remove('vi-visitor');
       $cookieStore.remove('vi-anonymous-token');
     }
 
