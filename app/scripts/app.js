@@ -28,7 +28,7 @@ angular.module('viLoggedClientApp', [
       }
 
       var userLoginStatus =
-        !$cookieStore.get('vi-token') && ($cookieStore.get('no-login') === 0 || $cookieStore.get('no-login') === undefined);
+        !$cookieStore.get('vi-token') && ($cookieStore.get('no-login') === 0);
 
       if (userLoginStatus && !$cookieStore.get('vi-visitor') && !$cookieStore.get('vi-anonymous-token')) {
         $state.go('login');
@@ -53,7 +53,12 @@ angular.module('viLoggedClientApp', [
       }
 
       if (angular.isUndefined($rootScope.user)) {
-        $rootScope.user = $cookieStore.get('current-user');
+        if ($cookieStore.get('current-user')) {
+          $rootScope.user = $cookieStore.get('current-user');
+        } else if ($rootScope.user = $cookieStore.get('vi-visitor')) {
+          $rootScope.user = $cookieStore.get('vi-visitor');
+        }
+
       }
 
       if ($state.$current.name === 'login') {
