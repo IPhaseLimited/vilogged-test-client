@@ -309,8 +309,8 @@ angular.module('viLoggedClientApp')
       if (!Object.keys($scope.validationErrors).length) {
         appointmentService.save($scope.appointment)
           .then(function (response) {
-            flash.success('Appointment was successfully created');
-            user.is_active ? $state.go('appointments') : $state.go('visitors', {visitor_id: $stateParams.visitor_id});
+            flash.success = 'Appointment was successfully created';
+            $scope.user.is_active ? $state.go('appointments') : $state.go('visitors', {visitor_id: $stateParams.visitor_id});
           })
           .catch(function (reason) {
             Object.keys(reason).forEach(function(key) {
