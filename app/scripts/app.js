@@ -21,6 +21,7 @@ angular.module('viLoggedClientApp', [
   .run(function ($cookieStore, $rootScope, $state, $http, $location, $interval, loginService, userService, authorizationService) {
 
     $rootScope.pageTitle = 'Visitor Management System';
+    $rootScope.pageHeader = 'Dashboard';
     $rootScope.$on('$stateChangeSuccess', function () {
 
       if ($state.$current.name === 'visitor-registration') {
@@ -43,6 +44,8 @@ angular.module('viLoggedClientApp', [
         $rootScope.pageTitle =
           angular.isDefined($state.$current.self.data.label) ? $state.$current.self.data.label : $rootScope.pageTitle;
 
+        $rootScope.pageHeader = $state.$current.name === 'home' ? 'Dashboard' : $rootScope.pageTitle;
+
         if ($state.current.data.requiredPermission !== undefined) {
           var authorized = authorizationService.authorize($state.current.data.requiredPermission);
           if (!authorized) {
@@ -62,7 +65,7 @@ angular.module('viLoggedClientApp', [
       }
 
       if ($state.$current.name === 'login') {
-        loginService.logout($rootScope.user);
+        loginService.logout();
       }
 
     });
