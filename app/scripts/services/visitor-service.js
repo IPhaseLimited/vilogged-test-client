@@ -8,16 +8,40 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('visitorService', function visitorService($q, storageService, db, syncService) {
+  .service('visitorService', function visitorService($q, storageService, db, syncService, config, $http) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var DB_NAME = db.VISITORS;
+    var BASE_URL = config.api.backend + config.api.backendCommon + '/';
 
     function findByField(field, value) {
-      return storageService.findByField(DB_NAME, field, value);
+      //return storageService.findByField(DB_NAME, field, value);
+
+      var deferred = $q.defer();
+
+      $http.get(BASE_URL + DB_NAME + '/?' + field + '=' + value)
+        .success(function(response) {
+          deferred.resolve(response);
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
+        });
+
+      return deferred.promise;
     }
 
     function getAllVisitors() {
-      return storageService.all(DB_NAME);
+      //return storageService.all(DB_NAME);
+      var deferred = $q.defer();
+
+      $http.get(BASE_URL + DB_NAME + '/nested/')
+        .success(function(response) {
+          deferred.resolve(response);
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
+        });
+
+      return deferred.promise;
     }
 
     function getChanges() {
@@ -56,9 +80,11 @@ angular.module('viLoggedClientApp')
       return storageService.find(DB_NAME, id);
     };
 
+
+
     this.findByVisitorPassCode = function(visitorPassCode) {
       var deferred = $q.defer();
-      findByField('visitor_pass_code', visitorPassCode)
+      findByField('visitors_pass_code', visitorPassCode)
         .then(function(response) {
           var filtered = {};
           if (response.length > 0) {
@@ -73,18 +99,37 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     };
 
+    this.findByPhone = function (value) {
+      var deferred = $q.defer();
+
+      findByField('visitors_phone', value)
+        .then(function(response) {
+          deferred.resolve(response);
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
+        });
+
+      return deferred.promise;
+    };
+
     this.findByPassCodeOrPhone = function (value) {
       var deferred = $q.defer();
-      getAllVisitors()
-        .then(function (response) {
-          var filtered = response.filter(function (row) {
-            return (String(row.visitor_pass_code) === String(value)) || (String(row.visitor_phone) === String(value));
-          });
 
-          if (filtered.length > 0) {
-            deferred.resolve(filtered[0]);
+      var promises = [
+        findByField('visitors_pass_code', value),
+        findByField('visitors_phone', value)
+      ];
+      $q.all(promises)
+        .then(function(response) {
+          if (response[0].length || response[1].length ) {
+            if (response[0].length) {
+              deferred.resolve(response[0][0]);
+            } else {
+              deferred.resolve(response[1][0]);
+            }
           } else {
-            deferred.reject(filtered);
+            deferred.reject({message: 'no match found'});
           }
         })
         .catch(function(reason) {

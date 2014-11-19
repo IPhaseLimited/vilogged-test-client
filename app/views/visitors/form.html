@@ -35,10 +35,23 @@
         </div>
 
         <div class="form-group">
-          <label for="birthDate" class="col-sm-3 control-label">Birth Date</label>
+          <label class="col-sm-3 control-label">Birth Date</label>
 
           <div class="col-sm-9">
-            <input type="date" class="form-control" id="birthDate" name="birthDate" ng-model="visitor.birth_date">
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="visitor.date_of_birth" datepicker-popup is-open="dob.opened"/>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="dob.open($event)">
+                  <i class="glyphicon glyphicon-calendar"></i>
+                </button>
+              </span>
+            </div>
+
+            <div class="text-danger bold" ng-show="(validationErrors).date_of_birth.length">
+              <span ng-repeat="error in (validationErrors).date_of_birth">
+                {{ error }}<br>
+              </span>
+            </div>
           </div>
         </div>
 
@@ -46,11 +59,12 @@
           <label for="nationality" class="col-sm-3 control-label">Nationality</label>
 
           <div class="col-sm-9">
-            <!--input type="text" class="form-control" id="nationality" name="nationality" ng-model="visitor.nationality"-->
             <select class="form-control" id="nationality" ng-change="getStates(visitor.nationality)" name="nationality"
                     ng-model="visitor.nationality">
               <option value=""></option>
-              <option ng-repeat="country in countries" value="{{ country  }}"> {{ countryState[country].name }}</option>
+              <option ng-selected="country === visitor.nationality" ng-repeat="country in countries"
+                      value="{{ country  }}"> {{ countryState[country].name }}
+              </option>
             </select>
           </div>
         </div>
@@ -62,11 +76,13 @@
             <input type="text" class="form-control" id="stateOfOrigin" name="stateOfOrigin"
                    ng-model="visitor.state_of_origin" ng-if="visitor.nationality !== 'nigeria'">
             <select class="form-control" id="stateOfOrigin"
-                    ng-change="getLGAs(visitor.state_of_origin, visitor.nationality)" name="nationality"
+                    ng-change="getLGAs(visitor.state_of_origin, visitor.nationality)"
                     ng-model="visitor.state_of_origin"
                     ng-if="visitor.nationality === 'nigeria'">
               <option value=""></option>
-              <option ng-repeat="state in states track by $index" value="{{ state  }}">
+
+              <option ng-selected="state === visitor.state_of_origin" ng-repeat="state in states track by $index"
+                      value="{{ state  }}">
                 {{ countryState[visitor.nationality].states[state].name }}
               </option>
             </select>
@@ -83,7 +99,9 @@
             <select class="form-control" id="lga" name="nationality" ng-model="visitor.lga_of_origin"
                     ng-if="visitor.nationality === 'nigeria'">
               <option value=""></option>
-              <option ng-repeat="lga in lgas track by $index" value="{{ lga  }}"> {{ lga }}</option>
+              <option ng-selected="lga === visitor.lga_of_origin" ng-repeat="lga in lgas track by $index"
+                      value="{{ lga  }}"> {{ lga }}
+              </option>
             </select>
           </div>
         </div>
@@ -91,9 +109,25 @@
         <div class="form-group">
           <label for="image" class="col-sm-3 control-label">Image</label>
 
-          <div class="col-sm-6">
-            <input id="image" type="file" ng-model-instant
+          <div class="col-sm-9">
+            <input id="image" type="file" ng-model-instant ng-if="!activateCamera"
                    onchange="angular.element(this).scope().setFiles(this, 'image')">
+
+            <div class="row">
+              <div ng-if="activateCamera" class="col-sm-4" vi-camera>
+                <div camera-control-snapshot></div>
+              </div>
+              <div class="col-sm-6 col-sm-offset-2" ng-if="activateCamera">
+                <canvas></canvas>
+              </div>
+            </div>
+
+            <a ng-click="activateCamera = !activateCamera" class="btn btn-success" ng-show="!activateCamera">
+              <i class="fa fa-camera"></i> Activate Camera
+            </a>
+            <a ng-click="activateCamera = !activateCamera" class="btn btn-success" ng-show="activateCamera">
+              <i class="fa fa-camera"></i> Deactivate Camera
+            </a>
           </div>
         </div>
 
@@ -107,7 +141,8 @@
         </div>
       </div>
       <div class="col-sm-4">
-        <img ng-src="visitor.image" ng-if="visitor.image" alt="" width="200" height="150"/>
+        <img ng-src="{{visitor.image}}" ng-if="visitor.image" alt="" width="200" height="150"/>
+        <img ng-src="{{visitor.image}}" ng-if="visitor.image" alt="" width="200" height="150"/>
       </div>
     </div>
 
@@ -117,12 +152,12 @@
       <label for="visitorEmail" class="col-sm-2 control-label">Visitor's Email<span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
-        <input type="text" class="form-control" id="visitorEmail" name="visitorEmail" ng-model="visitor.visitor_email">
+        <input type="text" class="form-control" id="visitorEmail" name="visitorEmail" ng-model="visitor.visitors_email">
 
-        <div class="text-danger bold" ng-show="(validationErrors).visitor_email.length">
-    <span ng-repeat="error in (validationErrors).visitor_email">
-      {{ error }}<br>
-    </span>
+        <div class="text-danger bold" ng-show="(validationErrors).visitors_email.length">
+          <span ng-repeat="error in (validationErrors).visitors_email">
+            {{ error }}<br>
+          </span>
         </div>
       </div>
 
@@ -132,10 +167,10 @@
       <label for="visitorPhone" class="col-sm-2 control-label">Visitor's Phone<span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
-        <input type="text" class="form-control" id="visitorPhone" name="visitorPhone" ng-model="visitor.visitor_phone">
+        <input type="text" class="form-control" id="visitorPhone" name="visitorPhone" ng-model="visitor.visitors_phone">
 
-        <div class="text-danger bold" ng-show="(validationErrors).visitor_email.length">
-          <span ng-repeat="error in (validationErrors).visitor_phone">
+        <div class="text-danger bold" ng-show="(validationErrors).visitors_phone.length">
+          <span ng-repeat="error in (validationErrors).visitors_phone">
             {{ error }}<br>
           </span>
         </div>
@@ -144,11 +179,12 @@
     </div>
 
     <div class="form-group">
-      <label for="contactAddress" class="col-sm-2 control-label">Contact Address<span class="text-danger">*</span></label>
+      <label for="contactAddress" class="col-sm-2 control-label">Contact Address<span
+        class="text-danger">*</span></label>
 
       <div class="col-sm-6">
         <textarea id="contactAddress" class="form-control" name="contactAddress"
-                  data-ng-model="visitor.visitor_location.contact_address"></textarea>
+                  data-ng-model="visitorsLocation.contact_address"></textarea>
 
         <div class="text-danger bold" ng-show="(validationErrors).contact_address.length">
         <span ng-repeat="error in (validationErrors).contact_address">
@@ -162,10 +198,11 @@
       <label for="cCountry" class="col-sm-2 control-label">Country<span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
-        <select name="cCountry" id="cCountry" ng-model="visitor.visitor_location.residential_country"
-                class="form-control" ng-change="getResidentialStates(visitor.visitor_location.residential_country)">
+        <select id="cCountry" ng-model="visitorsLocation.residential_country"
+                class="form-control" ng-change="getResidentialStates(visitorsLocation.residential_country)">
           <option value=""></option>
-          <option value="{{ country }}" ng-repeat="country in countries track by $index">
+          <option ng-selected="country === visitorsLocation.residential_country" value="{{ country }}"
+                  ng-repeat="country in countries track by $index">
             {{ countryState[country].name }}
           </option>
         </select>
@@ -183,19 +220,20 @@
 
       <div class="col-sm-6">
         <select name="cstate" id="cstate" class="form-control"
-                ng-change="getResidentialLGAS(visitor.visitor_location.residential_state, visitor.visitor_location.residential_country)"
-                ng-if="visitor.visitor_location.residential_country === 'nigeria'"
-                ng-model="visitor.visitor_location.residential_state">
+                ng-change="getResidentialLGAS(visitorsLocation.residential_state, visitorsLocation.residential_country)"
+                ng-if="visitorsLocation.residential_country === 'nigeria'"
+                ng-model="visitorsLocation.residential_state">
           <option value=""></option>
-          <option value="{{ state }}"
+          <option ng-selected="state === visitorsLocation.residential_state" value="{{ state }}"
                   ng-repeat="state in locationStates track by $index">
-            {{ countryState[visitor.visitor_location.residential_country].states[state].name }}
+            {{ countryState[visitorsLocation.residential_country].states[state].name }}
           </option>
         </select>
         <input type="text" id="cstate"
                class="form-control" name="cstate"
-               data-ng-model="visitor.visitor_location.residential_state"
-               ng-if="visitor.visitor_location.residential_country !== 'nigeria'">
+               data-ng-model="visitorsLocation.residential_state"
+               ng-if="visitorsLocation.residential_country !== 'nigeria'">
+
         <div class="text-danger bold" ng-show="(validationErrors).residential_state.length">
         <span ng-repeat="error in (validationErrors).residential_state">
           {{ error }}<br>
@@ -208,15 +246,18 @@
       <label for="clga" class="col-sm-2 control-label">City/LGA<span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
-        <select class="form-control" id="clga" name="clga" ng-model="visitor.visitor_location.residential_lga"
-                ng-if="visitor.visitor_location.residential_country === 'nigeria'">
+        <select class="form-control" id="clga" name="clga" ng-model="visitorsLocation.residential_lga"
+                ng-if="visitorsLocation.residential_country === 'nigeria'">
           <option value=""></option>
-          <option ng-repeat="lga in lgas track by $index" value="{{ lga }}"> {{ lga }}</option>
+          <option ng-selected="lga === visitorsLocation.residential_lga" ng-repeat="lga in locationLgas track by $index"
+                  value="{{ lga }}"> {{ lga }}
+          </option>
         </select>
         <input type="text" id="clga"
                class="form-control" name="clga"
-               data-ng-model="visitor.visitor_location.residential_lga"
-               ng-if="visitor.visitor_location.residential_country !== 'nigeria'">
+               data-ng-model="visitorsLocation.residential_lga"
+               ng-if="visitorsLocation.residential_country !== 'nigeria'">
+
         <div class="text-danger bold" ng-show="(validationErrors).residential_lga.length">
         <span ng-repeat="error in (validationErrors).residential_lga">
           {{ error }}<br>

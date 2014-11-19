@@ -18,7 +18,10 @@ angular.module('viLoggedClientApp')
           allowedRoles: []
         },
         templateUrl: 'views/reports/index.html',
-        controller: 'ReportsCtrl'
+        controller: 'ReportsCtrl',
+        ncyBreadcrumb: {
+          label: 'Reports'
+        }
       });
   })
   .controller('ReportsCtrl', function ($scope, appointmentService, visitorService) {

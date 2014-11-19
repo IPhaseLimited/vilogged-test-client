@@ -1,6 +1,7 @@
 {
   "api": {
     "backend": "http://localhost:8000",
+    "remoteBackend": "http://localhost:8000",
     "backendCommon": "/api/v1",
     "couchDB": "http://localhost:5984",
     "localDB": "http://localhost:5984"

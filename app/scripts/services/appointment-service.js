@@ -8,26 +8,49 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('appointmentService', function appointmentService($q, storageService, utility, db) {
+  .service('appointmentService', function appointmentService($q, db, $http, config, storageService, utility) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var DB_NAME = db.APPOINTMENTS;
+    var BASE_URL = config.api.backend + config.api.backendCommon + '/';
 
     function getAllAppointments() {
-      return storageService.all(DB_NAME);
+      //return storageService.all(DB_NAME);
+
+      var deferred = $q.defer();
+
+      $http.get(BASE_URL + DB_NAME + '/nested/')
+        .success(function(response) {
+          deferred.resolve(response);
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
+        });
+
+      return deferred.promise;
+    }
+
+    function findByField(field, value) {
+      var deferred = $q.defer();
+
+      $http.get(BASE_URL + DB_NAME + '/?' + field + '=' + value)
+        .success(function(response) {
+          deferred.resolve(response);
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
+        });
+
+      return deferred.promise;
     }
 
     function getAppointmentsByUser(user) {
       var deferred = $q.defer();
-      getAllAppointments(DB_NAME)
-        .then(function (response) {
-          var filtered = response
-            .filter(function (appointment) {
-              return appointment.host.id === user.id;
-            });
 
-          deferred.resolve(filtered);
+      findByField('host_id', user.id)
+        .then(function (response) {
+          deferred.resolve(response);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
 
@@ -44,8 +67,8 @@ angular.module('viLoggedClientApp')
         .then(function (response) {
           var filtered = response
             .filter(function (appointment) {
-              return appointment.is_approved &&
-                new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.is_expired;
+              return appointment.approved &&
+                new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.expired;
             });
           deferred.resolve(filtered);
         })
@@ -60,14 +83,33 @@ angular.module('viLoggedClientApp')
       return storageService.find(DB_NAME, id);
     }
 
-    function getAppointmentsAwaitingApproval(user) {
+
+    function getNested(id) {
+      var deferred = $q.defer();
+
+      $http.get(BASE_URL + DB_NAME + '/nested/'+id)
+        .success(function(response) {
+          deferred.resolve(response);
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
+        });
+
+      return deferred.promise;
+    }
+
+    function appointmentsAwaitingApprovalFilter(response) {
+      return response
+        .filter(function (appointment) {
+          return !appointment.approved && !appointment.expired && utility.getTimeStamp(appointment.appointment_date) > new Date().getTime();
+        });
+    }
+
+    function getUserAppointmentsAwaitingApproval(user) {
       var deferred = $q.defer();
       getAppointmentsByUser(user)
         .then(function (response) {
-          var filtered = response
-            .filter(function (appointment) {
-              return !appointment.is_approved && !appointment.is_expired;
-            });
+          var filtered = appointmentsAwaitingApprovalFilter(response);
 
           deferred.resolve(filtered);
         }).
@@ -84,7 +126,7 @@ angular.module('viLoggedClientApp')
         .then(function (response) {
           var filtered = response
             .filter(function (appointment) {
-              return appointment.visitor.id === visitor_id;
+              return appointment.visitor_id.id === visitor_id;
             });
 
           deferred.resolve(filtered);
@@ -98,12 +140,13 @@ angular.module('viLoggedClientApp')
 
     function getVisitorUpcomingAppointments(visitor_id) {
       var deferred = $q.defer();
-      getAppointmentsByUser(visitor_id)
+
+      findByField('visitor_id__uuid', visitor_id)
         .then(function (response) {
           var filtered = response
             .filter(function (appointment) {
-              return appointment.is_approved &&
-                new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.is_expired;
+              return appointment.approved &&
+                new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.expired;
             });
           deferred.resolve(filtered)
         })
@@ -111,25 +154,7 @@ angular.module('viLoggedClientApp')
           deferred.reject(reason);
         });
 
-      return deferred.promise;
-    }
 
-    function currentAppointments() {
-      var deferred = $q.defer();
-      getAllAppointments()
-        .then(function (response) {
-          var currentAppointments = response
-            .filter(function (appointment) {
-              var startTime = utility.getTimeStamp(appointment.appointment_date, appointment.start_time);
-              var endTime = utility.getTimeStamp(appointment.appointment_date, appointment.end_time);
-              var date = new Date().getTime();
-              return appointment.is_approved && ( date >= startTime || date <= endTime) && appointment.check_in;
-            });
-          deferred.resolve(currentAppointments);
-        })
-        .catch(function (reason) {
-          deferred.reject(reason);
-        });
       return deferred.promise;
     }
 
@@ -182,14 +207,14 @@ angular.module('viLoggedClientApp')
     }
 
     this.get = get;
+    this.getNested = getNested;
     this.all = getAllAppointments;
     this.save = save;
     this.getUserUpcomingAppointments = getUserUpcomingAppointments;
     this.getAppointmentsByUser = getAppointmentsByUser;
-    this.getAppointmentsAwaitingApproval = getAppointmentsAwaitingApproval;
+    this.getUserAppointmentsAwaitingApproval = getUserAppointmentsAwaitingApproval;
     this.getVisitorUpcomingAppointments = getVisitorUpcomingAppointments;
     this.getAppointmentsByVisitor = getAppointmentsByVisitor;
-    this.getCurrentAppointments = currentAppointments;
     this.getAppointmentsByWeek = appointmentByWeek;
     this.getAppointmentsByMonth = appointmentByMonth;
     this.getAppointmentsByDay = appointmentsByDay;

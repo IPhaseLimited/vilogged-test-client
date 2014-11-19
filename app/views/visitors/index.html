@@ -32,27 +32,24 @@
           <tr data-ng-repeat="visitor in visitors | paginationOffset:currentPage:itemsPerPage | orderBy: 'first_name'">
             <td>{{ $index + 1 }}</td>
             <td>{{ visitor.first_name }} {{ visitor.last_name }}</td>
-            <td>{{ visitor.visitor_email }}</td>
-            <td>{{ visitor.visitor_phone }}</td>
+            <td>{{ visitor.visitors_email }}</td>
+            <td>{{ visitor.visitors_phone }}</td>
             <td>{{ visitor.company_name }}</td>
             <td>{{ visitor.group_type }}</td>
             <td>{{ visitor.created |date: 'dd MMM, yyyy' }}</td>
             <td>
-              <!--<a class="btn btn-primary btn-xs"-->
-              <!--ui-sref="edit-visitor-profile({visitor_id: visitor.uuid})"-->
-              <!--title="Edit {{ visitor.first_name }}'s details">-->
-              <!--<i class="fa fa-edit"></i> Edit-->
-              <!--</a>-->
+              <a class="btn btn-primary btn-xs" ui-sref="edit-visitor-profile({visitor_id: visitor.uuid})"
+                title="Edit {{ visitor.first_name }}'s details" ng-show="user.is_staff">
+                <i class="fa fa-edit"></i> Edit
+              </a>
 
-              <a class="btn btn-success btn-xs"
-                 ui-sref="show-visitor({visitor_id: visitor._id})"
-                 title="View {{ visitor.first_name }}'s details">
+              <a class="btn btn-success btn-xs" ui-sref="show-visitor({visitor_id: visitor.uuid})"
+                 title="View {{ visitor.first_name }}'s details" ng-show="user.is_active">
                 <i class="fa fa-eye"></i> View
               </a>
 
-              <a class="btn btn-success btn-xs"
-                 ui-sref="create-appointment-visitor({visitor_id: visitor.uuid})"
-                 title="Create appointment">
+              <a class="btn btn-success btn-xs" ui-sref="create-appointment-visitor({visitor_id: visitor.uuid})"
+                 title="Create appointment" ng-show="user.is_active">
                 <i class="fa fa-plus-circle"></i> Create Appointment
               </a>
             </td>

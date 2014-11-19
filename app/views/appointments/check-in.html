@@ -1,10 +1,9 @@
-<div class="row">
+<div class="row" ng-cloak>
   <div class="col-sm-6">
     <div class="widget">
       <div class="widget-head">
         <div class="pull-left">Guest Record</div>
         <div class="widget-icons pull-right">
-          <a href="" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> View Details</a>
         </div>
         <div class="clearfix"></div>
       </div>
@@ -14,27 +13,27 @@
             <div class="col-sm-8">
               <div class="row">
                 <div class="col-sm-6"><strong>Name</strong></div>
-                <div class="col-sm-6">{{ ((appointment).visitor).first_name + ' ' + ((appointment).visitor).last_name
+                <div class="col-sm-6">{{ ((appointmentView).visitor_id).first_name + ' ' + ((appointmentView).visitor_id).last_name
                   }}
                 </div>
               </div>
               <div class="row">
                 <div class="col-sm-6"><strong>Birth Date</strong></div>
-                <div class="col-sm-6">{{ ((appointment).visitor).birth_date | date: 'MMM d, y' }}</div>
+                <div class="col-sm-6">{{ ((appointmentView).visitor_id).date_of_birth | date: 'MMM d, y' }}</div>
               </div>
               <div class="row">
                 <div class="col-sm-6"><strong>Contact Phone</strong></div>
                 <div class="col-sm-6"><strong>Contact Email</strong></div>
               </div>
               <div class="row">
-                <div class="col-sm-6">{{ ((appointment).visitor).visitor_phone}}</div>
-                <div class="col-sm-6">{{ ((appointment).visitor).visitor_email}}</div>
+                <div class="col-sm-6">{{ ((appointmentView).visitor_id).visitors_phone}}</div>
+                <div class="col-sm-6">{{ ((appointmentView).visitor_id).visitors_email}}</div>
               </div>
             </div>
             <div class="col-sm-4">
-              <img ng-if="((appointment).visitor).image !== undefined" ng-src="{{ appointment.visitor.image }}" alt=""
+              <img ng-if="((appointmentView).visitor_id).image !== undefined" ng-src="{{ appointmentView.visitor.image }}" alt=""
                    class="img-responsive"/>
-              <img ng-if="!((appointment).visitor).image" ng-src="img/place_holder.jpg" alt=""
+              <img ng-if="!((appointmentView).visitor_id).image" ng-src="img/place_holder.jpg" alt=""
                    class="img-responsive"/>
             </div>
           </div>
@@ -51,7 +50,6 @@
       <div class="widget-head">
         <div class="pull-left">Host Record</div>
         <div class="widget-icons pull-right">
-          <a href="" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> View Details</a>
         </div>
         <div class="clearfix"></div>
       </div>
@@ -61,26 +59,34 @@
             <div class="col-sm-8">
               <div class="row">
                 <div class="col-sm-6"><strong>Name</strong></div>
-                <div class="col-sm-6">{{ ((appointment).host).first_name + ' ' + ((appointment).host).last_name }}</div>
+                <div class="col-sm-6">{{ ((appointmentView).host_id).first_name + ' ' + ((appointmentView).host_id).last_name }}</div>
               </div>
               <div class="row">
                 <div class="col-sm-6"><strong>Department</strong></div>
-                <div ng-if="(((appointment).host).user_profile).department" class="col-sm-6">
-                  {{ (((appointment).host).user_profile).department }}
+                <div ng-if="(((appointmentView).host_id).user_profile).department" class="col-sm-6">
+                  {{ (((appointmentView).host_id).user_profile).department.department_name }}
                 </div>
-                <div ng-if="!(((appointment).host).user_profile).department" class="col-sm-6"> Nil</div>
+                <div ng-if="!(((appointmentView).host_id).user_profile).department" class="col-sm-6"> Nil</div>
               </div>
               <div col-sm-12><strong>Contact Phone</strong></div>
               <div class="row">
-                <div class="col-sm-4">{{ (((appointment).host).user_profile).phone }}</div>
-                <div class="col-sm-4">{{ (((appointment).host).user_profile).home_phone }}</div>
-                <div class="col-sm-4">{{ (((appointment).host).user_profile).work_phone }}</div>
+                <div class="col-sm-12">
+                  <span ng-if="(((appointmentView).host_id).user_profile).phone ">
+                    {{ (((appointmentView).host_id).user_profile).phone }}
+                  </span>
+                  <span ng-if="(((appointmentView).host_id).user_profile).home_phone">
+                    {{ (((appointmentView).host_id).user_profile).home_phone }}
+                  </span>
+                  <span ng-if="(((appointmentView).host_id).user_profile).work_phone">
+                    {{ (((appointmentView).host_id).user_profile).work_phone }}
+                  </span>
+                </div>
               </div>
             </div>
             <div class="col-sm-4">
-              <img ng-if="((appointment).visitor).image !== undefined" ng-src="{{ appointment.visitor.image }}" alt=""
+              <img ng-if="((appointmentView).visitor_id).image !== undefined" ng-src="{{ appointmentView.visitor.image }}" alt=""
                    class="img-responsive"/>
-              <img ng-if="!((appointment).visitor).image" ng-src="img/place_holder.jpg" alt=""
+              <img ng-if="!((appointmentView).visitor_id).image" ng-src="img/place_holder.jpg" alt=""
                    class="img-responsive"/>
             </div>
           </div>
@@ -97,9 +103,6 @@
   <div class="widget-head">
     <div class="pull-left">Appointment Detail</div>
     <div class="widget-icons pull-right">
-      <a class="btn btn-primary btn-xs" ui-sref="edit-appointment({appointment_id: appointment._id})">
-        <i class="fa fa-edit"></i> Edit Appointment
-      </a>
     </div>
     <div class="clearfix"></div>
   </div>
@@ -185,18 +188,18 @@
           <div class="col-sm-offset-2 col-sm-10">
             <div class="checkbox">
               <label>
-                <input type="checkbox" ng-model="vehicle"> Did guest come with vehicle?
+                <input type="checkbox" ng-model="withVehicle"> Did guest come with vehicle?
               </label>
             </div>
           </div>
         </div>
 
-        <div ng-if="vehicle">
+        <div ng-if="withVehicle">
           <div class="form-group">
             <label class="control-label col-sm-2" for="license">License</label>
 
             <div class="col-sm-8">
-              <input type="text" class="form-control" ng-model="appointment.vehicle.license" id="license"
+              <input type="text" class="form-control" ng-model="vehicle.license" id="license"
                      name="license"/>
             </div>
           </div>
@@ -205,7 +208,7 @@
             <label class="control-label col-sm-2" for="model">Model</label>
 
             <div class="col-sm-8">
-              <input type="text" class="form-control" ng-model="appointment.vehicle.model" id="model"
+              <input type="text" class="form-control" ng-model="vehicle.model" id="model"
                      name="model"/>
             </div>
           </div>
@@ -214,9 +217,12 @@
             <label class="control-label col-sm-2" for="vehicleType">Vehicle Type</label>
 
             <div class="col-sm-8">
-              <select class="form-control" ng-model="appointment.vehicle.vehicleType"
-                      id="vehicleType" name="vehicleType"
-                      ng-options="vehicleType.vehicle_type for vehicleType in vehicleTypes"></select>
+              <select class="form-control" ng-model="vehicle.vehicle_type" id="vehicleType" name="vehicleType" >
+                <option ng-repeat="vehicleType in vehicleTypes" value="{{ vehicleType.vehicle_type }}">
+                  {{ vehicleType.vehicle_type }}
+                </option>
+
+              </select>
             </div>
           </div>
 
@@ -224,7 +230,7 @@
             <label class="control-label col-sm-2" for="color">Color</label>
 
             <div class="col-sm-8">
-              <input type="text" class="form-control" ng-model="appointment.vehicle.color" id="color"
+              <input type="text" class="form-control" ng-model="vehicle.color" id="color"
                      name="color"/>
             </div>
           </div>
@@ -234,9 +240,17 @@
         <legend>
           Items Not Allowed
         </legend>
+        <div>
+          <a class="btn btn-info pull-left" ng-click="addItem()">
+            <i class="fa fa-plus-circle"></i>
+            Add Item
+          </a>
+          <div class="clearfix"></div>
+        </div>
+
         <div ng-if="item">
 
-          <div ng-repeat="row in appointment.restricted_items">
+          <div ng-repeat="row in restricted_items">
             <h4>
               New Item
               <a ng-click="removeItem($index)" class="btn btn-danger btn-xs pull-right">
@@ -248,15 +262,26 @@
               <label class="col-sm-2 control-label">Code</label>
 
               <div class="col-sm-6">
-                <input class="form-control" ng-model="appointment.restricted_items[$index].item_code" >
+                <input class="form-control" ng-model="restricted_items[$index].item_code" >
+                <div class="text-danger bold" ng-show="restrictedItemsErrors[$index+'item_code'].length">
+                  <span>
+                    {{ restrictedItemsErrors[$index+'item_code'] }}<br/>
+                  </span>
+                </div>
               </div>
+
             </div>
 
             <div class="form-group">
               <label class="col-sm-2 control-label">Name</label>
 
               <div class="col-sm-6">
-                <input class="form-control" ng-model="appointment.restricted_items[$index].item_name" >
+                <input class="form-control" ng-model="restricted_items[$index].item_name" >
+                <div class="text-danger bold" ng-show="restrictedItemsErrors[$index+'item_name'].length">
+                  <span>
+                    {{ restrictedItemsErrors[$index+'item_name'] }}<br/>
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -264,18 +289,16 @@
               <label class="col-sm-2 control-label">Type</label>
 
               <div class="col-sm-6">
-                <input class="form-control" ng-model="appointment.restricted_items[$index].item_type" >
+                <input class="form-control" ng-model="restricted_items[$index].item_type" >
+                <div class="text-danger bold" ng-show="restrictedItemsErrors[$index+'item_type'].length">
+                  <span>
+                    {{ restrictedItemsErrors[$index+'item_type'] }}<br/>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-
-        <a class="btn btn-info col-sm-offset-9 pull-right" ng-click="addItem()">
-          <i class="fa fa-plus-circle"></i>
-          Add Item
-        </a>
-        <div class="clearfix"></div>
-
         <hr/>
         <div class="form-group">
           <button class="btn btn-success col-sm-offset-9 pull-right">

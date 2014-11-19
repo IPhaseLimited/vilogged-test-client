@@ -14,7 +14,14 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/profile',
         templateUrl: 'views/user/user-profile.html',
-        controller: 'UserProfileCtrl'
+        controller: 'UserProfileCtrl',
+        data: {
+          label: 'User Profile',
+          requiredPermission: 'is_superuser'
+        },
+        ncyBreadcrumb: {
+          label: 'User Profile'
+        }
       })
   })
   .config(function ($stateProvider) {
@@ -23,7 +30,14 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/users',
         templateUrl: 'views/user/index.html',
-        controller: 'UsersCtrl'
+        controller: 'UsersCtrl',
+        data: {
+          label: 'Users',
+          requiredPermission: 'is_superuser'
+        },
+        ncyBreadcrumb: {
+          label: 'Users'
+        }
       })
   })
   .config(function ($stateProvider) {
@@ -32,7 +46,14 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/user/add',
         templateUrl: 'views/user/widget-form.html',
-        controller: 'UserFormCtrl'
+        controller: 'UserFormCtrl',
+        data: {
+          label: 'Create User Account',
+          requiredPermission: 'is_superuser'
+        },
+        ncyBreadcrumb: {
+          label: 'Create User Account'
+        }
       })
   })
   .config(function ($stateProvider) {
@@ -41,7 +62,14 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/user/:user_id/edit',
         templateUrl: 'views/user/widget-form.html',
-        controller: 'UserFormCtrl'
+        controller: 'UserFormCtrl',
+        data: {
+          label: 'Edit User\'s Account',
+          requiredPermission: 'is_superuser'
+        },
+        ncyBreadcrumb: {
+          label: 'Edit User\'s Account'
+        }
       })
   })
   .config(function ($stateProvider) {
@@ -50,12 +78,18 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/users/change-password',
         templateUrl: 'views/user/user-change-password.html',
-        controller: 'ChangePasswordCtrl'
+        controller: 'ChangePasswordCtrl',
+        data: {
+          label: 'Change Password',
+          requiredPermission: 'is_superuser'
+        },
+        ncyBreadcrumb: {
+          label: 'Change Password'
+        }
       })
   })
-  .controller('UserProfileCtrl', function ($scope, $interval, userService, appointmentService, messageCenterService) {
+  .controller('UserProfileCtrl', function ($scope, $interval, userService, appointmentService) {
     $scope.currentUser = userService.user;
-
     appointmentService.getAppointmentsByUser($scope.currentUser)
       .then(function (response) {
         $scope.numberOfAppointments = response.length;
@@ -64,17 +98,16 @@ angular.module('viLoggedClientApp')
         console.log(reason);
       });
 
-    appointmentService.getUpcomingAppointments($scope.currentUser)
+    appointmentService.getUserUpcomingAppointments($scope.currentUser)
       .then(function (response) {
         $scope.upcomingAppointments = response;
         $scope.upcomingAppointmentCount = response.length;
-        console.log($scope.upcomingAppointmentCount)
       })
       .catch(function (reason) {
         console.log(reason);
       });
 
-    appointmentService.getAppointmentsAwaitingApproval($scope.currentUser)
+    appointmentService.getUserAppointmentsAwaitingApproval($scope.currentUser)
       .then(function (response) {
         $scope.appointmentsAwaitingApproval = response;
         $scope.appointmentsAwaitingApprovalCount = response.length;
@@ -83,9 +116,9 @@ angular.module('viLoggedClientApp')
         console.log(reason);
       });
   })
-  .controller('UsersCtrl', function ($scope, userService) {
+  .controller('UsersCtrl', function ($scope, userService, notificationService) {
     function getUsers() {
-      userService.all()
+      userService.usersNested()
         .then(function (response) {
           $scope.users = response;
         })
@@ -108,16 +141,24 @@ angular.module('viLoggedClientApp')
       if (userService.user.id === id) {
         return;
       }
-      userService.remove(id)
-        .then(function (response) {
-          getUsers();
-        })
-        .catch(function (reason) {
-          console.log(reason);
+      var dialogParams = {
+        modalHeader: 'Delete User?',
+        modalBodyText: 'are you sure you want to delete the following?'
+      };
+
+      notificationService.modal.confirm(dialogParams)
+        .then(function() {
+          userService.remove(id)
+            .then(function (response) {
+              getUsers();
+            })
+            .catch(function (reason) {
+              console.log(reason);
+            });
         });
     }
   })
-  .controller('UserFormCtrl', function ($scope, $state, $stateParams, userService, companyDepartmentsService) {
+  .controller('UserFormCtrl', function ($scope, $state, $stateParams, userService, companyDepartmentsService, flash) {
     $scope.currentUser = userService.user;
     $scope.user = {};
     $scope.user.user_profile = {};
@@ -150,13 +191,14 @@ angular.module('viLoggedClientApp')
         $scope.user.user_profile.work_phone = $scope.user.user_profile.work_phone || null;
       }
 
-      //TODO:: flash messages
       if (toString.call($scope.user.user_profile.department) === '[object String]') {
-        $scope.user.user_profile.department = JSON.parse($scope.user.user_profile.department);
+        //$scope.user.user_profile.department = JSON.parse($scope.user.user_profile.department);
       }
       userService.save($scope.user)
         .then(function () {
-          console.log('here');
+          !$stateParams.user_id
+            ? flash.success = 'User account was successfully created.'
+            : flash.success = 'User account was successfully updated.';
           $state.go("users");
         })
         .catch(function (reason) {
