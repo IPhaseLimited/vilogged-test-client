@@ -426,7 +426,7 @@ angular.module('viLoggedClientApp')
         item.appointment_id = $scope.appointment.uuid;
         restricted.push(restrictedItemsService.save(item));
       });
-
+      $scope.vehicle.appointments_id = $scope.appointment.uuid;
       var promises = [
         appointmentService.save($scope.appointment),
         vehicleService.save($scope.vehicle),
