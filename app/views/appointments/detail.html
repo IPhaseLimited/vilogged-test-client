@@ -1,4 +1,3 @@
-{{(appointment).visitor_id|json}}
 <div class="row">
   <div class="col-sm-6">
     <div class="widget">
@@ -98,7 +97,7 @@
   <div class="widget-head">
     <div class="pull-left">Appointment Detail</div>
     <div class="widget-icons pull-right">
-      <a class="btn btn-primary btn-xs" ui-sref="edit-appointment({appointment_id: appointment._id})"
+      <a class="btn btn-primary btn-xs" ui-sref="edit-appointment({appointment_id: appointment.uuid})"
          ng-show="isAppointmentUpcoming(appointment.appointment_date)">
         <i class="fa fa-edit"></i> Edit Appointment
       </a>
