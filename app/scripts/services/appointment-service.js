@@ -101,7 +101,7 @@ angular.module('viLoggedClientApp')
     function appointmentsAwaitingApprovalFilter(response) {
       return response
         .filter(function (appointment) {
-          return !appointment.approved && !appointment.expired;
+          return !appointment.approved && !appointment.expired && utility.getTimeStamp(appointment.appointment_date) > new Date().getTime();
         });
     }
 
@@ -114,20 +114,6 @@ angular.module('viLoggedClientApp')
           deferred.resolve(filtered);
         }).
         catch(function (reason) {
-          deferred.reject(reason);
-        });
-
-      return deferred.promise;
-    }
-
-    function getAppointmentsAwaitingApproval() {
-      var deferred = $q.defer();
-      getAllAppointments()
-        .then(function (response) {
-          var filtered = appointmentsAwaitingApprovalFilter(response);
-          deferred.resolve(filtered);
-        })
-        .catch(function (reason) {
           deferred.reject(reason);
         });
 
@@ -172,25 +158,6 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     }
 
-    function currentAppointments() {
-      var deferred = $q.defer();
-      getAllAppointments()
-        .then(function (response) {
-          var currentAppointments = response
-            .filter(function (appointment) {
-              var startTime = utility.getTimeStamp(appointment.appointment_date, appointment.start_time);
-              var endTime = utility.getTimeStamp(appointment.appointment_date, appointment.end_time);
-              var date = new Date().getTime();
-              return appointment.approved && ( date >= startTime || date <= endTime) && appointment.checked_in;
-            });
-          deferred.resolve(currentAppointments);
-        })
-        .catch(function (reason) {
-          deferred.reject(reason);
-        });
-      return deferred.promise;
-    }
-
     function appointmentsByDay(date) {
       var deferred = $q.defer();
       var searchTimeStamp = angular.isDefined(date) ? utility.getTimeStamp(date) : utility.getTimeStamp(moment().format('l'));
@@ -231,38 +198,6 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     }
 
-    function appointmentsNotCheckedIn () {
-      var deferred = $q.defer();
-      getAllAppointments()
-        .then(function (response) {
-          var appointments = response
-            .filter(function (appointment) {
-              return appointment.approved && appointment.checked_in !== null;
-            });
-          deferred.resolve(appointments);
-        })
-        .catch(function (reason) {
-          deferred.reject(reason);
-        });
-      return deferred.promise;
-    }
-
-    function expiredAppointments() {
-      var deferred = $q.defer();
-      getAllAppointments()
-        .then(function (response) {
-          var appointments = response
-            .filter(function (appointment) {
-              return appointment.expired;
-            });
-        })
-        .catch(function (reason) {
-          console.log(reason);
-        });
-
-      return deferred.promise;
-    }
-
     function appointmentByWeek (date) {
       return appointmentsByPeriod(date, 'week');
     }
@@ -275,15 +210,11 @@ angular.module('viLoggedClientApp')
     this.getNested = getNested;
     this.all = getAllAppointments;
     this.save = save;
-    this.getAppointmentsNotCheckedIn = appointmentsNotCheckedIn;
-    this.getExpiredAppointments = expiredAppointments;
     this.getUserUpcomingAppointments = getUserUpcomingAppointments;
     this.getAppointmentsByUser = getAppointmentsByUser;
     this.getUserAppointmentsAwaitingApproval = getUserAppointmentsAwaitingApproval;
-    this.getAppointmentsAwaitingApproval = getAppointmentsAwaitingApproval;
     this.getVisitorUpcomingAppointments = getVisitorUpcomingAppointments;
     this.getAppointmentsByVisitor = getAppointmentsByVisitor;
-    this.getCurrentAppointments = currentAppointments;
     this.getAppointmentsByWeek = appointmentByWeek;
     this.getAppointmentsByMonth = appointmentByMonth;
     this.getAppointmentsByDay = appointmentsByDay;

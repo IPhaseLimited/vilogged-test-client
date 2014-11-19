@@ -16,6 +16,10 @@
         </p>
       </div>
 
+      <div flash-alert active-class="in" class="alert fade" ng-show="flash.message">
+        <span class="alert-message">{{flash.message}}</span>
+      </div>
+
       <div ng-if="appointments.length">
         <table class="table table-responsive table-condensed table-bordered table-striped">
           <thead>
@@ -31,7 +35,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="appointment in appointments"
+          <tr ng-repeat="appointment in appointments track by appointment.uuid"
               ng-class="{'text-danger': expired(appointment.appointment_date), 'text-success': upcoming(appointment.appointment_date)}">
             <td>{{ $index+1 }}</td>
             <td>{{ ((appointment).visitor_id).first_name + ' ' + ((appointment).visitor_id).last_name }}</td>
@@ -42,7 +46,8 @@
             <td class="text-center"><i class="fa " ng-class="{'fa-fa-check-circle text-success bold' : appointment.is_approved, 'fa-ban text-danger bold' : !appointment.is_approved}"></i></td>
             <td>
               <a ui-sref="visitor-check-in({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
-                 ng-if="!appointment.check_in" ng-show="isAppointmentUpcoming(appointment.appointment_date) && user.is_staff">Check In</a>
+                 ng-if="!appointment.check_in" ng-show="isAppointmentUpcoming(appointment.appointment_date) && user.is_staff"
+                 ng-class="{disabled: !appointment.is_approved}">Check In</a>
               <a ui-sref="visitor-check-out({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
                  ng-if="appointment.check_in" ng-show="isAppointmentUpcoming(appointment.appointment_date) && user.is_staff">Check Out</a>
               <a ui-sref="edit-appointment({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
