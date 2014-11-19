@@ -155,6 +155,36 @@ angular.module('viLoggedClientApp')
         console.log(reason);
       });
 
+    $scope.toggleAppointmentApproval = function (approvalStatus) {
+      console.log('someone clicked me');
+      var dialogParams = {
+        modalHeader: 'Appointment Approval'
+      };
+
+      dialogParams.modalBodyText = approvalStatus ? 'Are you sure you want to approve this appointment?' :
+        'Are you sure you want to disapprove this appointment?';
+
+      notificationService.modal.confirm(dialogParams)
+        .then(function() {
+          appointmentService.get($stateParams.appointment_id)
+            .then(function(response){
+              response.is_approved = approvalStatus;
+              appointmentService.save(response)
+                .then(function(){
+                  approvalStatus ? flash.success = 'The selected appointment has been approved.' :
+                    'The selected appointment has been rejected.';
+                  $state.go(appointments);
+                })
+                .catch(function(reason){
+                  console.log(reason);
+                });
+            })
+            .catch(function(reason){
+              console.log(reason);
+            });
+        });
+    }
+
     $scope.printLabel = function() {
       $modal.open({
         templateUrl: 'views/appointments/partials/visitor-pass-template.html',
@@ -169,36 +199,6 @@ angular.module('viLoggedClientApp')
             });
         }
       });
-
-      $scope.toggleAppointmentApproval = function (approvalStatus) {
-        console.log('someone clicked me');
-        var dialogParams = {
-          modalHeader: 'Appointment Approval'
-        };
-
-        dialogParams.modalBodyText = approvalStatus ? 'Are you sure you want to approve this appointment?' :
-          'Are you sure you want to disapprove this appointment?';
-
-        notificationService.modal.confirm(dialogParams)
-          .then(function() {
-            appointmentService.get($stateParams.appointment_id)
-              .then(function(response){
-                response.is_approved = approvalStatus;
-                appointmentService.save(response)
-                  .then(function(){
-                    approvalStatus ? flash.success = 'The selected appointment has been approved.' :
-                      'The selected appointment has been rejected.';
-                    $state.go(appointments);
-                  })
-                  .catch(function(reason){
-                    console.log(reason);
-                  });
-              })
-              .catch(function(reason){
-                console.log(reason);
-              });
-          });
-      }
     };
 
     $scope.isAppointmentUpcoming = function (appointmentDate) {
