@@ -150,7 +150,7 @@
       </table>
     </div>
     <div class="widget-foot">
-      <div ng-show="isAppointmentUpcoming(appointment.appointment_date)">
+      <div ng-show="isAppointmentUpcoming(appointment.appointment_date) && user.id === appointment.host_id.id">
         <a class="btn btn-success" ng-click="appointment.is_approved = true">Approved</a>
         <a class="btn btn-danger" ng-click="appointment.is_approved = false">Reject</a>
       </div>
