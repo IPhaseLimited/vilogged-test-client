@@ -286,7 +286,7 @@ angular.module('viLoggedClientApp')
     $scope.createAppointment = function () {
       $scope.appointment.label_code = utility.generateRandomInteger();
       $scope.appointment.appointment_date =$filter('date')($scope.appointment.appointment_date, 'yyyy-MM-dd');
-      $scope.appointment.expired = false;
+      $scope.appointment.is_expired = false;
       $scope.appointment.checked_in = null;
       $scope.appointment.checked_out = null;
 
