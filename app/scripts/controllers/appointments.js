@@ -95,7 +95,7 @@ angular.module('viLoggedClientApp')
         }
       })
       .state('print-visitor-label', {
-        url: '/appointments/?appointment_id',
+        url: '/appointments/:appointment_id/print-pass',
         templateUrl: 'views/appointments/visitor-pass.html',
         controller: 'VisitorPassCtrl',
         data: {
@@ -145,7 +145,7 @@ angular.module('viLoggedClientApp')
         console.log(reason);
       });
   })
-  .controller('AppointmentDetailCtrl', function ($scope, $stateParams, appointmentService, utility) {
+  .controller('AppointmentDetailCtrl', function ($scope, $stateParams, appointmentService, utility, $modal) {
     appointmentService.getNested($stateParams.appointment_id)
       .then(function (response) {
         $scope.appointment = response;
@@ -153,6 +153,22 @@ angular.module('viLoggedClientApp')
       .catch(function (reason) {
         console.log(reason);
       });
+
+    $scope.printLabel = function() {
+      $modal.open({
+        templateUrl: 'views/appointments/partials/visitor-pass-template.html',
+        controller: function($scope, $modalInstance, appointmentService) {
+          $scope.$modalInstance = $modalInstance;
+          appointmentService.getNested($stateParams.appointment_id)
+            .then(function (response) {
+              $scope.appointment = response;
+            })
+            .catch(function (reason) {
+              console.log(reason);
+            });
+        }
+      });
+    };
 
 
     $scope.isAppointmentUpcoming = function (appointmentDate) {
@@ -446,7 +462,7 @@ angular.module('viLoggedClientApp')
     $scope.appointment = {};
     console.log($stateParams.appointment_id);
 
-    appointmentService.get($stateParams.appointment_id)
+    appointmentService.getNested($stateParams.appointment_id)
       .then(function (response) {
         $scope.appointment = response;
       })
