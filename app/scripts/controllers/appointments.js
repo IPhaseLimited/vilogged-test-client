@@ -145,7 +145,8 @@ angular.module('viLoggedClientApp')
         console.log(reason);
       });
   })
-  .controller('AppointmentDetailCtrl', function ($scope, $stateParams, appointmentService, utility, $modal) {
+  .controller('AppointmentDetailCtrl', function ($scope, $state, $stateParams, appointmentService, utility, $modal,
+                                                 notificationService) {
     appointmentService.getNested($stateParams.appointment_id)
       .then(function (response) {
         $scope.appointment = response;
@@ -168,8 +169,37 @@ angular.module('viLoggedClientApp')
             });
         }
       });
-    };
 
+      $scope.toggleAppointmentApproval = function (approvalStatus) {
+        console.log('someone clicked me');
+        var dialogParams = {
+          modalHeader: 'Appointment Approval'
+        };
+
+        dialogParams.modalBodyText = approvalStatus ? 'Are you sure you want to approve this appointment?' :
+          'Are you sure you want to disapprove this appointment?';
+
+        notificationService.modal.confirm(dialogParams)
+          .then(function() {
+            appointmentService.get($stateParams.appointment_id)
+              .then(function(response){
+                response.is_approved = approvalStatus;
+                appointmentService.save(response)
+                  .then(function(){
+                    approvalStatus ? flash.success = 'The selected appointment has been approved.' :
+                      'The selected appointment has been rejected.';
+                    $state.go(appointments);
+                  })
+                  .catch(function(reason){
+                    console.log(reason);
+                  });
+              })
+              .catch(function(reason){
+                console.log(reason);
+              });
+          });
+      }
+    };
 
     $scope.isAppointmentUpcoming = function (appointmentDate) {
       var appointmentTimeStamp = utility.getTimeStamp(appointmentDate);
@@ -203,8 +233,6 @@ angular.module('viLoggedClientApp')
         this.opened = true
       }
     };
-
-
 
     $scope.disabled = function(date, mode) {
       return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
