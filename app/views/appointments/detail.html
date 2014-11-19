@@ -1,10 +1,18 @@
 <div class="row">
+  <div class="col-sm-12 clearfix">
+    <a class="btn btn-primary btn-lg pull-right block" ng-click="printLabel()">
+      <i class="fa fa-print"></i> Print Label
+    </a>
+  </div>
+</div>
+
+<div class="row">
   <div class="col-sm-6">
     <div class="widget">
       <div class="widget-head">
         <div class="pull-left">Guest Record</div>
         <div class="widget-icons pull-right">
-          <a href="" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> View Details</a>
+          <!--a href="" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> View Details</a-->
         </div>
         <div class="clearfix"></div>
       </div>
@@ -32,7 +40,7 @@
               </div>
             </div>
             <div class="col-sm-4">
-              <img ng-if="((appointment).visitor_id).image !== undefined" ng-src="{{appointment.visitor.image}}" alt=""
+              <img ng-if="((appointment).visitor_id).image !== undefined" ng-src="{{appointment.visitor_id.image}}" alt=""
                    class="img-responsive"/>
               <img ng-if="!((appointment).visitor_id).image" ng-src="img/place_holder.jpg" alt=""
                    class="img-responsive"/>
@@ -51,7 +59,7 @@
       <div class="widget-head">
         <div class="pull-left">Host Record</div>
         <div class="widget-icons pull-right">
-          <a href="" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> View Details</a>
+          <!--a href="" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> View Details</a-->
         </div>
         <div class="clearfix"></div>
       </div>
@@ -133,6 +141,7 @@
           <td>{{ appointment.visit_start_time }}</td>
           <td>{{ appointment.visit_end_time }}</td>
           <td>
+            //FIXME: what is appointment.approval_status?
             <span ng-if="appointment.approval_status === undefined">Awaiting Approval</span>
             <span ng-if="appointment.approval_status !== undefined">{{ appointment.approval_status }}</span>
           </td>
@@ -142,8 +151,8 @@
     </div>
     <div class="widget-foot">
       <div ng-show="isAppointmentUpcoming(appointment.appointment_date)">
-        <a class="btn btn-success" ng-click="appointment.approved = true">Approved</a>
-        <a class="btn btn-danger" ng-click="appointment.approved = false">Reject</a>
+        <a class="btn btn-success" ng-click="appointment.is_approved = true">Approved</a>
+        <a class="btn btn-danger" ng-click="appointment.is_approved = false">Reject</a>
       </div>
     </div>
   </div>
