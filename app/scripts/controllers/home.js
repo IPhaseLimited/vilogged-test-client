@@ -9,6 +9,9 @@ angular.module('viLoggedClientApp')
       url: '/',
       templateUrl: 'views/home/index.html',
       controller: 'MainCtrl',
+      data: {
+        label: 'Dashboard'
+      },
       ncyBreadcrumb: {
         label: 'Home'
       }

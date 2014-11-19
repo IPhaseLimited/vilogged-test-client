@@ -46,6 +46,12 @@
                 </button>
               </span>
             </div>
+
+            <div class="text-danger bold" ng-show="(validationErrors).date_of_birth.length">
+              <span ng-repeat="error in (validationErrors).date_of_birth">
+                {{ error }}<br>
+              </span>
+            </div>
           </div>
         </div>
 
@@ -149,9 +155,9 @@
         <input type="text" class="form-control" id="visitorEmail" name="visitorEmail" ng-model="visitor.visitors_email">
 
         <div class="text-danger bold" ng-show="(validationErrors).visitors_email.length">
-    <span ng-repeat="error in (validationErrors).visitors_email">
-      {{ error }}<br>
-    </span>
+          <span ng-repeat="error in (validationErrors).visitors_email">
+            {{ error }}<br>
+          </span>
         </div>
       </div>
 

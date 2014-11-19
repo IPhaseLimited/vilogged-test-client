@@ -110,7 +110,7 @@ angular.module('viLoggedClientApp')
   })
   .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, $rootScope, $window, visitorService,
                                            validationService, countryStateService, guestGroupConstant, userService,
-                                           flash, countryState, visitorsLocationService) {
+                                           flash, countryState, visitorsLocationService, $filter) {
     $scope.visitors = [];
     $scope.visitor = {};
     $scope.visitorsLocation = {};
@@ -238,6 +238,9 @@ angular.module('viLoggedClientApp')
       });
       if (!Object.keys($scope.validationErrors).length) {
         $scope.visitor.image = $scope.takenImg;
+        if ($scope.visitor.date_of_birth) {
+          $scope.visitor.date_of_birth = $filter('date')($scope.visitor.date_of_birth, 'yyyy-MM-dd');
+        }
         visitorService.save($scope.visitor)
           .then(function (response) {
             $scope.visitor = response;

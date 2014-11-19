@@ -12,10 +12,10 @@ angular.module('viLoggedClientApp')
         controller: 'AppointmentCtrl',
         data: {
           requiredPermission: 'is_active',
-          label: 'Create Appointment'
+          label: 'Appointments'
         },
         ncyBreadcrumb: {
-          label: 'Create Appointment'
+          label: 'Appointments'
         }
       })
       .state('show-appointment', {
