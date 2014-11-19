@@ -24,14 +24,22 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('ReportsCtrl', function ($scope, appointmentService, visitorService) {
+  .controller('ReportsCtrl', function ($scope, appointmentService, visitorService, utility) {
     $scope.maxSize = 5;
     $scope.currentPage = 1;
     $scope.itemsPerPage = 10;
 
-    appointmentService.getCurrentAppointments()
+    var appointments = appointmentService.all();
+
+    appointments
       .then(function (response) {
-        $scope.currentAppointments = response;
+        $scope.currentAppointments = response
+          .filter(function (appointment) {
+            var startTime = utility.getTimeStamp(appointment.appointment_date, appointment.start_time);
+            var endTime = utility.getTimeStamp(appointment.appointment_date, appointment.end_time);
+            var date = new Date().getTime();
+            return appointment.is_approved && ( date >= startTime || date <= endTime) && appointment.checked_in;
+          });
         $scope.totalItems = response.length;
         $scope.numPages = $scope.totalItems/$scope.itemsPerPage;
       })
