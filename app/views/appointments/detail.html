@@ -1,6 +1,7 @@
 <div class="row">
   <div class="col-sm-12 clearfix">
-    <a class="btn btn-primary btn-lg pull-right block" ng-click="printLabel()">
+    <a class="btn btn-primary btn-lg pull-right block" ng-hide="!isAppointmentUpcoming(appointment.appointment_date)"
+       ng-click="printLabel()">
       <i class="fa fa-print"></i> Print Label
     </a>
   </div>
@@ -133,7 +134,7 @@
           <th>Appointment Date</th>
           <th>Start Time</th>
           <th>End Time</th>
-          <th>Approval Status</th>
+          <th>Is Approved?</th>
           <th>Pass Code</th>
         </tr>
         <tr>
@@ -141,9 +142,9 @@
           <td>{{ appointment.visit_start_time }}</td>
           <td>{{ appointment.visit_end_time }}</td>
           <td>
-            //FIXME: what is appointment.approval_status?
-            <span ng-if="appointment.approval_status === undefined">Awaiting Approval</span>
-            <span ng-if="appointment.approval_status !== undefined">{{ appointment.approval_status }}</span>
+            <span ng-if="appointment.is_approved === null">Awaiting Approval</span>
+            <pre>{{appointment.is_approved}}</pre>
+            <span ng-if="appointment.is_approved !== null">{{ appointment.is_approved }}</span>
           </td>
           <td>{{ appointment.label_code }}</td>
         </tr>
@@ -151,8 +152,8 @@
     </div>
     <div class="widget-foot">
       <div ng-show="isAppointmentUpcoming(appointment.appointment_date) && user.id === appointment.host_id.id">
-        <a class="btn btn-success" ng-click="appointment.is_approved = true">Approved</a>
-        <a class="btn btn-danger" ng-click="appointment.is_approved = false">Reject</a>
+        <a class="btn btn-success" ng-click="toggleAppointmentApproval(true)">Approve</a>
+        <a class="btn btn-danger" ng-click="toggleAppointmentApproval(false)">Reject</a>
       </div>
     </div>
   </div>
