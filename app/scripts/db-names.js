@@ -6,7 +6,7 @@ angular.module('db.names', [])
     APPOINTMENTS: 'appointments',
     COMPANY_DEPARTMENTS: 'company_departments',
     ENTRANCE: 'company_entrance',
-    RESTRICTED_ITEMS: 'resisted_items',
+    RESTRICTED_ITEMS: 'restricted_items',
     VEHICLE: 'vehicle',
     VISITORS: 'visitors',
     VISITORS_LOCATION: 'visitors_location'

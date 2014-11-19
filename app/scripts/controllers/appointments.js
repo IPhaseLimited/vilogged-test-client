@@ -321,17 +321,18 @@ angular.module('viLoggedClientApp')
       }
     };
   })
-  .controller('CheckInCtrl', function ($scope, $state, $stateParams, $q,
-                                       visitorService, appointmentService, entranceService,
-                                       vehicleTypeConstant, notificationService, utility, authorizationService) {
+  .controller('CheckInCtrl', function ($scope, $state, $stateParams, $q, visitorService, appointmentService, entranceService,
+                                       vehicleTypeConstant, notificationService, utility, restrictedItemsService, vehicleService) {
     $scope.appointment = {};
-    $scope.appointment.restricted_items = [{
+    $scope.restricted_items = [{
       item_code: '',
       item_name: '',
       item_type: ''
     }];
     $scope.default = {};
+    $scope.vehicle = {};
     $scope.vehicleTypes = vehicleTypeConstant;
+    $scope.restrictedItemsErrors = {};
 
     entranceService.all()
       .then(function (response) {
@@ -340,11 +341,25 @@ angular.module('viLoggedClientApp')
       .catch(function (reason) {
       });
 
-    appointmentService.getNested($stateParams.appointment_id)
+    appointmentService.get($stateParams.appointment_id)
       .then(function (response) {
         $scope.appointment = response;
-        if (angular.isUndefined($scope.appointment.restricted_items)) {
-          $scope.appointment.restricted_items = [{
+        if (angular.isUndefined($scope.restricted_items)) {
+          $scope.restricted_items = [{
+            item_code: '',
+            item_name: '',
+            item_type: ''
+          }];
+        }
+      })
+      .catch(function (reason) {
+      });
+
+    appointmentService.getNested($stateParams.appointment_id)
+      .then(function (response) {
+        $scope.appointmentView = response;
+        if (angular.isUndefined($scope.restricted_items)) {
+          $scope.restricted_items = [{
             item_code: '',
             item_name: '',
             item_type: ''
@@ -356,9 +371,24 @@ angular.module('viLoggedClientApp')
 
     $scope.checkItemScope = function () {
       if ($scope.item === false) {
-        $scope.appointment.restricted_items = [];
+        $scope.restricted_items = [];
       }
     };
+
+    function validateItems() {
+      var errors = {};
+      $scope.restricted_items.forEach(function(item, index) {
+
+        Object.keys(item).forEach(function(key) {
+          if (!item[key]) {
+            errors[index + key] = 'Please enter item value to continue';
+          }
+        });
+      });
+
+      $scope.restrictedItemsErrors = errors;
+      return Object.keys(errors).length === 0;
+    }
 
     $scope.addItem = function () {
       if (!angular.isDefined($scope.item)) {
@@ -369,18 +399,20 @@ angular.module('viLoggedClientApp')
       if ($scope.item === false) {
         $scope.item = true;
       }
+      if (validateItems()) {
+        $scope.restricted_items.push({
+          item_code: '',
+          item_name: '',
+          item_type: ''
+        });
+      }
 
-      $scope.appointment.restricted_items.push({
-        item_code: '',
-        item_name: '',
-        item_type: ''
-      });
     };
 
     $scope.removeItem = function (index) {
-      $scope.appointment.restricted_items.splice(index, 1);
+      $scope.restricted_items.splice(index, 1);
 
-      if ($scope.appointment.restricted_items.length === 0) {
+      if ($scope.restricted_items.length === 0) {
         $scope.item = false;
       }
     };
@@ -388,12 +420,25 @@ angular.module('viLoggedClientApp')
     $scope.checkVisitorIn = function () {
       $scope.appointment.check_in = utility.getDateTime();
       $scope.appointment.label_code = utility.generateRandomInteger();
-      appointmentService.save($scope.appointment)
-        .then(function (response) {
-          //TODO:: implement notification service
-          $state.go('print-visitor-label', { appointment_id: $scope.appointment._id });
+
+      var restricted = [];
+      $scope.restricted_items.forEach(function(item) {
+        item.appointment_id = $scope.appointment.uuid;
+        restricted.push(restrictedItemsService.save(item));
+      });
+
+      var promises = [
+        appointmentService.save($scope.appointment),
+        vehicleService.save($scope.vehicle),
+        restricted
+      ];
+      $q.all(promises)
+        .then(function(response) {
+          $state.go('print-visitor-label', { appointment_id: $scope.appointment.uuid });
+          console.log(response);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
+          console.log(reason);
         });
     };
   })
