@@ -26,9 +26,11 @@ angular.module('viLoggedClientApp')
 
     $scope.visitorCredential = {};
     $scope.visitorLogin = function() {
+      $scope.busy = true;
       loginService.visitorLogin($scope.visitorCredential)
         .then(function (response) {
           $scope.loginError = false;
+          $scope.busy = false;
           //FIXME:: fix redirection on login
           $state.go('show-visitor', {visitor_id: response.loginRawResponse.uuid})
         })
@@ -36,20 +38,24 @@ angular.module('viLoggedClientApp')
           $scope.loginError = true;
           $scope.errorMessages = reason.loginMessage;
           $scope.visitorCredential.identity = '';
+          $scope.busy = false;
         })
     };
 
     $scope.credentials = {};
     $scope.login = function() {
+      $scope.busy = true;
       loginService.login($scope.credentials)
         .then(function() {
           $scope.loginError = false;
+          $scope.busy = false;
           $state.go('home');
         })
         .catch(function(reason) {
           $scope.loginError = true;
           $scope.errorMessages = reason.loginMessage;
           console.log(reason);
+          $scope.busy = false;
         });
     }
   })

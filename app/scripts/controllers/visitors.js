@@ -91,13 +91,16 @@ angular.module('viLoggedClientApp')
   .controller('VisitorsCtrl', function ($scope, visitorService, visitorsLocationService) {
     $scope.visitors = [];
     function getVisitors() {
+      $scope.busy = true;
       visitorService.all()
         .then(function (response) {
+          $scope.busy = false;
           $scope.visitors = response;
           $scope.totalItems = $scope.visitors.length;
           $scope.numPages = Math.ceil($scope.totalItems / $scope.itemsPerPage);
         })
         .catch(function (reason) {
+          $scope.busy = false;
           console.log(reason);
         });
     }
@@ -167,6 +170,7 @@ angular.module('viLoggedClientApp')
     ];
 
     if ($stateParams.visitor_id !== null && $stateParams.visitor_id !== undefined) {
+      $scope.busy = true;
       visitorService.get($stateParams.visitor_id)
         .then(function (response) {
           $scope.visitor = response;
@@ -190,19 +194,22 @@ angular.module('viLoggedClientApp')
                   $scope.locationLgas = $scope.countryState[$scope.visitorsLocation.residential_country].states[$scope.visitorsLocation.residential_state].lga.sort();
                 }
               }
-
+              $scope.busy = false;
             })
             .catch(function (reason) {
+              $scope.busy = false;
               console.log(reason);
             });
           $scope.title = 'Edit ' + $scope.visitor.firstName + '\'s Profile';
         })
         .catch(function (reason) {
           console.log(reason);
+          $scope.busy = false;
         });
     }
 
     $scope.createProfile = function () {
+      $scope.busy = true;
       var emailValidation = validationService.EMAIL;
       emailValidation.required = true;
       var phoneNumberValidation = validationService.BASIC;
@@ -267,18 +274,21 @@ angular.module('viLoggedClientApp')
             $scope.visitorsLocation.visitor_id = response.uuid;
             visitorsLocationService.save($scope.visitorsLocation)
               .then(function () {
+                $scope.busy = false;
                 afterRegistration();
               })
               .catch(function (reason) {
                 Object.keys(reason).forEach(function (key) {
                   $scope.validationErrors[key] = reason[key];
+                  $scope.busy = false;
                 });
                 //afterRegistration();
               });
           })
           .catch(function (reason) {
-            flash.error = 'An error occurred while saving visitor\'s profile';
+            flash.error = reason.message;
             console.log(reason);
+            $scope.busy = false;
           });
       }
 
@@ -316,6 +326,9 @@ angular.module('viLoggedClientApp')
     $scope.appointmentsCurrentPage = 1;
     $scope.appointmentsPerPage = 10;
     $scope.maxSize = 5;
+    $scope.busy = true;
+    $scope.visitorLoaded = false;
+    $scope.appointmentLoaded = false;
 
     visitorService.get($stateParams.visitor_id)
       .then(function (response) {
@@ -326,8 +339,16 @@ angular.module('viLoggedClientApp')
               if (response.length) {
                 $scope.visitorsLocation = response[0];
               }
+              $scope.visitorLoaded = true;
+              if ($scope.appointmentLoaded) {
+                $scope.busy = flase;
+              }
             })
             .catch(function (reason) {
+              $scope.visitorLoaded = true;
+              if ($scope.appointmentLoaded) {
+                $scope.busy = flase;
+              }
               console.log(reason);
             });
         }
@@ -335,17 +356,38 @@ angular.module('viLoggedClientApp')
       })
       .catch(function (reason) {
         console.log(reason);
+
       });
 
-    appointmentService.getVisitorUpcomingAppointments($stateParams.visitor_id)
+    var appointments = appointmentService.findByField('visitor_id__uuid');
+
+    appointments
+      .then(function () {
+        $scope.appointmentLoaded = true;
+        if ($scope.appointmentLoaded) {
+          $scope.busy = flase;
+        }
+      })
+      .catch(function () {
+        $scope.appointmentLoaded = true;
+        if ($scope.visitorLoaded) {
+          $scope.busy = flase;
+        }
+      });
+
+    appointments
       .then(function (response) {
-        $scope.upcomingAppointments = response;
+        $scope.upcomingAppointments = response
+          .filter(function (appointment) {
+            return appointment.approved &&
+              new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.expired;
+          });
       })
       .catch(function (reason) {
         console.log(reason);
       });
 
-    appointmentService.getAppointmentsByVisitor($stateParams.visitor_id)
+    appointments
       .then(function (response) {
         $scope.appointments = response;
         $scope.totalAppointments = $scope.appointments.length;
