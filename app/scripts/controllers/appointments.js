@@ -121,6 +121,7 @@ angular.module('viLoggedClientApp')
       })
   })
   .controller('AppointmentCtrl', function ($scope, appointmentService, utility) {
+    $scope.busy = true;
     $scope.currentPage = 1;
     $scope.maxSize = 5;
     $scope.itemsPerPage = 10;
@@ -140,22 +141,28 @@ angular.module('viLoggedClientApp')
         $scope.appointments = response;
         $scope.totalItems = $scope.appointments.length;
         $scope.numPages = Math.ceil($scope.totalItems/$scope.itemsPerPage);
+        $scope.busy = false;
       })
       .catch(function (reason) {
+        $scope.busy=false;
         console.log(reason);
       });
   })
   .controller('AppointmentDetailCtrl', function ($scope, $state, $stateParams, appointmentService, utility, $modal,
                                                  notificationService) {
+    $scope.busy = true;
     appointmentService.getNested($stateParams.appointment_id)
       .then(function (response) {
+        $scope.busy = false;
         $scope.appointment = response;
       })
       .catch(function (reason) {
+        $scope.busy = false;
         console.log(reason);
       });
 
     $scope.printLabel = function() {
+      $scope.busy = true;
       $modal.open({
         templateUrl: 'views/appointments/partials/visitor-pass-template.html',
         controller: function($scope, $modalInstance, appointmentService) {
@@ -163,8 +170,10 @@ angular.module('viLoggedClientApp')
           appointmentService.getNested($stateParams.appointment_id)
             .then(function (response) {
               $scope.appointment = response;
+              $scope.busy = false;
             })
             .catch(function (reason) {
+              $scope.busy = false;
               console.log(reason);
             });
         }
@@ -179,6 +188,7 @@ angular.module('viLoggedClientApp')
         dialogParams.modalBodyText = approvalStatus ? 'Are you sure you want to approve this appointment?' :
           'Are you sure you want to disapprove this appointment?';
 
+        $scope.busy = true;
         notificationService.modal.confirm(dialogParams)
           .then(function() {
             appointmentService.get($stateParams.appointment_id)
@@ -188,13 +198,16 @@ angular.module('viLoggedClientApp')
                   .then(function(){
                     approvalStatus ? flash.success = 'The selected appointment has been approved.' :
                       'The selected appointment has been rejected.';
+                    $scope.busy = false;
                     $state.go(appointments);
                   })
                   .catch(function(reason){
+                    $scope.busy = false;
                     console.log(reason);
                   });
               })
               .catch(function(reason){
+                $scope.busy = false;
                 console.log(reason);
               });
           });
