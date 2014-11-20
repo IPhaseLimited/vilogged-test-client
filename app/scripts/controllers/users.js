@@ -116,7 +116,7 @@ angular.module('viLoggedClientApp')
         console.log(reason);
       });
   })
-  .controller('UsersCtrl', function ($scope, userService, notificationServic, flash) {
+  .controller('UsersCtrl', function ($scope, userService, notificationService, flash) {
     function getUsers() {
       userService.usersNested()
         .then(function (response) {
