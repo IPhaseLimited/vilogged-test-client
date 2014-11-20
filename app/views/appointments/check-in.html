@@ -169,8 +169,9 @@
 
           <div class="col-sm-10">
             <select class="form-control" id="entrance"
-                    name="entrance" ng-model="appointment.entrance"
-                    ng-options="ent.entrance_name for ent in entrance"></select>
+                    name="entrance" ng-model="appointment.entrance_id">
+              <option ng-repeat="entrance in entrances" value="{{ entrance.uuid }}">{{ entrance.entrance_name }}</option>
+            </select>
           </div>
         </div>
 
