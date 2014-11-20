@@ -8,8 +8,22 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('notificationService', function notificationService($modal, $http, config) {
+  .service('notificationService', function notificationService($modal, $http, $q, config) {
     // AngularJS will instantiate a singleton by calling "new" on this function
+
+    function sendMessage(http, objectParams, apiUrl) {
+      var deferred = $q.defer();
+
+      http.post(apiUrl, objectParams)
+        .then(function (response) {
+          deferred.resolve(response);
+        })
+        .catch(function (reason) {
+          console.log(reason);
+        });
+
+      return deferred.promise;
+    }
 
     this.modal = {};
     this.modal.confirm = function (paramObject) {
@@ -33,6 +47,7 @@ angular.module('viLoggedClientApp')
     this.message = {};
 
     this.message.sendSms = function (smsParams, smsApi) {
+      var message = {};
       if (!angular.isDefined(smsApi)) {
         smsApi = config.api.smsApi;
       }
@@ -41,10 +56,20 @@ angular.module('viLoggedClientApp')
         smsParams = {};
       }
 
-      console.log('SMS was sent.')
+      //sendMessage($http, smsParams, smsApi)
+      //  .then(function (response) {
+      //    message = response;
+      //  })
+      //  .catch(function (reason) {
+      //    message = return reason;
+      //  });
+
+      return message;
     };
 
     this.message.sendEmail = function (emailParams, sendApi) {
+      var message = {};
+
       if (!angular.isDefined(emailApi)) {
         emailApi = '';
       }
@@ -53,11 +78,14 @@ angular.module('viLoggedClientApp')
         emailParams = {};
       }
 
-      console.log('Email was sent.')
-    };
+      //sendMessage($http, smsParams, smsApi)
+      //  .then(function (response) {
+      //    message = response;
+      //  })
+      //  .catch(function (reason) {
+      //    message = return reason;
+      //  });
 
-    this.message.sendMessage = function() {
-      this.sendEmail();
-      this.sendSms();
-    }
+      return message;
+    };
   });
