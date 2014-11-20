@@ -46,7 +46,9 @@
             <td>{{ appointment.appointment_date | date:'EEE, MMM d, y' }}</td>
             <td>{{ appointment.visit_start_time }}</td>
             <td>{{ appointment.visit_end_time }}</td>
-            <td class="text-center"><i class="fa " ng-class="{'fa-fa-check-circle text-success bold' : appointment.is_approved, 'fa-ban text-danger bold' : !appointment.is_approved}"></i></td>
+            <td class="text-center">
+              <i class="fa " ng-class="{'fa-check-circle text-success bold' : appointment.is_approved, 'fa-ban text-danger bold' : !appointment.is_approved}"></i>
+            </td>
             <td>
               <a ui-sref="visitor-check-in({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
                  ng-if="!appointment.check_in" ng-show="isAppointmentUpcoming(appointment.appointment_date) && user.is_staff"
