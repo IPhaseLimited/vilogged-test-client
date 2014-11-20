@@ -116,7 +116,7 @@ angular.module('viLoggedClientApp')
         console.log(reason);
       });
   })
-  .controller('UsersCtrl', function ($scope, userService, notificationService) {
+  .controller('UsersCtrl', function ($scope, userService, notificationService, flash) {
     function getUsers() {
       userService.usersNested()
         .then(function (response) {
@@ -138,27 +138,35 @@ angular.module('viLoggedClientApp')
 
     //TODO:: flash message
     $scope.deleteAccount = function (id) {
+      $scope.busy = true;
       if (userService.user.id === id) {
         return;
       }
       var dialogParams = {
         modalHeader: 'Delete User?',
-        modalBodyText: 'are you sure you want to delete the following?'
+        modalBodyText: 'Are you sure you want to delete the following?'
       };
 
       notificationService.modal.confirm(dialogParams)
         .then(function() {
           userService.remove(id)
             .then(function (response) {
+              flash.success = 'Account deleted successfully.';
               getUsers();
+              $scope.busy = false;
             })
             .catch(function (reason) {
+              flash.error = reason.message;
               console.log(reason);
+              $scope.busy = false;
             });
         });
     }
   })
   .controller('UserFormCtrl', function ($scope, $state, $stateParams, userService, companyDepartmentsService, flash) {
+    $scope.busy = true;
+    $scope.userLoaded = false;
+    $scope.departmentLoaded = false;
     $scope.currentUser = userService.user;
     $scope.user = {};
     $scope.user.user_profile = {};
@@ -166,19 +174,36 @@ angular.module('viLoggedClientApp')
     if ($stateParams.user_id) {
       userService.get($stateParams.user_id)
         .then(function (response) {
-          //console.log(response);
           $scope.user = response;
+          $scope.userLoaded = false;
+          if ($scope.departmentLoaded) {
+            $scope.busy = true;
+          }
         })
         .catch(function (reason) {
+          flash.error = reason.message;
+          $scope.userLoaded = false;
+          if ($scope.departmentLoaded) {
+            $scope.busy = true;
+          }
+          console.log(reason);
         })
     }
 
     companyDepartmentsService.all()
       .then(function (response) {
         $scope.departments = response;
+        $scope.departmentLoaded = false;
+        if ($scope.userLoaded) {
+          $scope.busy = true;
+        }
       })
       .catch(function (reason) {
         console.log(reason);
+        $scope.userLoaded = false;
+        if ($scope.departmentLoaded) {
+          $scope.busy = true;
+        }
       });
 
     if (!$scope.currentUser.is_superuser) {
@@ -186,6 +211,7 @@ angular.module('viLoggedClientApp')
     }
 
     $scope.createUserAccount = function () {
+      $scope.busy = true;
       if ($scope.user.user_profile !== undefined || $scope.user.user_profile === null) {
         $scope.user.user_profile.home_phone = $scope.user.user_profile.home_phone || null;
         $scope.user.user_profile.work_phone = $scope.user.user_profile.work_phone || null;
@@ -199,23 +225,30 @@ angular.module('viLoggedClientApp')
           !$stateParams.user_id
             ? flash.success = 'User account was successfully created.'
             : flash.success = 'User account was successfully updated.';
+          $scope.busy = false;
           $state.go("users");
         })
         .catch(function (reason) {
+          $scope.busy = false;
           console.log(reason);
         });
     }
   })
-  .controller('ChangePasswordCtrl', function ($scope, $state, $stateParams, userService) {
+  .controller('ChangePasswordCtrl', function ($scope, $state, $stateParams, userService, flash) {
+    $scope.busy = false;
     $scope.userPassword = {};
 
-    //todo:: flash message
     $scope.changeAccountPassword = function () {
+      $scope.busy = true;
       userService.updatePassword($scope.userPassword)
         .then(function (response) {
+          flash.success = 'Password changed successfully.';
+          $scope.busy = false;
           $state.go("home");
         })
         .catch(function (reason) {
+          flash.error = reason.message;
+          $scope.busy = false;
         })
     }
   });

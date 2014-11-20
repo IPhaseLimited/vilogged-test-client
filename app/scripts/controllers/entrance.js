@@ -43,36 +43,56 @@ angular.module('viLoggedClientApp')
       })
   })
   .controller('CompanyEntranceCtrl', function ($scope, entranceService) {
+    $scope.busy = false;
     $scope.entrance = [];
 
     $scope.deleteEntrance = function(id) {
+      $scope.busy = true;
       entranceService.remove(id)
-        .then(function(response) {})
-        .catch(function(reason) {})
+        .then(function(response) {
+          $scope.busy = false;
+        })
+        .catch(function(reason) {
+          $scope.busy = false;
+          console.log(reason);
+        })
     };
 
     entranceService.all()
       .then(function(response) {
+        $scope.busy = false;
         $scope.entrance = response;
       })
-      .catch(function(reason) {});
+      .catch(function(reason) {
+        $scope.busy = false;
+        console.log(reason);
+      });
   })
   .controller('EntranceFormCtrl', function($scope, $state, $stateParams, entranceService) {
     $scope.entrance = {};
 
     if ($stateParams.entrance_id !== null || $stateParams.entrance_id !== undefined) {
+      $scope.busy = true;
       entranceService.get($stateParams.entrance_id)
         .then(function(response) {
+          $scope.busy = false;
           $scope.entrance = response;
         })
-        .catch(function(){});
+        .catch(function(){
+          $scope.busy = false;
+        });
     }
 
     $scope.addEntrance = function() {
+      $scope.busy = true;
       entranceService.save($scope.entrance)
         .then(function(response){
+          $scope.busy = false;
           $state.go("entrance")
         })
-        .catch(function(reason) {});
+        .catch(function(reason) {
+          $scope.busy = false;
+          console.log(reason);
+        });
     }
   });
