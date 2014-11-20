@@ -1830,8 +1830,6 @@ footer .copy{
 }
 
 .loading-status {
-  position: absolute;
-  top: 0;
   max-width: 150px;
   margin: auto;
   background-color: #a9302a;
