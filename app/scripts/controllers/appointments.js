@@ -183,7 +183,7 @@ angular.module('viLoggedClientApp')
               console.log(reason);
             });
         });
-    }
+    };
 
     $scope.printLabel = function() {
       $modal.open({
@@ -409,7 +409,7 @@ angular.module('viLoggedClientApp')
     entranceService.all()
       .then(function (response) {
         $scope.busy = false;
-        $scope.entrance = response;
+        $scope.entrances = response;
       })
       .catch(function (reason) {
         $scope.busy = false;
@@ -500,39 +500,54 @@ angular.module('viLoggedClientApp')
       }
     };
 
+    function itemNotEmpty(item) {
+      var empty = [];
+      Object.keys(item).forEach(function(key) {
+        if (angular.isUndefined(item[key]) || item[key] === '') {
+          empty.push(item);
+        }
+      });
+      return empty.length === 0;
+    }
+
     $scope.checkVisitorIn = function () {
-      $scope.appointment.check_in = utility.getDateTime();
+
+      $scope.appointment.checked_in = utility.getISODateTime();
       $scope.appointment.label_code = utility.generateRandomInteger();
 
       var restricted = [];
       $scope.restricted_items.forEach(function(item) {
-        item.appointment_id = $scope.appointment.uuid;
-        restricted.push(restrictedItemsService.save(item));
+        if (itemNotEmpty(item)) {
+          item.appointment_id = $scope.appointment.uuid;
+          restricted.push(restrictedItemsService.save(item));
+        }
       });
+
       $scope.vehicle.appointments_id = $scope.appointment.uuid;
-      var promises = [
-        appointmentService.save($scope.appointment),
-        vehicleService.save($scope.vehicle),
-        restricted
-      ];
+      var promises = [appointmentService.save($scope.appointment)];
+
+      if ($scope.withVehicle) {
+        promises.push( vehicleService.save($scope.vehicle));
+      }
+
+      if (restricted.length) {
+        promises.push(restricted);
+      }
 
       $scope.busy = true;
       $q.all(promises)
-        .then(function(response) {
+        .then(function() {
           $scope.busy = false;
-          $state.go('print-visitor-label', { appointment_id: $scope.appointment.uuid });
-          console.log(response);
+          $state.go('appointments');
         })
         .catch(function(reason) {
           $scope.busy = false;
           console.log(reason);
         });
-    };
+    }
   })
   .controller('VisitorPassCtrl', function($scope, $state, $stateParams, appointmentService) {
     $scope.appointment = {};
-    console.log($stateParams.appointment_id);
-
     $scope.busy = true;
     appointmentService.getNested($stateParams.appointment_id)
       .then(function (response) {
