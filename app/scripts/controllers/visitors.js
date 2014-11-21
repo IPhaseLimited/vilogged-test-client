@@ -341,13 +341,13 @@ angular.module('viLoggedClientApp')
               }
               $scope.visitorLoaded = true;
               if ($scope.appointmentLoaded) {
-                $scope.busy = flase;
+                $scope.busy = false;
               }
             })
             .catch(function (reason) {
               $scope.visitorLoaded = true;
               if ($scope.appointmentLoaded) {
-                $scope.busy = flase;
+                $scope.busy = false;
               }
               console.log(reason);
             });
@@ -359,19 +359,19 @@ angular.module('viLoggedClientApp')
 
       });
 
-    var appointments = appointmentService.findByField('visitor_id__uuid');
+    var appointments = appointmentService.findByField('visitor_id', $stateParams.visitor_id);
 
     appointments
       .then(function () {
         $scope.appointmentLoaded = true;
         if ($scope.appointmentLoaded) {
-          $scope.busy = flase;
+          $scope.busy = false;
         }
       })
       .catch(function () {
         $scope.appointmentLoaded = true;
         if ($scope.visitorLoaded) {
-          $scope.busy = flase;
+          $scope.busy = false;
         }
       });
 

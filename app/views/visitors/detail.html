@@ -117,7 +117,7 @@
         You have no appointments created
       </div>
 
-      <table class="table table-condensed table-responsive table-bordered" ng-if="upcomingAppointments.length">
+      <table class="table table-condensed table-responsive table-bordered" ng-if="appointments.length">
         <thead>
         <tr>
           <th>S/N</th>
@@ -128,7 +128,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="appointment in appointments">
+        <tr ng-repeat="appointment in appointments track by appointment.uuid | orderBy: created">
           <td>{{ $index+1 }}</td>
           <td>{{ appointment.appointment_date }}</td>
           <td>{{ appointment.visit_start_time }}</td>
