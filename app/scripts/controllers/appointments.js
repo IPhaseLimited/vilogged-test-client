@@ -214,7 +214,7 @@ angular.module('viLoggedClientApp')
               console.log(reason);
             });
         });
-    }
+    };
 
     $scope.isAppointmentUpcoming = function (appointmentDate) {
       var appointmentTimeStamp = utility.getTimeStamp(appointmentDate);
