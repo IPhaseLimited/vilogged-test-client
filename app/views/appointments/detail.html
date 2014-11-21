@@ -146,7 +146,6 @@
           <td>{{ appointment.visit_end_time }}</td>
           <td>
             <span ng-if="appointment.is_approved === null">Awaiting Approval</span>
-            <pre>{{appointment.is_approved}}</pre>
             <span ng-if="appointment.is_approved !== null">{{ appointment.is_approved }}</span>
           </td>
           <td>{{ appointment.label_code }}</td>
@@ -154,7 +153,8 @@
       </table>
     </div>
     <div class="widget-foot">
-      <div>
+      <div ng-show="appointment.is_approved === null && !appointment.is_expired && isAppointmentUpcoming(appointment.appointment_date)"
+        ng-hide="user.id !== appointment.host_id.id">
         <a class="btn btn-success" ng-click="toggleAppointmentApproval(true)">Approve</a>
         <a class="btn btn-danger" ng-click="toggleAppointmentApproval(false)">Reject</a>
       </div>

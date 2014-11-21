@@ -89,8 +89,7 @@ angular.module('viLoggedClientApp')
       })
   })
   .controller('UserProfileCtrl', function ($scope, $interval, userService, appointmentService) {
-    $scope.currentUser = userService.user;
-    appointmentService.getAppointmentsByUser($scope.currentUser)
+    appointmentService.getAppointmentsByUser($scope.user)
       .then(function (response) {
         $scope.numberOfAppointments = response.length;
       })
@@ -98,7 +97,7 @@ angular.module('viLoggedClientApp')
         console.log(reason);
       });
 
-    appointmentService.getUserUpcomingAppointments($scope.currentUser)
+    appointmentService.getUserUpcomingAppointments($scope.user)
       .then(function (response) {
         $scope.upcomingAppointments = response;
         $scope.upcomingAppointmentCount = response.length;
@@ -107,7 +106,7 @@ angular.module('viLoggedClientApp')
         console.log(reason);
       });
 
-    appointmentService.getUserAppointmentsAwaitingApproval($scope.currentUser)
+    appointmentService.getUserAppointmentsAwaitingApproval($scope.user)
       .then(function (response) {
         $scope.appointmentsAwaitingApproval = response;
         $scope.appointmentsAwaitingApprovalCount = response.length;
@@ -167,7 +166,7 @@ angular.module('viLoggedClientApp')
     $scope.busy = true;
     $scope.userLoaded = false;
     $scope.departmentLoaded = false;
-    $scope.currentUser = userService.user;
+    $scope.user = userService.user;
     $scope.user = {};
     $scope.user.user_profile = {};
 
@@ -206,7 +205,7 @@ angular.module('viLoggedClientApp')
         }
       });
 
-    if (!$scope.currentUser.is_superuser) {
+    if (!$scope.user.is_superuser) {
       $state.go("home");
     }
 
