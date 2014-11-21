@@ -8,7 +8,7 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('utility', function utility() {
+  .service('utility', function utility($filter) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     /**
@@ -162,6 +162,10 @@ angular.module('viLoggedClientApp')
 
     this.getDateTime = function() {
       return new Date().toJSON();
+    };
+
+    this.getISODateTime = function() {
+      return $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
     };
 
     this.generateRandomInteger = function() {
