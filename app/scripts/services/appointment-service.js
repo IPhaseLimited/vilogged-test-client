@@ -210,6 +210,7 @@ angular.module('viLoggedClientApp')
     this.getNested = getNested;
     this.all = getAllAppointments;
     this.save = save;
+    this.findByField = findByField;
     this.getUserUpcomingAppointments = getUserUpcomingAppointments;
     this.getAppointmentsByUser = getAppointmentsByUser;
     this.getUserAppointmentsAwaitingApproval = getUserAppointmentsAwaitingApproval;
