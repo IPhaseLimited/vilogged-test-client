@@ -40,9 +40,7 @@
                    ng-show="displayVisitorLogin">
                   <i class="fa"></i> User Login
                 </a>
-                <a class="btn btn-primary btn btn-xs pull-right" ui-sref="visitor-registration" ng-show="displayVisitorLogin">
-                  Create Guest Profile
-                </a>
+
                 <a class="btn btn-primary btn btn-xs pull-right" ng-click="displayVisitorLogin=!displayVisitorLogin"
                    ng-show="!displayVisitorLogin">
                   Guest Login
@@ -106,6 +104,13 @@
                   <br/>
 
                 </form>
+              </div>
+        <hr/>
+              <div>
+                <a class="btn btn-primary btn btn-xs pull-right" ui-sref="visitor-registration" ng-show="displayVisitorLogin">
+                  Create Guest Profile
+                </a>
+                <div class="clearfix"></div>
               </div>
 
             </div>

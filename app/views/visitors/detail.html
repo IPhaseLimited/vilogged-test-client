@@ -4,7 +4,8 @@
       <div class="widget-head">
         <div class="pull-left">My Profile</div>
         <div class="widget-icons pull-right">
-          <a class="btn btn-primary btn-xs" ui-sref="edit-visitor-profile({visitor_id: visitor._id})">
+          <a class="btn btn-primary btn-xs" ui-sref="edit-visitor-profile({visitor_id: visitor.uuid})"
+             ng-show="user.is_active">
             <i class="fa fa-edit"></i>Edit
           </a>
         </div>
@@ -15,29 +16,33 @@
           <div class="row">
             <div class="col-sm-8">
               <div class="row">
-                <div class="col-sm-6">Pass Code</div>
-                <div class="col-sm-6">{{ visitor.visitor_pass_code }}</div>
+                <div class="col-sm-4">Pass Code</div>
+                <div class="col-sm-8">{{ visitor.visitors_pass_code }}</div>
               </div>
               <div class="row">
-                <div class="col-sm-6">First Name</div>
-                <div class="col-sm-6">{{ visitor.first_name }}</div>
+                <div class="col-sm-4">First Name</div>
+                <div class="col-sm-8">{{ visitor.first_name }}</div>
               </div>
               <div class="row">
-                <div class="col-sm-6">Last Name</div>
-                <div class="col-sm-6">{{ visitor.last_name }}</div>
+                <div class="col-sm-4">Last Name</div>
+                <div class="col-sm-8">{{ visitor.last_name }}</div>
               </div>
               <div class="row">
-                <div class="col-sm-6">Visitor Phone</div>
-                <div class="col-sm-6">{{ visitor.visitor_phone }}</div>
+                <div class="col-sm-4">Visitor Phone</div>
+                <div class="col-sm-8">{{ visitor.visitors_phone }}</div>
               </div>
               <div class="row">
-                <div class="col-sm-6">Email</div>
-                <div class="col-sm-6">{{ visitor.visitor_email }}</div>
+                <div class="col-sm-4">Email</div>
+                <div class="col-sm-8">{{ visitor.visitors_email }}</div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4">Company</div>
+                <div class="col-sm-8">{{ visitor.company_name }}</div>
               </div>
             </div>
             <div class="col-sm-4">
               <img ng-src="{{ visitor.image }}" alt="" class="img-thumbnail img-responsive"  ng-if="visitor.image"/>
-              <img src="../../img/place_holder.jpg" alt="" class="img-thumbnail img-responsive" ng-if="!visitor.image"/>
+              <img src="img/place_holder.jpg" alt="" class="img-thumbnail img-responsive" ng-if="!visitor.image"/>
             </div>
           </div>
         </div>
@@ -53,7 +58,7 @@
       <div class="widget-head">
         <div class="pull-left">Upcoming Appointments</div>
         <div class="widget-icons pull-right">
-          <a class="btn btn-primary btn-xs" ui-sref="create-appointment-visitor({visitor_id: visitor._id})">
+          <a class="btn btn-primary btn-xs" ui-sref="create-appointment-visitor({visitor_id: visitor.uuid})">
             <span class="fa fa-plus-circle"></span> Create Appointment
           </a>
         </div>
@@ -97,7 +102,7 @@
   <div class="widget-head">
     <div class="pull-left">Appointment Histories</div>
     <div class="widget-icons pull-right">
-      <a class="btn btn-primary btn-xs" ui-sref="create-appointment-visitor({visitor_id: visitor._id})">
+      <a class="btn btn-primary btn-xs" ui-sref="create-appointment-visitor({visitor_id: visitor.uuid})">
         <span class=" fa fa-plus-circle"></span> Create Appointment
       </a>
     </div>

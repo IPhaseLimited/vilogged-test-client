@@ -6,28 +6,40 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/entrance',
         data: {
-          label: 'Entrance List'
+          label: 'Entrance List',
+          requiredPermission: 'is_superuser'
         },
         templateUrl: 'views/entrance/index.html',
-        controller: 'CompanyEntranceCtrl'
+        controller: 'CompanyEntranceCtrl',
+        ncyBreadcrumb: {
+          label: 'Entrance'
+        }
       })
       .state('add-company-entrance', {
         parent: 'root.index',
         url: '/entrance/add',
         data: {
-          label: 'Add Entrance'
+          label: 'Add Entrance',
+          requiredPermission: 'is_superuser'
         },
         templateUrl: 'views/entrance/widget-form.html',
-        controller: 'EntranceFormCtrl'
+        controller: 'EntranceFormCtrl',
+        ncyBreadcrumb: {
+          label: 'Create Entrance'
+        }
       })
       .state('edit-company-entrance', {
         parent: 'root.index',
         url: '/entrance/:entrance_id/edit',
         data: {
-          label: 'Add Entrance'
+          label: 'Add Entrance',
+          requiredPermission: 'is_superuser'
         },
         templateUrl: 'views/entrance/widget-form.html',
-        controller: 'EntranceFormCtrl'
+        controller: 'EntranceFormCtrl',
+        ncyBreadcrumb: {
+          label: 'Edit Entrance'
+        }
       })
   })
   .controller('CompanyEntranceCtrl', function ($scope, entranceService) {

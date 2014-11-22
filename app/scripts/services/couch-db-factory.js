@@ -92,5 +92,5 @@ angular.module('viLoggedClientApp')
             _db: '_session'
           }
         }
-      })
+      });
   });

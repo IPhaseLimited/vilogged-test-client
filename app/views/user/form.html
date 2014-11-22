@@ -2,7 +2,7 @@
   <form class="form-horizontal" ng-submit="createUserAccount()" name="userAccount">
     <legend>User Account Detail</legend>
     <div class="form-group">
-      <label for="username" class="control-label col-sm-2">Username</label>
+      <label for="username" class="control-label col-sm-2">Username <span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
         <input class="form-control" type="text" name="username" id="username"
@@ -11,7 +11,7 @@
     </div>
 
     <div class="form-group" ng-if="!user.id">
-      <label for="password" class="control-label col-sm-2">Password</label>
+      <label for="password" class="control-label col-sm-2">Password <span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
         <input class="form-control" type="password" name="password" id="password"
@@ -20,7 +20,7 @@
     </div>
 
     <div class="form-group" ng-if="!user.id">
-      <label for="confirm_password" class="control-label col-sm-2">Confirm Password</label>
+      <label for="confirm_password" class="control-label col-sm-2">Confirm Password <span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
         <input class="form-control" type="password" name="confirm_password" id="confirm_password"
@@ -29,7 +29,7 @@
     </div>
 
     <div class="form-group">
-      <label for="email" class="control-label col-sm-2">Email</label>
+      <label for="email" class="control-label col-sm-2">Email <span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
         <input class="form-control" type="text" name="email" id="email" ng-model="user.email" required/>
@@ -39,7 +39,7 @@
     <legend>User Profile</legend>
 
     <div class="form-group">
-      <label for="first_name" class="control-label col-sm-2">First Name</label>
+      <label for="first_name" class="control-label col-sm-2">First Name <span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
         <input class="form-control" type="text" name="first_name" id="first_name"
@@ -48,7 +48,7 @@
     </div>
 
     <div class="form-group">
-      <label for="last_name" class="control-label col-sm-2">Last Name</label>
+      <label for="last_name" class="control-label col-sm-2">Last Name <span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
         <input class="form-control" type="text" name="last_name" id="last_name"
@@ -57,7 +57,7 @@
     </div>
 
     <div class="form-group">
-      <label for="phone" class="control-label col-sm-2">Phone</label>
+      <label for="phone" class="control-label col-sm-2">Phone <span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
         <input class="form-control" type="text" name="phone" id="phone" ng-model="user.user_profile.phone" required/>
@@ -83,12 +83,12 @@
     </div>
 
     <div class="form-group">
-      <label for="department" class="control-label col-sm-2">Department</label>
+      <label for="department" class="control-label col-sm-2">Department <span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
         <select class="form-control" name="department" id="department" ng-model="user.user_profile.department">
           <option value=""></option>
-          <option value="{{ department }}" ng-repeat="department in departments">{{ department.department_name }}</option>
+          <option ng-selected="user.user_profile.department === department.uuid" value="{{ department.uuid }}" ng-repeat="department in departments">{{ department.department_name }}</option>
         </select>
       </div>
     </div>

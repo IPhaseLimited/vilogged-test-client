@@ -2,15 +2,15 @@
 
 /**
  * @ngdoc service
- * @name viLoggedClientApp.companyDepartmentsService
+ * @name viLoggedClientApp.restrictedItemsService
  * @description
- * # companyDepartmentsService
+ * # restrictedItemsService
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('companyDepartmentsService', function companyDepartmentsService($q, storageService, db, utility, syncService) {
+  .service('restrictedItemsService', function restrictedItemsService($q, storageService, db, utility, syncService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
-    var DB_NAME = db.COMPANY_DEPARTMENTS.replace(/_/, '-');
+    var DB_NAME = db.RESTRICTED_ITEMS.replace(/_/, '-');
 
     function getAll() {
       return storageService.all(DB_NAME);
@@ -47,6 +47,5 @@ angular.module('viLoggedClientApp')
     };
 
     this.all = getAll;
-
 
   });

@@ -14,7 +14,15 @@ angular.module('viLoggedClientApp')
         'parent': 'root.index',
         'url': '/settings',
         'templateUrl': '/views/settings/setting.html',
-        'controller': 'SettingFormCtrl'
+        'controller': 'SettingFormCtrl',
+        data: {
+          label: 'Settings Page',
+          requiredPermission: 'is_superuser'
+        },
+        ncyBreadcrumb: {
+          label: 'Settings',
+          parent: 'Home'
+        }
       })
   })
   .controller('SettingFormCtrl', function ($scope, utility) {

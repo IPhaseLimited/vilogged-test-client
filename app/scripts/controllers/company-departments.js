@@ -43,8 +43,11 @@ function formController($scope, $state, companyDepartmentsService, $stateParams,
         })
         .catch(function (reason) {
           if (angular.isDefined($modalInstance)) {
-            $modalInstance.close(true);
+            //$modalInstance.close(true);
           }
+          (Object.keys(reason)).forEach(function(key) {
+            $scope.validationErrors[key] = reason[key];
+          });
           console.log(reason);
         });
     }
@@ -57,56 +60,54 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/company-departments',
         templateUrl: 'views/company-departments/index.html',
-        controller: 'CompanyDepartmentsCtrl'
+        controller: 'CompanyDepartmentsCtrl',
+        data: {
+          requiredPermission: 'is_superuser',
+          label: 'Departments'
+        },
+        ncyBreadcrumb: {
+          label: 'Departments'
+        }
       })
       .state('add-company-department', {
         parent: 'root.index',
         url: '/company-departments/add',
         templateUrl: 'views/company-departments/widget-form.html',
-        controller: 'CompanyDepartmentsFormCtrl'
+        controller: 'CompanyDepartmentsFormCtrl',
+        data: {
+          requiredPermission: 'is_superuser',
+          label: 'Add Department'
+        },
+        ncyBreadcrumb: {
+          label: 'Add Department'
+        }
       })
       .state('edit-company-department', {
         parent: 'root.index',
         url: '/company-departments/:id',
         templateUrl: 'views/company-departments/widget-form.html',
-        controller: 'CompanyDepartmentsFormCtrl'
+        controller: 'CompanyDepartmentsFormCtrl',
+        data: {
+          requiredPermission: 'is_superuser',
+          label: 'Edit Department'
+        },
+        ncyBreadcrumb: {
+          label: 'Edit Department'
+        }
       });
   })
   .controller('CompanyDepartmentsCtrl', function ($scope, companyDepartmentsService, $modal, notificationService, $interval) {
-    var DELAY = 300; //30ms
-    var busy = false;
     $scope.departments = [];
     function getDepartments() {
       companyDepartmentsService.all()
         .then(function (departments) {
           $scope.departments = departments;
-          busy = false;
         })
         .catch(function (reason) {
-          busy = false;
           console.log(reason);
         });
     }
     getDepartments();
-
-    $scope.syncPromises['departments'] = $interval(function() {
-      if (!busy) {
-        busy = true;
-        companyDepartmentsService.changes()
-          .then(function(reponse) {
-            if (reponse.update) {
-              getDepartments();
-            } else {
-              busy = false;
-            }
-          })
-          .catch(function(reason) {
-            busy = false;
-            console.log(reason);
-          });
-      }
-
-    }, DELAY);
 
     $scope.remove = function(id) {
 
