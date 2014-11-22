@@ -74,7 +74,8 @@ angular.module('viLoggedClientApp')
           requiredPermission: 'is_superuser'
         },
         ncyBreadcrumb: {
-          label: 'Change Password'
+          label: 'Change Password',
+          parent: 'profile'
         }
       });
   })
@@ -195,8 +196,10 @@ angular.module('viLoggedClientApp')
         }
       });
 
+    console.log($scope.user);
+    //FIXME: please differentiate between the logged user and your user model
     if (!$scope.user.is_superuser) {
-      $state.go("home");
+      //$state.go("home");
     }
 
     $scope.createUserAccount = function () {
