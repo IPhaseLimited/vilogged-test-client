@@ -27,7 +27,8 @@ angular.module('viLoggedClientApp')
           label: 'Appointment Detail'
         },
         ncyBreadcrumb: {
-          label: 'Appointment Detail'
+          label: 'Appointment Detail',
+          parent: 'appointments'
         }
       })
       .state('create-appointment-visitor', {
@@ -39,7 +40,8 @@ angular.module('viLoggedClientApp')
           label: 'Create Appointment'
         },
         ncyBreadcrumb: {
-          label: 'Create Appointment'
+          label: 'Create Appointment',
+          parent: 'appointments'
         }
       })
       .state('create-appointment-host', {
@@ -52,7 +54,8 @@ angular.module('viLoggedClientApp')
           label: 'Create Appointment'
         },
         ncyBreadcrumb: {
-          label: 'Create Appointment'
+          label: 'Create Appointment',
+          parent: 'appointments'
         }
       })
       .state('create-appointment', {
@@ -65,7 +68,8 @@ angular.module('viLoggedClientApp')
           label: 'Create Appointment'
         },
         ncyBreadcrumb: {
-          label: 'Create Appointment'
+          label: 'Create Appointment',
+          parent: 'appointments'
         }
       })
       .state('edit-appointment', {
@@ -78,7 +82,8 @@ angular.module('viLoggedClientApp')
           label: 'Edit Appointment'
         },
         ncyBreadcrumb: {
-          label: 'Edit Appointment'
+          label: 'Edit Appointment',
+          parent: 'appointments'
         }
       })
       .state('visitor-check-in', {
@@ -91,7 +96,8 @@ angular.module('viLoggedClientApp')
           label: 'Check Visitor In'
         },
         ncyBreadcrumb: {
-          label: 'Check Visitor In'
+          label: 'Check Visitor In',
+          parent: 'appointments'
         }
       })
       .state('print-visitor-label', {
@@ -103,7 +109,8 @@ angular.module('viLoggedClientApp')
           label: 'Print Visitor Tag'
         },
         ncyBreadcrumb: {
-          label: 'Print Visitor Tag'
+          label: 'Print Visitor Tag',
+          parent: 'appointments'
         }
       })
       .state('visitor-check-out', {
@@ -116,7 +123,8 @@ angular.module('viLoggedClientApp')
           label: 'Check Visitor Out'
         },
         ncyBreadcrumb: {
-          label: 'Check Visitor Out'
+          label: 'Check Visitor Out',
+          parent: 'appointments'
         }
       })
   })

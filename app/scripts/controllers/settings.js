@@ -24,7 +24,7 @@ angular.module('viLoggedClientApp')
         }
       })
   })
-  .controller('SettingFormCtrl', function ($scope, utility) {
+  .controller('SettingFormCtrl', function ($scope, utility, $http) {
     $scope.busy = true;
     $scope.currentPage = 'server-setting';
     $scope.pageTile = utility.toTitleCase('Server Setting');
@@ -34,6 +34,24 @@ angular.module('viLoggedClientApp')
       serverSetting: {},
       databaseSetting: {},
       systemSetting: {}
+    };
+
+    $http.get('/api/save-settings')
+      .success(function(response) {
+        $scope.settings = response;
+      })
+      .error(function(reason) {
+        console.log(reason);
+      });
+
+    $scope.save = function() {
+      $http.post('/api/save-settings', $scope.settings)
+        .success(function(response) {
+
+        })
+        .error(function(reason) {
+          console.log(reason);
+        });
     };
 
     $scope.setCurrentPage = function(page) {

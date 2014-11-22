@@ -4,18 +4,19 @@ angular.module('viLoggedClientApp')
   .config(function ($urlRouterProvider, $stateProvider) {
     // Initial state
     $urlRouterProvider.otherwise('/');
-    $stateProvider.state('home', {
-      parent: 'root.index',
-      url: '/',
-      templateUrl: 'views/home/index.html',
-      controller: 'MainCtrl',
-      data: {
-        label: 'Dashboard'
-      },
-      ncyBreadcrumb: {
-        label: 'Home'
-      }
-    })
+    $stateProvider
+      .state('home', {
+        parent: 'root.index',
+        url: '/',
+        templateUrl: 'views/home/index.html',
+        controller: 'MainCtrl',
+        data: {
+          label: 'Dashboard'
+        },
+        ncyBreadcrumb: {
+          label: 'Home'
+        }
+      })
       .state('home.index', {
         abstract: true,
         views: {

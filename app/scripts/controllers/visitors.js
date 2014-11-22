@@ -71,7 +71,7 @@ angular.module('viLoggedClientApp')
         },
         ncyBreadcrumb: {
           label: 'Edit Visitor\'s Profile',
-          parent: 'Visitors'
+          parent: 'visitors'
         }
       })
       .state('show-visitor', {
@@ -84,7 +84,8 @@ angular.module('viLoggedClientApp')
           requiredPermission: 'is_active'
         },
         ncyBreadcrumb: {
-          label: 'Visitor\'s Detail'
+          label: 'Visitor\'s Detail',
+          parent: 'visitors'
         }
       });
   })
