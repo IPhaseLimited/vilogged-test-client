@@ -18,13 +18,18 @@ angular.module('viLoggedClientApp', [
   'angular-flash.flash-alert-directive',
   'ncy-angular-breadcrumb'
 ])
-  .run(function ($cookieStore, $rootScope, $state, $http, $location, $interval, loginService, userService, authorizationService) {
+  .run(function ($cookieStore, $rootScope, $state, $http, $location, $interval, loginService, flash) {
 
     $rootScope.pageTitle = 'Visitor Management System';
     $rootScope.pageHeader = 'Dashboard';
+
+    function redirectToLogin() {
+      loginService.logout();
+      $location.path('/login');
+    }
     $rootScope.$on('$stateChangeSuccess', function () {
 
-      if ($state.$current.name === 'visitor-registration') {
+      /*if ($state.$current.name === 'visitor-registration') {
         loginService.anonymousLogin()
       }
 
@@ -38,7 +43,9 @@ angular.module('viLoggedClientApp', [
       if ($cookieStore.get('vi-anonymous-token') && $state.$current.name !== 'visitor-registration') {
         loginService.logout();
         $state.go('login');
-      }
+      }*/
+
+
 
       if (angular.isDefined($state.$current.self.data)) {
         $rootScope.pageTitle =
@@ -46,13 +53,15 @@ angular.module('viLoggedClientApp', [
 
         $rootScope.pageHeader = $state.$current.name === 'home' ? 'Dashboard' : $rootScope.pageTitle;
 
-        if ($state.current.data.requiredPermission !== undefined) {
+        /*if ($state.current.data.requiredPermission !== undefined) {
           var authorized = authorizationService.authorize($state.current.data.requiredPermission);
+
           if (!authorized) {
-            console.log('not authorized');
+
+
             //$state.go('access-rejected');
           }
-        }
+        }*/
       }
 
       if (angular.isUndefined($rootScope.user)) {
@@ -60,13 +69,25 @@ angular.module('viLoggedClientApp', [
           $rootScope.user = $cookieStore.get('current-user');
         } else if ($rootScope.user = $cookieStore.get('vi-visitor')) {
           $rootScope.user = $cookieStore.get('vi-visitor');
+        } else {
+          redirectToLogin();
         }
-
       }
 
       if ($state.$current.name === 'login') {
-        loginService.logout();
+        redirectToLogin();
       }
+
+      if (angular.isDefined($rootScope.user)) {
+        var page = $state.$current.name;
+        var visitorsPages = ['show-visitor'];
+        if ($rootScope.user.is_vistor && visitorsPages.indexOf(page) === -1) {
+          flash.danger = 'Access Denied';
+          $location.path('/visitors/'+$rootScope.user.id);
+        }
+      }
+
+
 
     });
   })
@@ -92,14 +113,6 @@ angular.module('viLoggedClientApp', [
   })
   .config(function (uiSelectConfig) {
     uiSelectConfig.theme = 'bootstrap';
-  })
-  .config(function (growlProvider) {
-    growlProvider.globalTimeToLive({
-      success: 5000,
-      error: 5000,
-      warning: 5000,
-      info: 5000
-    });
   })
   .config(function (flashProvider) {
     flashProvider.errorClassnames.push('alert-danger');
