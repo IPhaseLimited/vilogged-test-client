@@ -389,7 +389,7 @@ angular.module('viLoggedClientApp')
               && (!appointment.is_expired || utility.getTimeStamp(appointment) < new Date().getTime());
           });
 
-          flash.success = 'An appointment with this host can\'t be created.';
+          flash.danger = 'An appointment with this host can\'t be created.';
             if (!$scope.user.is_active) {
               $scope.busy = false;
               $state.go('show-visitor', {visitor_id: $scope.visitor.selected.uuid});
