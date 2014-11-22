@@ -84,7 +84,8 @@ angular.module('viLoggedClientApp')
           requiredPermission: 'is_active'
         },
         ncyBreadcrumb: {
-          label: 'Visitor\'s Detail'
+          label: 'Visitor\'s Detail',
+          parent: 'visitors'
         }
       });
   })
