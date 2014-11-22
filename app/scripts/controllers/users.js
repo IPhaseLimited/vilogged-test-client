@@ -23,9 +23,6 @@ angular.module('viLoggedClientApp')
           label: 'User Profile'
         }
       })
-  })
-  .config(function ($stateProvider) {
-    $stateProvider
       .state('users', {
         parent: 'root.index',
         url: '/users',
@@ -39,9 +36,6 @@ angular.module('viLoggedClientApp')
           label: 'Users'
         }
       })
-  })
-  .config(function ($stateProvider) {
-    $stateProvider
       .state('createUser', {
         parent: 'root.index',
         url: '/user/add',
@@ -52,12 +46,10 @@ angular.module('viLoggedClientApp')
           requiredPermission: 'is_superuser'
         },
         ncyBreadcrumb: {
-          label: 'Create User Account'
+          label: 'Create User Account',
+          parent: 'users'
         }
       })
-  })
-  .config(function ($stateProvider) {
-    $stateProvider
       .state('editUser', {
         parent: 'root.index',
         url: '/user/:user_id/edit',
@@ -68,12 +60,10 @@ angular.module('viLoggedClientApp')
           requiredPermission: 'is_superuser'
         },
         ncyBreadcrumb: {
-          label: 'Edit User\'s Account'
+          label: 'Edit User\'s Account',
+          parent: 'users'
         }
       })
-  })
-  .config(function ($stateProvider) {
-    $stateProvider
       .state('change-password', {
         parent: 'root.index',
         url: '/users/change-password',
@@ -86,7 +76,7 @@ angular.module('viLoggedClientApp')
         ncyBreadcrumb: {
           label: 'Change Password'
         }
-      })
+      });
   })
   .controller('UserProfileCtrl', function ($scope, $interval, userService, appointmentService) {
     appointmentService.getAppointmentsByUser($scope.user)
