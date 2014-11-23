@@ -18,7 +18,7 @@ angular.module('viLoggedClientApp', [
   'angular-flash.flash-alert-directive',
   'ncy-angular-breadcrumb'
 ])
-  .run(function ($cookieStore, $rootScope, $state, $http, $location, $interval, loginService, flash) {
+  .run(function($cookieStore, $rootScope, $state, $http, $location, $interval, loginService, flash) {
 
     $rootScope.pageTitle = 'Visitor Management System';
     $rootScope.pageHeader = 'Dashboard';
@@ -27,7 +27,7 @@ angular.module('viLoggedClientApp', [
       loginService.logout();
       $location.path('/login');
     }
-    $rootScope.$on('$stateChangeSuccess', function () {
+    $rootScope.$on('$stateChangeSuccess', function() {
 
       /*if ($state.$current.name === 'visitor-registration') {
         loginService.anonymousLogin()
@@ -91,12 +91,12 @@ angular.module('viLoggedClientApp', [
 
     });
   })
-  .config(function ($httpProvider) {
+  .config(function($httpProvider) {
     $httpProvider.interceptors.push([
       '$cookieStore', '$location',
-      function ($cookieStore, $location) {
+      function($cookieStore, $location) {
         return {
-          'request': function (config) {
+          'request': function(config) {
             if ($cookieStore.get('vi-token') && $location.path() !== '/login') {
               $httpProvider.defaults.headers.common['Authorization'] = 'Token ' + $cookieStore.get('vi-token');
             }
@@ -106,21 +106,21 @@ angular.module('viLoggedClientApp', [
       }
     ]);
   })
-  .config(function ($compileProvider) {
+  .config(function($compileProvider) {
     // to bypass Chrome app CSP for images.
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(chrome-extension):/);
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file|blob):|data:image\//);
   })
-  .config(function (uiSelectConfig) {
+  .config(function(uiSelectConfig) {
     uiSelectConfig.theme = 'bootstrap';
   })
-  .config(function (flashProvider) {
+  .config(function(flashProvider) {
     flashProvider.errorClassnames.push('alert-danger');
     flashProvider.warnClassnames.push('alert-warn');
     flashProvider.infoClassnames.push('alert-info');
     flashProvider.successClassnames.push('alert-success');
   })
-  .config(function ($breadcrumbProvider) {
+  .config(function($breadcrumbProvider) {
     $breadcrumbProvider.setOptions({
       prefixStateName: 'home',
       template: 'bootstrap2'

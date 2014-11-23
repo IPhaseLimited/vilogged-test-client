@@ -8,7 +8,7 @@
  * Controller of the viloggedClientApp
  */
 angular.module('viLoggedClientApp')
-  .config(function ($stateProvider) {
+  .config(function($stateProvider) {
     $stateProvider
       .state('profile', {
         parent: 'root.index',
@@ -79,20 +79,20 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('UserProfileCtrl', function ($scope, $interval, userService, appointmentService, utility,
+  .controller('UserProfileCtrl', function($scope, $interval, userService, appointmentService, utility,
                                            notificationService) {
     var appointments = appointmentService.getNestedAppointmentsByUser($scope.user);
 
     appointments
-      .then(function (response) {
+      .then(function(response) {
         $scope.numberOfAppointments = response.length;
       })
-      .catch(function (reason) {
+      .catch(function(reason) {
         console.log(reason);
       });
 
     appointments
-      .then(function (response) {
+      .then(function(response) {
         $scope.upcomingAppointments = response.filter(function(appointment) {
           return appointment.is_approved &&
             new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.is_expired
@@ -100,25 +100,25 @@ angular.module('viLoggedClientApp')
         });
         $scope.upcomingAppointmentCount = $scope.upcomingAppointments.length;
       })
-      .catch(function (reason) {
+      .catch(function(reason) {
         console.log(reason);
       });
 
     appointments
-      .then(function (response) {
+      .then(function(response) {
         $scope.appointmentsAwaitingApproval = response
-          .filter(function (appointment) {
+          .filter(function(appointment) {
             return !appointment.is_approved && !appointment.is_expired &&
               utility.getTimeStamp(appointment.appointment_date) > new Date().getTime()
               && appointment.is_approved === null;
           });
         $scope.appointmentsAwaitingApprovalCount = $scope.appointmentsAwaitingApproval.length;
       })
-      .catch(function (reason) {
+      .catch(function(reason) {
         console.log(reason);
       });
 
-    $scope.toggleAppointmentApproval = function (appointment_id, approvalStatus) {
+    $scope.toggleAppointmentApproval = function(appointment_id, approvalStatus) {
       var dialogParams = {
         modalHeader: 'Appointment Approval'
       };
@@ -151,28 +151,28 @@ angular.module('viLoggedClientApp')
         });
     };
   })
-  .controller('UsersCtrl', function ($scope, userService, notificationService, flash) {
+  .controller('UsersCtrl', function($scope, userService, notificationService, flash) {
     function getUsers() {
       userService.usersNested()
-        .then(function (response) {
+        .then(function(response) {
           $scope.users = response;
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
 
         });
     }
 
     getUsers();
 
-    $scope.toggleActive = function (id) {
+    $scope.toggleActive = function(id) {
       userService.toggleUserActivationStatus(id)
-        .then(function (response) {
+        .then(function(response) {
           getUsers();
         });
     };
 
     //TODO:: flash message
-    $scope.deleteAccount = function (id) {
+    $scope.deleteAccount = function(id) {
       $scope.busy = true;
       if (userService.user.id === id) {
         return;
@@ -183,14 +183,14 @@ angular.module('viLoggedClientApp')
       };
 
       notificationService.modal.confirm(dialogParams)
-        .then(function () {
+        .then(function() {
           userService.remove(id)
-            .then(function (response) {
+            .then(function(response) {
               flash.success = 'Account deleted successfully.';
               getUsers();
               $scope.busy = false;
             })
-            .catch(function (reason) {
+            .catch(function(reason) {
               flash.error = reason.message;
               console.log(reason);
               $scope.busy = false;
@@ -198,7 +198,7 @@ angular.module('viLoggedClientApp')
         });
     }
   })
-  .controller('UserFormCtrl', function ($scope, $state, $stateParams, userService, companyDepartmentsService, flash) {
+  .controller('UserFormCtrl', function($scope, $state, $stateParams, userService, companyDepartmentsService, flash) {
     $scope.busy = true;
     $scope.userLoaded = false;
     $scope.departmentLoaded = false;
@@ -208,14 +208,14 @@ angular.module('viLoggedClientApp')
 
     if ($stateParams.user_id) {
       userService.get($stateParams.user_id)
-        .then(function (response) {
+        .then(function(response) {
           $scope.user = response;
           $scope.userLoaded = false;
           if ($scope.departmentLoaded) {
             $scope.busy = true;
           }
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           flash.error = reason.message;
           $scope.userLoaded = false;
           if ($scope.departmentLoaded) {
@@ -226,14 +226,14 @@ angular.module('viLoggedClientApp')
     }
 
     companyDepartmentsService.all()
-      .then(function (response) {
+      .then(function(response) {
         $scope.departments = response;
         $scope.departmentLoaded = false;
         if ($scope.userLoaded) {
           $scope.busy = true;
         }
       })
-      .catch(function (reason) {
+      .catch(function(reason) {
         console.log(reason);
         $scope.userLoaded = false;
         if ($scope.departmentLoaded) {
@@ -247,7 +247,7 @@ angular.module('viLoggedClientApp')
       //$state.go("home");
     }
 
-    $scope.createUserAccount = function () {
+    $scope.createUserAccount = function() {
       $scope.busy = true;
       if ($scope.user.user_profile !== undefined || $scope.user.user_profile === null) {
         $scope.user.user_profile.home_phone = $scope.user.user_profile.home_phone || null;
@@ -258,32 +258,32 @@ angular.module('viLoggedClientApp')
         //$scope.user.user_profile.department = JSON.parse($scope.user.user_profile.department);
       }
       userService.save($scope.user)
-        .then(function () {
+        .then(function() {
           !$stateParams.user_id
             ? flash.success = 'User account was successfully created.'
             : flash.success = 'User account was successfully updated.';
           $scope.busy = false;
           $state.go("users");
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           $scope.busy = false;
           console.log(reason);
         });
     }
   })
-  .controller('ChangePasswordCtrl', function ($scope, $state, $stateParams, userService, flash) {
+  .controller('ChangePasswordCtrl', function($scope, $state, $stateParams, userService, flash) {
     $scope.busy = false;
     $scope.userPassword = {};
 
-    $scope.changeAccountPassword = function () {
+    $scope.changeAccountPassword = function() {
       $scope.busy = true;
       userService.updatePassword($scope.userPassword)
-        .then(function (response) {
+        .then(function(response) {
           flash.success = 'Password changed successfully.';
           $scope.busy = false;
           $state.go("home");
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           flash.error = reason.message;
           $scope.busy = false;
         })

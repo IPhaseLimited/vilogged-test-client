@@ -44,7 +44,7 @@ angular.module('viLoggedClientApp')
         }
       })
   })
-  .controller('CompanyEntranceCtrl', function ($scope, entranceService) {
+  .controller('CompanyEntranceCtrl', function($scope, entranceService) {
     $scope.busy = false;
     $scope.entrance = [];
 

@@ -15,10 +15,10 @@ angular.module('viLoggedClientApp')
       var deferred = $q.defer();
 
       http.post(apiUrl, objectParams)
-        .then(function (response) {
+        .then(function(response) {
           deferred.resolve(response);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           console.log(reason);
         });
 
@@ -26,7 +26,7 @@ angular.module('viLoggedClientApp')
     }
 
     this.modal = {};
-    this.modal.confirm = function (paramObject) {
+    this.modal.confirm = function(paramObject) {
       var modalInstance = $modal.open({
         templateUrl: 'views/partials/confirm-dialog.html',
         controller: function($scope, $modalInstance){
@@ -46,7 +46,7 @@ angular.module('viLoggedClientApp')
 
     this.message = {};
 
-    this.message.sendSms = function (smsParams, smsApi) {
+    this.message.sendSms = function(smsParams, smsApi) {
       var message = {};
       if (!angular.isDefined(smsApi)) {
         smsApi = config.api.smsApi;
@@ -57,17 +57,17 @@ angular.module('viLoggedClientApp')
       }
 
       //sendMessage($http, smsParams, smsApi)
-      //  .then(function (response) {
+      //  .then(function(response) {
       //    message = response;
       //  })
-      //  .catch(function (reason) {
+      //  .catch(function(reason) {
       //    message = return reason;
       //  });
 
       return message;
     };
 
-    this.message.sendEmail = function (emailParams, sendApi) {
+    this.message.sendEmail = function(emailParams, sendApi) {
       var message = {};
 
       if (!angular.isDefined(emailApi)) {
@@ -79,10 +79,10 @@ angular.module('viLoggedClientApp')
       }
 
       //sendMessage($http, smsParams, smsApi)
-      //  .then(function (response) {
+      //  .then(function(response) {
       //    message = response;
       //  })
-      //  .catch(function (reason) {
+      //  .catch(function(reason) {
       //    message = return reason;
       //  });
 

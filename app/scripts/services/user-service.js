@@ -13,10 +13,10 @@ angular.module('viLoggedClientApp')
     function getAllUsers() {
       var deferred = $q.defer();
       $http.get(config.api.backend + '/api/v1/users/')
-        .success(function (users) {
+        .success(function(users) {
           deferred.resolve(users)
         })
-        .error(function (reason) {
+        .error(function(reason) {
           deferred.reject(reason);
         });
 
@@ -26,10 +26,10 @@ angular.module('viLoggedClientApp')
     function getUser(id) {
       var deferred = $q.defer();
       $http.get(config.api.backend + '/api/v1/user/' + id + '/')
-        .then(function (response) {
+        .then(function(response) {
           deferred.resolve(response.data);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
       return deferred.promise;
@@ -38,10 +38,10 @@ angular.module('viLoggedClientApp')
     function getCurrentUser() {
       var deferred = $q.defer();
       $http.get(config.api.backend + '/api/v1/current-user/')
-        .success(function (user) {
+        .success(function(user) {
           deferred.resolve(user);
         })
-        .error(function (reason) {
+        .error(function(reason) {
           deferred.reject(reason);
         });
       return deferred.promise;
@@ -81,10 +81,10 @@ angular.module('viLoggedClientApp')
       var deferred = $q.defer();
       if (!user.id) {
         $http.post(config.api.backend + '/api/v1/user/', user)
-          .success(function (response) {
+          .success(function(response) {
             deferred.resolve(response);
           })
-          .error(function (reason) {
+          .error(function(reason) {
             deferred.reject(reason);
           });
       } else {
@@ -96,10 +96,10 @@ angular.module('viLoggedClientApp')
     function updateUser(user) {
       var deferred = $q.defer();
       $http.put(config.api.backend + '/api/v1/user/' + user.id + '/', user)
-        .success(function (response) {
+        .success(function(response) {
           deferred.resolve(response);
         })
-        .error(function (reason) {
+        .error(function(reason) {
           deferred.reject(reason);
         });
       return deferred.promise;
@@ -108,17 +108,17 @@ angular.module('viLoggedClientApp')
     function toggleUserAccountActive(id) {
       var deferred = $q.defer();
       getUser(id)
-        .then(function (response) {
+        .then(function(response) {
           response.is_active = !response.is_active;
           updateUser(id, response)
-            .then(function (response) {
+            .then(function(response) {
               deferred.resolve(response);
             })
-            .catch(function (reason) {
+            .catch(function(reason) {
               deferred.reject(reason);
             });
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
       return deferred.promise;
@@ -127,10 +127,10 @@ angular.module('viLoggedClientApp')
     function removeUser(id) {
       var deferred = $q.defer();
       $http.delete(config.api.backend + '/api/v1/user/' + id + '/')
-        .success(function (response) {
+        .success(function(response) {
           deferred.resolve(response);
         })
-        .error(function (reason) {
+        .error(function(reason) {
           deferred.reject(reason);
         });
 
@@ -140,10 +140,10 @@ angular.module('viLoggedClientApp')
     function updatePassword(password) {
       var deferred = $q.defer();
       $http.post(config.api.backend + '/api/v1/user/set/password', password)
-        .success(function (response) {
+        .success(function(response) {
           deferred.resolve(response);
         })
-        .error(function (reason) {
+        .error(function(reason) {
           deferred.reject(reason);
         });
       return deferred.promise;
@@ -152,10 +152,10 @@ angular.module('viLoggedClientApp')
     function findUserBy(field, value) {
       var deferred = $q.defer();
       $http.get(config.api.backend + '/api/v1/user/?' + field + '=' + value)
-        .success(function (response) {
+        .success(function(response) {
           deferred.resolve(response);
         })
-        .error(function (reason) {
+        .error(function(reason) {
           deferred.reject(reason);
         });
       return deferred.promise;
@@ -165,10 +165,10 @@ angular.module('viLoggedClientApp')
       var deferred = $q.defer();
 
       $http.get(config.api.backend + '/api/v1/users/nested')
-        .success(function (response) {
+        .success(function(response) {
           deferred.resolve(response);
         })
-        .error(function (reason) {
+        .error(function(reason) {
           deferred.reject(reason);
         });
       return deferred.promise;

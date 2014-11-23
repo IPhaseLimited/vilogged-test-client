@@ -13,7 +13,7 @@ angular.module('viLoggedClientApp')
 
 
     this.modal = {};
-    this.dialog = function (paramObject) {
+    this.dialog = function(paramObject) {
       return $modal.open({
         templateUrl: 'views/partials/confirm-dialog.html',
         controller: function($scope, $modalInstance){

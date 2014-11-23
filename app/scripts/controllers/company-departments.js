@@ -38,7 +38,7 @@ function formController($scope, $state, companyDepartmentsService, $stateParams,
     $scope.validationErrors = validationService.validateFields(validationParams, $scope.companyDepartments);
     if (Object.keys( $scope.validationErrors).length === 0) {
       companyDepartmentsService.save($scope.companyDepartments)
-        .then(function () {
+        .then(function() {
           $scope.busy = false;
           if (angular.isDefined($modalInstance)) {
             $modalInstance.close(true);
@@ -47,7 +47,7 @@ function formController($scope, $state, companyDepartmentsService, $stateParams,
             $state.go('company-departments');
           }
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           if (angular.isDefined($modalInstance)) {
             //$modalInstance.close(true);
             $scope.busy = false;
@@ -105,16 +105,16 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('CompanyDepartmentsCtrl', function ($scope, companyDepartmentsService, $modal, notificationService, $interval) {
+  .controller('CompanyDepartmentsCtrl', function($scope, companyDepartmentsService, $modal, notificationService, $interval) {
     $scope.departments = [];
     function getDepartments() {
       $scope.busy = true;
       companyDepartmentsService.all()
-        .then(function (departments) {
+        .then(function(departments) {
           $scope.busy = false;
           $scope.departments = departments;
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           $scope.busy = false;
           console.log(reason);
         });

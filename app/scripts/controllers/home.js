@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('viLoggedClientApp')
-  .config(function ($urlRouterProvider, $stateProvider) {
+  .config(function($urlRouterProvider, $stateProvider) {
     // Initial state
     $urlRouterProvider.otherwise('/');
     $stateProvider
@@ -22,7 +22,7 @@ angular.module('viLoggedClientApp')
         views: {
           'nav': {
             templateUrl: 'views/home/nav.html',
-            controller: function ($scope, $state) {
+            controller: function($scope, $state) {
               $scope.$state = $state;
             }
           },
@@ -32,75 +32,75 @@ angular.module('viLoggedClientApp')
         }
       })
   })
-  .controller('MainCtrl', function ($scope, flash, appointmentService, utility) {
+  .controller('MainCtrl', function($scope, flash, appointmentService, utility) {
     $scope.busy = true;
     var appointments = appointmentService.all();
 
     appointments
-      .then(function (response) {
+      .then(function(response) {
         $scope.currentAppointments = response
-          .filter(function (appointment) {
+          .filter(function(appointment) {
             var startTime = utility.getTimeStamp(appointment.appointment_date, appointment.start_time);
             var endTime = utility.getTimeStamp(appointment.appointment_date, appointment.end_time);
             var date = new Date().getTime();
             return appointment.is_approved && ( date >= startTime || date <= endTime) && appointment.checked_in;
           });
       })
-      .catch(function (reason) {
+      .catch(function(reason) {
         flash.error = reason.message;
       });
 
     appointments
-      .then(function (response) {
+      .then(function(response) {
         $scope.appointmentsAwaitingApproval = response
-          .filter(function (appointment) {
+          .filter(function(appointment) {
             return !appointment.is_approved && utility.getTimeStamp(appointment.appointment_date) > new Date().getTime();
           });
       })
-      .catch(function (reason) {
+      .catch(function(reason) {
         flash.error = reason.message;
       });
 
     appointments
-      .then(function (response) {
+      .then(function(response) {
         $scope.appointmentsNotCheckedIn = response
-          .filter(function (appointment) {
+          .filter(function(appointment) {
             return appointment.is_approved && appointment.checked_in !== null;
           });
       })
-      .catch(function (reason) {
+      .catch(function(reason) {
         flash.error = reason.message;
       });
 
     appointments
-      .then(function (response) {
+      .then(function(response) {
         $scope.expiredAppointments = response
-          .filter(function (appointment) {
+          .filter(function(appointment) {
             return utility.getTimeStamp(appointment.appointment_date) < new Date().getTime()
               || appointment.checked_out !== null;
           });
       })
-      .catch(function (reason) {
+      .catch(function(reason) {
         flash.error = reason.message;
       });
 
     appointments
-      .then(function (response) {
+      .then(function(response) {
         $scope.appointmentsNeverUsed = response
-          .filter(function (appointment) {
+          .filter(function(appointment) {
             return appointment.is_approved && appointment.checked_in === null &&
               (appointment.is_expired || utility.getTimeStamp(appointment.appointment_date) < new Date().getTime());
           });
       })
-      .catch(function (reason) {
+      .catch(function(reason) {
         flash.error = reason.message;
       });
 
     appointments
-      .then(function () {
+      .then(function() {
         $scope.busy = false;
       })
-      .catch(function () {
+      .catch(function() {
         $scope.busy = false;
       })
   })

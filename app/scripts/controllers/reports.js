@@ -24,7 +24,7 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('ReportsCtrl', function ($scope, appointmentService, visitorService, utility) {
+  .controller('ReportsCtrl', function($scope, appointmentService, visitorService, utility) {
     $scope.busy = true;
     $scope.maxSize = 5;
     $scope.currentPage = 1;
@@ -33,9 +33,9 @@ angular.module('viLoggedClientApp')
     var appointments = appointmentService.all();
 
     appointments
-      .then(function (response) {
+      .then(function(response) {
         $scope.currentAppointments = response
-          .filter(function (appointment) {
+          .filter(function(appointment) {
             var startTime = utility.getTimeStamp(appointment.appointment_date, appointment.start_time);
             var endTime = utility.getTimeStamp(appointment.appointment_date, appointment.end_time);
             var date = new Date().getTime();
@@ -44,43 +44,43 @@ angular.module('viLoggedClientApp')
         $scope.totalItems = response.length;
         $scope.numPages = Math.ceil($scope.totalItems/$scope.itemsPerPage);
       })
-      .catch(function (reason) {
+      .catch(function(reason) {
         console.log(reason);
       });
 
     appointmentService.getAppointmentsByDay()
-      .then(function (response) {
+      .then(function(response) {
         $scope.appointmentForToday = response;
         $scope.numberOfAppointmentsForToday = response.length;
       })
-      .catch(function (reason) {
+      .catch(function(reason) {
         console.log(reason);
       });
 
     appointmentService.getAppointmentsByMonth()
-      .then(function (response) {
+      .then(function(response) {
         $scope.appointmentForThisMonth = response;
         $scope.numberOfAppointmentsForThisMonth = response.length;
       })
-      .catch(function (reason) {
+      .catch(function(reason) {
         console.log(reason);
       });
 
     appointmentService.getAppointmentsByWeek()
-      .then(function (response) {
+      .then(function(response) {
         $scope.appointmentForThisWeek = response;
         $scope.numberOfAppointmentsForThisWeek = response.length;
       })
-      .catch(function (reason) {
+      .catch(function(reason) {
         console.log(reason);
       });
 
     visitorService.getVisitorsGroupedByCompany()
-      .then(function (response) {
+      .then(function(response) {
         $scope.visitorsGroupedByCompany = response;
         $scope.busy = false;
       })
-      .catch(function (reason) {
+      .catch(function(reason) {
         console.log(reason);
         $scope.busy = false;
       })

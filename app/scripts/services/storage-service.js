@@ -31,7 +31,7 @@ angular.module('viLoggedClientApp')
      * @return {promise|Function|promise|promise|promise|*}
      * @private
      */
-    var setData = function (table, data) {
+    var setData = function(table, data) {
       var deferred = $q.defer();
       if(!data.hasOwnProperty('uuid')){
         deferred.reject('data should have a uuid or primary key field.');
@@ -165,15 +165,15 @@ angular.module('viLoggedClientApp')
      * this is basically just filter() but the idea is that there are probably ways to pass this
      * to the storage layer to get the filtering done in the db, so make it a separae fn and figure that out later
      */
-    var getFromTableByLambda = function (tableName, fn) {
+    var getFromTableByLambda = function(tableName, fn) {
       var deferred = $q.defer();
       var results = [];
       try {
         getData(tableName)
-          .then(function (data) {
+          .then(function(data) {
             results = data.filter(fn);
             deferred.resolve(results);
-          }).catch(function (reason) {
+          }).catch(function(reason) {
             deferred.reject(reason);
           });
       } catch (e) {
@@ -188,17 +188,17 @@ angular.module('viLoggedClientApp')
      * this collection can not be indexed via key, to get table rows that can
      * be accessed via keys use all() or getData()
      */
-    var getAllFromTable = function (tableName) {
+    var getAllFromTable = function(tableName) {
       var deferred = $q.defer();
       getData(tableName)
-        .then(function (data) {
+        .then(function(data) {
           var rows = [];
           for (var key in data) {
             rows.push(data[key]);
           }
           deferred.resolve(rows);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
       return deferred.promise;

@@ -17,7 +17,7 @@ angular.module('viLoggedClientApp')
      * @param {string} id will be the object key
      * @returns {{}}
      */
-    this.castArrayToObject = function (array, id) {
+    this.castArrayToObject = function(array, id) {
       id = angular.isUndefined(id) ? 'uuid' : id;
       var newObject = {};
       if (Object.prototype.toString.call(array) === '[object Array]') {
@@ -33,17 +33,17 @@ angular.module('viLoggedClientApp')
      *
      * #see 'top' is the id of a href element defined in views/index/index.html
      */
-    this.scrollToTop = function () {
+    this.scrollToTop = function() {
       $location.hash('top');
       $anchorScroll();
     };
 
-    var isDateObject = function (date) {
+    var isDateObject = function(date) {
       return Object.prototype.toString.call(date) === '[object Date]';
     };
 
-    var removeObjFromCollection = function (obj, collection, key) {
-      collection = collection.filter(function (item) {
+    var removeObjFromCollection = function(obj, collection, key) {
+      collection = collection.filter(function(item) {
         if (typeof item[key] === 'undefined' || typeof obj[key] === 'undefined') {
           throw 'both objects compared must have the property(key).';
         }
@@ -52,7 +52,7 @@ angular.module('viLoggedClientApp')
       return collection;
     };
 
-    this.addObjectToCollection = function (obj, collections, key) {
+    this.addObjectToCollection = function(obj, collections, key) {
       var _obj = JSON.parse(obj);
       if (_obj.deSelected === undefined) {
         collections.push(_obj);
@@ -61,11 +61,11 @@ angular.module('viLoggedClientApp')
       return removeObjFromCollection(_obj, collections, key);
     };
 
-    this.spaceOutUpperCaseWords = function (upperCaseWord) {
+    this.spaceOutUpperCaseWords = function(upperCaseWord) {
       return upperCaseWord.split(/(?=[A-Z])/).join(' ');
     };
 
-    this.copy = function (src, des) {
+    this.copy = function(src, des) {
       if (typeof src !== 'undefined') {
         //src obj already exists, update des obj.
         for (var key in src) {
@@ -75,7 +75,7 @@ angular.module('viLoggedClientApp')
       return des;
     };
 
-    this.ellipsize = function (string, length) {
+    this.ellipsize = function(string, length) {
       if (length < 1) {
         return '';
       }
@@ -94,7 +94,7 @@ angular.module('viLoggedClientApp')
      * @param {string} path a key (or keys) in the object, e.g. 'a.b.c'
      * @return {boolean} true if obj contains path(s), otherwise false
      */
-    this.has = function (obj, path) {
+    this.has = function(obj, path) {
       if (!(obj && path)) {
         return false;
       }
@@ -114,7 +114,7 @@ angular.module('viLoggedClientApp')
      * @param obj
      * @returns {Array}
      */
-    this.convertObjectToArray = function (obj) {
+    this.convertObjectToArray = function(obj) {
       var list = [];
       for (var key in obj) {
         var data = obj[key];
@@ -123,7 +123,7 @@ angular.module('viLoggedClientApp')
       return list;
     };
 
-    this.getStringUuid = function (uuidObj) {
+    this.getStringUuid = function(uuidObj) {
       var uuidString = uuidObj;
       if (typeof uuidObj === 'string') {
         uuidString = uuidObj;
@@ -146,7 +146,7 @@ angular.module('viLoggedClientApp')
 
     this.uuidGenerator = function() {
       var now = Date.now();
-      return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         // jshint bitwise: false
         var r = (now + Math.random() * 16) % 16 | 0;
         now = Math.floor(now / 16);
@@ -172,7 +172,7 @@ angular.module('viLoggedClientApp')
       return Date.now();
     };
 
-    this.toTitleCase = function (str) {
+    this.toTitleCase = function(str) {
       return (str||"").replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     };
 
@@ -182,7 +182,7 @@ angular.module('viLoggedClientApp')
      * @param time Time to calculate timestamp
      * @returns {number} Timestamp
      */
-    this.getTimeStamp = function (date, time) {
+    this.getTimeStamp = function(date, time) {
       var timeStamp = new Date(date);
       if (angular.isDefined(time)) {
         var timeArray = time.split(':');

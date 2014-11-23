@@ -7,7 +7,7 @@
  * # ngPrint
  */
 angular.module('viLoggedClientApp')
-  .directive('ngPrint', function () {
+  .directive('ngPrint', function() {
 
     var printSection = document.getElementById('printSection');
     // if there is no printing section, create one
@@ -17,13 +17,13 @@ angular.module('viLoggedClientApp')
       document.body.appendChild(printSection);
     }
     function link(scope, element, attrs) {
-      element.on('click', function () {
+      element.on('click', function() {
         var elemToPrint = document.getElementById(attrs.printElementId);
         if (elemToPrint) {
           printElement(elemToPrint);
         }
       });
-      window.onafterprint = function () {
+      window.onafterprint = function() {
         // clean the print section before adding new content
         printSection.innerHTML = '';
       }

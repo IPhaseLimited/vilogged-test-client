@@ -99,7 +99,7 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     };
 
-    this.findByPhone = function (value) {
+    this.findByPhone = function(value) {
       var deferred = $q.defer();
 
       findByField('visitors_phone', value)
@@ -113,7 +113,7 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     };
 
-    this.findByPassCodeOrPhone = function (value) {
+    this.findByPassCodeOrPhone = function(value) {
       var deferred = $q.defer();
 
       var promises = [

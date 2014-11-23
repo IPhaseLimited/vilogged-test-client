@@ -19,10 +19,10 @@ angular.module('viLoggedClientApp')
       var deferred = $q.defer();
 
       $http.get(BASE_URL + DB_NAME + '/nested/')
-        .success(function (response) {
+        .success(function(response) {
           deferred.resolve(response);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
 
@@ -33,10 +33,10 @@ angular.module('viLoggedClientApp')
       var deferred = $q.defer();
 
       $http.get(BASE_URL + DB_NAME + '/?' + field + '=' + value)
-        .success(function (response) {
+        .success(function(response) {
           deferred.resolve(response);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
 
@@ -47,10 +47,10 @@ angular.module('viLoggedClientApp')
       var deferred = $q.defer();
 
       $http.get(BASE_URL + DB_NAME + '/nested/?' + field + '=' + value)
-        .success(function (response) {
+        .success(function(response) {
           deferred.resolve(response);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
 
@@ -61,10 +61,10 @@ angular.module('viLoggedClientApp')
       var deferred = $q.defer();
 
       findByFieldNested('host_id__id', user.id)
-        .then(function (response) {
+        .then(function(response) {
           deferred.resolve(response);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
 
@@ -75,10 +75,10 @@ angular.module('viLoggedClientApp')
       var deferred = $q.defer();
 
       findByField('host_id', user.id)
-        .then(function (response) {
+        .then(function(response) {
           deferred.resolve(response);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
 
@@ -92,15 +92,15 @@ angular.module('viLoggedClientApp')
     function getUserUpcomingAppointments(user) {
       var deferred = $q.defer();
       getAppointmentsByUser(user)
-        .then(function (response) {
+        .then(function(response) {
           var filtered = response
-            .filter(function (appointment) {
+            .filter(function(appointment) {
               return appointment.approved &&
                 new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.expired;
             });
           deferred.resolve(filtered);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.resolve(reason);
         });
 
@@ -116,10 +116,10 @@ angular.module('viLoggedClientApp')
       var deferred = $q.defer();
 
       $http.get(BASE_URL + DB_NAME + '/nested/' + id)
-        .success(function (response) {
+        .success(function(response) {
           deferred.resolve(response);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
 
@@ -128,7 +128,7 @@ angular.module('viLoggedClientApp')
 
     function appointmentsAwaitingApprovalFilter(response) {
       return response
-        .filter(function (appointment) {
+        .filter(function(appointment) {
           return !appointment.approved && !appointment.expired && utility.getTimeStamp(appointment.appointment_date) > new Date().getTime();
         });
     }
@@ -136,12 +136,12 @@ angular.module('viLoggedClientApp')
     function getUserAppointmentsAwaitingApproval(user) {
       var deferred = $q.defer();
       getAppointmentsByUser(user)
-        .then(function (response) {
+        .then(function(response) {
           var filtered = appointmentsAwaitingApprovalFilter(response);
 
           deferred.resolve(filtered);
         }).
-        catch(function (reason) {
+        catch(function(reason) {
           deferred.reject(reason);
         });
 
@@ -151,15 +151,15 @@ angular.module('viLoggedClientApp')
     function getAppointmentsByVisitor(visitor_id) {
       var deferred = $q.defer();
       getAllAppointments(DB_NAME)
-        .then(function (response) {
+        .then(function(response) {
           var filtered = response
-            .filter(function (appointment) {
+            .filter(function(appointment) {
               return appointment.visitor_id.id === visitor_id;
             });
 
           deferred.resolve(filtered);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
 
@@ -170,15 +170,15 @@ angular.module('viLoggedClientApp')
       var deferred = $q.defer();
 
       findByField('visitor_id__uuid', visitor_id)
-        .then(function (response) {
+        .then(function(response) {
           var filtered = response
-            .filter(function (appointment) {
+            .filter(function(appointment) {
               return appointment.approved &&
                 new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.expired;
             });
           deferred.resolve(filtered)
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
 
@@ -190,15 +190,15 @@ angular.module('viLoggedClientApp')
       var deferred = $q.defer();
       var searchTimeStamp = angular.isDefined(date) ? utility.getTimeStamp(date) : utility.getTimeStamp(moment().format('l'));
       getAllAppointments()
-        .then(function (response) {
+        .then(function(response) {
           var appointments = response
-            .filter(function (appointment) {
+            .filter(function(appointment) {
               var appointmentTimeStamp = utility.getTimeStamp(appointment.appointment_date);
               return searchTimeStamp === appointmentTimeStamp;
             });
           deferred.resolve(appointments);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
       return deferred.promise;
@@ -212,15 +212,15 @@ angular.module('viLoggedClientApp')
       var weekStartedOn = utility.getTimeStamp(moment().startOf(period));
       var weekEndedOn = utility.getTimeStamp(moment().endOf(period));
       getAllAppointments()
-        .then(function (response) {
+        .then(function(response) {
           var appointments = response
-            .filter(function (appointment) {
+            .filter(function(appointment) {
               var appointmentTimeStamp = utility.getTimeStamp(appointment.appointment_date);
               return appointmentTimeStamp >= weekStartedOn || appointmentTimeStamp <= weekEndedOn;
             });
           deferred.resolve(appointments);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
       return deferred.promise;
