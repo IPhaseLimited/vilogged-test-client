@@ -202,7 +202,7 @@ angular.module('viLoggedClientApp')
     $scope.busy = true;
     $scope.userLoaded = false;
     $scope.departmentLoaded = false;
-    $scope.user = userService.user;
+    $scope.currentUser = userService.user;
     $scope.user = {};
     $scope.user.user_profile = {};
 
@@ -278,11 +278,12 @@ angular.module('viLoggedClientApp')
       $scope.busy = true;
       userService.updatePassword($scope.userPassword)
         .then(function(response) {
-          grow.addSuccessMessage('Password changed successfully.');
+          growl.addSuccessMessasge('Password changed successfully.');
           $scope.busy = false;
           $state.go("home");
         })
         .catch(function(reason) {
+          flash.error = reason.message;
           $scope.busy = false;
         })
     }
