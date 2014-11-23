@@ -162,6 +162,7 @@ angular.module('viLoggedClientApp')
     appointmentService.getNested($stateParams.appointment_id)
       .then(function(response) {
         $scope.appointment = response;
+        console.log($scope.appointment)
         $scope.busy = false;
       })
       .catch(function(reason) {
@@ -203,6 +204,7 @@ angular.module('viLoggedClientApp')
           appointmentService.get($stateParams.appointment_id)
             .then(function(response) {
               response.is_approved = approvalStatus;
+              response.entrance_id = 1;
               appointmentService.save(response)
                 .then(function() {
                   approvalStatus ? growl.addSuccessMessage('The selected appointment has been approved.') :
@@ -383,7 +385,7 @@ angular.module('viLoggedClientApp')
       appointmentService.findByField('visitor_id', $scope.visitor.selected.uuid)
         .then(function(response){
           var existingAppointment = response.filter(function(appointment) {
-            return appointment.host_id === appointment.host.id  && !appointment.checked_out
+            return appointment.host_id === $scope.appointment.host.selected.id  && !appointment.checked_out
               && (!appointment.is_expired || utility.getTimeStamp(appointment) < new Date().getTime());
           });
 
@@ -421,7 +423,9 @@ angular.module('viLoggedClientApp')
 
       $scope.validationErrors = validationService.validateFields(validationParams, $scope.appointment);
       if (!Object.keys($scope.validationErrors).length) {
+        $scope.appointment.entrance_id = 'd970f3aa81d4432b8c3ae33ca8e7cd9a';
         $scope.busy = true;
+        $scope.appointment.entrance_id = 1;
         appointmentService.save($scope.appointment)
           .then(function(response) {
             $scope.busy = false;

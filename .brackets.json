@@ -1,7 +1,5 @@
 {
     "jscodehints.detectedExclusions": [
-        "C:/Users/SQuaye/Documents/git/viLogged-Client/app/bower_components/angularjs-nvd3-directives/src/directives/outro.js",
-        "C:/Users/SQuaye/Documents/git/viLogged-Client/app/bower_components/jasmine/spec/html/MatchersHtmlSpec.js",
-        "C:/Users/SQuaye/Documents/git/viLogged-Client/app/scripts/controllers/entrance.js"
+        "C:/Users/SQuaye/Documents/git/viLogged-Client/app/bower_components/webcam-directive/karma.conf.js"
     ]
 }
