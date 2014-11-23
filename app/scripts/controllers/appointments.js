@@ -204,7 +204,7 @@ angular.module('viLoggedClientApp')
           appointmentService.get($stateParams.appointment_id)
             .then(function(response) {
               response.is_approved = approvalStatus;
-              response.entrance_id = 1;
+              response.entrance_id = 'd970f3aa81d4432b8c3ae33ca8e7cd9a';
               appointmentService.save(response)
                 .then(function() {
                   approvalStatus ? growl.addSuccessMessage('The selected appointment has been approved.') :
@@ -276,7 +276,6 @@ angular.module('viLoggedClientApp')
         })
         .catch(function(reason) {
           $scope.busy = false;
-          $scope.customErrors['host_id'] = reason.message;
           console.log(reason);
         });
     };
@@ -295,7 +294,6 @@ angular.module('viLoggedClientApp')
           })
           .catch(function(reason) {
             $scope.busy = false;
-            $scope.customErrors['host_id'] = reason.message;
             console.log(reason);
           });
       },
@@ -403,7 +401,7 @@ angular.module('viLoggedClientApp')
         })
         .catch(function(reason) {
           $scope.busy = false;
-          console.log(reason.message);
+          console.log(reason);
         });
 
       $scope.appointment.visit_start_time = $filter('date')($scope.visit_start_time, 'hh:mm a');
@@ -424,7 +422,7 @@ angular.module('viLoggedClientApp')
       $scope.validationErrors = validationService.validateFields(validationParams, $scope.appointment);
       if (!Object.keys($scope.validationErrors).length) {
         $scope.busy = true;
-        $scope.appointment.entrance_id = 1;
+        $scope.appointment.entrance_id = 'd970f3aa81d4432b8c3ae33ca8e7cd9a';
         appointmentService.save($scope.appointment)
           .then(function(response) {
             $scope.busy = false;
@@ -433,9 +431,11 @@ angular.module('viLoggedClientApp')
           })
           .catch(function(reason) {
             $scope.busy = false;
-            Object.keys(reason).forEach(function(key) {
-              $scope.validationErrors[key] = reason[key];
-            });
+            if (angular.isObject(reason)) {
+              Object.keys(reason).forEach(function(key) {
+                $scope.validationErrors[key] = reason[key];
+              });
+            }
             console.log(reason);
           });
       }
