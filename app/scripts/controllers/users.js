@@ -134,8 +134,9 @@ angular.module('viLoggedClientApp')
               response.is_approved = approvalStatus;
               appointmentService.save(response)
                 .then(function(){
-                  approvalStatus ? growl.addSuccessMessage('The selected appointment has been approved.') :
-                    growl.addSuccessMessage('The selected appointment has been rejected.');
+                  var message = approvalStatus ? 'The selected appointment has been approved.' : 'The selected appointment has been rejected.';
+                  growl.addSuccessMessage(message);
+
                   $scope.busy = false;
                   if (!$scope.upcomingAppointments) $scope.upcomingAppointments = [];
                 })
@@ -191,7 +192,7 @@ angular.module('viLoggedClientApp')
               $scope.busy = false;
             })
             .catch(function(reason) {
-              growl.addErrorMessage(reason.message);
+              flash.error = reason.message;
               console.log(reason);
               $scope.busy = false;
             });
@@ -202,7 +203,7 @@ angular.module('viLoggedClientApp')
     $scope.busy = true;
     $scope.userLoaded = false;
     $scope.departmentLoaded = false;
-    $scope.currentUser = userService.user;
+    $scope.user = userService.user;
     $scope.user = {};
     $scope.user.user_profile = {};
 
@@ -216,7 +217,6 @@ angular.module('viLoggedClientApp')
           }
         })
         .catch(function(reason) {
-          growl.addErrorMessage(reason.message);
           $scope.userLoaded = false;
           if ($scope.departmentLoaded) {
             $scope.busy = true;
@@ -259,9 +259,9 @@ angular.module('viLoggedClientApp')
       }
       userService.save($scope.user)
         .then(function() {
-          !$stateParams.user_id
-            ? growl.addSuccessMessage('User account was successfully created.')
-            : growl.addSuccessMessage('User account was successfully updated.');
+          var message = !$stateParams.user_id ? 'User account was successfully created.' : 'User account was successfully updated.';
+          growl.addSuccessMessage(message);
+
           $scope.busy = false;
           $state.go("users");
         })
@@ -284,8 +284,7 @@ angular.module('viLoggedClientApp')
           $state.go("home");
         })
         .catch(function(reason) {
-          growl.addErrorMessage(reason.message);
-          console.log(reason);
+          flash.error = reason.message;
           $scope.busy = false;
         })
     }
