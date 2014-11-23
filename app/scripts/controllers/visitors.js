@@ -112,9 +112,9 @@ angular.module('viLoggedClientApp')
     $scope.maxSize = 5;
     $scope.itemsPerPage = 10;
   })
-  .controller('VisitorFormCtrl', function($scope, $state, $stateParams, $rootScope, $window, visitorService,
+  .controller('VisitorFormCtrl', function($scope, $state, $stateParams, $rootScope, $window, visitorService, growl,
                                            validationService, countryStateService, guestGroupConstant, userService,
-                                           flash, countryState, visitorsLocationService, $filter) {
+                                           countryState, visitorsLocationService, $filter) {
     $scope.visitors = [];
     $scope.visitor = {};
     $scope.visitorsLocation = {};
@@ -257,15 +257,19 @@ angular.module('viLoggedClientApp')
 
               if (userService.user) {
 
-                flash.success = $scope.visitor.uuid ? 'Visitor profile was successfully updated' : 'Visitor profile successfully created.';
+                if ($scope.visitor.uuid) {
+                  growl.addSuccessMessage('Visitor profile was successfully updated');
+                } else {
+                  growl.addSuccessMessage('Visitor profile successfully created.');
+                }
                 $state.go('visitors');
               } else {
 
                 if (!angular.isDefined($scope.visitor.uuid)) {
-                  flash.success = 'Your profile was successfully created.';
+                  growl.addSuccessMessage('Your profile was successfully created.');
                   $state.go('login');
                 } else {
-                  flash.success = 'Your profile was successfully updated.';
+                  growl.addSuccessMessage('Your profile was successfully updated.');
                   $state.go('show-visitor', {visitor_id: $scope.visitor.uuid});
                 }
 
@@ -287,7 +291,6 @@ angular.module('viLoggedClientApp')
               });
           })
           .catch(function(reason) {
-            flash.error = reason.message;
             console.log(reason);
             $scope.busy = false;
           });
