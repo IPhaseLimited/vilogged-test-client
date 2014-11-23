@@ -455,7 +455,7 @@ angular.module('viLoggedClientApp')
     entranceService.all()
       .then(function(response) {
         $scope.busy = false;
-        $scope.entrance = response;
+        $scope.entrances = response;
       })
       .catch(function(reason) {
         $scope.busy = false;
