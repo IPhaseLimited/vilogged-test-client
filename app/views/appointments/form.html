@@ -24,7 +24,7 @@
             </label>
 
             <div class="col-sm-6">
-              <ui-select ng-model="appointment_host.selected" theme="select2">
+              <ui-select ng-model="host.selected" theme="select2">
                 <ui-select-match placeholder="Select a host in the list or search with his phone number...">
                   {{$select.selected.first_name + ' ' + $select.selected.last_name}}
                 </ui-select-match>
@@ -47,7 +47,7 @@
             </label>
 
             <div class="col-sm-6">
-              <ui-select ng-model="appointment_visitor.selected" theme="select2">
+              <ui-select ng-model="visitor.selected" theme="select2">
                 <ui-select-match placeholder="Select a visitor in the list or search with his phone number...">
                   {{$select.selected.first_name + ' ' + $select.selected.last_name}}
                 </ui-select-match>

@@ -189,7 +189,14 @@
                 <td>{{ appointment.appointment_date | date: 'EEE, MMM d, y' }}</td>
                 <td>{{ appointment.visit_start_time }}</td>
                 <td>{{ appointment.visit_end_time }}</td>
-                <td><a ng-click="approveAppointment(appointment.visitor.uuid)" class="btn btn-primary btn-xs">Approve</a></td>
+                <td>
+                  <a ng-click="toggleAppointmentApproval(appointment.uuid, true)" class="btn btn-primary btn-xs">
+                    <span class="fa fa-check"></span>
+                  </a>
+                  <a ng-click="toggleAppointmentApproval(appointment.uuid, false)" class="btn btn-danger btn-xs">
+                    <span class="fa fa-times"></span>
+                  </a>
+                </td>
               </tr>
               </tbody>
             </table>

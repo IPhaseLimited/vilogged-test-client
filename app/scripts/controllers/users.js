@@ -79,8 +79,11 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('UserProfileCtrl', function ($scope, $interval, userService, appointmentService) {
-    appointmentService.getAppointmentsByUser($scope.user)
+  .controller('UserProfileCtrl', function ($scope, $interval, userService, appointmentService, utility,
+                                           notificationService) {
+    var appointments = appointmentService.getNestedAppointmentsByUser($scope.user);
+
+    appointments
       .then(function (response) {
         $scope.numberOfAppointments = response.length;
       })
@@ -88,23 +91,65 @@ angular.module('viLoggedClientApp')
         console.log(reason);
       });
 
-    appointmentService.getUserUpcomingAppointments($scope.user)
+    appointments
       .then(function (response) {
-        $scope.upcomingAppointments = response;
-        $scope.upcomingAppointmentCount = response.length;
+        $scope.upcomingAppointments = response.filter(function(appointment) {
+          return appointment.is_approved &&
+            new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.is_expired
+              && appointment.is_approved !== true;
+        });
+        $scope.upcomingAppointmentCount = $scope.upcomingAppointments.length;
       })
       .catch(function (reason) {
         console.log(reason);
       });
 
-    appointmentService.getUserAppointmentsAwaitingApproval($scope.user)
+    appointments
       .then(function (response) {
-        $scope.appointmentsAwaitingApproval = response;
-        $scope.appointmentsAwaitingApprovalCount = response.length;
+        $scope.appointmentsAwaitingApproval = response
+          .filter(function (appointment) {
+            return !appointment.is_approved && !appointment.is_expired &&
+              utility.getTimeStamp(appointment.appointment_date) > new Date().getTime()
+              && appointment.is_approved === null;
+          });
+        $scope.appointmentsAwaitingApprovalCount = $scope.appointmentsAwaitingApproval.length;
       })
       .catch(function (reason) {
         console.log(reason);
       });
+
+    $scope.toggleAppointmentApproval = function (appointment_id, approvalStatus) {
+      var dialogParams = {
+        modalHeader: 'Appointment Approval'
+      };
+
+      dialogParams.modalBodyText = approvalStatus ? 'Are you sure you want to approve this appointment?' :
+        'Are you sure you want to disapprove this appointment?';
+
+      $scope.busy = true;
+      notificationService.modal.confirm(dialogParams)
+        .then(function() {
+          appointmentService.get(appointment_id)
+            .then(function(response){
+              response.is_approved = approvalStatus;
+              appointmentService.save(response)
+                .then(function(){
+                  approvalStatus ? flash.success = 'The selected appointment has been approved.' :
+                    'The selected appointment has been rejected.';
+                  $scope.busy = false;
+                  if (!$scope.upcomingAppointments) $scope.upcomingAppointments = [];
+                })
+                .catch(function(reason){
+                  $scope.busy = false;
+                  console.log(reason);
+                });
+            })
+            .catch(function(reason){
+              $scope.busy = false;
+              console.log(reason);
+            });
+        });
+    };
   })
   .controller('UsersCtrl', function ($scope, userService, notificationService, flash) {
     function getUsers() {
@@ -138,7 +183,7 @@ angular.module('viLoggedClientApp')
       };
 
       notificationService.modal.confirm(dialogParams)
-        .then(function() {
+        .then(function () {
           userService.remove(id)
             .then(function (response) {
               flash.success = 'Account deleted successfully.';

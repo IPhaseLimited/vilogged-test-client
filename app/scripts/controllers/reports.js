@@ -42,7 +42,7 @@ angular.module('viLoggedClientApp')
             return appointment.is_approved && ( date >= startTime || date <= endTime) && appointment.checked_in;
           });
         $scope.totalItems = response.length;
-        $scope.numPages = $scope.totalItems/$scope.itemsPerPage;
+        $scope.numPages = Math.ceil($scope.totalItems/$scope.itemsPerPage);
       })
       .catch(function (reason) {
         console.log(reason);

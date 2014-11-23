@@ -19,10 +19,10 @@ angular.module('viLoggedClientApp')
       var deferred = $q.defer();
 
       $http.get(BASE_URL + DB_NAME + '/nested/')
-        .success(function(response) {
+        .success(function (response) {
           deferred.resolve(response);
         })
-        .catch(function(reason) {
+        .catch(function (reason) {
           deferred.reject(reason);
         });
 
@@ -33,10 +33,38 @@ angular.module('viLoggedClientApp')
       var deferred = $q.defer();
 
       $http.get(BASE_URL + DB_NAME + '/?' + field + '=' + value)
-        .success(function(response) {
+        .success(function (response) {
           deferred.resolve(response);
         })
-        .catch(function(reason) {
+        .catch(function (reason) {
+          deferred.reject(reason);
+        });
+
+      return deferred.promise;
+    }
+
+    function findByFieldNested(field, value) {
+      var deferred = $q.defer();
+
+      $http.get(BASE_URL + DB_NAME + '/nested/?' + field + '=' + value)
+        .success(function (response) {
+          deferred.resolve(response);
+        })
+        .catch(function (reason) {
+          deferred.reject(reason);
+        });
+
+      return deferred.promise;
+    }
+
+    function getNestedAppointmentsByUser(user) {
+      var deferred = $q.defer();
+
+      findByFieldNested('host_id__id', user.id)
+        .then(function (response) {
+          deferred.resolve(response);
+        })
+        .catch(function (reason) {
           deferred.reject(reason);
         });
 
@@ -50,7 +78,7 @@ angular.module('viLoggedClientApp')
         .then(function (response) {
           deferred.resolve(response);
         })
-        .catch(function(reason) {
+        .catch(function (reason) {
           deferred.reject(reason);
         });
 
@@ -87,11 +115,11 @@ angular.module('viLoggedClientApp')
     function getNested(id) {
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + '/nested/'+id)
-        .success(function(response) {
+      $http.get(BASE_URL + DB_NAME + '/nested/' + id)
+        .success(function (response) {
           deferred.resolve(response);
         })
-        .catch(function(reason) {
+        .catch(function (reason) {
           deferred.reject(reason);
         });
 
@@ -162,7 +190,7 @@ angular.module('viLoggedClientApp')
       var deferred = $q.defer();
       var searchTimeStamp = angular.isDefined(date) ? utility.getTimeStamp(date) : utility.getTimeStamp(moment().format('l'));
       getAllAppointments()
-        .then(function(response) {
+        .then(function (response) {
           var appointments = response
             .filter(function (appointment) {
               var appointmentTimeStamp = utility.getTimeStamp(appointment.appointment_date);
@@ -186,7 +214,7 @@ angular.module('viLoggedClientApp')
       getAllAppointments()
         .then(function (response) {
           var appointments = response
-            .filter(function(appointment) {
+            .filter(function (appointment) {
               var appointmentTimeStamp = utility.getTimeStamp(appointment.appointment_date);
               return appointmentTimeStamp >= weekStartedOn || appointmentTimeStamp <= weekEndedOn;
             });
@@ -198,11 +226,11 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     }
 
-    function appointmentByWeek (date) {
+    function appointmentByWeek(date) {
       return appointmentsByPeriod(date, 'week');
     }
 
-    function appointmentByMonth (date) {
+    function appointmentByMonth(date) {
       return appointmentsByPeriod(date, 'month');
     }
 
@@ -213,6 +241,7 @@ angular.module('viLoggedClientApp')
     this.findByField = findByField;
     this.getUserUpcomingAppointments = getUserUpcomingAppointments;
     this.getAppointmentsByUser = getAppointmentsByUser;
+    this.getNestedAppointmentsByUser = getNestedAppointmentsByUser;
     this.getUserAppointmentsAwaitingApproval = getUserAppointmentsAwaitingApproval;
     this.getVisitorUpcomingAppointments = getVisitorUpcomingAppointments;
     this.getAppointmentsByVisitor = getAppointmentsByVisitor;
