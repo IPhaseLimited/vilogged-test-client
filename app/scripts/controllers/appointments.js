@@ -383,7 +383,7 @@ angular.module('viLoggedClientApp')
       appointmentService.findByField('visitor_id', $scope.visitor.selected)
         .then(function(response){
           var existingAppointment = response.filter(function(appointment) {
-            return appointment.host_id === appointment.host.id  && !appointment.checked_out
+            return appointment.host_id === $scope.appointment.host.selected.id  && !appointment.checked_out
               && (!appointment.is_expired || utility.getTimeStamp(appointment) < new Date().getTime());
           });
 
