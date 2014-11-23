@@ -32,7 +32,14 @@ angular.module('viLoggedClientApp')
         }
       })
   })
-  .controller('MainCtrl', function($scope, flash, appointmentService, utility) {
+  .controller('MainCtrl', function($scope, appointmentService, utility, growl) {
+
+
+    growl.addWarnMessage("This adds a warn message");
+    growl.addInfoMessage("This adds a info message");
+    growl.addSuccessMessage("This adds a success message");
+    growl.addErrorMessage("This adds a error message");
+
     $scope.busy = true;
     var appointments = appointmentService.all();
 
@@ -47,7 +54,7 @@ angular.module('viLoggedClientApp')
           });
       })
       .catch(function(reason) {
-        flash.error = reason.message;
+        console.log(reason);
       });
 
     appointments
@@ -58,7 +65,7 @@ angular.module('viLoggedClientApp')
           });
       })
       .catch(function(reason) {
-        flash.error = reason.message;
+        console.log(reason);
       });
 
     appointments
@@ -69,7 +76,7 @@ angular.module('viLoggedClientApp')
           });
       })
       .catch(function(reason) {
-        flash.error = reason.message;
+        console.log(reason);
       });
 
     appointments
@@ -81,7 +88,7 @@ angular.module('viLoggedClientApp')
           });
       })
       .catch(function(reason) {
-        flash.error = reason.message;
+        console.log(reason);
       });
 
     appointments
@@ -93,7 +100,7 @@ angular.module('viLoggedClientApp')
           });
       })
       .catch(function(reason) {
-        flash.error = reason.message;
+        console.log(reason);
       });
 
     appointments
