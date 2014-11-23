@@ -422,6 +422,7 @@ angular.module('viLoggedClientApp')
       $scope.validationErrors = validationService.validateFields(validationParams, $scope.appointment);
       if (!Object.keys($scope.validationErrors).length) {
         $scope.busy = true;
+        $scope.appointment.entrance_id = 1;
         appointmentService.save($scope.appointment)
           .then(function(response) {
             $scope.busy = false;
