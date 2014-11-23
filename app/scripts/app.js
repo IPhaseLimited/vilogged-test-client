@@ -86,13 +86,14 @@ angular.module('viLoggedClientApp', [
         }
 
         var staffPages = ['profile', 'editUser', 'change-password', 'visitors', 'create-visitor-profile',
-          'show-visitor', 'home', 'visitor-check-in', 'visitor-check-out'];
+          'show-visitor', 'home', 'visitor-check-in', 'visitor-check-out', 'create-appointment', 'create-appointment-visitor',
+          'appointments', 'show-appointment', 'edit-appointment'];
         if ($rootScope.user.is_staff && staffPages.indexOf(page) === -1) {
           $location.path('/');
         }
 
         var activeUserPages = ['profile', 'appointments', 'create-appointment-host', 'show-appointment', 'edit-appointment'];
-        if ($rootScope.user.is_active && activeUserPages.indexOf(page) === -1) {
+        if ($rootScope.user.is_active && !$rootScope.user.is_staff && activeUserPages.indexOf(page) === -1) {
           $location.path('/profile');
         }
       }

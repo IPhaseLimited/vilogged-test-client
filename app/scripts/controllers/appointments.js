@@ -162,6 +162,7 @@ angular.module('viLoggedClientApp')
     appointmentService.getNested($stateParams.appointment_id)
       .then(function(response) {
         $scope.appointment = response;
+        console.log($scope.appointment)
         $scope.busy = false;
       })
       .catch(function(reason) {
@@ -203,6 +204,7 @@ angular.module('viLoggedClientApp')
           appointmentService.get($stateParams.appointment_id)
             .then(function(response) {
               response.is_approved = approvalStatus;
+              response.entrance_id = 1;
               appointmentService.save(response)
                 .then(function() {
                   approvalStatus ? growl.addSuccessMessage('The selected appointment has been approved.') :

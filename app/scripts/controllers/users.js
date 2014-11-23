@@ -192,7 +192,6 @@ angular.module('viLoggedClientApp')
               $scope.busy = false;
             })
             .catch(function(reason) {
-              flash.error = reason.message;
               console.log(reason);
               $scope.busy = false;
             });
@@ -203,7 +202,7 @@ angular.module('viLoggedClientApp')
     $scope.busy = true;
     $scope.userLoaded = false;
     $scope.departmentLoaded = false;
-    $scope.user = userService.user;
+    $scope.currentUser = userService.user;
     $scope.user = {};
     $scope.user.user_profile = {};
 
