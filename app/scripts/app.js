@@ -79,10 +79,20 @@ angular.module('viLoggedClientApp', [
 
       if (angular.isDefined($rootScope.user)) {
         var page = $state.$current.name;
-        var visitorsPages = ['show-visitor'];
+        var visitorsPages = ['show-visitor', 'create-appointment-visitor'];
         if ($rootScope.user.is_vistor && visitorsPages.indexOf(page) === -1) {
           //flash.danger = 'Access Denied';
           $location.path('/visitors/'+$rootScope.user.id);
+        }
+
+        var staffPages = ['profile', 'editUser', 'change-password', 'visitors', 'create-visitor-profile', 'show-visitor', 'home'];
+        if ($rootScope.user.is_staff && staffPages.indexOf(page) === -1) {
+          $location.path('/');
+        }
+
+        var activeUserPages = ['profile', 'appointments', 'create-appointment-host'];
+        if ($rootScope.user.is_active && activePages.indexOf(page) === -1) {
+          $location.path('/profile');
         }
       }
 
