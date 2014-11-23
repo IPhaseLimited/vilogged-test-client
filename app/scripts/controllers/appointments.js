@@ -156,7 +156,7 @@ angular.module('viLoggedClientApp')
         $scope.busy = false
       });
   })
-  .controller('AppointmentDetailCtrl', function($scope, $state, $stateParams, appointmentService, utility, $modal,
+  .controller('AppointmentDetailCtrl', function($scope, $state, $stateParams, appointmentService, utility, $modal, growl,
                                                  notificationService) {
     $scope.busy = true;
     appointmentService.getNested($stateParams.appointment_id)
@@ -205,10 +205,10 @@ angular.module('viLoggedClientApp')
               response.is_approved = approvalStatus;
               appointmentService.save(response)
                 .then(function() {
-                  approvalStatus ? flash.success = 'The selected appointment has been approved.' :
-                    'The selected appointment has been rejected.';
+                  approvalStatus ? growl.addSuccessMessage('The selected appointment has been approved.') :
+                    growl.addErrorMessage('The selected appointment has been rejected.');
                   $scope.busy = false;
-                  $state.go(appointments);
+                  $state.go('appointments');
                 })
                 .catch(function(reason) {
                   $scope.busy = false;
@@ -232,8 +232,8 @@ angular.module('viLoggedClientApp')
       return new Date().getTime() > appointmentTimeStamp;
     };
   })
-  .controller('AppointmentFormCtrl', function($scope, $stateParams, $state, $timeout, $filter, visitorService,
-                                               userService, appointmentService, utility, validationService, flash) {
+  .controller('AppointmentFormCtrl', function($scope, $stateParams, $state, $timeout, $filter, visitorService, growl,
+                                               userService, appointmentService, utility, validationService) {
     $scope.busy = false;
     $scope.appointment = {};
     $scope.visit_start_time = new Date();
@@ -380,7 +380,7 @@ angular.module('viLoggedClientApp')
       $scope.appointment.checked_in = null;
       $scope.appointment.checked_out = null;
 
-      appointmentService.findByField('visitor_id', $scope.visitor.selected)
+      appointmentService.findByField('visitor_id', $scope.visitor.selected.uuid)
         .then(function(response){
           var existingAppointment = response.filter(function(appointment) {
             return appointment.host_id === $scope.appointment.host.selected.id  && !appointment.checked_out
@@ -389,7 +389,7 @@ angular.module('viLoggedClientApp')
 
 
           if (existingAppointment.length) {
-            flash.danger = 'An appointment with this host can\'t be created.';
+            growl.addErrorMessage('An appointment with this host can\'t be created.');
             if (!$scope.user.is_active) {
               $scope.busy = false;
               $state.go('show-visitor', {visitor_id: $scope.visitor.selected.uuid});
@@ -425,7 +425,7 @@ angular.module('viLoggedClientApp')
         appointmentService.save($scope.appointment)
           .then(function(response) {
             $scope.busy = false;
-            flash.success = 'Appointment was successfully created';
+            growl.addSuccessMessage( 'Appointment was successfully created' );
             $scope.user.is_active ? $state.go('appointments') : $state.go('visitors', {visitor_id: $stateParams.visitor_id});
           })
           .catch(function(reason) {

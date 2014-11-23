@@ -14,19 +14,18 @@ angular.module('viLoggedClientApp', [
   'db.names',
   'webcam',
   'ngResource',
-  'angular-flash.service',
-  'angular-flash.flash-alert-directive',
   'ncy-angular-breadcrumb'
 ])
-  .run(function($cookieStore, $rootScope, $state, $http, $location, $interval, loginService, flash) {
+  .run(function($cookieStore, $rootScope, $state, $http, $location, $interval, loginService) {
 
     $rootScope.pageTitle = 'Visitor Management System';
     $rootScope.pageHeader = 'Dashboard';
-
     function redirectToLogin() {
       loginService.logout();
       $location.path('/login');
     }
+
+
     $rootScope.$on('$stateChangeSuccess', function() {
 
       /*if ($state.$current.name === 'visitor-registration') {
@@ -82,7 +81,7 @@ angular.module('viLoggedClientApp', [
         var page = $state.$current.name;
         var visitorsPages = ['show-visitor'];
         if ($rootScope.user.is_vistor && visitorsPages.indexOf(page) === -1) {
-          flash.danger = 'Access Denied';
+          //flash.danger = 'Access Denied';
           $location.path('/visitors/'+$rootScope.user.id);
         }
       }
@@ -106,6 +105,9 @@ angular.module('viLoggedClientApp', [
       }
     ]);
   })
+  .config(['growlProvider', function(growlProvider) {
+    growlProvider.globalTimeToLive(50000);
+  }])
   .config(function($compileProvider) {
     // to bypass Chrome app CSP for images.
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(chrome-extension):/);
@@ -113,12 +115,6 @@ angular.module('viLoggedClientApp', [
   })
   .config(function(uiSelectConfig) {
     uiSelectConfig.theme = 'bootstrap';
-  })
-  .config(function(flashProvider) {
-    flashProvider.errorClassnames.push('alert-danger');
-    flashProvider.warnClassnames.push('alert-warn');
-    flashProvider.infoClassnames.push('alert-info');
-    flashProvider.successClassnames.push('alert-success');
   })
   .config(function($breadcrumbProvider) {
     $breadcrumbProvider.setOptions({

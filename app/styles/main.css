@@ -86,6 +86,32 @@
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
     display: none !important;
 }
+.growl {
+  z-index: 10000;
+  float: none;
+  position: fixed;
+  right: inherit;
+  width: inherit;
+  max-width: 400px;
+  min-width: 250px;
+}
+
+.growl-item.ng-enter,
+.growl-item.ng-leave {
+  -webkit-transition:1s linear all;
+  -moz-transition:1s linear all;
+  -o-transition:1s linear all;
+  transition:1s linear all;
+}
+
+.message-body {
+  position: absolute;
+  left: 50%;
+}
+.message-content {
+  position: relative;
+  left: -50%;
+}
 
 @media screen {
   #printSection {
