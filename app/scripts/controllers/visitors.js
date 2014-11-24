@@ -209,8 +209,11 @@ angular.module('viLoggedClientApp')
         });
     }
 
-    $scope.saveUserProfile = function() {
-      console.log($scope.visitor);
+    $scope.saveProfile = function() {
+
+      /**
+       * sends email and sms to new visitor account
+       */
       function sendNotification() {
         var visitor = {
           first_name: $scope.visitor.first_name,
@@ -219,29 +222,27 @@ angular.module('viLoggedClientApp')
           pass_code: $scope.visitor.visitors_pass_code
         };
 
-        var emailTemplate = 'Hello &&first_name&& &&last_name&&,\n Your account with visitor privileges has ' +
-          'successfully been created. \nYou can now log on using either\n Phone Number: &&phone&& \n'
-          + 'OR \n Pass Code: &&pass_code&& \n Nigerian Communication Commission';
-        var compiledEmailTemplate = utility.compileTemplate(visitor, emailTemplate, '&&');
-        console.log(compiledEmailTemplate);
+        var emailTemplate = visitorService.EMAIL_TEMPLATE;
+        var compiledEmailTemplate = utility.compileTemplate(visitor, emailTemplate);
+        //console.log(compiledEmailTemplate);
 
-        var smsTemplate = 'Hello &&first_name&& &&last_name&&, your account has been created. You can now log on using either, Phone Number: &&phone&& OR Pass Code: &&pass_code&&';
+        var smsTemplate = visitorService.SMS_TEMPLATE;
         var compiledSMSTemplate = utility.compileTemplate(visitor, smsTemplate, '&&');
-        console.log(compiledSMSTemplate);
+        //console.log(compiledSMSTemplate);
 
         if (angular.isDefined($scope.visitor.visitors_phone) && $scope.visitor.visitors_phone !== '') {
-          notificationService.message.sendSms({
+          notificationService.send.sms({
             message: compiledSMSTemplate,
             mobiles: $scope.visitor.visitors_phone
-          })
+          });
         }
 
         if (angular.isDefined($scope.visitor.visitors_email) && $scope.visitor.visitors_email !== '') {
-          notificationService.message.sendEmail({
+          notificationService.send.email({
             to: $scope.visitor.visitors_email,
             subject: 'Visitor\'s account created.',
             message: compiledEmailTemplate
-          })
+          });
         }
       }
 
