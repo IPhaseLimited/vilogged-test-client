@@ -281,6 +281,9 @@ angular.module('viLoggedClientApp')
         $scope.validationErrors[key] = validateLocation[key];
       });
       if (!Object.keys($scope.validationErrors).length) {
+        if (!angular.isDefined($scope.visitor.company_name)) {
+          $scope.visitor.company_name = 'Anonymous';
+        }
         $scope.visitor.image = $scope.takenImg;
         if ($scope.visitor.date_of_birth) {
           $scope.visitor.date_of_birth = $filter('date')($scope.visitor.date_of_birth, 'yyyy-MM-dd');

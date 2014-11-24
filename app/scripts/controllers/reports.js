@@ -39,7 +39,7 @@ angular.module('viLoggedClientApp')
             var startTime = utility.getTimeStamp(appointment.appointment_date, appointment.start_time);
             var endTime = utility.getTimeStamp(appointment.appointment_date, appointment.end_time);
             var date = new Date().getTime();
-            return appointment.is_approved && ( date >= startTime || date <= endTime) && appointment.checked_in;
+            return appointment.is_approved && ( date >= startTime || date <= endTime) && appointment.checked_in && !appointment.checked_out;
           });
         $scope.totalItems = response.length;
         $scope.numPages = Math.ceil($scope.totalItems/$scope.itemsPerPage);

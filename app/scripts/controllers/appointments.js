@@ -204,7 +204,7 @@ angular.module('viLoggedClientApp')
           appointmentService.get($stateParams.appointment_id)
             .then(function(response) {
               response.is_approved = approvalStatus;
-              response.entrance_id = 'd970f3aa81d4432b8c3ae33ca8e7cd9a';
+              response.entrance_id = '3bc509b67ae34abdc24774a8826507d4';
               appointmentService.save(response)
                 .then(function() {
                   approvalStatus ? growl.addSuccessMessage('The selected appointment has been approved.') :
@@ -421,9 +421,9 @@ angular.module('viLoggedClientApp')
 
       $scope.validationErrors = validationService.validateFields(validationParams, $scope.appointment);
       if (!Object.keys($scope.validationErrors).length) {
-        $scope.appointment.entrance_id = 'd970f3aa81d4432b8c3ae33ca8e7cd9a';
+        $scope.appointment.entrance_id = '3bc509b67ae34abdc24774a8826507d4';
         $scope.busy = true;
-        $scope.appointment.entrance_id = 'd970f3aa81d4432b8c3ae33ca8e7cd9a';
+        $scope.appointment.entrance_id = '3bc509b67ae34abdc24774a8826507d4';
         appointmentService.save($scope.appointment)
           .then(function(response) {
             $scope.busy = false;
