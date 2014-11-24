@@ -32,13 +32,21 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="visitor in visitors track by visitor.uuid | paginationOffset:currentPage:itemsPerPage | orderBy: 'created'">
+          <tr ng-repeat="visitor in visitors track by visitor.visitors_phone | paginationOffset:currentPage:itemsPerPage | orderBy: 'visitor.created'"
+            ng-class="{'text-danger': getGroupType(visitor.group_type) === 'Banned'}">
             <td>{{ $index + 1 }}</td>
             <td>{{ visitor.first_name }} {{ visitor.last_name }}</td>
             <td>{{ visitor.visitors_email }}</td>
             <td>{{ visitor.visitors_phone }}</td>
             <td>{{ visitor.company_name }}</td>
-            <td>{{ visitor.group_type }}</td>
+            <td>
+              <span class="label" ng-class="{'label-danger': getGroupType(visitor.group_type) === 'Banned',
+                'label-warning': getGroupType(visitor.group_type) === 'Normal',
+                'label-success': getGroupType(visitor.group_type) === 'Success'
+                }">
+                {{ getGroupType(visitor.group_type) }}
+              </span>
+            </td>
             <td>{{ visitor.created |date: 'dd MMM, yyyy' }}</td>
             <td>
               <a class="btn btn-primary btn-xs" ui-sref="edit-visitor-profile({visitor_id: visitor.uuid})"
