@@ -15,10 +15,10 @@ angular.module('viLoggedClientApp')
       var deferred = $q.defer();
 
       $http.post(apiUrl, objectParams)
-        .then(function(response) {
+        .success(function(response) {
           deferred.resolve(response);
         })
-        .catch(function(reason) {
+        .error(function(reason) {
           console.log(reason);
         });
 
@@ -44,25 +44,25 @@ angular.module('viLoggedClientApp')
       return modalInstance.result;
     };
 
-    this.message = {};
-
-    this.message.sendSms = function(smsParams) {
-      sendMessage(smsParams, '/api/send-sms/')
-        .then(function(response) {
-          var message = response;
-        })
-        .catch(function(reason) {
-          console.log(reason)
-        });
+    this.send = {
+      sms: function(smsParams) {
+        sendMessage(smsParams, '/api/send-sms')
+          .then(function(response) {
+            var message = response;
+          })
+          .catch(function(reason) {
+            console.log(reason)
+          });
+      },
+      email: function(emailParams) {
+        sendMessage(emailParams, '/api/send-mail')
+          .then(function(response) {
+            var message = response;
+          })
+          .catch(function(reason) {
+            console.log(reason);
+          });
+      }
     };
 
-    this.message.sendEmail = function(emailParams) {
-      sendMessage(emailParams, '/api/send-email/')
-        .then(function(response) {
-          var message = response;
-        })
-        .catch(function(reason) {
-          console.log(reason);
-        });
-    };
   });
