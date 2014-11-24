@@ -1,6 +1,8 @@
 <div class="loading-status" ng-if="busy">
   Loading...
 </div>
+
+  <pre>{{appointment|json}}</pre>
 <div class="row" ng-cloak>
   <div class="col-sm-6">
     <div class="widget">
@@ -16,27 +18,27 @@
             <div class="col-sm-8">
               <div class="row">
                 <div class="col-sm-6"><strong>Name</strong></div>
-                <div class="col-sm-6">{{ ((appointmentView).visitor_id).first_name + ' ' + ((appointmentView).visitor_id).last_name
+                <div class="col-sm-6">{{ ((appointment).visitor_id).first_name + ' ' + ((appointment).visitor_id).last_name
                   }}
                 </div>
               </div>
               <div class="row">
                 <div class="col-sm-6"><strong>Birth Date</strong></div>
-                <div class="col-sm-6">{{ ((appointmentView).visitor_id).date_of_birth | date: 'MMM d, y' }}</div>
+                <div class="col-sm-6">{{ ((appointment).visitor_id).date_of_birth | date: 'MMM d, y' }}</div>
               </div>
               <div class="row">
                 <div class="col-sm-6"><strong>Contact Phone</strong></div>
                 <div class="col-sm-6"><strong>Contact Email</strong></div>
               </div>
               <div class="row">
-                <div class="col-sm-6">{{ ((appointmentView).visitor_id).visitors_phone}}</div>
-                <div class="col-sm-6">{{ ((appointmentView).visitor_id).visitors_email}}</div>
+                <div class="col-sm-6">{{ ((appointment).visitor_id).visitors_phone}}</div>
+                <div class="col-sm-6">{{ ((appointment).visitor_id).visitors_email}}</div>
               </div>
             </div>
             <div class="col-sm-4">
-              <img ng-if="((appointmentView).visitor_id).image !== undefined" ng-src="{{ appointmentView.visitor.image }}" alt=""
+              <img ng-if="((appointment).visitor_id).image !== undefined" ng-src="{{ appointment.visitor.image }}" alt=""
                    class="img-responsive"/>
-              <img ng-if="!((appointmentView).visitor_id).image" ng-src="img/place_holder.jpg" alt=""
+              <img ng-if="!((appointment).visitor_id).image" ng-src="img/place_holder.jpg" alt=""
                    class="img-responsive"/>
             </div>
           </div>
@@ -62,34 +64,34 @@
             <div class="col-sm-8">
               <div class="row">
                 <div class="col-sm-6"><strong>Name</strong></div>
-                <div class="col-sm-6">{{ ((appointmentView).host_id).first_name + ' ' + ((appointmentView).host_id).last_name }}</div>
+                <div class="col-sm-6">{{ ((appointment).host_id).first_name + ' ' + ((appointment).host_id).last_name }}</div>
               </div>
               <div class="row">
                 <div class="col-sm-6"><strong>Department</strong></div>
-                <div ng-if="(((appointmentView).host_id).user_profile).department" class="col-sm-6">
-                  {{ (((appointmentView).host_id).user_profile).department.department_name }}
+                <div ng-if="(((appointment).host_id).user_profile).department" class="col-sm-6">
+                  {{ (((appointment).host_id).user_profile).department.department_name }}
                 </div>
-                <div ng-if="!(((appointmentView).host_id).user_profile).department" class="col-sm-6"> Nil</div>
+                <div ng-if="!(((appointment).host_id).user_profile).department" class="col-sm-6"> Nil</div>
               </div>
               <div col-sm-12><strong>Contact Phone</strong></div>
               <div class="row">
                 <div class="col-sm-12">
-                  <span ng-if="(((appointmentView).host_id).user_profile).phone ">
-                    {{ (((appointmentView).host_id).user_profile).phone }}
+                  <span ng-if="(((appointment).host_id).user_profile).phone ">
+                    {{ (((appointment).host_id).user_profile).phone }}
                   </span>
-                  <span ng-if="(((appointmentView).host_id).user_profile).home_phone">
-                    {{ (((appointmentView).host_id).user_profile).home_phone }}
+                  <span ng-if="(((appointment).host_id).user_profile).home_phone">
+                    {{ (((appointment).host_id).user_profile).home_phone }}
                   </span>
-                  <span ng-if="(((appointmentView).host_id).user_profile).work_phone">
-                    {{ (((appointmentView).host_id).user_profile).work_phone }}
+                  <span ng-if="(((appointment).host_id).user_profile).work_phone">
+                    {{ (((appointment).host_id).user_profile).work_phone }}
                   </span>
                 </div>
               </div>
             </div>
             <div class="col-sm-4">
-              <img ng-if="((appointmentView).visitor_id).image !== undefined" ng-src="{{ appointmentView.visitor.image }}" alt=""
+              <img ng-if="((appointment).visitor_id).image !== undefined" ng-src="{{ appointment.visitor.image }}" alt=""
                    class="img-responsive"/>
-              <img ng-if="!((appointmentView).visitor_id).image" ng-src="img/place_holder.jpg" alt=""
+              <img ng-if="!((appointment).visitor_id).image" ng-src="img/place_holder.jpg" alt=""
                    class="img-responsive"/>
             </div>
           </div>
@@ -306,7 +308,7 @@
         <hr/>
         <div class="form-group">
           <button class="btn btn-success col-sm-offset-9 pull-right">
-            <i class="fa fa-check-circle"></i> Check Guest In & Print Pass
+            <i class="fa fa-check-circle"></i> Check Guest In
           </button>
         </div>
       </form>

@@ -54,7 +54,8 @@ angular.module('viLoggedClientApp')
       .then(function(response) {
         $scope.appointmentsAwaitingApproval = response
           .filter(function(appointment) {
-            return !appointment.is_approved && utility.getTimeStamp(appointment.appointment_date) > new Date().getTime();
+            return !appointment.is_approved && (utility.getTimeStamp(appointment.appointment_date) > new Date().getTime()
+              || !appointment.is_expired);
           });
       })
       .catch(function(reason) {

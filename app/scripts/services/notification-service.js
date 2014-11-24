@@ -11,10 +11,10 @@ angular.module('viLoggedClientApp')
   .service('notificationService', function notificationService($modal, $http, $q, config) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
-    function sendMessage(http, objectParams, apiUrl) {
+    function sendMessage(objectParams, apiUrl) {
       var deferred = $q.defer();
 
-      http.post(apiUrl, objectParams)
+      $http.post(apiUrl, objectParams)
         .then(function(response) {
           deferred.resolve(response);
         })
@@ -46,46 +46,23 @@ angular.module('viLoggedClientApp')
 
     this.message = {};
 
-    this.message.sendSms = function(smsParams, smsApi) {
-      var message = {};
-      if (!angular.isDefined(smsApi)) {
-        smsApi = config.api.smsApi;
-      }
-
-      if (!angular.isDefined(smsParams)) {
-        smsParams = {};
-      }
-
-      //sendMessage($http, smsParams, smsApi)
-      //  .then(function(response) {
-      //    message = response;
-      //  })
-      //  .catch(function(reason) {
-      //    message = return reason;
-      //  });
-
-      return message;
+    this.message.sendSms = function(smsParams) {
+      sendMessage(smsParams, '/api/send-sms')
+        .then(function(response) {
+          var message = response;
+        })
+        .catch(function(reason) {
+          console.log(reason)
+        });
     };
 
-    this.message.sendEmail = function(emailParams, sendApi) {
-      var message = {};
-
-      if (!angular.isDefined(emailApi)) {
-        emailApi = '';
-      }
-
-      if (!angular.isDefined(emailParams)) {
-        emailParams = {};
-      }
-
-      //sendMessage($http, smsParams, smsApi)
-      //  .then(function(response) {
-      //    message = response;
-      //  })
-      //  .catch(function(reason) {
-      //    message = return reason;
-      //  });
-
-      return message;
+    this.message.sendEmail = function(emailParams) {
+      sendMessage(emailParams, '/api/send-email')
+        .then(function(response) {
+          var message = response;
+        })
+        .catch(function(reason) {
+          console.log(reason);
+        });
     };
   });

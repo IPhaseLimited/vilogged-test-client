@@ -1,0 +1,166 @@
+<div class="loading-status" ng-if="busy">
+  Loading...
+</div>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="widget">
+      <div class="widget-head">
+        <div class="pull-left">Guest Record</div>
+        <div class="widget-icons pull-right">
+          <a href="" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> View Details</a>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="widget-content">
+        <div class="padd">
+          <div class="row">
+            <div class="col-sm-8">
+              <div class="row">
+                <div class="col-sm-6"><strong>Name</strong></div>
+                <div class="col-sm-6">{{ ((appointment).visitor).first_name + ' ' + ((appointment).visitor).last_name
+                  }}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6"><strong>Birth Date</strong></div>
+                <div class="col-sm-6">{{ ((appointment).visitor).birth_date | date: 'MMM d, y' }}</div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6"><strong>Contact Phone</strong></div>
+                <div class="col-sm-6"><strong>Contact Email</strong></div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">{{ ((appointment).visitor).visitor_phone}}</div>
+                <div class="col-sm-6">{{ ((appointment).visitor).visitor_email}}</div>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <img ng-if="((appointment).visitor).image !== undefined" ng-src="{{ appointment.visitor.image }}" alt=""
+                   class="img-responsive"/>
+              <img ng-if="!((appointment).visitor).image" ng-src="img/place_holder.jpg" alt=""
+                   class="img-responsive"/>
+            </div>
+          </div>
+        </div>
+        <div class="widget-foot">
+          <!-- Footer goes here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6">
+    <div class="widget">
+      <div class="widget-head">
+        <div class="pull-left">Host Record</div>
+        <div class="widget-icons pull-right">
+          <a href="" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> View Details</a>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="widget-content">
+        <div class="padd">
+          <div class="row">
+            <div class="col-sm-8">
+              <div class="row">
+                <div class="col-sm-6"><strong>Name</strong></div>
+                <div class="col-sm-6">{{ ((appointment).host).first_name + ' ' + ((appointment).host).last_name }}</div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6"><strong>Department</strong></div>
+                <div ng-if="(((appointment).host).user_profile).department" class="col-sm-6">
+                  {{ (((appointment).host).user_profile).department }}
+                </div>
+                <div ng-if="!(((appointment).host).user_profile).department" class="col-sm-6"> Nil</div>
+              </div>
+              <div col-sm-12><strong>Contact Phone</strong></div>
+              <div class="row">
+                <div class="col-sm-4">{{ (((appointment).host).user_profile).phone }}</div>
+                <div class="col-sm-4">{{ (((appointment).host).user_profile).home_phone }}</div>
+                <div class="col-sm-4">{{ (((appointment).host).user_profile).work_phone }}</div>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <img ng-if="((appointment).visitor).image !== undefined" ng-src="{{ appointment.visitor.image }}" alt=""
+                   class="img-responsive"/>
+              <img ng-if="!((appointment).visitor).image" ng-src="img/place_holder.jpg" alt=""
+                   class="img-responsive"/>
+            </div>
+          </div>
+        </div>
+        <div class="widget-foot">
+          <!-- Footer goes here -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="widget">
+  <div class="widget-head">
+    <div class="pull-left">Appointment Detail</div>
+    <div class="widget-icons pull-right">
+      <a class="btn btn-primary btn-xs" ui-sref="edit-appointment({appointment_id: appointment._id})">
+        <i class="fa fa-edit"></i> Edit Appointment
+      </a>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <div class="widget-content">
+    <div class="padd">
+      <div class="row">
+        <div class="col-sm-6">
+          <h3>Purpose of Visit</h3>
+          <hr/>
+          <p ng-show="appointment.purpose">{{ appointment.purpose }}</p>
+          <p ng-show="!appointment.purpose">None</p>
+        </div>
+        <div class="col-sm-6">
+          <h3>Representing</h3>
+          <hr/>
+          <p ng-show="appointment.purpose">{{ appointment.representing }}</p>
+          <p ng-show="!appointment.purpose">None</p>
+        </div>
+      </div>
+      <table class="table table-condensed">
+        <tr>
+          <th>Appointment Date</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Approval Status</th>
+          <th>Pass Code</th>
+        </tr>
+        <tr>
+          <td>{{ appointment.appointment_date | date: 'MMM d, y' }}</td>
+          <td>{{ appointment.visit_start_time }}</td>
+          <td>{{ appointment.visit_end_time }}</td>
+          <td>
+            <span ng-if="appointment.approval_status === undefined">Awaiting Approval</span>
+            <span ng-if="appointment.approval_status !== undefined">{{ appointment.approval_status }}</span>
+          </td>
+          <td>{{ appointment.label_code }}</td>
+        </tr>
+      </table>
+    </div>
+    <div class="widget-foot">
+      <!-- Footer goes here -->
+    </div>
+  </div>
+</div>
+
+<div class="widget">
+  <div class="widget-head">
+    <div class="pull-left"></div>
+    <div class="widget-icons pull-right">
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <div class="widget-content">
+    <div class="padd">
+      <div ng-include="'views\appointments\form.html'"></div>
+    </div>
+    <div class="widget-foot">
+      <!-- Footer goes here -->
+    </div>
+  </div>
+</div>
