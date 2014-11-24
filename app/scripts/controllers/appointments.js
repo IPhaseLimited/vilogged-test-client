@@ -117,7 +117,7 @@ angular.module('viLoggedClientApp')
         parent: 'root.index',
         url: '/appointments/:appointment_id/check-out',
         templateUrl: 'views/appointments/check-out.html',
-        controller: 'CheckInCtrl',
+        controller: 'CheckOutCtrl',
         data: {
           requiredPermission: 'is_staff',
           label: 'Check Visitor Out'
@@ -442,7 +442,8 @@ angular.module('viLoggedClientApp')
     };
   })
   .controller('CheckInCtrl', function($scope, $state, $stateParams, $q, visitorService, appointmentService, entranceService,
-                                       vehicleTypeConstant, notificationService, utility, restrictedItemsService, vehicleService) {
+                                       vehicleTypeConstant, notificationService, utility, restrictedItemsService,
+                                       vehicleService, growl) {
     $scope.appointment = {};
     $scope.restricted_items = [{
       item_code: '',
@@ -572,7 +573,7 @@ angular.module('viLoggedClientApp')
         }
       });
 
-      $scope.vehicle.appointments_id = $scope.appointment.uuid;
+      $scope.vehicle.appointment_id = $scope.appointment.uuid;
       var promises = [
         appointmentService.save($scope.appointment),
         vehicleService.save($scope.vehicle),
@@ -591,11 +592,38 @@ angular.module('viLoggedClientApp')
       $q.all(promises)
         .then(function() {
           $scope.busy = false;
+          growl.addSuccessMessage('User checked in successfully.');
           $state.go('appointments');
         })
         .catch(function(reason) {
           $scope.busy = false;
           console.log(reason);
+        });
+    }
+  })
+  .controller('CheckOutCtrl', function ($scope, $state, $stateParams, appointmentService, utility, notificationService, growl) {
+    $scope.busy = true;
+    appointmentService.get($stateParams.appointment_id)
+      .then(function (response) {
+        $scope.appointment = response;
+        checkOut(response);
+      })
+      .catch(function (reason) {
+        console.log(reason);
+        $scope.busy = false;
+      });
+
+    function checkOut(response) {
+      response.checked_out = utility.getISODateTime();
+      appointmentService.save(response)
+        .then(function (response) {
+          growl.addSuccessMessage('Visitor checked out successfully.');
+          $state.go('appointments');
+          $scope.busy = false;
+        })
+        .catch(function(reason) {
+          console.log(reason);
+          $scope.busy = false;
         });
     }
   })
