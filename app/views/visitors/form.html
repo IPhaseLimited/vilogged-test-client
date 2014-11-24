@@ -145,7 +145,6 @@
       </div>
       <div class="col-sm-4">
         <img ng-src="{{visitor.image}}" ng-if="visitor.image" alt="" width="200" height="150"/>
-        <img ng-src="{{visitor.image}}" ng-if="visitor.image" alt="" width="200" height="150"/>
       </div>
     </div>
 
@@ -289,14 +288,14 @@
       </div>
     </div>
 
-    <div class="form-group" ng-if="visitor._id">
+    <div class="form-group" ng-if="visitor.uuid">
       <label for="visitorGroup" class="col-sm-2 control-label">Visitor Group</label>
 
       <div class="col-sm-6">
         <select class="form-control col-sm-6" ng-model="visitor.group_type" name="visitorGroup"
                 id="visitorGroup">
           <option value=""></option>
-          <option value="{{ visitorGroup }}" ng-repeat="visitorGroup in visitorGroups">
+          <option value="{{ $index }}" ng-repeat="visitorGroup in visitorGroups">
             {{ visitorGroup }}
           </option>
         </select>
@@ -307,7 +306,7 @@
 
     <div class="col-sm-offset-2 col-sm-10">
       <button class="btn btn-primary">
-        Create Visitor Profile
+        Save Changes
       </button>
     </div>
   </fieldset>
