@@ -206,65 +206,60 @@ angular.module('viLoggedClientApp')
     $scope.busy = true;
     $scope.userLoaded = false;
     $scope.departmentLoaded = false;
-    $scope.currentUser = userService.user;
-    $scope.user = {};
-    $scope.user.user_profile = {};
+    $scope.userProfile = {};
+    $scope.userProfile.user_profile = {};
 
     if ($stateParams.user_id) {
       userService.get($stateParams.user_id)
         .then(function(response) {
-          $scope.user = response;
-          $scope.userLoaded = false;
+          $scope.userProfile = response;
+          $scope.userLoaded = true;
           if ($scope.departmentLoaded) {
-            $scope.busy = true;
+            $scope.busy = false;
           }
         })
         .catch(function(reason) {
-          $scope.userLoaded = false;
+          $scope.userLoaded = true;
           if ($scope.departmentLoaded) {
-            $scope.busy = true;
+            $scope.busy = false;
           }
           console.log(reason);
         })
+    } else {
+      $scope.userLoaded = true;
     }
 
     companyDepartmentsService.all()
       .then(function(response) {
         $scope.departments = response;
-        $scope.departmentLoaded = false;
+        $scope.departmentLoaded = true;
         if ($scope.userLoaded) {
-          $scope.busy = true;
+          $scope.busy = false;
         }
       })
       .catch(function(reason) {
         console.log(reason);
-        $scope.userLoaded = false;
+        $scope.departmentLoaded = true;
         if ($scope.departmentLoaded) {
-          $scope.busy = true;
+          $scope.busy = false;
         }
       });
 
-    console.log($scope.user);
-    //FIXME: please differentiate between the logged user and your user model
-    if (!$scope.user.is_superuser) {
-      //$state.go("home");
-    }
-
     $scope.createUserAccount = function() {
       $scope.busy = true;
-      if ($scope.user.user_profile !== undefined || $scope.user.user_profile === null) {
-        $scope.user.user_profile.home_phone = $scope.user.user_profile.home_phone || null;
-        $scope.user.user_profile.work_phone = $scope.user.user_profile.work_phone || null;
+      if ($scope.userProfile.user_profile !== undefined || $scope.userProfile.user_profile === null) {
+        $scope.userProfile.user_profile.home_phone = $scope.userProfile.user_profile.home_phone || null;
+        $scope.userProfile.user_profile.work_phone = $scope.userProfile.user_profile.work_phone || null;
       }
 
-      if (toString.call($scope.user.user_profile.department) === '[object String]') {
+      if (toString.call($scope.userProfile.user_profile.department) === '[object String]') {
         //$scope.user.user_profile.department = JSON.parse($scope.user.user_profile.department);
       }
-      userService.save($scope.user)
+      userService.save($scope.userProfile)
         .then(function() {
-          var message = !$stateParams.user_id ? 'User account was successfully created.' : 'User account was successfully updated.';
+          var message = 'User account was successfully saved.';
           growl.addSuccessMessage(message);
-          if ($scope.user.id === $rootScope.user.id) {
+          if ($scope.userProfile.id === $scope.user.id) {
             userService.currentUser()
               .then(function(user) {
                 $rootScope.user = user;

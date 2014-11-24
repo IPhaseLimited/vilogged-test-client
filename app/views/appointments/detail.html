@@ -148,13 +148,12 @@
             <span ng-if="appointment.is_approved === null">Awaiting Approval</span>
             <span ng-if="appointment.is_approved !== null">{{ appointment.is_approved }}</span>
           </td>
-          <td>{{ appointment.label_code }}</td>
+          <td>{{ appointment.visitor_id.visitors_pass_code }}</td>
         </tr>
       </table>
     </div>
     <div class="widget-foot">
-      <div ng-show="appointment.is_approved === null && !appointment.is_expired && isAppointmentUpcoming(appointment.appointment_date)"
-        ng-hide="user.id !== appointment.host_id.id">
+      <div ng-show="!appointment.is_approved && !appointment.is_expired && isAppointmentUpcoming(appointment.appointment_date) && user.id === appointment.host_id.id">
         <a class="btn btn-success" ng-click="toggleAppointmentApproval(true)">Approve</a>
         <a class="btn btn-danger" ng-click="toggleAppointmentApproval(false)">Reject</a>
       </div>
