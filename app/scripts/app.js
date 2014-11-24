@@ -16,7 +16,7 @@ angular.module('viLoggedClientApp', [
   'ngResource',
   'ncy-angular-breadcrumb'
 ])
-  .run(function($cookieStore, $rootScope, $state, $http, $location, $interval, loginService) {
+  .run(function($cookieStore, $rootScope, $state, $http, $location, $interval, loginService, growl, authorizationService) {
 
     $rootScope.pageTitle = 'Visitor Management System';
     $rootScope.pageHeader = 'Dashboard';
@@ -79,20 +79,19 @@ angular.module('viLoggedClientApp', [
 
       if (angular.isDefined($rootScope.user)) {
         var page = $state.$current.name;
-        var visitorsPages = ['show-visitor', 'create-appointment-visitor'];
+        var visitorsPages = authorizationService.allowedPages.visitors;
         if ($rootScope.user.is_vistor && visitorsPages.indexOf(page) === -1) {
           //flash.danger = 'Access Denied';
           $location.path('/visitors/'+$rootScope.user.id);
         }
 
-        var staffPages = ['profile', 'editUser', 'change-password', 'visitors', 'create-visitor-profile',
-          'show-visitor', 'home', 'visitor-check-in', 'visitor-check-out', 'create-appointment', 'create-appointment-visitor',
-          'appointments', 'show-appointment', 'edit-appointment'];
-        if ($rootScope.user.is_staff && staffPages.indexOf(page) === -1) {
+        var staffPages = authorizationService.allowedPages.staff;
+        if (($rootScope.user.is_staff && !$rootScope.user.is_superuser) &&  staffPages.indexOf(page) === -1) {
+          growl.addErrorMessage('Access Denied');
           $location.path('/');
         }
 
-        var activeUserPages = ['profile', 'appointments', 'create-appointment-host', 'show-appointment', 'edit-appointment'];
+        var activeUserPages = authorizationService.allowedPages.users;
         if ($rootScope.user.is_active && !$rootScope.user.is_staff && activeUserPages.indexOf(page) === -1) {
           $location.path('/profile');
         }
