@@ -162,7 +162,6 @@ angular.module('viLoggedClientApp')
     appointmentService.getNested($stateParams.appointment_id)
       .then(function(response) {
         $scope.appointment = response;
-        console.log($scope.appointment)
         $scope.busy = false;
       })
       .catch(function(reason) {
@@ -198,6 +197,39 @@ angular.module('viLoggedClientApp')
       dialogParams.modalBodyText = approvalStatus ? 'Are you sure you want to approve this appointment?' :
         'Are you sure you want to disapprove this appointment?';
 
+      //sends email and sms to visitor whose appointment has been approved
+      function sendMessage () {
+        var appointment = {
+          first_name: $scope.appointment.visitor_id.first_name,
+          last_name: $scope.appointment.visitor_id.last_name,
+          start_time: $scope.appointment.visit_start_time,
+          host_first_name: $scope.appointment.host_id.first_name,
+          host_last_name: $scope.appointment.host_id.last_name,
+          date: $scope.appointment.appointment_date
+        };
+
+        var emailTemplate = appointmentService.APPOINTMENT_APPROVAL_EMAIL_TEMPLATE;
+        var compiledEmailTemplate = utility.compileTemplate(appointment, emailTemplate);
+
+        var smsTemplate = appointmentService.APPOINTMENT_APPROVAL_SMS_TEMPLATE;
+        var compiledSMSTemplate = utility.compileTemplate(appointment, smsTemplate);
+
+        if (angular.isDefined($scope.appointment.visitor_id.visitors_phone) && $scope.appointment.visitor_id.visitors_phone !== '') {
+          notificationService.send.sms({
+            message: compiledSMSTemplate,
+            mobiles: $scope.visitor.visitors_phone
+          });
+        }
+
+        if (angular.isDefined($scope.appointment.visitor_id.visitors_email) && $scope.appointment.visitor_id.visitors_email !== '') {
+          notificationService.send.email({
+            to: $scope.visitor.visitors_email,
+            subject: 'Appointment Schedule Approved.',
+            message: compiledEmailTemplate
+          });
+        }
+      }
+
       $scope.busy = true;
       notificationService.modal.confirm(dialogParams)
         .then(function() {
@@ -210,6 +242,7 @@ angular.module('viLoggedClientApp')
                   approvalStatus ? growl.addSuccessMessage('The selected appointment has been approved.') :
                     growl.addErrorMessage('The selected appointment has been rejected.');
                   $scope.busy = false;
+                  sendMessage();
                   $state.go('appointments');
                 })
                 .catch(function(reason) {
@@ -247,6 +280,35 @@ angular.module('viLoggedClientApp')
     $scope.clearError = function(key) {
       delete $scope.customErrors[key];
     };
+
+    //sends email and sms to host when appointment is created
+    function sendMessage () {
+      var appointment = {
+        first_name: $scope.appointment.host_id.first_name,
+        last_name: $scope.appointment.host_id.last_name
+      };
+
+      var emailTemplate = appointmentService.APPOINTMENT_CREATED_EMAIL_TEMPLATE;
+      var compiledEmailTemplate = utility.compileTemplate(appointment, emailTemplate);
+
+      var smsTemplate = appointmentService.APPOINTMENT_CREATED_SMS_TEMPLATE;
+      var compiledSMSTemplate = utility.compileTemplate(appointment, smsTemplate);
+
+      if (angular.isDefined($scope.appointment.host_id.user.phone) && $scope.appointment.host_id.user.phone !== '') {
+        notificationService.send.sms({
+          message: compiledSMSTemplate,
+          mobiles: $scope.appointment.host_id.user.phone
+        });
+      }
+
+      if (angular.isDefined($scope.appointment.host_id.user.email) && $scope.appointment.host_id.user.email !== '') {
+        notificationService.send.email({
+          to: $scope.appointment.host_id.user.email,
+          subject: 'Appointment created.',
+          message: compiledEmailTemplate
+        });
+      }
+    }
 
     $scope.appointmentDate = {
       opened: false,
@@ -427,6 +489,7 @@ angular.module('viLoggedClientApp')
         appointmentService.save($scope.appointment)
           .then(function(response) {
             $scope.busy = false;
+            sendMessage();
             growl.addSuccessMessage( 'Appointment was successfully created' );
             $scope.user.is_active ? $state.go('appointments') : $state.go('visitors', {visitor_id: $stateParams.visitor_id});
           })

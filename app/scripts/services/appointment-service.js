@@ -13,6 +13,18 @@ angular.module('viLoggedClientApp')
     var DB_NAME = db.APPOINTMENTS;
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
 
+    var APPOINTMENT_APPROVAL_EMAIL_TEMPLATE = 'Hello &&first_name&& &&last_name&&,\n\nYour appointment with &&host_first_name&& &&host_last_name&& has been approved.'
+      + '\n\nYour appointment is scheduled for\n\nDate:&&date&& \nExpected Check in Time: &&start_time&&' +
+      '\n\nNigerian Communication Commission';
+
+    var APPOINTMENT_APPROVAL_SMS_TEMPLATE = 'Hello &&first_name&& &&last_name&&, your appointment with &&host_first_name&& &&host_last_name&& has been approved.'
+      + ' Your appointment is scheduled for Date:&&date&& Expected Check in Time: &&end_time&&';
+
+    var APPOINTMENT_CREATED_EMAIL_TEMPLATE = 'Hello &&first_name&& &&last_name&&,\n\nYou have an appointment awaiting your approval\n\n'+
+      'Nigerian Communication Commission';
+
+    var APPOINTMENT_CREATED_SMS_TEMPLATE = 'Hello &&first_name&& &&last_name&&, you have an appointment awaiting your approval';
+
     function getAllAppointments() {
       //return storageService.all(DB_NAME);
 
@@ -248,4 +260,8 @@ angular.module('viLoggedClientApp')
     this.getAppointmentsByWeek = appointmentByWeek;
     this.getAppointmentsByMonth = appointmentByMonth;
     this.getAppointmentsByDay = appointmentsByDay;
+    this.APPOINTMENT_APPROVAL_EMAIL_TEMPLATE = APPOINTMENT_APPROVAL_EMAIL_TEMPLATE;
+    this.APPOINTMENT_APPROVAL_SMS_TEMPLATE = APPOINTMENT_APPROVAL_SMS_TEMPLATE;
+    this.APPOINTMENT_CREATED_EMAIL_TEMPLATE = APPOINTMENT_CREATED_EMAIL_TEMPLATE;
+    this.APPOINTMENT_CREATED_SMS_TEMPLATE = APPOINTMENT_CREATED_SMS_TEMPLATE;
   });
