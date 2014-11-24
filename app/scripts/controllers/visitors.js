@@ -210,7 +210,6 @@ angular.module('viLoggedClientApp')
     }
 
     $scope.saveUserProfile = function() {
-      console.log($scope.visitor);
       function sendNotification() {
         var visitor = {
           first_name: $scope.visitor.first_name,
@@ -291,26 +290,12 @@ angular.module('viLoggedClientApp')
 
             function afterRegistration() {
 
-              if (userService.user) {
-
-                if ($scope.visitor.uuid) {
-                  growl.addSuccessMessage('Visitor profile was successfully updated');
-                } else {
-                  growl.addSuccessMessage('Visitor profile successfully created.');
-                  sendNotification();
-                }
+              if ($scope.user.is_staff) {
+                growl.addSuccessMessage('Visitor profile was saved successfully.');
                 $state.go('visitors');
               } else {
-
-                if (!angular.isDefined($scope.visitor.uuid)) {
-                  growl.addSuccessMessage('Your profile was successfully created.');
-                  $state.go('login');
-                } else {
-                  sendNotification();
-                  growl.addSuccessMessage('Your profile was successfully updated.');
-                  $state.go('show-visitor', {visitor_id: $scope.visitor.uuid});
-                }
-
+                growl.addSuccessMessage('Your profile was saved successfully.');
+                $state.go('show-visitor', {visitor_id: $scope.visitor.uuid});
               }
             }
 
