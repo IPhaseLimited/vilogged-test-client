@@ -190,6 +190,26 @@ angular.module('viLoggedClientApp')
         timeStamp.setMinutes(timeArray[1]);
       }
       return timeStamp.getTime();
+    };
+
+    this.compileTemplate = function(_replacements, template, _delimiter) {
+
+      function pregQuote(str) {
+        return (str + '').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
+      }
+
+
+      var objectTest = Object.prototype.toString.call(_replacements) === '[object Object]';
+      var replacements = objectTest ? _replacements : {};
+      var delimiter = _delimiter === undefined ? '&&' : _delimiter;
+
+      (Object.keys(replacements))
+        .forEach(function(key) {
+          var patternString = pregQuote(delimiter+key+delimiter);
+          template = template.replace(new RegExp(patternString, 'g'), replacements[key]);
+        });
+      return template;
     }
+
 
   });
