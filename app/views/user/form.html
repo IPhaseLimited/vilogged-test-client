@@ -1,3 +1,6 @@
+<div class="loading-status" ng-if="busy">
+  Loading...
+</div>
 <div>
   <form class="form-horizontal" ng-submit="createUserAccount()" name="userAccount">
     <legend>User Account Detail</legend>
@@ -6,25 +9,25 @@
 
       <div class="col-sm-6">
         <input class="form-control" type="text" name="username" id="username"
-               ng-model="user.username" required/>
+               ng-model="userProfile.username" required/>
       </div>
     </div>
 
-    <div class="form-group" ng-if="!user.id">
+    <div class="form-group" ng-if="!userProfile.id">
       <label for="password" class="control-label col-sm-2">Password <span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
         <input class="form-control" type="password" name="password" id="password"
-               ng-model="user.password" required/>
+               ng-model="userProfile.password" required/>
       </div>
     </div>
 
-    <div class="form-group" ng-if="!user.id">
+    <div class="form-group" ng-if="!userProfile.id">
       <label for="confirm_password" class="control-label col-sm-2">Confirm Password <span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
         <input class="form-control" type="password" name="confirm_password" id="confirm_password"
-               ng-model="user.confirm_password" required/>
+               ng-model="userProfile.confirm_password" required/>
       </div>
     </div>
 
@@ -32,7 +35,7 @@
       <label for="email" class="control-label col-sm-2">Email <span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
-        <input class="form-control" type="text" name="email" id="email" ng-model="user.email" required/>
+        <input class="form-control" type="text" name="email" id="email" ng-model="userProfile.email" required/>
       </div>
     </div>
 
@@ -43,7 +46,7 @@
 
       <div class="col-sm-6">
         <input class="form-control" type="text" name="first_name" id="first_name"
-               ng-model="user.first_name" required/>
+               ng-model="userProfile.first_name" required/>
       </div>
     </div>
 
@@ -52,7 +55,7 @@
 
       <div class="col-sm-6">
         <input class="form-control" type="text" name="last_name" id="last_name"
-               ng-model="user.last_name" required/>
+               ng-model="userProfile.last_name" required/>
       </div>
     </div>
 
@@ -60,7 +63,7 @@
       <label for="phone" class="control-label col-sm-2">Phone <span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
-        <input class="form-control" type="text" name="phone" id="phone" ng-model="user.user_profile.phone" required/>
+        <input class="form-control" type="text" name="phone" id="phone" ng-model="userProfile.user_profile.phone" required/>
       </div>
     </div>
 
@@ -69,7 +72,7 @@
 
       <div class="col-sm-6">
         <input class="form-control" type="text" name="last_name" id="home_phone"
-               ng-model="user.user_profile.home_phone"/>
+               ng-model="userProfile.user_profile.home_phone"/>
       </div>
     </div>
 
@@ -78,7 +81,7 @@
 
       <div class="col-sm-6">
         <input class="form-control" type="text" name="work_phone" id="work_phone"
-               ng-model="user.user_profile.work_phone"/>
+               ng-model="userProfile.user_profile.work_phone"/>
       </div>
     </div>
 
@@ -86,9 +89,9 @@
       <label for="department" class="control-label col-sm-2">Department <span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
-        <select class="form-control" name="department" id="department" ng-model="user.user_profile.department">
+        <select class="form-control" name="department" id="department" ng-model="userProfile.user_profile.department">
           <option value=""></option>
-          <option ng-selected="user.user_profile.department === department.uuid" value="{{ department.uuid }}" ng-repeat="department in departments">{{ department.department_name }}</option>
+          <option ng-selected="userProfile.user_profile.department === department.uuid" value="{{ department.uuid }}" ng-repeat="department in departments">{{ department.department_name }}</option>
         </select>
       </div>
     </div>
@@ -97,7 +100,7 @@
       <div class="col-sm-offset-2 col-sm-10">
         <div class="checkbox">
           <label>
-            <input type="checkbox" ng_model="user.is_staff"> Grant staff privileges?
+            <input type="checkbox" ng_model="userProfile.is_staff"> Grant staff privileges?
           </label>
         </div>
       </div>
@@ -107,7 +110,7 @@
       <div class="col-sm-offset-2 col-sm-10">
         <div class="checkbox">
           <label>
-            <input type="checkbox" ng-model="user.is_active"> Make account active?
+            <input type="checkbox" ng-model="userProfile.is_active"> Make account active?
           </label>
         </div>
       </div>
@@ -116,12 +119,10 @@
     <hr/>
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-6">
-        <button class="btn btn-primary" ng-class="{'disabled btn-danger': userAccount.$invalid}"
-                ng-if="!user.id">
+        <button class="btn btn-primary" ng-if="!user.id">
           Create User Account
         </button>
-        <button class="btn btn-primary" ng-class="{'disabled btn-danger': userAccount.$invalid}"
-                ng-if="user.id">
+        <button class="btn btn-primary" ng-if="user.id">
           Edit User Account
         </button>
       </div>

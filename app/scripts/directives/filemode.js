@@ -7,7 +7,7 @@
  * # fileMode
  */
 angular.module('viLoggedClientApp')
-  .directive('fileModel', ['$parse', function ($parse) {
+  .directive('fileModel', ['$parse', function($parse) {
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {

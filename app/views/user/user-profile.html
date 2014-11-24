@@ -1,3 +1,6 @@
+<div class="loading-status" ng-if="busy">
+  Loading...
+</div>
 <div class="row">
   <div class="col-sm-6">
     <div class="widget">
@@ -15,35 +18,35 @@
               <table class="table-condensed table">
                 <tr>
                   <th>Name</th>
-                  <td>{{ currentUser.first_name + ' ' + currentUser.last_name }}</td>
+                  <td>{{ user.first_name + ' ' + user.last_name }}</td>
                 </tr>
                 <tr>
                   <th>Email</th>
-                  <td ng-if="currentUser.email">
-                    {{ currentUser.email }}
+                  <td ng-if="user.email">
+                    {{ user.email }}
                   </td>
-                  <td ng-if="!currentUser.email"> Nil</td>
+                  <td ng-if="!user.email"> Nil</td>
                 </tr>
                 <tr>
                   <th>Phone</th>
-                  <td ng-if="currentUser.user_profile.phone">
-                    {{ currentUser.user_profile.phone }}
+                  <td ng-if="user.user_profile.phone">
+                    {{ user.user_profile.phone }}
                   </td>
-                  <td ng-if="!currentUser.user_profile.phone"> Nil</td>
+                  <td ng-if="!user.user_profile.phone"> Nil</td>
                 </tr>
                 <tr>
                   <th>Home Phone</th>
-                  <td ng-if="currentUser.user_profile.home_phone">
-                    {{ currentUser.user_profile.home_phone }}
+                  <td ng-if="user.user_profile.home_phone">
+                    {{ user.user_profile.home_phone }}
                   </td>
-                  <td ng-if="!currentUser.user_profile.home_phone"> Nil</td>
+                  <td ng-if="!user.user_profile.home_phone"> Nil</td>
                 </tr>
                 <tr>
                   <th>Office Phone</th>
-                  <td ng-if="currentUser.user_profile.work_phone">
-                    {{ currentUser.user_profile.work_phone }}
+                  <td ng-if="user.user_profile.work_phone">
+                    {{ user.user_profile.work_phone }}
                   </td>
-                  <td ng-if="!currentUser.user_profile.work_phone"> Nil</td>
+                  <td ng-if="!user.user_profile.work_phone"> Nil</td>
                 </tr>
               </table>
             </div>
@@ -176,15 +179,24 @@
                 <th>Date</th>
                 <th>Start Time</th>
                 <th>End Time</th>
+                <th></th>
               </tr>
               </thead>
               <tbody>
-              <tr ng-repeat="appointment in appointmentsAwaitingApproval | limitTo: 5 | orderBy: appointment_date">
+              <tr ng-repeat="appointment in appointmentsAwaitingApproval | limitTo: 5 | orderBy: appointment.created">
                 <td>{{ $index+1 }}</td>
-                <td>{{ appointment.visitor.first_name + " " + appointment.visitor.last_name }}</td>
+                <td>{{ appointment.visitor_id.first_name + " " + appointment.visitor_id.last_name }}</td>
                 <td>{{ appointment.appointment_date | date: 'EEE, MMM d, y' }}</td>
                 <td>{{ appointment.visit_start_time }}</td>
                 <td>{{ appointment.visit_end_time }}</td>
+                <td>
+                  <a ng-click="toggleAppointmentApproval(appointment.uuid, true)" class="btn btn-primary btn-xs">
+                    <span class="fa fa-check"></span>
+                  </a>
+                  <a ng-click="toggleAppointmentApproval(appointment.uuid, false)" class="btn btn-danger btn-xs">
+                    <span class="fa fa-times"></span>
+                  </a>
+                </td>
               </tr>
               </tbody>
             </table>

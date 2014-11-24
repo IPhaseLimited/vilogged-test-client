@@ -16,17 +16,21 @@ function formController($scope, $state, companyDepartmentsService, $stateParams,
   }
 
   if (id !== undefined && id !== null) {
+    $scope.busy = true;
     companyDepartmentsService.get(id)
       .then(function(response) {
+        $scope.busy = false;
         $scope.companyDepartments = response;
         console.log(response);
       })
       .catch(function(reason) {
+        $scope.busy = false;
         console.error(reason)
       });
   }
 
   $scope.save = function() {
+    $scope.busy = true;
 
     var validationParams = {
       department_name: validationService.BASIC
@@ -34,16 +38,19 @@ function formController($scope, $state, companyDepartmentsService, $stateParams,
     $scope.validationErrors = validationService.validateFields(validationParams, $scope.companyDepartments);
     if (Object.keys( $scope.validationErrors).length === 0) {
       companyDepartmentsService.save($scope.companyDepartments)
-        .then(function () {
+        .then(function() {
+          $scope.busy = false;
           if (angular.isDefined($modalInstance)) {
             $modalInstance.close(true);
           } else {
+            $scope.busy = false;
             $state.go('company-departments');
           }
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           if (angular.isDefined($modalInstance)) {
             //$modalInstance.close(true);
+            $scope.busy = false;
           }
           (Object.keys(reason)).forEach(function(key) {
             $scope.validationErrors[key] = reason[key];
@@ -79,7 +86,8 @@ angular.module('viLoggedClientApp')
           label: 'Add Department'
         },
         ncyBreadcrumb: {
-          label: 'Add Department'
+          label: 'Add Department',
+          parent: 'company-departments'
         }
       })
       .state('edit-company-department', {
@@ -92,18 +100,22 @@ angular.module('viLoggedClientApp')
           label: 'Edit Department'
         },
         ncyBreadcrumb: {
-          label: 'Edit Department'
+          label: 'Edit Department',
+          parent: 'company-departments'
         }
       });
   })
-  .controller('CompanyDepartmentsCtrl', function ($scope, companyDepartmentsService, $modal, notificationService, $interval) {
+  .controller('CompanyDepartmentsCtrl', function($scope, companyDepartmentsService, $modal, notificationService, $interval) {
     $scope.departments = [];
     function getDepartments() {
+      $scope.busy = true;
       companyDepartmentsService.all()
-        .then(function (departments) {
+        .then(function(departments) {
+          $scope.busy = false;
           $scope.departments = departments;
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
+          $scope.busy = false;
           console.log(reason);
         });
     }
@@ -118,12 +130,15 @@ angular.module('viLoggedClientApp')
 
       notificationService.modal.confirm(dialogParams)
         .then(function() {
+          $scope.busy = true;
           companyDepartmentsService.remove(id)
             .then(function(response) {
+              $scope.busy = false;
               console.log(response);
               getDepartments();
             })
             .catch(function(reason) {
+              $scope.busy = false;
               console.log(reason);
             });
         });
@@ -132,6 +147,7 @@ angular.module('viLoggedClientApp')
 
     $scope.addDepartment = function(id) {
 
+      $scope.busy = true;
       var modalInstance = $modal.open({
         templateUrl: 'views/company-departments/modal-form.html',
         controller: function($scope, $state, companyDepartmentsService, $stateParams, $modalInstance, validationService) {
@@ -141,6 +157,7 @@ angular.module('viLoggedClientApp')
 
       modalInstance.result
         .then(function() {
+          $scope.busy = false;
           getDepartments();
         });
 

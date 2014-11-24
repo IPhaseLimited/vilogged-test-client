@@ -1,3 +1,6 @@
+<div class="loading-status" ng-if="busy">
+  Loading...
+</div>
 <div class="row">
   <div class="col-sm-12">
     <div class="widget">
@@ -27,10 +30,10 @@
               <tbody>
               <tr ng-repeat="currentAppointment in currentAppointments  | paginationOffset:currentPage:itemsPerPage | orderBy: 'start_time'">
                 <td>{{ $index + 1 }}</td>
-                <td>{{ currentAppointment.visitor.first_name }} {{ currentAppointment.visitor.last_name }}</td>
-                <td>{{ currentAppointment.host.first_name }} {{ currentAppointment.host.last_name }}</td>
-                <td>{{ currentAppointment.start_time }}</td>
-                <td>{{ currentAppointment.end_time }}</td>
+                <td>{{ currentAppointment.visitor_id.first_name }} {{ currentAppointment.visitor_id.last_name }}</td>
+                <td>{{ currentAppointment.host_id.first_name }} {{ currentAppointment.host_id.last_name }}</td>
+                <td>{{ currentAppointment.visit_start_time }}</td>
+                <td>{{ currentAppointment.visit_end_time }}</td>
               </tr>
               </tbody>
             </table>

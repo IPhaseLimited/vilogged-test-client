@@ -22,6 +22,31 @@ module.exports = function(grunt) {
       dist: 'dist'
     },
 
+    express: {
+      options: {
+// Override defaults here
+        hostname: 'localhost',
+        livereload: 35729
+      },
+      web: {
+        options: {
+          script: '../viLogged-Cron/index.js',
+          base: [
+            '.tmp',
+            '<%= yeoman.app %>'
+          ]
+        }
+      },
+      livereload: {
+        options: {
+          base: [
+            '.tmp',
+            '<%= yeoman.app %>'
+          ]
+        }
+      }
+    },
+
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       jsTest: {
@@ -38,7 +63,7 @@ module.exports = function(grunt) {
       },
       livereload: {
         options: {
-          livereload: '<%= connect.options.livereload %>'
+          livereload: '<%= express.options.livereload %>'
         },
         files: [
           '<%= yeoman.app %>/*.html',
@@ -50,6 +75,22 @@ module.exports = function(grunt) {
           '<%= yeoman.app %>/scripts/{,*/}*.js',
           '<%= yeoman.app %>/scripts/fixtures/*.json'
         ]
+      },
+      express: {
+        files:  [
+          '<%= yeoman.app %>/*.html',
+          '.tmp/styles/{,*/}*.css',
+          '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
+          '<%= yeoman.app %>/views/**/*.html',
+          '<%= yeoman.app %>/manifest.json',
+          '<%= yeoman.app %>/_locales/{,*/}*.json',
+          '<%= yeoman.app %>/scripts/{,*/}*.js',
+          '<%= yeoman.app %>/scripts/fixtures/*.json'
+        ],
+        tasks:  [ 'express:web' ],
+        options: {
+          spawn: false
+        }
       },
       fixtures: {
         files: ['<%= yeoman.app %>/scripts/fixtures/*.json'],
@@ -156,7 +197,7 @@ module.exports = function(grunt) {
             '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
             '<%= yeoman.dist %>/styles/fonts/*',
             '!<%= yeoman.dist %>/scripts/main*.js',
-            '!<%= yeoman.dist %>/images/icon{,-*}.png',
+            '!<%= yeoman.dist %>/images/icon{,-*}.png'
           ]
         }
       }
@@ -464,7 +505,8 @@ module.exports = function(grunt) {
       'ngconstant:development',
       'concurrent:server',
       'autoprefixer',
-      'connect:livereload',
+      'express:web',
+      //'express:livereload',
       'watch'
     ]);
   });

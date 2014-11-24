@@ -1,4 +1,7 @@
-<form class="form-horizontal" name="visitorForm" ng-submit="createProfile()" novalidate>
+<div class="loading-status" ng-if="busy">
+  Loading...
+</div>
+<form class="form-horizontal" name="visitorForm" ng-submit="saveProfile()" novalidate>
   <fieldset>
 
     <legend>Personal Information</legend>

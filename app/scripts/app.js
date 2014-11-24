@@ -14,42 +14,25 @@ angular.module('viLoggedClientApp', [
   'db.names',
   'webcam',
   'ngResource',
-  'angular-flash.service',
-  'angular-flash.flash-alert-directive',
   'ncy-angular-breadcrumb'
 ])
-  .run(function ($cookieStore, $rootScope, $state, $http, $location, $interval, loginService, userService, authorizationService) {
+  .run(function($cookieStore, $rootScope, $state, $http, $location, $interval, loginService, growl, authorizationService) {
 
     $rootScope.pageTitle = 'Visitor Management System';
-    $rootScope.$on('$stateChangeSuccess', function () {
+    $rootScope.pageHeader = 'Dashboard';
 
-      if ($state.$current.name === 'visitor-registration') {
-        loginService.anonymousLogin()
-      }
+    function redirectToLogin() {
+      loginService.logout();
+      $location.path('/login');
+    }
 
-      var userLoginStatus =
-        !$cookieStore.get('vi-token') && ($cookieStore.get('no-login') === 0);
-
-      if (userLoginStatus && !$cookieStore.get('vi-visitor') && !$cookieStore.get('vi-anonymous-token')) {
-        $state.go('login');
-      }
-
-      if ($cookieStore.get('vi-anonymous-token') && $state.$current.name !== 'visitor-registration') {
-        loginService.logout();
-        $state.go('login');
-      }
+    $rootScope.$on('$stateChangeSuccess', function() {
 
       if (angular.isDefined($state.$current.self.data)) {
         $rootScope.pageTitle =
           angular.isDefined($state.$current.self.data.label) ? $state.$current.self.data.label : $rootScope.pageTitle;
 
-        if ($state.current.data.requiredPermission !== undefined) {
-          var authorized = authorizationService.authorize($state.current.data.requiredPermission);
-          if (!authorized) {
-            console.log('not authorized');
-            //$state.go('access-rejected');
-          }
-        }
+        $rootScope.pageHeader = $state.$current.name === 'home' ? 'Dashboard' : $rootScope.pageTitle;
       }
 
       if (angular.isUndefined($rootScope.user)) {
@@ -57,54 +40,76 @@ angular.module('viLoggedClientApp', [
           $rootScope.user = $cookieStore.get('current-user');
         } else if ($rootScope.user = $cookieStore.get('vi-visitor')) {
           $rootScope.user = $cookieStore.get('vi-visitor');
+        } else {
+          redirectToLogin();
         }
-
       }
 
       if ($state.$current.name === 'login') {
-        loginService.logout($rootScope.user);
+        redirectToLogin();
       }
 
+      if (angular.isDefined($rootScope.user)) {
+        var page = $state.$current.name;
+        var visitorsPages = authorizationService.allowedPages.visitors;
+        if ($rootScope.user.is_vistor && visitorsPages.indexOf(page) === -1) {
+          //flash.danger = 'Access Denied';
+          $location.path('/visitors/'+$rootScope.user.id);
+        }
+
+        var staffPages = authorizationService.allowedPages.staff;
+        if (($rootScope.user.is_staff && !$rootScope.user.is_superuser) &&  staffPages.indexOf(page) === -1) {
+          growl.addErrorMessage('Access Denied');
+          $location.path('/');
+        }
+
+        var activeUserPages = authorizationService.allowedPages.users;
+        if ($rootScope.user.is_active && !$rootScope.user.is_staff && activeUserPages.indexOf(page) === -1) {
+          $location.path('/profile');
+        }
+      }
     });
   })
-  .config(function ($httpProvider) {
+  .config(function($httpProvider) {
     $httpProvider.interceptors.push([
-      '$cookieStore', '$location',
-      function ($cookieStore, $location) {
+      '$cookieStore', '$location', '$q',
+      function($cookieStore, $location, $q) {
         return {
-          'request': function (config) {
-            if ($cookieStore.get('vi-token') && $location.path() !== '/login') {
+          'request': function(config) {
+            if ($cookieStore.get('vi-token')) {
               $httpProvider.defaults.headers.common['Authorization'] = 'Token ' + $cookieStore.get('vi-token');
+              if ($location.path() === '/login') {
+                delete $httpProvider.defaults.headers.common['Authorization'];
+              }
             }
             return config;
+          },
+          // Intercept 401s and redirect you to login
+          responseError: function(response) {
+            if (response.status === 401) {
+              $location.path('/login');
+              return $q.reject(response);
+            }
+            else {
+              return $q.reject(response);
+            }
           }
         };
       }
     ]);
   })
-  .config(function ($compileProvider) {
+  .config(['growlProvider', function(growlProvider) {
+    growlProvider.globalTimeToLive(50000);
+  }])
+  .config(function($compileProvider) {
     // to bypass Chrome app CSP for images.
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(chrome-extension):/);
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file|blob):|data:image\//);
   })
-  .config(function (uiSelectConfig) {
+  .config(function(uiSelectConfig) {
     uiSelectConfig.theme = 'bootstrap';
   })
-  .config(function (growlProvider) {
-    growlProvider.globalTimeToLive({
-      success: 5000,
-      error: 5000,
-      warning: 5000,
-      info: 5000
-    });
-  })
-  .config(function (flashProvider) {
-    flashProvider.errorClassnames.push('alert-danger');
-    flashProvider.warnClassnames.push('alert-warn');
-    flashProvider.infoClassnames.push('alert-info');
-    flashProvider.successClassnames.push('alert-success');
-  })
-  .config(function ($breadcrumbProvider) {
+  .config(function($breadcrumbProvider) {
     $breadcrumbProvider.setOptions({
       prefixStateName: 'home',
       template: 'bootstrap2'

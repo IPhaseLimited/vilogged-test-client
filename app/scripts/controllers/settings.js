@@ -20,12 +20,12 @@ angular.module('viLoggedClientApp')
           requiredPermission: 'is_superuser'
         },
         ncyBreadcrumb: {
-          label: 'Settings',
-          parent: 'Home'
+          label: 'Settings'
         }
       })
   })
-  .controller('SettingFormCtrl', function ($scope, utility) {
+  .controller('SettingFormCtrl', function($scope, utility, $http) {
+    $scope.busy = true;
     $scope.currentPage = 'server-setting';
     $scope.pageTile = utility.toTitleCase('Server Setting');
     $scope.currentPageTemplateUrl = '/views/settings/server-setting.html';
@@ -34,6 +34,24 @@ angular.module('viLoggedClientApp')
       serverSetting: {},
       databaseSetting: {},
       systemSetting: {}
+    };
+
+    $http.get('/api/save-settings')
+      .success(function(response) {
+        $scope.settings = response;
+      })
+      .error(function(reason) {
+        console.log(reason);
+      });
+
+    $scope.save = function() {
+      $http.post('/api/save-settings', $scope.settings)
+        .success(function(response) {
+
+        })
+        .error(function(reason) {
+          console.log(reason);
+        });
     };
 
     $scope.setCurrentPage = function(page) {
@@ -58,5 +76,6 @@ angular.module('viLoggedClientApp')
               $scope.currentPageTemplateUrl = '/views/settings/server-setting.html';
               break;
       }
+      $scope.busy = false;
     }
   });

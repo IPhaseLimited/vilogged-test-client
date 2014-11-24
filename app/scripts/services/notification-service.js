@@ -8,11 +8,25 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('notificationService', function notificationService($modal) {
+  .service('notificationService', function notificationService($modal, $http, $q, config) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
+    function sendMessage(objectParams, apiUrl) {
+      var deferred = $q.defer();
+
+      $http.post(apiUrl, objectParams)
+        .success(function(response) {
+          deferred.resolve(response);
+        })
+        .error(function(reason) {
+          console.log(reason);
+        });
+
+      return deferred.promise;
+    }
+
     this.modal = {};
-    this.modal.confirm = function (paramObject) {
+    this.modal.confirm = function(paramObject) {
       var modalInstance = $modal.open({
         templateUrl: 'views/partials/confirm-dialog.html',
         controller: function($scope, $modalInstance){
@@ -29,4 +43,26 @@ angular.module('viLoggedClientApp')
 
       return modalInstance.result;
     };
+
+    this.send = {
+      sms: function(smsParams) {
+        sendMessage(smsParams, '/api/send-sms')
+          .then(function(response) {
+            var message = response;
+          })
+          .catch(function(reason) {
+            console.log(reason)
+          });
+      },
+      email: function(emailParams) {
+        sendMessage(emailParams, '/api/send-mail')
+          .then(function(response) {
+            var message = response;
+          })
+          .catch(function(reason) {
+            console.log(reason);
+          });
+      }
+    };
+
   });

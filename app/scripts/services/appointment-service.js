@@ -13,6 +13,18 @@ angular.module('viLoggedClientApp')
     var DB_NAME = db.APPOINTMENTS;
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
 
+    var APPOINTMENT_APPROVAL_EMAIL_TEMPLATE = 'Hello &&first_name&& &&last_name&&,\n\nYour appointment with &&host_first_name&& &&host_last_name&& has been approved.'
+      + '\n\nYour appointment is scheduled for\n\nDate:&&date&& \nExpected Check in Time: &&start_time&&' +
+      '\n\nNigerian Communication Commission';
+
+    var APPOINTMENT_APPROVAL_SMS_TEMPLATE = 'Hello &&first_name&& &&last_name&&, your appointment with &&host_first_name&& &&host_last_name&& has been approved.'
+      + ' Your appointment is scheduled for Date:&&date&& Expected Check in Time: &&end_time&&';
+
+    var APPOINTMENT_CREATED_EMAIL_TEMPLATE = 'Hello &&first_name&& &&last_name&&,\n\nYou have an appointment awaiting your approval\n\n'+
+      'Nigerian Communication Commission';
+
+    var APPOINTMENT_CREATED_SMS_TEMPLATE = 'Hello &&first_name&& &&last_name&&, you have an appointment awaiting your approval';
+
     function getAllAppointments() {
       //return storageService.all(DB_NAME);
 
@@ -43,11 +55,39 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     }
 
+    function findByFieldNested(field, value) {
+      var deferred = $q.defer();
+
+      $http.get(BASE_URL + DB_NAME + '/nested/?' + field + '=' + value)
+        .success(function(response) {
+          deferred.resolve(response);
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
+        });
+
+      return deferred.promise;
+    }
+
+    function getNestedAppointmentsByUser(user) {
+      var deferred = $q.defer();
+
+      findByFieldNested('host_id__id', user.id)
+        .then(function(response) {
+          deferred.resolve(response);
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
+        });
+
+      return deferred.promise;
+    }
+
     function getAppointmentsByUser(user) {
       var deferred = $q.defer();
 
       findByField('host_id', user.id)
-        .then(function (response) {
+        .then(function(response) {
           deferred.resolve(response);
         })
         .catch(function(reason) {
@@ -64,15 +104,15 @@ angular.module('viLoggedClientApp')
     function getUserUpcomingAppointments(user) {
       var deferred = $q.defer();
       getAppointmentsByUser(user)
-        .then(function (response) {
+        .then(function(response) {
           var filtered = response
-            .filter(function (appointment) {
+            .filter(function(appointment) {
               return appointment.approved &&
                 new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.expired;
             });
           deferred.resolve(filtered);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.resolve(reason);
         });
 
@@ -87,7 +127,7 @@ angular.module('viLoggedClientApp')
     function getNested(id) {
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + '/nested/'+id)
+      $http.get(BASE_URL + DB_NAME + '/nested/' + id)
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -100,7 +140,7 @@ angular.module('viLoggedClientApp')
 
     function appointmentsAwaitingApprovalFilter(response) {
       return response
-        .filter(function (appointment) {
+        .filter(function(appointment) {
           return !appointment.approved && !appointment.expired && utility.getTimeStamp(appointment.appointment_date) > new Date().getTime();
         });
     }
@@ -108,12 +148,12 @@ angular.module('viLoggedClientApp')
     function getUserAppointmentsAwaitingApproval(user) {
       var deferred = $q.defer();
       getAppointmentsByUser(user)
-        .then(function (response) {
+        .then(function(response) {
           var filtered = appointmentsAwaitingApprovalFilter(response);
 
           deferred.resolve(filtered);
         }).
-        catch(function (reason) {
+        catch(function(reason) {
           deferred.reject(reason);
         });
 
@@ -123,15 +163,15 @@ angular.module('viLoggedClientApp')
     function getAppointmentsByVisitor(visitor_id) {
       var deferred = $q.defer();
       getAllAppointments(DB_NAME)
-        .then(function (response) {
+        .then(function(response) {
           var filtered = response
-            .filter(function (appointment) {
+            .filter(function(appointment) {
               return appointment.visitor_id.id === visitor_id;
             });
 
           deferred.resolve(filtered);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
 
@@ -142,15 +182,15 @@ angular.module('viLoggedClientApp')
       var deferred = $q.defer();
 
       findByField('visitor_id__uuid', visitor_id)
-        .then(function (response) {
+        .then(function(response) {
           var filtered = response
-            .filter(function (appointment) {
+            .filter(function(appointment) {
               return appointment.approved &&
                 new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.expired;
             });
           deferred.resolve(filtered)
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
 
@@ -164,13 +204,13 @@ angular.module('viLoggedClientApp')
       getAllAppointments()
         .then(function(response) {
           var appointments = response
-            .filter(function (appointment) {
+            .filter(function(appointment) {
               var appointmentTimeStamp = utility.getTimeStamp(appointment.appointment_date);
               return searchTimeStamp === appointmentTimeStamp;
             });
           deferred.resolve(appointments);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
       return deferred.promise;
@@ -184,7 +224,7 @@ angular.module('viLoggedClientApp')
       var weekStartedOn = utility.getTimeStamp(moment().startOf(period));
       var weekEndedOn = utility.getTimeStamp(moment().endOf(period));
       getAllAppointments()
-        .then(function (response) {
+        .then(function(response) {
           var appointments = response
             .filter(function(appointment) {
               var appointmentTimeStamp = utility.getTimeStamp(appointment.appointment_date);
@@ -192,17 +232,17 @@ angular.module('viLoggedClientApp')
             });
           deferred.resolve(appointments);
         })
-        .catch(function (reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
       return deferred.promise;
     }
 
-    function appointmentByWeek (date) {
+    function appointmentByWeek(date) {
       return appointmentsByPeriod(date, 'week');
     }
 
-    function appointmentByMonth (date) {
+    function appointmentByMonth(date) {
       return appointmentsByPeriod(date, 'month');
     }
 
@@ -210,12 +250,18 @@ angular.module('viLoggedClientApp')
     this.getNested = getNested;
     this.all = getAllAppointments;
     this.save = save;
+    this.findByField = findByField;
     this.getUserUpcomingAppointments = getUserUpcomingAppointments;
     this.getAppointmentsByUser = getAppointmentsByUser;
+    this.getNestedAppointmentsByUser = getNestedAppointmentsByUser;
     this.getUserAppointmentsAwaitingApproval = getUserAppointmentsAwaitingApproval;
     this.getVisitorUpcomingAppointments = getVisitorUpcomingAppointments;
     this.getAppointmentsByVisitor = getAppointmentsByVisitor;
     this.getAppointmentsByWeek = appointmentByWeek;
     this.getAppointmentsByMonth = appointmentByMonth;
     this.getAppointmentsByDay = appointmentsByDay;
+    this.APPOINTMENT_APPROVAL_EMAIL_TEMPLATE = APPOINTMENT_APPROVAL_EMAIL_TEMPLATE;
+    this.APPOINTMENT_APPROVAL_SMS_TEMPLATE = APPOINTMENT_APPROVAL_SMS_TEMPLATE;
+    this.APPOINTMENT_CREATED_EMAIL_TEMPLATE = APPOINTMENT_CREATED_EMAIL_TEMPLATE;
+    this.APPOINTMENT_CREATED_SMS_TEMPLATE = APPOINTMENT_CREATED_SMS_TEMPLATE;
   });

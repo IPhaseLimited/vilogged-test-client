@@ -69,7 +69,7 @@ angular.module('viLoggedClientApp')
       };
       if (credential.identity) {
         visitorService.findByPassCodeOrPhone(credential.identity)
-          .then(function (response) {
+          .then(function(response) {
             loginResponse.status = 200;
             loginResponse.loginMessage = 'Login was successful';
             loginResponse.loginRawResponse = response;
@@ -77,7 +77,7 @@ angular.module('viLoggedClientApp')
             $cookieStore.put('vi-visitor', $rootScope.user );
             deferred.resolve(loginResponse);
           })
-          .catch(function (reason) {
+          .catch(function(reason) {
             loginResponse.status = 401;
             loginResponse.loginMessage = ERROR_MESSAGE;
             deferred.reject(loginResponse);

@@ -1,11 +1,11 @@
-<form class="form-horizontal" ng-submit="saveServerSetting()" name="serverSettingForm">
+
   <fieldset>
 
     <div class="form-group">
       <label class="control-label col-sm-2" for="smtpServer">SMTP Sever</label>
 
       <div class="col-sm-6">
-        <input class="form-control" name="smtpServer" id="smtpServer" required type="text" ng-model="settings.serverSetting.smtp_server"/>
+        <input class="form-control" name="smtpServer" id="smtpServer"  type="text" ng-model="settings.serverSetting.smtp_server"/>
       </div>
     </div>
 
@@ -13,7 +13,7 @@
       <label class="control-label col-sm-2" for="smtpUser">SMTP Sever</label>
 
       <div class="col-sm-6">
-        <input class="form-control" name="smtpUser" id="smtpUser" required type="text" ng-model="settings.serverSetting.smtp_user"/>
+        <input class="form-control" name="smtpUser" id="smtpUser"  type="text" ng-model="settings.serverSetting.smtpUser"/>
       </div>
     </div>
 
@@ -21,7 +21,7 @@
       <label class="control-label col-sm-2" for="smtpPassword">SMTP Sever</label>
 
       <div class="col-sm-6">
-        <input class="form-control" name="smtpPassword" id="smtpPassword" required type="text" ng-model="settings.serverSetting.smtp_password"/>
+        <input class="form-control" name="smtpPassword" id="smtpPassword"  type="text" ng-model="settings.serverSetting.smtpPass"/>
       </div>
     </div>
 
@@ -29,15 +29,11 @@
       <label class="control-label col-sm-2" for="smtpPort">SMTP Port</label>
 
       <div class="col-sm-6">
-        <input class="form-control" name="smtpPort" id="smtpPort" required ng-model="settings.serverSetting.smtp_port" type="text"/>
+        <input class="form-control" name="smtpPort" id="smtpPort"  ng-model="settings.serverSetting.smtpPort" type="text"/>
       </div>
     </div>
 
     <hr/>
 
-    <div class="col-sm-offset-2 col-sm-6">
-      <button class="btn btn-primary"><i class="fa fa-cog"></i> Save Database Setting</button>
-    </div>
   </fieldset>
-</form>
 

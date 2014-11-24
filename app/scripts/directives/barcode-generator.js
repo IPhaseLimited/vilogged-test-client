@@ -8,7 +8,7 @@
  */
 angular.module('viLoggedClientApp')
   .directive('barcodeGenerator', [function() {
-    var Barcode	= (function () {
+    var Barcode	= (function() {
       var barcode	= {
         settings: {
           barWidth:		1,

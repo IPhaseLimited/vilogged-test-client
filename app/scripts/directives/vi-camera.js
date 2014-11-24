@@ -7,7 +7,7 @@
  * # viCamera
  */
 angular.module('viLoggedClientApp')
-  .directive('viCamera', function (cameraService) {
+  .directive('viCamera', function(cameraService) {
     return {
       restrict: 'EA',
       replace: true,

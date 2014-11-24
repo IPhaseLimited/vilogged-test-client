@@ -13,6 +13,13 @@ angular.module('viLoggedClientApp')
     var DB_NAME = db.VISITORS;
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
 
+    var EMAIL_TEMPLATE = 'Hello &&first_name&& &&last_name&&,\n\nYour account with visitor privileges has ' +
+      'successfully been created.\n\nYou can now log on using either Phone Number: &&phone&& '
+      + 'OR Pass Code: &&pass_code&&\n\nNigerian Communication Commission';
+
+    var SMS_TEMPLATE = 'Hello &&first_name&& &&last_name&&, your account has been created. You can ' +
+      'now log on using either, Phone Number: &&phone&& OR Pass Code: &&pass_code&&';
+
     function findByField(field, value) {
       //return storageService.findByField(DB_NAME, field, value);
 
@@ -23,7 +30,11 @@ angular.module('viLoggedClientApp')
           deferred.resolve(response);
         })
         .catch(function(reason) {
-          deferred.reject(reason);
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
         });
 
       return deferred.promise;
@@ -38,7 +49,11 @@ angular.module('viLoggedClientApp')
           deferred.resolve(response);
         })
         .catch(function(reason) {
-          deferred.reject(reason);
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
         });
 
       return deferred.promise;
@@ -65,7 +80,11 @@ angular.module('viLoggedClientApp')
           deferred.resolve(visitors);
         })
         .catch(function(reason) {
-          deferred.reject(reason);
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
         });
       return deferred.promise;
     }
@@ -93,13 +112,17 @@ angular.module('viLoggedClientApp')
           deferred.resolve(filtered);
         })
         .catch(function(reason) {
-          deferred.reject(reason);
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
         });
 
       return deferred.promise;
     };
 
-    this.findByPhone = function (value) {
+    this.findByPhone = function(value) {
       var deferred = $q.defer();
 
       findByField('visitors_phone', value)
@@ -107,13 +130,17 @@ angular.module('viLoggedClientApp')
           deferred.resolve(response);
         })
         .catch(function(reason) {
-          deferred.reject(reason);
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
         });
 
       return deferred.promise;
     };
 
-    this.findByPassCodeOrPhone = function (value) {
+    this.findByPassCodeOrPhone = function(value) {
       var deferred = $q.defer();
 
       var promises = [
@@ -133,7 +160,11 @@ angular.module('viLoggedClientApp')
           }
         })
         .catch(function(reason) {
-          deferred.reject(reason);
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
         });
 
       return deferred.promise;
@@ -143,4 +174,6 @@ angular.module('viLoggedClientApp')
     this.changes = getChanges;
     this.getVisitorsGroupedByCompany = visitorsGroupByCompanyName;
     this.DBNAME = DB_NAME;
+    this.EMAIL_TEMPLATE = EMAIL_TEMPLATE;
+    this.SMS_TEMPLATE = SMS_TEMPLATE;
   });
