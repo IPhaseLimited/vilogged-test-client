@@ -198,7 +198,8 @@ angular.module('viLoggedClientApp')
         });
     }
   })
-  .controller('UserFormCtrl', function($scope, $state, $stateParams, userService, companyDepartmentsService, growl) {
+  .controller('UserFormCtrl', function($scope, $state, $stateParams, userService, companyDepartmentsService, growl,
+                                       $rootScope, $cookieStore) {
     $scope.busy = true;
     $scope.userLoaded = false;
     $scope.departmentLoaded = false;
@@ -260,7 +261,18 @@ angular.module('viLoggedClientApp')
         .then(function() {
           var message = !$stateParams.user_id ? 'User account was successfully created.' : 'User account was successfully updated.';
           growl.addSuccessMessage(message);
-
+          if ($scope.user.id === $rootScope.user.id) {
+            userService.currentUser()
+              .then(function(user) {
+                $rootScope.user = user;
+                $cookieStore.put('current-user', user);
+              })
+              .catch(function(reason) {
+                $scope.busy = false;
+                $state.go("users");
+              });
+          }
+          
           $scope.busy = false;
           $state.go("users");
         })
