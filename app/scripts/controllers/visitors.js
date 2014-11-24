@@ -112,9 +112,9 @@ angular.module('viLoggedClientApp')
     $scope.maxSize = 5;
     $scope.itemsPerPage = 10;
   })
-  .controller('VisitorFormCtrl', function($scope, $state, $stateParams, $rootScope, $window, visitorService, growl,
+  .controller('VisitorFormCtrl', function($scope, $state, $stateParams, $rootScope, $window, $filter, visitorService,
                                            validationService, countryStateService, guestGroupConstant, userService,
-                                           countryState, visitorsLocationService, $filter) {
+                                           countryState, visitorsLocationService, notificationService, utility, growl) {
     $scope.visitors = [];
     $scope.visitor = {};
     $scope.visitorsLocation = {};
@@ -209,7 +209,42 @@ angular.module('viLoggedClientApp')
         });
     }
 
-    $scope.createProfile = function() {
+    $scope.saveUserProfile = function() {
+      console.log($scope.visitor);
+      function sendNotification() {
+        var visitor = {
+          first_name: $scope.visitor.first_name,
+          last_name: $scope.visitor.last_name,
+          phone: $scope.visitor.visitors_phone,
+          pass_code: $scope.visitor.visitors_pass_code
+        };
+
+        var emailTemplate = 'Hello &&first_name&& &&last_name&&,\n Your account with visitor privileges has ' +
+          'successfully been created. \n You can now log on using either\n Phone Number: &&phone&& \n'
+          + 'OR \n Pass Code: &&pass_code&& \n Nigerian Communication Commission';
+        var compiledEmailTemplate = utility.compileTemplate(visitor, emailTemplate, '&&');
+        console.log(compiledEmailTemplate);
+
+        var smsTemplate = 'Hello &&first_name&& &&last_name&&, your account has been created. You can now log on using either, Phone Number: &&phone&& OR Pass Code: &&pass_code&&';
+        var compiledSMSTemplate = utility.compileTemplate(visitor, smsTemplate, '&&');
+        console.log(compiledSMSTemplate);
+
+        if (angular.isDefined($scope.visitor.visitors_phone) && $scope.visitor.visitors_phone !== '') {
+          notificationService.message.sendSms({
+            message: compiledSMSTemplate,
+            mobiles: $scope.visitor.visitors_phone
+          })
+        }
+
+        if (angular.isDefined($scope.visitor.visitors_email) && $scope.visitor.visitors_email !== '') {
+          notificationService.message.sendEmail({
+            to: $scope.visitor.visitors_email,
+            subject: 'Visitor\'s account created.',
+            message: compiledEmailTemplate
+          })
+        }
+      }
+
       $scope.busy = true;
       var emailValidation = validationService.EMAIL;
       emailValidation.required = true;
@@ -249,51 +284,54 @@ angular.module('viLoggedClientApp')
         if ($scope.visitor.date_of_birth) {
           $scope.visitor.date_of_birth = $filter('date')($scope.visitor.date_of_birth, 'yyyy-MM-dd');
         }
-        visitorService.save($scope.visitor)
-          .then(function(response) {
-            $scope.visitor = response;
-
-            function afterRegistration() {
-
-              if (userService.user) {
-
-                if ($scope.visitor.uuid) {
-                  growl.addSuccessMessage('Visitor profile was successfully updated');
-                } else {
-                  growl.addSuccessMessage('Visitor profile successfully created.');
-                }
-                $state.go('visitors');
-              } else {
-
-                if (!angular.isDefined($scope.visitor.uuid)) {
-                  growl.addSuccessMessage('Your profile was successfully created.');
-                  $state.go('login');
-                } else {
-                  growl.addSuccessMessage('Your profile was successfully updated.');
-                  $state.go('show-visitor', {visitor_id: $scope.visitor.uuid});
-                }
-
-              }
-            }
-
-            $scope.visitorsLocation.visitor_id = response.uuid;
-            visitorsLocationService.save($scope.visitorsLocation)
-              .then(function() {
-                $scope.busy = false;
-                afterRegistration();
-              })
-              .catch(function(reason) {
-                Object.keys(reason).forEach(function(key) {
-                  $scope.validationErrors[key] = reason[key];
-                  $scope.busy = false;
-                });
-                //afterRegistration();
-              });
-          })
-          .catch(function(reason) {
-            console.log(reason);
-            $scope.busy = false;
-          });
+        sendNotification();
+        //visitorService.save($scope.visitor)
+        //  .then(function(response) {
+        //    $scope.visitor = response;
+        //
+        //    function afterRegistration() {
+        //
+        //      if (userService.user) {
+        //
+        //        if ($scope.visitor.uuid) {
+        //          growl.addSuccessMessage('Visitor profile was successfully updated');
+        //        } else {
+        //          growl.addSuccessMessage('Visitor profile successfully created.');
+        //          sendNotification();
+        //        }
+        //        $state.go('visitors');
+        //      } else {
+        //
+        //        if (!angular.isDefined($scope.visitor.uuid)) {
+        //          growl.addSuccessMessage('Your profile was successfully created.');
+        //          $state.go('login');
+        //        } else {
+        //          sendNotification();
+        //          growl.addSuccessMessage('Your profile was successfully updated.');
+        //          $state.go('show-visitor', {visitor_id: $scope.visitor.uuid});
+        //        }
+        //
+        //      }
+        //    }
+        //
+        //    $scope.visitorsLocation.visitor_id = response.uuid;
+        //    visitorsLocationService.save($scope.visitorsLocation)
+        //      .then(function() {
+        //        $scope.busy = false;
+        //        afterRegistration();
+        //      })
+        //      .catch(function(reason) {
+        //        Object.keys(reason).forEach(function(key) {
+        //          $scope.validationErrors[key] = reason[key];
+        //          $scope.busy = false;
+        //        });
+        //        //afterRegistration();
+        //      });
+        //  })
+        //  .catch(function(reason) {
+        //    console.log(reason);
+        //    $scope.busy = false;
+        //  });
       }
 
     };
