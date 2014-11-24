@@ -43,7 +43,7 @@ angular.module('viLoggedClientApp')
             var startTime = utility.getTimeStamp(appointment.appointment_date, appointment.start_time);
             var endTime = utility.getTimeStamp(appointment.appointment_date, appointment.end_time);
             var date = new Date().getTime();
-            return appointment.is_approved && ( date >= startTime || date <= endTime) && appointment.checked_in;
+            return appointment.is_approved && ( date >= startTime || date <= endTime) && appointment.checked_in && !appointment.checked_out;
           });
       })
       .catch(function(reason) {
@@ -66,7 +66,7 @@ angular.module('viLoggedClientApp')
       .then(function(response) {
         $scope.appointmentsNotCheckedIn = response
           .filter(function(appointment) {
-            return appointment.is_approved && appointment.checked_in !== null;
+            return appointment.is_approved && appointment.checked_in === null;
           });
       })
       .catch(function(reason) {

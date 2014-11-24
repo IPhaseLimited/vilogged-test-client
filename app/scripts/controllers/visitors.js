@@ -281,6 +281,9 @@ angular.module('viLoggedClientApp')
         $scope.validationErrors[key] = validateLocation[key];
       });
       if (!Object.keys($scope.validationErrors).length) {
+        if (!angular.isDefined($scope.visitor.company_name)) {
+          $scope.visitor.company_name = 'Anonymous';
+        }
         $scope.visitor.image = $scope.takenImg;
         if ($scope.visitor.date_of_birth) {
           $scope.visitor.date_of_birth = $filter('date')($scope.visitor.date_of_birth, 'yyyy-MM-dd');
@@ -292,26 +295,12 @@ angular.module('viLoggedClientApp')
 
             function afterRegistration() {
 
-              if (userService.user) {
-
-                if ($scope.visitor.uuid) {
-                  growl.addSuccessMessage('Visitor profile was successfully updated');
-                } else {
-                  growl.addSuccessMessage('Visitor profile successfully created.');
-                  sendNotification();
-                }
+              if ($scope.user.is_staff) {
+                growl.addSuccessMessage('Visitor profile was saved successfully.');
                 $state.go('visitors');
               } else {
-
-                if (!angular.isDefined($scope.visitor.uuid)) {
-                  growl.addSuccessMessage('Your profile was successfully created.');
-                  $state.go('login');
-                } else {
-                  sendNotification();
-                  growl.addSuccessMessage('Your profile was successfully updated.');
-                  $state.go('show-visitor', {visitor_id: $scope.visitor.uuid});
-                }
-
+                growl.addSuccessMessage('Your profile was saved successfully.');
+                $state.go('show-visitor', {visitor_id: $scope.visitor.uuid});
               }
             }
 

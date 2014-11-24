@@ -73,7 +73,7 @@ angular.module('viLoggedClientApp')
   .controller('EntranceFormCtrl', function($scope, $state, $stateParams, entranceService) {
     $scope.entrance = {};
 
-    if ($stateParams.entrance_id !== null || $stateParams.entrance_id !== undefined) {
+    if ($stateParams.entrance_id) {
       $scope.busy = true;
       entranceService.get($stateParams.entrance_id)
         .then(function(response) {
