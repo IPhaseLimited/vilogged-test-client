@@ -11,20 +11,26 @@ angular.module('viLoggedClientApp')
   .service('apiService', function apiService($http, apiFactory, config, $q) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
+    var TIME_OUT = 5000;
+    var CONFIG = {timeout: TIME_OUT};
     this.put = function(db, data) {
       var deferred = $q.defer();
       //return apiFactory.put({_db:db, _param: data.uuid}, data).$promise;
-      $http.post(BASE_URL + db + '/' + data.uuid, data)
+      $http.post(BASE_URL + db + '/' + data.uuid, data, CONFIG)
         .success(function(response) {
           deferred.resolve(response);
         })
         .error(function() {
-          $http.put(BASE_URL + db + '/' + data.uuid, data)
+          $http.put(BASE_URL + db + '/' + data.uuid, data, CONFIG)
             .success(function(response) {
               deferred.resolve(response);
             })
             .error(function(reason) {
-              deferred.reject(reason);
+              if (reason === null) {
+                deferred.reject('timeout');
+              } else {
+                deferred.reject(reason);
+              }
             });
           return deferred.promise;
         });
@@ -35,12 +41,16 @@ angular.module('viLoggedClientApp')
     this.post = function(db, data) {
       //return apiFactory.post({_db:db}, data).$promise;
       var deferred = $q.defer();
-      $http.post(BASE_URL + db + '/', data)
+      $http.post(BASE_URL + db + '/', data, CONFIG)
         .success(function(response) {
           deferred.resolve(response);
         })
         .error(function(reason) {
-          deferred.reject(reason);
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
         });
 
       return deferred.promise;
@@ -53,12 +63,16 @@ angular.module('viLoggedClientApp')
       }).$promise;*/
 
       var deferred = $q.defer();
-      $http.get(BASE_URL + db + '/')
+      $http.get(BASE_URL + db + '/', CONFIG)
         .success(function(response) {
           deferred.resolve(response);
         })
         .error(function(reason) {
-          deferred.reject(reason);
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
         });
 
       return deferred.promise;
@@ -68,12 +82,16 @@ angular.module('viLoggedClientApp')
       //return apiFactory.get({_db: db, _param: id}).$promise;
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + db + '/'+ id + '/')
+      $http.get(BASE_URL + db + '/'+ id + '/', CONFIG)
         .success(function(response) {
           deferred.resolve(response);
         })
         .error(function(reason) {
-          deferred.reject(reason);
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
         });
 
       return deferred.promise;
@@ -83,12 +101,16 @@ angular.module('viLoggedClientApp')
       //return apiFactory.remove({_db: db, _param: id}).$promise;
       var deferred = $q.defer();
 
-      $http.delete(BASE_URL + db + '/'+ id + '/')
+      $http.delete(BASE_URL + db + '/'+ id + '/', CONFIG)
         .success(function(response) {
           deferred.resolve(response);
         })
         .error(function(reason) {
-          deferred.reject(reason);
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
         });
 
       return deferred.promise;

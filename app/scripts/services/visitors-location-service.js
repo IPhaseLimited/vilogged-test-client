@@ -13,6 +13,8 @@ angular.module('viLoggedClientApp')
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
     var DB_NAME = db.VISITORS_LOCATION.replace(/_/, '-');
 
+
+
     this.save = function(object) {
       return storageService.save(DB_NAME, object);
     };
@@ -29,7 +31,11 @@ angular.module('viLoggedClientApp')
           deferred.resolve(response);
         })
         .error(function(reason) {
-          deferred.reject(reason);
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
         });
 
       return deferred.promise;

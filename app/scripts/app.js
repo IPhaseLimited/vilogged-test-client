@@ -26,7 +26,6 @@ angular.module('viLoggedClientApp', [
       $location.path('/login');
     }
 
-
     $rootScope.$on('$stateChangeSuccess', function() {
 
       if (angular.isDefined($state.$current.self.data)) {
@@ -69,9 +68,6 @@ angular.module('viLoggedClientApp', [
           $location.path('/profile');
         }
       }
-
-
-
     });
   })
   .config(function($httpProvider) {
