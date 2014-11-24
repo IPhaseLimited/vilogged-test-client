@@ -20,6 +20,7 @@ angular.module('viLoggedClientApp', [
 
     $rootScope.pageTitle = 'Visitor Management System';
     $rootScope.pageHeader = 'Dashboard';
+
     function redirectToLogin() {
       loginService.logout();
       $location.path('/login');
@@ -28,39 +29,11 @@ angular.module('viLoggedClientApp', [
 
     $rootScope.$on('$stateChangeSuccess', function() {
 
-      /*if ($state.$current.name === 'visitor-registration') {
-        loginService.anonymousLogin()
-      }
-
-      var userLoginStatus =
-        !$cookieStore.get('vi-token') && ($cookieStore.get('no-login') === 0);
-
-      if (userLoginStatus && !$cookieStore.get('vi-visitor') && !$cookieStore.get('vi-anonymous-token')) {
-        $state.go('login');
-      }
-
-      if ($cookieStore.get('vi-anonymous-token') && $state.$current.name !== 'visitor-registration') {
-        loginService.logout();
-        $state.go('login');
-      }*/
-
-
-
       if (angular.isDefined($state.$current.self.data)) {
         $rootScope.pageTitle =
           angular.isDefined($state.$current.self.data.label) ? $state.$current.self.data.label : $rootScope.pageTitle;
 
         $rootScope.pageHeader = $state.$current.name === 'home' ? 'Dashboard' : $rootScope.pageTitle;
-
-        /*if ($state.current.data.requiredPermission !== undefined) {
-          var authorized = authorizationService.authorize($state.current.data.requiredPermission);
-
-          if (!authorized) {
-
-
-            //$state.go('access-rejected');
-          }
-        }*/
       }
 
       if (angular.isUndefined($rootScope.user)) {
@@ -103,14 +76,27 @@ angular.module('viLoggedClientApp', [
   })
   .config(function($httpProvider) {
     $httpProvider.interceptors.push([
-      '$cookieStore', '$location',
-      function($cookieStore, $location) {
+      '$cookieStore', '$location', '$q',
+      function($cookieStore, $location, $q) {
         return {
           'request': function(config) {
-            if ($cookieStore.get('vi-token') && $location.path() !== '/login') {
+            if ($cookieStore.get('vi-token')) {
               $httpProvider.defaults.headers.common['Authorization'] = 'Token ' + $cookieStore.get('vi-token');
+              if ($location.path() === '/login') {
+                delete $httpProvider.defaults.headers.common['Authorization'];
+              }
             }
             return config;
+          },
+          // Intercept 401s and redirect you to login
+          responseError: function(response) {
+            if (response.status === 401) {
+              $location.path('/login');
+              return $q.reject(response);
+            }
+            else {
+              return $q.reject(response);
+            }
           }
         };
       }
