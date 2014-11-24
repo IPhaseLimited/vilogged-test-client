@@ -159,7 +159,10 @@ angular.module('viLoggedClientApp')
           $scope.users = response;
         })
         .catch(function(reason) {
-
+          if (reason === 'timeout') {
+            growl.addErrorMessage('it looks like your network is experiencing some problem');
+          }
+          console.log(reason);
         });
     }
 
@@ -272,7 +275,7 @@ angular.module('viLoggedClientApp')
                 $state.go("users");
               });
           }
-          
+
           $scope.busy = false;
           $state.go("users");
         })
