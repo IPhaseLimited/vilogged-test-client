@@ -23,7 +23,11 @@ angular.module('viLoggedClientApp')
         deferred.resolve(utility.castArrayToObject(response));
       })
       .catch(function(reason) {
-        deferred.reject(reason);
+        if (reason === null) {
+          deferred.reject('timeout');
+        } else {
+          deferred.reject(reason);
+        }
       });
 
     return deferred.promise;

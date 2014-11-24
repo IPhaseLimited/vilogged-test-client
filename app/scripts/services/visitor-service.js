@@ -30,7 +30,11 @@ angular.module('viLoggedClientApp')
           deferred.resolve(response);
         })
         .catch(function(reason) {
-          deferred.reject(reason);
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
         });
 
       return deferred.promise;
@@ -45,7 +49,11 @@ angular.module('viLoggedClientApp')
           deferred.resolve(response);
         })
         .catch(function(reason) {
-          deferred.reject(reason);
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
         });
 
       return deferred.promise;
@@ -72,7 +80,11 @@ angular.module('viLoggedClientApp')
           deferred.resolve(visitors);
         })
         .catch(function(reason) {
-          deferred.reject(reason);
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
         });
       return deferred.promise;
     }
@@ -100,7 +112,11 @@ angular.module('viLoggedClientApp')
           deferred.resolve(filtered);
         })
         .catch(function(reason) {
-          deferred.reject(reason);
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
         });
 
       return deferred.promise;
@@ -114,7 +130,11 @@ angular.module('viLoggedClientApp')
           deferred.resolve(response);
         })
         .catch(function(reason) {
-          deferred.reject(reason);
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
         });
 
       return deferred.promise;
@@ -140,7 +160,11 @@ angular.module('viLoggedClientApp')
           }
         })
         .catch(function(reason) {
-          deferred.reject(reason);
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
         });
 
       return deferred.promise;
