@@ -47,7 +47,7 @@ angular.module('viLoggedClientApp')
     this.message = {};
 
     this.message.sendSms = function(smsParams) {
-      sendMessage(smsParams, '/api/send-sms')
+      sendMessage(smsParams, '/api/send-sms/')
         .then(function(response) {
           var message = response;
         })
@@ -57,7 +57,7 @@ angular.module('viLoggedClientApp')
     };
 
     this.message.sendEmail = function(emailParams) {
-      sendMessage(emailParams, '/api/send-email')
+      sendMessage(emailParams, '/api/send-email/')
         .then(function(response) {
           var message = response;
         })
