@@ -421,6 +421,7 @@ angular.module('viLoggedClientApp')
 
       $scope.validationErrors = validationService.validateFields(validationParams, $scope.appointment);
       if (!Object.keys($scope.validationErrors).length) {
+        $scope.appointment.entrance_id = 'd970f3aa81d4432b8c3ae33ca8e7cd9a';
         $scope.busy = true;
         $scope.appointment.entrance_id = 'd970f3aa81d4432b8c3ae33ca8e7cd9a';
         appointmentService.save($scope.appointment)

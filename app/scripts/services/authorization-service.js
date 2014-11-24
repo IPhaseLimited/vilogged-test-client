@@ -40,6 +40,35 @@ angular.module('viLoggedClientApp')
       return currentUser.is_staff || currentUser.is_superuser;
     };
 
+    this.allowedPages = {
+      staff: [
+        'profile',
+        'editUser',
+        'change-password',
+        'visitors',
+        'create-visitor-profile',
+        'show-visitor',
+        'home',
+        'visitor-check-in',
+        'visitor-check-out',
+        'create-appointment',
+        'create-appointment-visitor',
+        'appointments',
+        'show-appointment',
+        'edit-appointment'],
+      visitors: [
+        'show-visitor',
+        'create-appointment-visitor'
+      ],
+      users: [
+        'profile',
+        'appointments',
+        'create-appointment-host',
+        'show-appointment',
+        'edit-appointment'
+      ]
+    };
+
     this.authorize = authorize;
     this.canModifyUser = canPerformAdminActions;
     this.canModifyDepartment = canPerformAdminActions;

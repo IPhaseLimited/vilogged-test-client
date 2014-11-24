@@ -88,12 +88,6 @@
 }
 .growl {
   z-index: 10000;
-  float: none;
-  position: fixed;
-  right: inherit;
-  width: inherit;
-  max-width: 400px;
-  min-width: 250px;
 }
 
 .growl-item.ng-enter,
