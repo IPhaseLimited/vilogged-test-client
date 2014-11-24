@@ -38,7 +38,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="appointment in appointments track by appointment.uuid | orderBy: appointment.created"
+          <tr ng-repeat="appointment in appointments track by appointment.uuid | paginationOffset:currentPage:itemsPerPage | orderBy: appointment.created"
               ng-class="{'text-danger': expired(appointment.appointment_date), 'text-success': upcoming(appointment.appointment_date)}">
             <td>{{ $index+1 }}</td>
             <td>{{ ((appointment).visitor_id).first_name + ' ' + ((appointment).visitor_id).last_name }}</td>
