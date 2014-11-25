@@ -51,6 +51,10 @@ angular.module('viLoggedClientApp')
               loginResponse.loginMessage = reason.detail === 'Invalid Token' ? ERROR_MESSAGE : reason.detail;
             }
 
+            if (reason === '') {
+              loginResponse.loginMessage = 'Server not responding';
+            }
+
             deferred.reject(loginResponse);
           });
       } else {
