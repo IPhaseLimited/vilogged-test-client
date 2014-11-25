@@ -13,7 +13,7 @@ angular.module('viLoggedClientApp')
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
     var DB_NAME = db.VISITORS_LOCATION.replace(/_/, '-');
 
-    var TIME_OUT = 5000;
+    var TIME_OUT = 90000; //1.5min
     var CONFIG = {timeout: TIME_OUT};
 
     this.save = function(object) {

@@ -128,7 +128,7 @@ angular.module('viLoggedClientApp')
         }
       })
   })
-  .controller('AppointmentCtrl', function($scope, appointmentService, utility, $rootScope) {
+  .controller('AppointmentCtrl', function($scope, appointmentService, utility, $rootScope, notificationService) {
     $rootScope.busy = true;
     $scope.currentPage = 1;
     $scope.maxSize = 5;
@@ -152,7 +152,7 @@ angular.module('viLoggedClientApp')
         $rootScope.busy = false
       })
       .catch(function(reason) {
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
         $rootScope.busy = false
       });
   })

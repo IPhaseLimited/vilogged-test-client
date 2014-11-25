@@ -13,7 +13,7 @@ angular.module('viLoggedClientApp')
     var DB_NAME = db.VISITORS;
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
 
-    var TIME_OUT = 5000;
+    var TIME_OUT = 90000; //1.5min
     var CONFIG = {timeout: TIME_OUT};
 
     var EMAIL_TEMPLATE = 'Hello &&first_name&& &&last_name&&,\n\nYour account with visitor privileges has ' +

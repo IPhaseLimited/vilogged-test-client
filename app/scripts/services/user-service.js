@@ -11,7 +11,7 @@ angular.module('viLoggedClientApp')
   .service('userService', function userService($q, $http, config, $cookieStore) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
-    var TIME_OUT = 5000;
+    var TIME_OUT = 90000; //1.5min
     var CONFIG = {timeout: TIME_OUT};
 
     function getAllUsers() {

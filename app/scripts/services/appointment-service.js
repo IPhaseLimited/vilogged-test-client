@@ -13,7 +13,7 @@ angular.module('viLoggedClientApp')
     var DB_NAME = db.APPOINTMENTS;
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
 
-    var TIME_OUT = 5000;
+    var TIME_OUT = 90000; //1.5min
     var CONFIG = {timeout: TIME_OUT};
 
     var APPOINTMENT_APPROVAL_EMAIL_TEMPLATE = 'Hello &&first_name&& &&last_name&&,\n\nYour appointment with &&host_first_name&& &&host_last_name&& has been approved.'

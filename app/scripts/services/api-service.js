@@ -11,7 +11,7 @@ angular.module('viLoggedClientApp')
   .service('apiService', function apiService($http, apiFactory, config, $q) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
-    var TIME_OUT = 5000;
+    var TIME_OUT = 90000; //1.5min
     var CONFIG = {timeout: TIME_OUT};
     this.put = function(db, data) {
       var deferred = $q.defer();
