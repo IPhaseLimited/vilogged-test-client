@@ -13,6 +13,12 @@ angular.module('viLoggedClientApp')
         views: {
           'header': {
             templateUrl: 'views/index/header.html',
+            controller: function($scope, $window) {
+              $scope.reload = function() {
+                $window.location.reload();
+              }
+            }
+            templateUrl: 'views/index/header.html',
             controller: function($scope, $location, $rootScope) {
               $rootScope.$on('$stateChangeSuccess', function() {
                 $scope.back = $location.path();
