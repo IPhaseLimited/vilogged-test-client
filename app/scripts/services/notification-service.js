@@ -26,9 +26,10 @@ angular.module('viLoggedClientApp')
     }
 
     this.setTimeOutNotification = function(reason) {
+
       if (reason === 'timeout' || reason === null) {
         growl.addErrorMessage('it looks like your network is experiencing some problem');
-      } else if (Object.prototype.toString.call(reason) === '[object Object]' && reason.status === 0) {
+      } else if (Object.prototype.toString.call(reason) === '[object Object]' && parseInt(reason.status) === 0) {
         growl.addErrorMessage('it looks like your network is experiencing some problem');
       } else {
         console.log(reason);
