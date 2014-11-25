@@ -32,8 +32,8 @@ angular.module('viLoggedClientApp')
         }
       })
   })
-  .controller('MainCtrl', function($scope, appointmentService, utility) {
-    $scope.busy = true;
+  .controller('MainCtrl', function($scope, appointmentService, utility, $rootScope) {
+    $rootScope.busy = true;
     var appointments = appointmentService.all();
 
     appointments
@@ -99,10 +99,10 @@ angular.module('viLoggedClientApp')
 
     appointments
       .then(function() {
-        $scope.busy = false;
+        $rootScope.busy = false;
       })
       .catch(function() {
-        $scope.busy = false;
+        $rootScope.busy = false;
       })
   })
 ;

@@ -1,7 +1,9 @@
 <a id="top"></a>
 <div ui-view="header"></div>
 <div growl></div>
-<div class="loading-status" ng-if="busy"></div>
+<div class="loading-status" ng-if="busy">
+  loading <i class="fa fa-spinner fa-spin"></i>
+</div>
 <div class="content">
 
   <!-- Sidebar -->

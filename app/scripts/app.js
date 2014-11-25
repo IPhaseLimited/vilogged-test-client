@@ -20,6 +20,7 @@ angular.module('viLoggedClientApp', [
 
     $rootScope.pageTitle = 'Visitor Management System';
     $rootScope.pageHeader = 'Dashboard';
+    $rootScope.busy = false;
 
     function redirectToLogin() {
       loginService.logout();

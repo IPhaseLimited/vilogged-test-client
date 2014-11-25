@@ -1829,14 +1829,3 @@ footer .copy{
   margin-bottom: 0;
 }
 
-.loading-status {
-  max-width: 150px;
-  margin: auto;
-  background-color: #a9302a;
-  color: #FFF;
-  z-index: 100;
-  font-size: 25px;
-  font-weight: bold;
-  text-align: center;
-  padding: 10px;
-}

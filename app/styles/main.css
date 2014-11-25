@@ -101,14 +101,15 @@
   -o-transition:1s linear all;
   transition:1s linear all;
 }
-
-.message-body {
-  position: absolute;
+.loading-status {
+  z-index: 10000;
+  position: fixed;
+  top:40px;
+  height: 50px;
+  min-width: 300px;
+  margin: 20px auto;
   left: 50%;
-}
-.message-content {
-  position: relative;
-  left: -50%;
+  font-size: 25px;
 }
 
 @media screen {

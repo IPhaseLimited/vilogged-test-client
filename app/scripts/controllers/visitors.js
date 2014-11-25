@@ -89,19 +89,19 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('VisitorsCtrl', function($scope, visitorService, visitorsLocationService) {
+  .controller('VisitorsCtrl', function($scope, visitorService, $rootScope) {
     $scope.visitors = [];
     function getVisitors() {
-      $scope.busy = true;
+      $rootScope.busy = true;
       visitorService.all()
         .then(function(response) {
-          $scope.busy = false;
+          $rootScope.busy = false;
           $scope.visitors = response;
           $scope.totalItems = $scope.visitors.length;
           $scope.numPages = Math.ceil($scope.totalItems / $scope.itemsPerPage);
         })
         .catch(function(reason) {
-          $scope.busy = false;
+          $rootScope.busy = false;
           console.log(reason);
         });
     }
@@ -171,7 +171,7 @@ angular.module('viLoggedClientApp')
     ];
 
     if ($stateParams.visitor_id !== null && $stateParams.visitor_id !== undefined) {
-      $scope.busy = true;
+      $rootScope.busy = true;
       visitorService.get($stateParams.visitor_id)
         .then(function(response) {
           $scope.visitor = response;
@@ -195,17 +195,17 @@ angular.module('viLoggedClientApp')
                   $scope.locationLgas = $scope.countryState[$scope.visitorsLocation.residential_country].states[$scope.visitorsLocation.residential_state].lga.sort();
                 }
               }
-              $scope.busy = false;
+              $rootScope.busy = false;
             })
             .catch(function(reason) {
-              $scope.busy = false;
+              $rootScope.busy = false;
               console.log(reason);
             });
           $scope.title = 'Edit ' + $scope.visitor.firstName + '\'s Profile';
         })
         .catch(function(reason) {
           console.log(reason);
-          $scope.busy = false;
+          $rootScope.busy = false;
         });
     }
 
@@ -246,7 +246,7 @@ angular.module('viLoggedClientApp')
         }
       }
 
-      $scope.busy = true;
+      $rootScope.busy = true;
       var emailValidation = validationService.EMAIL;
       emailValidation.required = true;
       var phoneNumberValidation = validationService.BASIC;
@@ -307,20 +307,20 @@ angular.module('viLoggedClientApp')
             $scope.visitorsLocation.visitor_id = response.uuid;
             visitorsLocationService.save($scope.visitorsLocation)
               .then(function() {
-                $scope.busy = false;
+                $rootScope.busy = false;
                 afterRegistration();
               })
               .catch(function(reason) {
                 Object.keys(reason).forEach(function(key) {
                   $scope.validationErrors[key] = reason[key];
-                  $scope.busy = false;
+                  $rootScope.busy = false;
                 });
                 //afterRegistration();
               });
           })
           .catch(function(reason) {
             console.log(reason);
-            $scope.busy = false;
+            $rootScope.busy = false;
           });
       }
 
@@ -350,7 +350,8 @@ angular.module('viLoggedClientApp')
       }
     };
   })
-  .controller('VisitorDetailCtrl', function($scope, $stateParams, visitorService, appointmentService, visitorsLocationService) {
+  .controller('VisitorDetailCtrl', function($scope, $stateParams, visitorService, appointmentService,
+                                            visitorsLocationService, $rootScope) {
     $scope.visitor = {};
     $scope.visitorsLocation = {};
     $scope.appointments = [];
@@ -358,7 +359,7 @@ angular.module('viLoggedClientApp')
     $scope.appointmentsCurrentPage = 1;
     $scope.appointmentsPerPage = 10;
     $scope.maxSize = 5;
-    $scope.busy = true;
+    $rootScope.busy = true;
     $scope.visitorLoaded = false;
     $scope.appointmentLoaded = false;
 
@@ -373,13 +374,13 @@ angular.module('viLoggedClientApp')
               }
               $scope.visitorLoaded = true;
               if ($scope.appointmentLoaded) {
-                $scope.busy = false;
+                $rootScope.busy = false;
               }
             })
             .catch(function(reason) {
               $scope.visitorLoaded = true;
               if ($scope.appointmentLoaded) {
-                $scope.busy = false;
+                $rootScope.busy = false;
               }
               console.log(reason);
             });
@@ -397,13 +398,13 @@ angular.module('viLoggedClientApp')
       .then(function() {
         $scope.appointmentLoaded = true;
         if ($scope.appointmentLoaded) {
-          $scope.busy = false;
+          $rootScope.busy = false;
         }
       })
       .catch(function() {
         $scope.appointmentLoaded = true;
         if ($scope.visitorLoaded) {
-          $scope.busy = false;
+          $rootScope.busy = false;
         }
       });
 

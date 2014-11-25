@@ -44,56 +44,56 @@ angular.module('viLoggedClientApp')
         }
       })
   })
-  .controller('CompanyEntranceCtrl', function($scope, entranceService) {
-    $scope.busy = false;
+  .controller('CompanyEntranceCtrl', function($scope, entranceService, $rootScope) {
+    $rootScope.busy = false;
     $scope.entrance = [];
 
     $scope.deleteEntrance = function(id) {
-      $scope.busy = true;
+      $rootScope.busy = true;
       entranceService.remove(id)
         .then(function(response) {
-          $scope.busy = false;
+          $rootScope.busy = false;
         })
         .catch(function(reason) {
-          $scope.busy = false;
+          $rootScope.busy = false;
           console.log(reason);
         })
     };
 
     entranceService.all()
       .then(function(response) {
-        $scope.busy = false;
+        $rootScope.busy = false;
         $scope.entrance = response;
       })
       .catch(function(reason) {
-        $scope.busy = false;
+        $rootScope.busy = false;
         console.log(reason);
       });
   })
-  .controller('EntranceFormCtrl', function($scope, $state, $stateParams, entranceService) {
+  .controller('EntranceFormCtrl', function($scope, $state, $stateParams, entranceService, $rootScope) {
     $scope.entrance = {};
 
     if ($stateParams.entrance_id) {
-      $scope.busy = true;
+      $rootScope.busy = true;
       entranceService.get($stateParams.entrance_id)
         .then(function(response) {
-          $scope.busy = false;
+          $rootScope.busy = false;
           $scope.entrance = response;
         })
         .catch(function(){
-          $scope.busy = false;
+          $rootScope.busy = false;
         });
     }
 
     $scope.addEntrance = function() {
-      $scope.busy = true;
+      $rootScope.busy = true;
       entranceService.save($scope.entrance)
         .then(function(response){
-          $scope.busy = false;
+          $rootScope.busy = false;
           $state.go("entrance")
         })
         .catch(function(reason) {
-          $scope.busy = false;
+          $rootScope.busy = false;
           console.log(reason);
         });
     }

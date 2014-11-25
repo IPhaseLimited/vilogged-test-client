@@ -128,8 +128,8 @@ angular.module('viLoggedClientApp')
         }
       })
   })
-  .controller('AppointmentCtrl', function($scope, appointmentService, utility) {
-    $scope.busy = true;
+  .controller('AppointmentCtrl', function($scope, appointmentService, utility, $rootScope) {
+    $rootScope.busy = true;
     $scope.currentPage = 1;
     $scope.maxSize = 5;
     $scope.itemsPerPage = 10;
@@ -149,28 +149,28 @@ angular.module('viLoggedClientApp')
         $scope.appointments = response;
         $scope.totalItems = $scope.appointments.length;
         $scope.numPages = Math.ceil($scope.totalItems / $scope.itemsPerPage);
-        $scope.busy = false
+        $rootScope.busy = false
       })
       .catch(function(reason) {
         console.log(reason);
-        $scope.busy = false
+        $rootScope.busy = false
       });
   })
   .controller('AppointmentDetailCtrl', function($scope, $state, $stateParams, appointmentService, utility, $modal, growl,
-                                                 notificationService) {
-    $scope.busy = true;
+                                                 notificationService, $rootScope) {
+    $rootScope.busy = true;
     appointmentService.getNested($stateParams.appointment_id)
       .then(function(response) {
         $scope.appointment = response;
-        $scope.busy = false;
+        $rootScope.busy = false;
       })
       .catch(function(reason) {
-        $scope.busy = false;
+        $rootScope.busy = false;
         console.log(reason);
       });
 
     $scope.printLabel = function() {
-      $scope.busy = true;
+      $rootScope.busy = true;
       $modal.open({
         templateUrl: 'views/appointments/partials/visitor-pass-template.html',
         controller: function($scope, $modalInstance, appointmentService) {
@@ -178,10 +178,10 @@ angular.module('viLoggedClientApp')
           appointmentService.getNested($stateParams.appointment_id)
             .then(function(response) {
               $scope.appointment = response;
-              $scope.busy = false;
+              $rootScope.busy = false;
             })
             .catch(function(reason) {
-              $scope.busy = false;
+              $rootScope.busy = false;
               console.log(reason);
             });
         }
@@ -230,7 +230,7 @@ angular.module('viLoggedClientApp')
         }
       }
 
-      $scope.busy = true;
+      $rootScope.busy = true;
       notificationService.modal.confirm(dialogParams)
         .then(function() {
           appointmentService.get($stateParams.appointment_id)
@@ -241,17 +241,17 @@ angular.module('viLoggedClientApp')
                 .then(function() {
                   approvalStatus ? growl.addSuccessMessage('The selected appointment has been approved.') :
                     growl.addErrorMessage('The selected appointment has been rejected.');
-                  $scope.busy = false;
+                  $rootScope.busy = false;
                   sendMessage();
                   $state.go('appointments');
                 })
                 .catch(function(reason) {
-                  $scope.busy = false;
+                  $rootScope.busy = false;
                   console.log(reason);
                 });
             })
             .catch(function(reason) {
-              $scope.busy = false;
+              $rootScope.busy = false;
               console.log(reason);
             });
         });
@@ -268,8 +268,8 @@ angular.module('viLoggedClientApp')
     };
   })
   .controller('AppointmentFormCtrl', function($scope, $stateParams, $state, $timeout, $filter, visitorService, growl,
-                                               userService, appointmentService, utility, validationService) {
-    $scope.busy = false;
+                                               userService, appointmentService, utility, validationService, $rootScope) {
+    $rootScope.busy = false;
     $scope.appointment = {};
     $scope.visit_start_time = new Date();
     $scope.visit_end_time = new Date();
@@ -325,49 +325,49 @@ angular.module('viLoggedClientApp')
     };
 
     $scope.getHost = function(hostPhone) {
-      $scope.busy = true;
+      $rootScope.busy = true;
       if (!hostPhone) {
-        $scope.busy = false;
+        $rootScope.busy = false;
         return;
       }
       userService.getUserByPhone(hostPhone)
         .then(function(response) {
-          $scope.busy = false;
+          $rootScope.busy = false;
           $scope.host.selected = response[0];
           console.log(response[0]);
         })
         .catch(function(reason) {
-          $scope.busy = false;
+          $rootScope.busy = false;
           console.log(reason);
         });
     };
 
     $scope.hostLookUp = {
       refreshHostsList: function(phone) {
-        $scope.busy = true;
+        $rootScope.busy = true;
         if (!phone) {
-          $scope.busy = false;
+          $rootScope.busy = false;
           return;
         }
         userService.getUserByPhone(phone)
           .then(function(response) {
-            $scope.busy = false;
+            $rootScope.busy = false;
             $scope.hosts = response;
           })
           .catch(function(reason) {
-            $scope.busy = false;
+            $rootScope.busy = false;
             console.log(reason);
           });
       },
       listHosts: function() {
-        $scope.busy = true;
+        $rootScope.busy = true;
         userService.all()
           .then(function(response) {
-            $scope.busy = false;
+            $rootScope.busy = false;
             $scope.hosts = response;
           })
           .catch(function(reason) {
-            $scope.busy = false;
+            $rootScope.busy = false;
             console.log(reason);
           })
       }
@@ -375,26 +375,26 @@ angular.module('viLoggedClientApp')
 
     $scope.visitorLookUp = {
       refreshVisitorsList: function(visitorPhone) {
-        $scope.busy = true;
+        $rootScope.busy = true;
         visitorService.findByPhone(visitorPhone)
           .then(function(response) {
-            $scope.busy = false;
+            $rootScope.busy = false;
             $scope.visitors = response;
           })
           .catch(function(reason) {
-            $scope.busy = false;
+            $rootScope.busy = false;
             console.log(reason);
           })
       },
       listVisitors: function() {
-        $scope.busy = true;
+        $rootScope.busy = true;
         visitorService.all()
           .then(function(response) {
-            $scope.busy = false;
+            $rootScope.busy = false;
             $scope.visitors = response;
           })
           .catch(function(reason) {
-            $scope.busy = false;
+            $rootScope.busy = false;
             console.log(reason);
           })
       }
@@ -409,33 +409,33 @@ angular.module('viLoggedClientApp')
     }
 
     if ($stateParams.visitor_id) {
-      $scope.busy = true;
+      $rootScope.busy = true;
       visitorService.get($stateParams.visitor_id)
         .then(function(response) {
-          $scope.busy = false;
+          $rootScope.busy = false;
           $scope.visitor.selected = response;
         })
         .catch(function(reason) {
-          $scope.busy = false;
+          $rootScope.busy = false;
           console.log(reason);
         })
     }
 
     if ($stateParams.host_id) {
-      $scope.busy = true;
+      $rootScope.busy = true;
       userService.get($stateParams.host_id)
         .then(function(response) {
-          $scope.busy = false;
+          $rootScope.busy = false;
           $scope.host.selected = response;
         })
         .catch(function(reason) {
-          $scope.busy = false;
+          $rootScope.busy = false;
           console.log(reason);
         })
     }
 
     $scope.createAppointment = function() {
-      $scope.busy = true;
+      $rootScope.busy = true;
       $scope.appointment.label_code = utility.generateRandomInteger();
       $scope.appointment.appointment_date = $filter('date')($scope.appointment.appointment_date, 'yyyy-MM-dd');
       $scope.appointment.is_expired = false;
@@ -453,16 +453,16 @@ angular.module('viLoggedClientApp')
           if (existingAppointment.length) {
             growl.addErrorMessage('An appointment with this host can\'t be created.');
             if (!$scope.user.is_active) {
-              $scope.busy = false;
+              $rootScope.busy = false;
               $state.go('show-visitor', {visitor_id: $scope.visitor.selected.uuid});
             } else {
-              $scope.busy = false;
+              $rootScope.busy = false;
               $state.go('appointments');
             }
           }
         })
         .catch(function(reason) {
-          $scope.busy = false;
+          $rootScope.busy = false;
           console.log(reason);
         });
 
@@ -484,17 +484,17 @@ angular.module('viLoggedClientApp')
       $scope.validationErrors = validationService.validateFields(validationParams, $scope.appointment);
       if (!Object.keys($scope.validationErrors).length) {
         $scope.appointment.entrance_id = '3bc509b67ae34abdc24774a8826507d4';
-        $scope.busy = true;
+        $rootScope.busy = true;
         $scope.appointment.entrance_id = '3bc509b67ae34abdc24774a8826507d4';
         appointmentService.save($scope.appointment)
           .then(function(response) {
-            $scope.busy = false;
+            $rootScope.busy = false;
             sendMessage();
             growl.addSuccessMessage( 'Appointment was successfully created' );
             $scope.user.is_active ? $state.go('appointments') : $state.go('visitors', {visitor_id: $stateParams.visitor_id});
           })
           .catch(function(reason) {
-            $scope.busy = false;
+            $rootScope.busy = false;
             if (angular.isObject(reason)) {
               Object.keys(reason).forEach(function(key) {
                 $scope.validationErrors[key] = reason[key];
@@ -507,7 +507,7 @@ angular.module('viLoggedClientApp')
   })
   .controller('CheckInCtrl', function($scope, $state, $stateParams, $q, visitorService, appointmentService, entranceService,
                                        vehicleTypeConstant, notificationService, utility, restrictedItemsService,
-                                       vehicleService, growl) {
+                                       vehicleService, growl, $rootScope) {
     $scope.appointment = {};
     $scope.restricted_items = [{
       item_code: '',
@@ -519,21 +519,21 @@ angular.module('viLoggedClientApp')
     $scope.vehicleTypes = vehicleTypeConstant;
     $scope.restrictedItemsErrors = {};
 
-    $scope.busy = true;
+    $rootScope.busy = true;
     entranceService.all()
       .then(function(response) {
-        $scope.busy = false;
+        $rootScope.busy = false;
         $scope.entrances = response;
       })
       .catch(function(reason) {
-        $scope.busy = false;
+        $rootScope.busy = false;
         console.log(reason);
       });
 
-    $scope.busy = true;
+    $rootScope.busy = true;
     appointmentService.get($stateParams.appointment_id)
       .then(function(response) {
-        $scope.busy = false;
+        $rootScope.busy = false;
         $scope.appointment = response;
         if (angular.isUndefined($scope.restricted_items)) {
           $scope.restricted_items = [{
@@ -544,14 +544,14 @@ angular.module('viLoggedClientApp')
         }
       })
       .catch(function(reason) {
-        $scope.busy = false;
+        $rootScope.busy = false;
         console.log(reason);
       });
 
-    $scope.busy = true;
+    $rootScope.busy = true;
     appointmentService.getNested($stateParams.appointment_id)
       .then(function(response) {
-        $scope.busy = false;
+        $rootScope.busy = false;
         $scope.appointmentView = response;
         if (angular.isUndefined($scope.restricted_items)) {
           $scope.restricted_items = [{
@@ -562,7 +562,7 @@ angular.module('viLoggedClientApp')
         }
       })
       .catch(function(reason) {
-        $scope.busy = false;
+        $rootScope.busy = false;
         console.log(reason);
       });
 
@@ -652,21 +652,22 @@ angular.module('viLoggedClientApp')
         promises.push(restricted);
       }
 
-      $scope.busy = true;
+      $rootScope.busy = true;
       $q.all(promises)
         .then(function() {
-          $scope.busy = false;
+          $rootScope.busy = false;
           growl.addSuccessMessage('User checked in successfully.');
           $state.go('appointments');
         })
         .catch(function(reason) {
-          $scope.busy = false;
+          $rootScope.busy = false;
           console.log(reason);
         });
     }
   })
-  .controller('CheckOutCtrl', function ($scope, $state, $stateParams, appointmentService, utility, notificationService, growl) {
-    $scope.busy = true;
+  .controller('CheckOutCtrl', function ($scope, $state, $stateParams, appointmentService, utility, notificationService,
+                                        growl, $rootScope) {
+    $rootScope.busy = true;
     appointmentService.get($stateParams.appointment_id)
       .then(function (response) {
         $scope.appointment = response;
@@ -674,7 +675,7 @@ angular.module('viLoggedClientApp')
       })
       .catch(function (reason) {
         console.log(reason);
-        $scope.busy = false;
+        $rootScope.busy = false;
       });
 
     function checkOut(response) {
@@ -683,26 +684,26 @@ angular.module('viLoggedClientApp')
         .then(function (response) {
           growl.addSuccessMessage('Visitor checked out successfully.');
           $state.go('appointments');
-          $scope.busy = false;
+          $rootScope.busy = false;
         })
         .catch(function(reason) {
           console.log(reason);
-          $scope.busy = false;
+          $rootScope.busy = false;
         });
     }
   })
-  .controller('VisitorPassCtrl', function($scope, $state, $stateParams, appointmentService) {
+  .controller('VisitorPassCtrl', function($scope, $state, $stateParams, appointmentService, $rootScope) {
     $scope.appointment = {};
     console.log($stateParams.appointment_id);
 
-    $scope.busy = true;
+    $rootScope.busy = true;
     appointmentService.getNested($stateParams.appointment_id)
       .then(function(response) {
-        $scope.busy = false;
+        $rootScope.busy = false;
         $scope.appointment = response;
       })
       .catch(function(reason) {
-        $scope.busy = false;
+        $rootScope.busy = false;
         console.log(reason);
       })
   });
