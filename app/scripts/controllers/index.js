@@ -12,7 +12,12 @@ angular.module('viLoggedClientApp')
         abstract: true,
         views: {
           'header': {
-            templateUrl: 'views/index/header.html'
+            templateUrl: 'views/index/header.html',
+            controller: function($scope, $window) {
+              $scope.reload = function() {
+                $window.location.reload();
+              }
+            }
           },
           'breadcrumbs': {
             templateUrl: 'views/index/breadcrumbs.html'
