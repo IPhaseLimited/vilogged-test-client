@@ -11,17 +11,15 @@ angular.module('viLoggedClientApp')
   .service('apiService', function apiService($http, apiFactory, config, $q) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
-    var TIME_OUT = 5000;
-    var CONFIG = {timeout: TIME_OUT};
     this.put = function(db, data) {
       var deferred = $q.defer();
       //return apiFactory.put({_db:db, _param: data.uuid}, data).$promise;
-      $http.post(BASE_URL + db + '/' + data.uuid, data, CONFIG)
+      $http.post(BASE_URL + db + '/' + data.uuid, data)
         .success(function(response) {
           deferred.resolve(response);
         })
         .error(function() {
-          $http.put(BASE_URL + db + '/' + data.uuid, data, CONFIG)
+          $http.put(BASE_URL + db + '/' + data.uuid, data)
             .success(function(response) {
               deferred.resolve(response);
             })
@@ -41,7 +39,7 @@ angular.module('viLoggedClientApp')
     this.post = function(db, data) {
       //return apiFactory.post({_db:db}, data).$promise;
       var deferred = $q.defer();
-      $http.post(BASE_URL + db + '/', data, CONFIG)
+      $http.post(BASE_URL + db + '/', data)
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -63,7 +61,7 @@ angular.module('viLoggedClientApp')
       }).$promise;*/
 
       var deferred = $q.defer();
-      $http.get(BASE_URL + db + '/', CONFIG)
+      $http.get(BASE_URL + db + '/')
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -82,7 +80,7 @@ angular.module('viLoggedClientApp')
       //return apiFactory.get({_db: db, _param: id}).$promise;
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + db + '/'+ id + '/', CONFIG)
+      $http.get(BASE_URL + db + '/'+ id + '/')
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -101,7 +99,7 @@ angular.module('viLoggedClientApp')
       //return apiFactory.remove({_db: db, _param: id}).$promise;
       var deferred = $q.defer();
 
-      $http.delete(BASE_URL + db + '/'+ id + '/', CONFIG)
+      $http.delete(BASE_URL + db + '/'+ id + '/')
         .success(function(response) {
           deferred.resolve(response);
         })

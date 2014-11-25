@@ -50,6 +50,12 @@
         </div>
       </form-->
       <!-- Links -->
+      <ul class="nav navbar-nav pull-left">
+        <li>
+          <a ng-click="reload()" class="navbar-btn btn-danger"><span class="fa fa-refresh"></span> <span class="sr-only">Reload</span></a>
+        </li>
+      </ul>
+
       <ul class="nav navbar-nav pull-right">
         <li class="dropdown pull-right">
           <a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -64,7 +70,7 @@
             </li>
             <li ng-show="user.is_active"><a ui-sref="change-password"><i class="fa fa-key"></i> Change Password</a></li>
             <li ng-show="user.is_superuser"><a ui-sref="settings"><i class="fa fa-cogs"></i> Settings</a></li>
-            <li><a ui-sref="logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+            <li><a ui-sref="logout({back: back})"><i class="fa fa-sign-out"></i> Logout</a></li>
           </ul>
         </li>
 

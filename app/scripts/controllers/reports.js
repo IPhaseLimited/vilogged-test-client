@@ -24,8 +24,8 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('ReportsCtrl', function($scope, appointmentService, visitorService, utility) {
-    $scope.busy = true;
+  .controller('ReportsCtrl', function($scope, appointmentService, visitorService, utility, $rootScope) {
+    $rootScope.busy = true;
     $scope.maxSize = 5;
     $scope.currentPage = 1;
     $scope.itemsPerPage = 10;
@@ -45,7 +45,7 @@ angular.module('viLoggedClientApp')
         $scope.numPages = Math.ceil($scope.totalItems/$scope.itemsPerPage);
       })
       .catch(function(reason) {
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
       });
 
     appointmentService.getAppointmentsByDay()
@@ -54,7 +54,7 @@ angular.module('viLoggedClientApp')
         $scope.numberOfAppointmentsForToday = response.length;
       })
       .catch(function(reason) {
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
       });
 
     appointmentService.getAppointmentsByMonth()
@@ -63,7 +63,7 @@ angular.module('viLoggedClientApp')
         $scope.numberOfAppointmentsForThisMonth = response.length;
       })
       .catch(function(reason) {
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
       });
 
     appointmentService.getAppointmentsByWeek()
@@ -72,16 +72,16 @@ angular.module('viLoggedClientApp')
         $scope.numberOfAppointmentsForThisWeek = response.length;
       })
       .catch(function(reason) {
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
       });
 
     visitorService.getVisitorsGroupedByCompany()
       .then(function(response) {
         $scope.visitorsGroupedByCompany = response;
-        $scope.busy = false;
+        $rootScope.busy = false;
       })
       .catch(function(reason) {
-        console.log(reason);
-        $scope.busy = false;
+        notificationService.setTimeOutNotification(reason);
+        $rootScope.busy = false;
       })
   });

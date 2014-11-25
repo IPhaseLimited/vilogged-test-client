@@ -8,7 +8,7 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('syncService', function syncService($q, $http, pouchdb, config, db, $cookieStore) {
+  .service('syncService', function syncService($q, $http, pouchdb, config, db, $cookieStore, $interval, $rootScope) {
     var dbNames = db;
     // AngularJS will instantiate a singleton by calling "new" on this function
     /*var db = pouchdb.create('visitors');
@@ -25,6 +25,15 @@ angular.module('viLoggedClientApp')
       }).catch(function(reason){
         console.log(reason);
       });*/
+
+    function updateRecord(fn, _delay) {
+      var delay = angular.isDefined(_delay) ? _delay : 30000; //3 minutes
+      $interval(function() {
+        if (!$rootScope.busy) {
+          fn();
+        }
+      }, delay);
+    }
 
     function getDBChanges(db) {
       var lastSeq = $cookieStore.get(db);
@@ -138,4 +147,5 @@ angular.module('viLoggedClientApp')
 
     this.startReplication = startUpReplication;
     this.getChanges = getDBChanges;
+    this.getUpdates = updateRecord;
   });

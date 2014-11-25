@@ -8,7 +8,8 @@
  * Controller of the viLoggedClientApp
  */
 
-function formController($scope, $state, companyDepartmentsService, $stateParams, $modalInstance, _id, validationService) {
+function formController($scope, $state, companyDepartmentsService, $stateParams, $modalInstance, _id, validationService,
+                        $rootScope) {
   var id = angular.isDefined(_id) ? _id : $stateParams.id;
   $scope.companyDepartments = {};
   if (angular.isDefined($modalInstance)) {
@@ -16,21 +17,21 @@ function formController($scope, $state, companyDepartmentsService, $stateParams,
   }
 
   if (id !== undefined && id !== null) {
-    $scope.busy = true;
+    $rootScope.busy = true;
     companyDepartmentsService.get(id)
       .then(function(response) {
-        $scope.busy = false;
+        $rootScope.busy = false;
         $scope.companyDepartments = response;
         console.log(response);
       })
       .catch(function(reason) {
-        $scope.busy = false;
+        $rootScope.busy = false;
         console.error(reason)
       });
   }
 
   $scope.save = function() {
-    $scope.busy = true;
+    $rootScope.busy = true;
 
     var validationParams = {
       department_name: validationService.BASIC
@@ -39,18 +40,18 @@ function formController($scope, $state, companyDepartmentsService, $stateParams,
     if (Object.keys( $scope.validationErrors).length === 0) {
       companyDepartmentsService.save($scope.companyDepartments)
         .then(function() {
-          $scope.busy = false;
+          $rootScope.busy = false;
           if (angular.isDefined($modalInstance)) {
             $modalInstance.close(true);
           } else {
-            $scope.busy = false;
+            $rootScope.busy = false;
             $state.go('company-departments');
           }
         })
         .catch(function(reason) {
           if (angular.isDefined($modalInstance)) {
             //$modalInstance.close(true);
-            $scope.busy = false;
+            $rootScope.busy = false;
           }
           (Object.keys(reason)).forEach(function(key) {
             $scope.validationErrors[key] = reason[key];
@@ -105,18 +106,18 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('CompanyDepartmentsCtrl', function($scope, companyDepartmentsService, $modal, notificationService, $interval) {
+  .controller('CompanyDepartmentsCtrl', function($scope, companyDepartmentsService, $modal, notificationService, $interval, $rootScope) {
     $scope.departments = [];
     function getDepartments() {
-      $scope.busy = true;
+      $rootScope.busy = true;
       companyDepartmentsService.all()
         .then(function(departments) {
-          $scope.busy = false;
+          $rootScope.busy = false;
           $scope.departments = departments;
         })
         .catch(function(reason) {
-          $scope.busy = false;
-          console.log(reason);
+          $rootScope.busy = false;
+          notificationService.setTimeOutNotification(reason);
         });
     }
     getDepartments();
@@ -130,16 +131,16 @@ angular.module('viLoggedClientApp')
 
       notificationService.modal.confirm(dialogParams)
         .then(function() {
-          $scope.busy = true;
+          $rootScope.busy = true;
           companyDepartmentsService.remove(id)
             .then(function(response) {
-              $scope.busy = false;
+              $rootScope.busy = false;
               console.log(response);
               getDepartments();
             })
             .catch(function(reason) {
-              $scope.busy = false;
-              console.log(reason);
+              $rootScope.busy = false;
+              notificationService.setTimeOutNotification(reason);
             });
         });
 
@@ -147,23 +148,26 @@ angular.module('viLoggedClientApp')
 
     $scope.addDepartment = function(id) {
 
-      $scope.busy = true;
+      $rootScope.busy = true;
       var modalInstance = $modal.open({
         templateUrl: 'views/company-departments/modal-form.html',
-        controller: function($scope, $state, companyDepartmentsService, $stateParams, $modalInstance, validationService) {
-          formController($scope, $state, companyDepartmentsService, $stateParams, $modalInstance, id, validationService);
+        controller: function($scope, $state, companyDepartmentsService, $stateParams, $modalInstance,
+                             validationService, $rootScope) {
+          formController($scope, $state, companyDepartmentsService, $stateParams, $modalInstance, id,
+            validationService, $rootScope);
         }
       });
 
       modalInstance.result
         .then(function() {
-          $scope.busy = false;
+          $rootScope.busy = false;
           getDepartments();
         });
 
     };
 
   })
-  .controller('CompanyDepartmentsFormCtrl', function($scope, $state, companyDepartmentsService, $stateParams, validationService) {
-    formController($scope, $state, companyDepartmentsService, $stateParams, validationService);
+  .controller('CompanyDepartmentsFormCtrl', function($scope, $state, companyDepartmentsService, $stateParams,
+                                                     validationService, $rootScope) {
+    formController($scope, $state, companyDepartmentsService, $stateParams, validationService, $rootScope);
   });

@@ -1,6 +1,3 @@
-<div class="loading-status" ng-if="busy">
-  Loading...
-</div>
 <div class="widget">
   <div class="widget-head">
     <div class="pull-left">Create Appointments</div>
@@ -14,11 +11,11 @@
   <div class="widget-content">
     <div class="padd">
       <fieldset>
-        <legend ng-if="!appointment._id">Create Appointment</legend>
-        <legend ng-if="appointment._id">Edit Appointment</legend>
+        <legend ng-if="!appointment.uuid">Create Appointment</legend>
+        <legend ng-if="appointment.uuid">Edit Appointment</legend>
         <form class="form-horizontal" name="appointmentForm" ng-submit="createAppointment()" novalidate>
 
-          <div ng-show="user.is_superuser || user.is_staff" class="form-group">
+          <div ng-show="(user.is_superuser || user.is_staff) && !appointment.uuid" class="form-group">
             <label class="control-label col-sm-2">
               Host Name <span class="text-danger">*</span>
             </label>
@@ -41,7 +38,7 @@
             </div>
           </div>
 
-          <div ng-show="user.is_active" class="form-group">
+          <div ng-show="user.is_active && !appointment.uuid" class="form-group">
             <label class="control-label col-sm-2">
               Visitor Name <span class="text-danger">*</span>
             </label>
@@ -65,7 +62,7 @@
           </div>
 
           <!--visitor host check-->
-          <div class="form-group" ng-show="!user.is_active">
+          <div class="form-group" ng-show="!user.is_active && !appointment.uuid">
             <label class="control-label col-sm-2" for="hostNumber">
               Host Phone Number  <span class="text-danger">*</span>
             </label>
@@ -141,7 +138,7 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" ng-show="!appointment.uuid">
             <label class="control-label col-sm-2" for="representing">Representing</label>
 
             <div class="col-sm-6">
@@ -150,7 +147,7 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" ng-show="!appointment.uuid">
             <label class="control-label col-sm-2" for="purpose">Purpose of Visit <span
               class="text-danger">*</span></label>
 

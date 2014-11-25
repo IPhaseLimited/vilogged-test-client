@@ -8,7 +8,7 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('entranceService', function entranceService($q, $http, db, storageService) {
+  .service('entranceService', function entranceService($q, $http, db, storageService, syncService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var DB_NAME = db.ENTRANCE.replace(/_/, '-');
 
@@ -30,4 +30,5 @@ angular.module('viLoggedClientApp')
 
     this.all = getAllEntrance;
     this.get = getEntrance;
+    this.getUpdates = syncService.getUpdates;
   });

@@ -16,21 +16,21 @@ angular.module('viLoggedClientApp')
         controller: 'LoginCtrl'
       })
       .state('logout', {
-        url: '/logout',
+        url: '/logout?back',
         templateUrl: 'views/login/login.html',
         controller: 'LogoutCtrl'
       });
   })
-  .controller('LoginCtrl', function($scope, $state, loginService) {
+  .controller('LoginCtrl', function($scope, $state, loginService, $rootScope, notificationService, $location) {
     $scope.displayVisitorLogin = true;
 
     $scope.visitorCredential = {};
     $scope.visitorLogin = function() {
-      $scope.busy = true;
+      $rootScope.busy = true;
       loginService.visitorLogin($scope.visitorCredential)
         .then(function(response) {
           $scope.loginError = false;
-          $scope.busy = false;
+          $rootScope.busy = false;
           //FIXME:: fix redirection on login
           $state.go('show-visitor', {visitor_id: response.loginRawResponse.uuid})
         })
@@ -38,29 +38,43 @@ angular.module('viLoggedClientApp')
           $scope.loginError = true;
           $scope.errorMessages = reason.loginMessage;
           $scope.visitorCredential.identity = '';
-          $scope.busy = false;
+          $rootScope.busy = false;
+          notificationService.setTimeOutNotification(reason);
         })
     };
 
     $scope.credentials = {};
     $scope.login = function() {
-      $scope.busy = true;
+      $rootScope.busy = true;
       loginService.login($scope.credentials)
         .then(function() {
           $scope.loginError = false;
-          $scope.busy = false;
-          $state.go('home');
+          $rootScope.busy = false;
+          var returnUrl = $location.search().back;
+          var back = '/';
+          if (returnUrl) {
+            back = decodeURIComponent(returnUrl);
+            delete $location.search().back;
+          }
+          $location.path(back);
         })
         .catch(function(reason) {
           $scope.loginError = true;
           $scope.errorMessages = reason.loginMessage;
-          console.log(reason);
-          $scope.busy = false;
+          $rootScope.busy = false;
+          notificationService.setTimeOutNotification(reason);
         });
     }
   })
   .controller('LogoutCtrl', function($scope, $state, $location, loginService) {
+    var currentUrl = $location.search().back;
+    var back = '/';
+    if (currentUrl) {
+      back = decodeURIComponent(currentUrl);
+      delete $location.search().back;
+    }
+    $location.search('back', back);
     loginService.logout();
-    $location.path('');
-    $state.go('login');
+    $location.path('/login');
+
   });

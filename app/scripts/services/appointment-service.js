@@ -8,7 +8,7 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('appointmentService', function appointmentService($q, db, $http, config, storageService, utility) {
+  .service('appointmentService', function appointmentService($q, db, $http, config, storageService, utility, syncService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var DB_NAME = db.APPOINTMENTS;
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
@@ -73,6 +73,20 @@ angular.module('viLoggedClientApp')
       var deferred = $q.defer();
 
       findByFieldNested('host_id__id', user.id)
+        .then(function(response) {
+          deferred.resolve(response);
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
+        });
+
+      return deferred.promise;
+    }
+
+    function getNestedAppointmentsByVisitor(visitor) {
+      var deferred = $q.defer();
+
+      findByFieldNested('visitor_id__uuid', visitor)
         .then(function(response) {
           deferred.resolve(response);
         })
@@ -257,6 +271,7 @@ angular.module('viLoggedClientApp')
     this.getUserAppointmentsAwaitingApproval = getUserAppointmentsAwaitingApproval;
     this.getVisitorUpcomingAppointments = getVisitorUpcomingAppointments;
     this.getAppointmentsByVisitor = getAppointmentsByVisitor;
+    this.getNestedAppointmentsByVisitor = getNestedAppointmentsByVisitor;
     this.getAppointmentsByWeek = appointmentByWeek;
     this.getAppointmentsByMonth = appointmentByMonth;
     this.getAppointmentsByDay = appointmentsByDay;
@@ -264,4 +279,5 @@ angular.module('viLoggedClientApp')
     this.APPOINTMENT_APPROVAL_SMS_TEMPLATE = APPOINTMENT_APPROVAL_SMS_TEMPLATE;
     this.APPOINTMENT_CREATED_EMAIL_TEMPLATE = APPOINTMENT_CREATED_EMAIL_TEMPLATE;
     this.APPOINTMENT_CREATED_SMS_TEMPLATE = APPOINTMENT_CREATED_SMS_TEMPLATE;
+    this.getUpdates = syncService.getUpdates;
   });

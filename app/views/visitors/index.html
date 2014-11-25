@@ -1,6 +1,3 @@
-<div class="loading-status" ng-if="busy">
-  Loading...
-</div>
 <div class="widget">
   <div class="widget-head">
     <div class="pull-left"></div>
@@ -12,10 +9,6 @@
 
   <div class="widget-content">
     <div class="padd">
-
-      <div flash-alert active-class="in alert" class="alert fade">
-        <span class="alert-message">{{flash.message}}</span>
-      </div>
 
       <div ng-if="visitors.length">
         <table class="table table-striped table-condensed table-responsive table-bordered">
@@ -32,13 +25,21 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="visitor in visitors track by visitor.uuid | paginationOffset:currentPage:itemsPerPage | orderBy: 'created'">
+          <tr ng-repeat="visitor in visitors track by visitor.visitors_phone | paginationOffset:currentPage:itemsPerPage | orderBy: 'visitor.created'"
+            ng-class="{'text-danger': confirm(visitor.group_type) === 'Banned'}">
             <td>{{ $index + 1 }}</td>
             <td>{{ visitor.first_name }} {{ visitor.last_name }}</td>
             <td>{{ visitor.visitors_email }}</td>
             <td>{{ visitor.visitors_phone }}</td>
             <td>{{ visitor.company_name }}</td>
-            <td>{{ visitor.group_type }}</td>
+            <td>
+              <span class="label" ng-class="{'label-danger': confirm(visitor.group_type) === 'Banned',
+                'label-warning': confirm(visitor.group_type) === 'Normal',
+                'label-success': confirm(visitor.group_type) === 'Success'
+                }">
+                {{ confirm(visitor.group_type) }}
+              </span>
+            </td>
             <td>{{ visitor.created |date: 'dd MMM, yyyy' }}</td>
             <td>
               <a class="btn btn-primary btn-xs" ui-sref="edit-visitor-profile({visitor_id: visitor.uuid})"
@@ -52,7 +53,7 @@
               </a>
 
               <a class="btn btn-success btn-xs" ui-sref="create-appointment-visitor({visitor_id: visitor.uuid})"
-                 title="Create appointment" ng-show="user.is_active">
+                 title="Create appointment" ng-show="user.is_active && confirm(visitor.group_type) !== 'Banned'">
                 <i class="fa fa-plus-circle"></i> Create Appointment
               </a>
             </td>

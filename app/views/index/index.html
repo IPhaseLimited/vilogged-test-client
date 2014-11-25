@@ -1,6 +1,11 @@
 <a id="top"></a>
 <div ui-view="header"></div>
 <div growl></div>
+<div class="loading-status" ng-if="busy">
+  <div class="alert alert-success">
+    loading <i class="fa fa-spinner fa-spin"></i>
+  </div>
+</div>
 <div class="content">
 
   <!-- Sidebar -->

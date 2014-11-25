@@ -32,8 +32,8 @@ angular.module('viLoggedClientApp')
         }
       })
   })
-  .controller('MainCtrl', function($scope, appointmentService, utility) {
-    $scope.busy = true;
+  .controller('MainCtrl', function($scope, appointmentService, utility, $rootScope, notificationService) {
+    $rootScope.busy = true;
     var appointments = appointmentService.all();
 
     appointments
@@ -45,64 +45,34 @@ angular.module('viLoggedClientApp')
             var date = new Date().getTime();
             return appointment.is_approved && ( date >= startTime || date <= endTime) && appointment.checked_in && !appointment.checked_out;
           });
-      })
-      .catch(function(reason) {
-        console.log(reason);
-      });
 
-    appointments
-      .then(function(response) {
         $scope.appointmentsAwaitingApproval = response
           .filter(function(appointment) {
             return !appointment.is_approved && (utility.getTimeStamp(appointment.appointment_date) > new Date().getTime()
               || !appointment.is_expired);
           });
-      })
-      .catch(function(reason) {
-        console.log(reason);
-      });
 
-    appointments
-      .then(function(response) {
         $scope.appointmentsNotCheckedIn = response
           .filter(function(appointment) {
             return appointment.is_approved && appointment.checked_in === null;
           });
-      })
-      .catch(function(reason) {
-        console.log(reason);
-      });
 
-    appointments
-      .then(function(response) {
         $scope.expiredAppointments = response
           .filter(function(appointment) {
             return utility.getTimeStamp(appointment.appointment_date) < new Date().getTime()
               || appointment.checked_out !== null;
           });
-      })
-      .catch(function(reason) {
-        console.log(reason);
-      });
 
-    appointments
-      .then(function(response) {
         $scope.appointmentsNeverUsed = response
           .filter(function(appointment) {
             return appointment.is_approved && appointment.checked_in === null &&
               (appointment.is_expired || utility.getTimeStamp(appointment.appointment_date) < new Date().getTime());
           });
+        $rootScope.busy = false;
       })
       .catch(function(reason) {
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
       });
 
-    appointments
-      .then(function() {
-        $scope.busy = false;
-      })
-      .catch(function() {
-        $scope.busy = false;
-      })
   })
 ;

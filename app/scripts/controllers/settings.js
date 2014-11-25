@@ -24,8 +24,8 @@ angular.module('viLoggedClientApp')
         }
       })
   })
-  .controller('SettingFormCtrl', function($scope, utility, $http) {
-    $scope.busy = true;
+  .controller('SettingFormCtrl', function($scope, utility, $http, $rootScope) {
+    $rootScope.busy = true;
     $scope.currentPage = 'server-setting';
     $scope.pageTile = utility.toTitleCase('Server Setting');
     $scope.currentPageTemplateUrl = '/views/settings/server-setting.html';
@@ -38,9 +38,11 @@ angular.module('viLoggedClientApp')
 
     $http.get('/api/save-settings')
       .success(function(response) {
+        $rootScope.busy = false;
         $scope.settings = response;
       })
       .error(function(reason) {
+        $rootScope.busy = false;
         console.log(reason);
       });
 
@@ -76,6 +78,6 @@ angular.module('viLoggedClientApp')
               $scope.currentPageTemplateUrl = '/views/settings/server-setting.html';
               break;
       }
-      $scope.busy = false;
+      $rootScope.busy = false;
     }
   });

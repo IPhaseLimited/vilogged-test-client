@@ -48,5 +48,6 @@ angular.module('viLoggedClientApp')
 
     this.all = getAll;
 
+    this.getUpdates = syncService.getUpdates;
 
   });

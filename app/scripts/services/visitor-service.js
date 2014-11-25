@@ -176,4 +176,5 @@ angular.module('viLoggedClientApp')
     this.DBNAME = DB_NAME;
     this.EMAIL_TEMPLATE = EMAIL_TEMPLATE;
     this.SMS_TEMPLATE = SMS_TEMPLATE;
+    this.getUpdates = syncService.getUpdates;
   });

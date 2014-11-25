@@ -20,6 +20,7 @@ angular.module('viLoggedClientApp', [
 
     $rootScope.pageTitle = 'Visitor Management System';
     $rootScope.pageHeader = 'Dashboard';
+    $rootScope.busy = false;
 
     function redirectToLogin() {
       loginService.logout();
@@ -74,6 +75,8 @@ angular.module('viLoggedClientApp', [
     $httpProvider.interceptors.push([
       '$cookieStore', '$location', '$q',
       function($cookieStore, $location, $q) {
+        var TIMEOUT = 90000; //1.5 minutes
+
         return {
           'request': function(config) {
             if ($cookieStore.get('vi-token')) {
@@ -82,11 +85,18 @@ angular.module('viLoggedClientApp', [
                 delete $httpProvider.defaults.headers.common['Authorization'];
               }
             }
+            config.timeout = TIMEOUT;
             return config;
           },
           // Intercept 401s and redirect you to login
           responseError: function(response) {
             if (response.status === 401) {
+              var currentUrl = $location.path();
+              var back = '/';
+              if (currentUrl !== '/login' && currentUrl !== '/logout') {
+                back = currentUrl;
+              }
+              $location.search('back', back);
               $location.path('/login');
               return $q.reject(response);
             }
