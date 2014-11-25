@@ -83,6 +83,20 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     }
 
+    function getNestedAppointmentsByVisitor(visitor) {
+      var deferred = $q.defer();
+
+      findByFieldNested('visitor_id__uuid', visitor)
+        .then(function(response) {
+          deferred.resolve(response);
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
+        });
+
+      return deferred.promise;
+    }
+
     function getAppointmentsByUser(user) {
       var deferred = $q.defer();
 
@@ -257,6 +271,7 @@ angular.module('viLoggedClientApp')
     this.getUserAppointmentsAwaitingApproval = getUserAppointmentsAwaitingApproval;
     this.getVisitorUpcomingAppointments = getVisitorUpcomingAppointments;
     this.getAppointmentsByVisitor = getAppointmentsByVisitor;
+    this.getNestedAppointmentsByVisitor = getNestedAppointmentsByVisitor;
     this.getAppointmentsByWeek = appointmentByWeek;
     this.getAppointmentsByMonth = appointmentByMonth;
     this.getAppointmentsByDay = appointmentsByDay;

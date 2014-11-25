@@ -113,7 +113,7 @@ angular.module('viLoggedClientApp')
     $scope.maxSize = 5;
     $scope.itemsPerPage = 10;
 
-    $scope.getGroupType = function (index) {
+    $scope.confirm = function (index) {
       return guestGroupConstant[index];
     }
   })
@@ -405,7 +405,7 @@ angular.module('viLoggedClientApp')
 
       });
 
-    var appointments = appointmentService.findByField('visitor_id', $stateParams.visitor_id);
+    var appointments = appointmentService.getNestedAppointmentsByVisitor($stateParams.visitor_id);
 
     appointments
       .then(function() {
