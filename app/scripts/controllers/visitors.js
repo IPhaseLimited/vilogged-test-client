@@ -404,7 +404,7 @@ angular.module('viLoggedClientApp')
 
       });
 
-    var appointments = appointmentService.findByField('visitor_id', $stateParams.visitor_id);
+    var appointments = appointmentService.getNestedAppointmentsByVisitor($stateParams.visitor_id);
 
     appointments
       .then(function() {

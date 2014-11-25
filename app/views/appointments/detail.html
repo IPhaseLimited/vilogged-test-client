@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-12 clearfix">
-    <a class="btn btn-primary btn-lg pull-right block" ng-hide="!isAppointmentUpcoming(appointment.appointment_date) || appointment.is_expired"
+    <a class="btn btn-primary btn-lg pull-right block" ng-hide="(!isAppointmentUpcoming(appointment.appointment_date) || appointment.is_expired) && user.is_staff"
        ng-click="printLabel()">
       <i class="fa fa-print"></i> Print Label
     </a>
@@ -165,7 +165,7 @@
   </div>
 </div>
 
-<div class="widget" ng-show="appointment.checked_in">
+<div class="widget" ng-show="appointment.checked_in && appointment.vehicle.length">
   <div class="widget-head">
     <div class="pull-left">Vehicle Detail</div>
     <div class="widget-icons pull-right">
@@ -185,11 +185,11 @@
           <th>Color</th>
           <th>Type</th>
         </tr>
-        <tr>
-          <td>{{ appointment.vehicle_id.license }}</td>
-          <td>{{ appointment.vehicle_id.model }}</td>
-          <td>{{ appointment.vehicle_id.color }}</td>
-          <td>{{ appointment.vehicle_id.vehicle_type }}</td>
+        <tr ng-repeat="vehicleObj in vehicle">
+          <td>{{ vehicle.license }}</td>
+          <td>{{ vehicle.model }}</td>
+          <td>{{ vehicle.color }}</td>
+          <td>{{ vehicle.vehicle_type }}</td>
         </tr>
       </table>
     </div>
@@ -197,7 +197,7 @@
   </div>
 </div>
 
-<div class="widget" ng-show="appointment.checked_in && appointment">
+<div class="widget" ng-show="appointment.checked_in && appointment.restricted_items.length">
   <div class="widget-head">
     <div class="pull-left">Restricted Items</div>
     <div class="widget-icons pull-right">
@@ -212,21 +212,15 @@
     <div class="padd">
       <table class="table table-condensed">
         <tr>
-          <th>Appointment Date</th>
-          <th>Start Time</th>
-          <th>End Time</th>
-          <th>Is Approved?</th>
-          <th>Pass Code</th>
+          <th>S/N</th>
+          <th>Item Code</th>
+          <th>Item Name</th>
+          <th>Item Type</th>
         </tr>
-        <tr>
-          <td>{{ appointment.appointment_date | date: 'MMM d, y' }}</td>
-          <td>{{ appointment.visit_start_time }}</td>
-          <td>{{ appointment.visit_end_time }}</td>
-          <td>
-            <span ng-if="appointment.is_approved === null">Awaiting Approval</span>
-            <span ng-if="appointment.is_approved !== null">{{ appointment.is_approved }}</span>
-          </td>
-          <td>{{ appointment.visitor_id.visitors_pass_code }}</td>
+        <tr ng-repeat="item in appointment.restricted_items">
+          <td>{{ item.item_code| date: 'MMM d, y' }}</td>
+          <td>{{ item.item_name| date: 'MMM d, y' }}</td>
+          <td>{{ item.item_type| date: 'MMM d, y' }}</td>
         </tr>
       </table>
     </div>
