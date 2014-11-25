@@ -117,7 +117,7 @@ angular.module('viLoggedClientApp')
         })
         .catch(function(reason) {
           $rootScope.busy = false;
-          console.log(reason);
+          notificationService.setTimeOutNotification(reason);
         });
     }
     getDepartments();
@@ -140,7 +140,7 @@ angular.module('viLoggedClientApp')
             })
             .catch(function(reason) {
               $rootScope.busy = false;
-              console.log(reason);
+              notificationService.setTimeOutNotification(reason);
             });
         });
 

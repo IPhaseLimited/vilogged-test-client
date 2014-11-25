@@ -70,7 +70,7 @@ angular.module('viLoggedClientApp')
         console.log(reason);
       });
   })
-  .controller('EntranceFormCtrl', function($scope, $state, $stateParams, entranceService, $rootScope) {
+  .controller('EntranceFormCtrl', function($scope, $state, $stateParams, entranceService, $rootScope, notificationService) {
     $scope.entrance = {};
 
     if ($stateParams.entrance_id) {
@@ -80,8 +80,9 @@ angular.module('viLoggedClientApp')
           $rootScope.busy = false;
           $scope.entrance = response;
         })
-        .catch(function(){
+        .catch(function(reason){
           $rootScope.busy = false;
+          notificationService.setTimeOutNotification(reason);
         });
     }
 
@@ -94,7 +95,7 @@ angular.module('viLoggedClientApp')
         })
         .catch(function(reason) {
           $rootScope.busy = false;
-          console.log(reason);
+          notificationService.setTimeOutNotification(reason);
         });
     }
   });

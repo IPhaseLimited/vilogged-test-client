@@ -8,7 +8,7 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('notificationService', function notificationService($modal, $http, $q, config) {
+  .service('notificationService', function notificationService($modal, $http, $q, growl) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     function sendMessage(objectParams, apiUrl) {
@@ -24,6 +24,15 @@ angular.module('viLoggedClientApp')
 
       return deferred.promise;
     }
+
+    this.setTimeOutNotification = function(reason) {
+      if (reason === 'timeout' || reason === null) {
+        growl.addErrorMessage('it looks like your network is experiencing some problem');
+      } else {
+        console.log(reason);
+      }
+      return reason;
+    };
 
     this.modal = {};
     this.modal.confirm = function(paramObject) {

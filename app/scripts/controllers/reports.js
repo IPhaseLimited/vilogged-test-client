@@ -45,7 +45,7 @@ angular.module('viLoggedClientApp')
         $scope.numPages = Math.ceil($scope.totalItems/$scope.itemsPerPage);
       })
       .catch(function(reason) {
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
       });
 
     appointmentService.getAppointmentsByDay()
@@ -54,7 +54,7 @@ angular.module('viLoggedClientApp')
         $scope.numberOfAppointmentsForToday = response.length;
       })
       .catch(function(reason) {
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
       });
 
     appointmentService.getAppointmentsByMonth()
@@ -63,7 +63,7 @@ angular.module('viLoggedClientApp')
         $scope.numberOfAppointmentsForThisMonth = response.length;
       })
       .catch(function(reason) {
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
       });
 
     appointmentService.getAppointmentsByWeek()
@@ -72,7 +72,7 @@ angular.module('viLoggedClientApp')
         $scope.numberOfAppointmentsForThisWeek = response.length;
       })
       .catch(function(reason) {
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
       });
 
     visitorService.getVisitorsGroupedByCompany()
@@ -81,7 +81,7 @@ angular.module('viLoggedClientApp')
         $rootScope.busy = false;
       })
       .catch(function(reason) {
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
         $rootScope.busy = false;
       })
   });

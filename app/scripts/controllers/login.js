@@ -21,7 +21,7 @@ angular.module('viLoggedClientApp')
         controller: 'LogoutCtrl'
       });
   })
-  .controller('LoginCtrl', function($scope, $state, loginService, $rootScope) {
+  .controller('LoginCtrl', function($scope, $state, loginService, $rootScope, notificationService) {
     $scope.displayVisitorLogin = true;
 
     $scope.visitorCredential = {};
@@ -39,6 +39,7 @@ angular.module('viLoggedClientApp')
           $scope.errorMessages = reason.loginMessage;
           $scope.visitorCredential.identity = '';
           $rootScope.busy = false;
+          notificationService.setTimeOutNotification(reason);
         })
     };
 
@@ -56,6 +57,7 @@ angular.module('viLoggedClientApp')
           $scope.errorMessages = reason.loginMessage;
           console.log(reason);
           $rootScope.busy = false;
+          notificationService.setTimeOutNotification(reason);
         });
     }
   })

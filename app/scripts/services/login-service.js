@@ -11,6 +11,9 @@ angular.module('viLoggedClientApp')
   .service('loginService', function loginService($q, $cookieStore, $http, $rootScope, userService, config, visitorService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
+    var TIME_OUT = 5000;
+    var CONFIG = {timeout: TIME_OUT};
+
     function login(credentials) {
       var ERROR_MESSAGE = 'username and password didn\'t match. Please try again';
       var deferred = $q.defer();
@@ -21,7 +24,7 @@ angular.module('viLoggedClientApp')
       };
       if (credentials.username && credentials.password) {
         $http.defaults.useXDomain = true;
-        $http.post(config.api.backend + '/api-token-auth/', credentials)
+        $http.post(config.api.backend + '/api-token-auth/', credentials, CONFIG)
           .success(function(response, status) {
             loginResponse.status = status;
             loginResponse.loginMessage = 'login was successful';
@@ -78,9 +81,13 @@ angular.module('viLoggedClientApp')
             deferred.resolve(loginResponse);
           })
           .catch(function(reason) {
-            loginResponse.status = 401;
-            loginResponse.loginMessage = ERROR_MESSAGE;
-            deferred.reject(loginResponse);
+            if (reason === null) {
+              deferred.reject('timeout');
+            } else {
+              loginResponse.status = 401;
+              loginResponse.loginMessage = ERROR_MESSAGE;
+              deferred.reject(loginResponse);
+            }
           })
       }
 

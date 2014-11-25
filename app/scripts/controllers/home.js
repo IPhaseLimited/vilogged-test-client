@@ -45,48 +45,24 @@ angular.module('viLoggedClientApp')
             var date = new Date().getTime();
             return appointment.is_approved && ( date >= startTime || date <= endTime) && appointment.checked_in && !appointment.checked_out;
           });
-      })
-      .catch(function(reason) {
-        console.log(reason);
-      });
 
-    appointments
-      .then(function(response) {
         $scope.appointmentsAwaitingApproval = response
           .filter(function(appointment) {
             return !appointment.is_approved && (utility.getTimeStamp(appointment.appointment_date) > new Date().getTime()
               || !appointment.is_expired);
           });
-      })
-      .catch(function(reason) {
-        console.log(reason);
-      });
 
-    appointments
-      .then(function(response) {
         $scope.appointmentsNotCheckedIn = response
           .filter(function(appointment) {
             return appointment.is_approved && appointment.checked_in === null;
           });
-      })
-      .catch(function(reason) {
-        console.log(reason);
-      });
 
-    appointments
-      .then(function(response) {
         $scope.expiredAppointments = response
           .filter(function(appointment) {
             return utility.getTimeStamp(appointment.appointment_date) < new Date().getTime()
               || appointment.checked_out !== null;
           });
-      })
-      .catch(function(reason) {
-        console.log(reason);
-      });
 
-    appointments
-      .then(function(response) {
         $scope.appointmentsNeverUsed = response
           .filter(function(appointment) {
             return appointment.is_approved && appointment.checked_in === null &&
@@ -94,15 +70,8 @@ angular.module('viLoggedClientApp')
           });
       })
       .catch(function(reason) {
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
       });
 
-    appointments
-      .then(function() {
-        $rootScope.busy = false;
-      })
-      .catch(function() {
-        $rootScope.busy = false;
-      })
   })
 ;

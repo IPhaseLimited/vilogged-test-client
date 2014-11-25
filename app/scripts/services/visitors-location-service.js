@@ -13,7 +13,8 @@ angular.module('viLoggedClientApp')
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
     var DB_NAME = db.VISITORS_LOCATION.replace(/_/, '-');
 
-
+    var TIME_OUT = 5000;
+    var CONFIG = {timeout: TIME_OUT};
 
     this.save = function(object) {
       return storageService.save(DB_NAME, object);
@@ -26,7 +27,7 @@ angular.module('viLoggedClientApp')
     this.findByField = function(field, value) {
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + '?' + field + '=' + value)
+      $http.get(BASE_URL + DB_NAME + '?' + field + '=' + value, CONFIG)
         .success(function(response) {
           deferred.resolve(response);
         })

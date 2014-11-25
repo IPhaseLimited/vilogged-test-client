@@ -159,10 +159,7 @@ angular.module('viLoggedClientApp')
           $scope.users = response;
         })
         .catch(function(reason) {
-          if (reason === 'timeout') {
-            growl.addErrorMessage('it looks like your network is experiencing some problem');
-          }
-          console.log(reason);
+          notificationService.setTimeOutNotification(reason);
         });
     }
 
@@ -195,7 +192,7 @@ angular.module('viLoggedClientApp')
               $rootScope.busy = false;
             })
             .catch(function(reason) {
-              console.log(reason);
+              notificationService.setTimeOutNotification(reason);
               $rootScope.busy = false;
             });
         });
@@ -223,7 +220,7 @@ angular.module('viLoggedClientApp')
           if ($scope.departmentLoaded) {
             $rootScope.busy = false;
           }
-          console.log(reason);
+          notificationService.setTimeOutNotification(reason);
         })
     } else {
       $scope.userLoaded = true;
@@ -238,7 +235,7 @@ angular.module('viLoggedClientApp')
         }
       })
       .catch(function(reason) {
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
         $scope.departmentLoaded = true;
         if ($scope.departmentLoaded) {
           $rootScope.busy = false;
@@ -267,6 +264,7 @@ angular.module('viLoggedClientApp')
               })
               .catch(function(reason) {
                 $rootScope.busy = false;
+                notificationService.setTimeOutNotification(reason);
                 $state.go("users");
               });
           }
@@ -276,7 +274,7 @@ angular.module('viLoggedClientApp')
         })
         .catch(function(reason) {
           $rootScope.busy = false;
-          console.log(reason);
+          notificationService.setTimeOutNotification(reason);
         });
     }
   })
@@ -288,12 +286,12 @@ angular.module('viLoggedClientApp')
       $rootScope.busy = true;
       userService.updatePassword($scope.userPassword)
         .then(function(response) {
-          growl.addSuccessMessasge('Password changed successfully.');
+          growl.addSuccessMessage('Password changed successfully.');
           $rootScope.busy = false;
           $state.go("home");
         })
         .catch(function(reason) {
-          flash.error = reason.message;
+          notificationService.setTimeOutNotification(reason);
           $rootScope.busy = false;
         })
     }

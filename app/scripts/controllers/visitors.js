@@ -204,7 +204,7 @@ angular.module('viLoggedClientApp')
           $scope.title = 'Edit ' + $scope.visitor.firstName + '\'s Profile';
         })
         .catch(function(reason) {
-          console.log(reason);
+          notificationService.setTimeOutNotification(reason);
           $rootScope.busy = false;
         });
     }
@@ -315,11 +315,12 @@ angular.module('viLoggedClientApp')
                   $scope.validationErrors[key] = reason[key];
                   $rootScope.busy = false;
                 });
+                notificationService.setTimeOutNotification(reason);
                 //afterRegistration();
               });
           })
           .catch(function(reason) {
-            console.log(reason);
+            notificationService.setTimeOutNotification(reason);
             $rootScope.busy = false;
           });
       }
@@ -382,13 +383,13 @@ angular.module('viLoggedClientApp')
               if ($scope.appointmentLoaded) {
                 $rootScope.busy = false;
               }
-              console.log(reason);
+              notificationService.setTimeOutNotification(reason);
             });
         }
 
       })
       .catch(function(reason) {
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
 
       });
 
@@ -401,7 +402,8 @@ angular.module('viLoggedClientApp')
           $rootScope.busy = false;
         }
       })
-      .catch(function() {
+      .catch(function(reason) {
+        notificationService.setTimeOutNotification(reason);
         $scope.appointmentLoaded = true;
         if ($scope.visitorLoaded) {
           $rootScope.busy = false;
@@ -417,7 +419,7 @@ angular.module('viLoggedClientApp')
           });
       })
       .catch(function(reason) {
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
       });
 
     appointments
@@ -428,7 +430,7 @@ angular.module('viLoggedClientApp')
           Math.ceil($scope.totalAppointments / $scope.appointmentsPerPage);
       })
       .catch(function(reason) {
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
       });
   })
 ;

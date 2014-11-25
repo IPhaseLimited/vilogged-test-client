@@ -166,7 +166,7 @@ angular.module('viLoggedClientApp')
       })
       .catch(function(reason) {
         $rootScope.busy = false;
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
       });
 
     $scope.printLabel = function() {
@@ -182,7 +182,7 @@ angular.module('viLoggedClientApp')
             })
             .catch(function(reason) {
               $rootScope.busy = false;
-              console.log(reason);
+              notificationService.setTimeOutNotification(reason);
             });
         }
       });
@@ -247,12 +247,12 @@ angular.module('viLoggedClientApp')
                 })
                 .catch(function(reason) {
                   $rootScope.busy = false;
-                  console.log(reason);
+                  notificationService.setTimeOutNotification(reason);
                 });
             })
             .catch(function(reason) {
               $rootScope.busy = false;
-              console.log(reason);
+              notificationService.setTimeOutNotification(reason);
             });
         });
     };
@@ -268,7 +268,8 @@ angular.module('viLoggedClientApp')
     };
   })
   .controller('AppointmentFormCtrl', function($scope, $stateParams, $state, $timeout, $filter, visitorService, growl,
-                                               userService, appointmentService, utility, validationService, $rootScope) {
+                                               userService, appointmentService, utility, validationService, $rootScope,
+                                               notificationService) {
     $rootScope.busy = false;
     $scope.appointment = {};
     $scope.visit_start_time = new Date();
@@ -338,7 +339,7 @@ angular.module('viLoggedClientApp')
         })
         .catch(function(reason) {
           $rootScope.busy = false;
-          console.log(reason);
+          notificationService.setTimeOutNotification(reason);
         });
     };
 
@@ -356,7 +357,7 @@ angular.module('viLoggedClientApp')
           })
           .catch(function(reason) {
             $rootScope.busy = false;
-            console.log(reason);
+            notificationService.setTimeOutNotification(reason);
           });
       },
       listHosts: function() {
@@ -368,7 +369,7 @@ angular.module('viLoggedClientApp')
           })
           .catch(function(reason) {
             $rootScope.busy = false;
-            console.log(reason);
+            notificationService.setTimeOutNotification(reason);
           })
       }
     };
@@ -383,7 +384,7 @@ angular.module('viLoggedClientApp')
           })
           .catch(function(reason) {
             $rootScope.busy = false;
-            console.log(reason);
+            notificationService.setTimeOutNotification(reason);
           })
       },
       listVisitors: function() {
@@ -395,7 +396,7 @@ angular.module('viLoggedClientApp')
           })
           .catch(function(reason) {
             $rootScope.busy = false;
-            console.log(reason);
+            notificationService.setTimeOutNotification(reason);
           })
       }
     };
@@ -417,7 +418,7 @@ angular.module('viLoggedClientApp')
         })
         .catch(function(reason) {
           $rootScope.busy = false;
-          console.log(reason);
+          notificationService.setTimeOutNotification(reason);
         })
     }
 
@@ -430,7 +431,7 @@ angular.module('viLoggedClientApp')
         })
         .catch(function(reason) {
           $rootScope.busy = false;
-          console.log(reason);
+          notificationService.setTimeOutNotification(reason);
         })
     }
 
@@ -463,7 +464,7 @@ angular.module('viLoggedClientApp')
         })
         .catch(function(reason) {
           $rootScope.busy = false;
-          console.log(reason);
+          notificationService.setTimeOutNotification(reason);
         });
 
       $scope.appointment.visit_start_time = $filter('date')($scope.visit_start_time, 'hh:mm a');
@@ -500,7 +501,7 @@ angular.module('viLoggedClientApp')
                 $scope.validationErrors[key] = reason[key];
               });
             }
-            console.log(reason);
+            notificationService.setTimeOutNotification(reason);
           });
       }
     };
@@ -527,7 +528,7 @@ angular.module('viLoggedClientApp')
       })
       .catch(function(reason) {
         $rootScope.busy = false;
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
       });
 
     $rootScope.busy = true;
@@ -545,7 +546,7 @@ angular.module('viLoggedClientApp')
       })
       .catch(function(reason) {
         $rootScope.busy = false;
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
       });
 
     $rootScope.busy = true;
@@ -661,7 +662,7 @@ angular.module('viLoggedClientApp')
         })
         .catch(function(reason) {
           $rootScope.busy = false;
-          console.log(reason);
+          notificationService.setTimeOutNotification(reason);
         });
     }
   })
@@ -674,7 +675,7 @@ angular.module('viLoggedClientApp')
         checkOut(response);
       })
       .catch(function (reason) {
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
         $rootScope.busy = false;
       });
 
@@ -687,7 +688,7 @@ angular.module('viLoggedClientApp')
           $rootScope.busy = false;
         })
         .catch(function(reason) {
-          console.log(reason);
+          notificationService.setTimeOutNotification(reason);
           $rootScope.busy = false;
         });
     }
@@ -704,6 +705,6 @@ angular.module('viLoggedClientApp')
       })
       .catch(function(reason) {
         $rootScope.busy = false;
-        console.log(reason);
+        notificationService.setTimeOutNotification(reason);
       })
   });

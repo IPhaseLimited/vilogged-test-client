@@ -13,6 +13,9 @@ angular.module('viLoggedClientApp')
     var DB_NAME = db.APPOINTMENTS;
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
 
+    var TIME_OUT = 5000;
+    var CONFIG = {timeout: TIME_OUT};
+
     var APPOINTMENT_APPROVAL_EMAIL_TEMPLATE = 'Hello &&first_name&& &&last_name&&,\n\nYour appointment with &&host_first_name&& &&host_last_name&& has been approved.'
       + '\n\nYour appointment is scheduled for\n\nDate:&&date&& \nExpected Check in Time: &&start_time&&' +
       '\n\nNigerian Communication Commission';
@@ -30,7 +33,7 @@ angular.module('viLoggedClientApp')
 
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + '/nested/')
+      $http.get(BASE_URL + DB_NAME + '/nested/', CONFIG)
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -44,7 +47,7 @@ angular.module('viLoggedClientApp')
     function findByField(field, value) {
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + '/?' + field + '=' + value)
+      $http.get(BASE_URL + DB_NAME + '/?' + field + '=' + value, CONFIG)
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -58,7 +61,7 @@ angular.module('viLoggedClientApp')
     function findByFieldNested(field, value) {
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + '/nested/?' + field + '=' + value)
+      $http.get(BASE_URL + DB_NAME + '/nested/?' + field + '=' + value, CONFIG)
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -127,7 +130,7 @@ angular.module('viLoggedClientApp')
     function getNested(id) {
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + '/nested/' + id)
+      $http.get(BASE_URL + DB_NAME + '/nested/' + id, CONFIG)
         .success(function(response) {
           deferred.resolve(response);
         })
