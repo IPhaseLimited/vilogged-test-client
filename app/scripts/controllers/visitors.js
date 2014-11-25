@@ -89,7 +89,7 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('VisitorsCtrl', function($scope, visitorService, $rootScope) {
+  .controller('VisitorsCtrl', function($scope, visitorService, $rootScope, guestGroupConstant) {
     $scope.visitors = [];
     function getVisitors() {
       $rootScope.busy = true;
@@ -111,6 +111,10 @@ angular.module('viLoggedClientApp')
     $scope.currentPage = 1;
     $scope.maxSize = 5;
     $scope.itemsPerPage = 10;
+
+    $scope.getGroupType = function (index) {
+      return guestGroupConstant[index];
+    }
   })
   .controller('VisitorFormCtrl', function($scope, $state, $stateParams, $rootScope, $window, $filter, visitorService,
                                            validationService, countryStateService, guestGroupConstant, userService,
@@ -272,10 +276,6 @@ angular.module('viLoggedClientApp')
         $scope.visitor.visitors_pass_code = new Date().getTime();
       }
 
-      if (!angular.isDefined($scope.visitor.group_type) || $scope.visitor.group_type === '') {
-        $scope.visitor.group_type = 'normal';
-      }
-
       $scope.validationErrors = validationService.validateFields(validationParams, $scope.visitor);
       (Object.keys(validateLocation)).forEach(function(key) {
         $scope.validationErrors[key] = validateLocation[key];
@@ -284,11 +284,21 @@ angular.module('viLoggedClientApp')
         if (!angular.isDefined($scope.visitor.company_name)) {
           $scope.visitor.company_name = 'Anonymous';
         }
+
         $scope.visitor.image = $scope.takenImg;
         if ($scope.visitor.date_of_birth) {
           $scope.visitor.date_of_birth = $filter('date')($scope.visitor.date_of_birth, 'yyyy-MM-dd');
         }
-        sendNotification();
+
+        /* sets the default visitor group type to normal */
+        if (!angular.isDefined($scope.visitor.group_type) || $scope.visitor.group_type === '') {
+          $scope.visitor.group_type = guestGroupConstant.indexOf('Normal');
+        }
+
+        var getGroupType = function (groupIndex) {
+          return guestGroupConstant[groupIndex];
+        };
+
         visitorService.save($scope.visitor)
           .then(function(response) {
             $scope.visitor = response;
@@ -302,6 +312,7 @@ angular.module('viLoggedClientApp')
                 growl.addSuccessMessage('Your profile was saved successfully.');
                 $state.go('show-visitor', {visitor_id: $scope.visitor.uuid});
               }
+              sendNotification();
             }
 
             $scope.visitorsLocation.visitor_id = response.uuid;
