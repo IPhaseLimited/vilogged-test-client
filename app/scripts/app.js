@@ -92,11 +92,12 @@ angular.module('viLoggedClientApp', [
           responseError: function(response) {
             if (response.status === 401) {
               var currentUrl = $location.path();
-              var back = '?back=/';
-              if (currentUrl !== '/login') {
+              var back = '/';
+              if (currentUrl !== '/login' && currentUrl !== '/logout') {
                 back = currentUrl;
               }
-              $location.path('/login'+back);
+              $location.search('back', back);
+              $location.path('/login');
               return $q.reject(response);
             }
             else {

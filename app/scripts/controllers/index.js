@@ -12,7 +12,13 @@ angular.module('viLoggedClientApp')
         abstract: true,
         views: {
           'header': {
-            templateUrl: 'views/index/header.html'
+            templateUrl: 'views/index/header.html',
+            controller: function($scope, $location, $rootScope) {
+              $rootScope.$on('$stateChangeSuccess', function() {
+                $scope.back = $location.path();
+              });
+
+            }
           },
           'breadcrumbs': {
             templateUrl: 'views/index/breadcrumbs.html'

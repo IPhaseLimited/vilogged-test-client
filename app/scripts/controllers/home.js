@@ -32,7 +32,7 @@ angular.module('viLoggedClientApp')
         }
       })
   })
-  .controller('MainCtrl', function($scope, appointmentService, utility, $rootScope) {
+  .controller('MainCtrl', function($scope, appointmentService, utility, $rootScope, notificationService) {
     $rootScope.busy = true;
     var appointments = appointmentService.all();
 

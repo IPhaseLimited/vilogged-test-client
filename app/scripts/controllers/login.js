@@ -16,12 +16,12 @@ angular.module('viLoggedClientApp')
         controller: 'LoginCtrl'
       })
       .state('logout', {
-        url: '/logout',
+        url: '/logout?back',
         templateUrl: 'views/login/login.html',
         controller: 'LogoutCtrl'
       });
   })
-  .controller('LoginCtrl', function($scope, $state, loginService, $rootScope, notificationService) {
+  .controller('LoginCtrl', function($scope, $state, loginService, $rootScope, notificationService, $location) {
     $scope.displayVisitorLogin = true;
 
     $scope.visitorCredential = {};
@@ -50,7 +50,13 @@ angular.module('viLoggedClientApp')
         .then(function() {
           $scope.loginError = false;
           $rootScope.busy = false;
-          $state.go('home');
+          var returnUrl = $location.search().back;
+          var back = '/';
+          if (returnUrl) {
+            back = decodeURIComponent(returnUrl);
+            delete $location.search().back;
+          }
+          $location.path(back);
         })
         .catch(function(reason) {
           $scope.loginError = true;
@@ -61,7 +67,14 @@ angular.module('viLoggedClientApp')
     }
   })
   .controller('LogoutCtrl', function($scope, $state, $location, loginService) {
+    var currentUrl = $location.search().back;
+    var back = '/';
+    if (currentUrl) {
+      back = decodeURIComponent(currentUrl);
+      delete $location.search().back;
+    }
+    $location.search('back', back);
     loginService.logout();
-    $location.path('');
-    $state.go('login');
+    $location.path('/login');
+
   });
