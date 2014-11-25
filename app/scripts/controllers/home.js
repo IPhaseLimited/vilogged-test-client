@@ -68,6 +68,7 @@ angular.module('viLoggedClientApp')
             return appointment.is_approved && appointment.checked_in === null &&
               (appointment.is_expired || utility.getTimeStamp(appointment.appointment_date) < new Date().getTime());
           });
+        $rootScope.busy = false;
       })
       .catch(function(reason) {
         notificationService.setTimeOutNotification(reason);
