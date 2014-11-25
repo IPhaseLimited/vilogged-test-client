@@ -13,9 +13,6 @@ angular.module('viLoggedClientApp')
     var DB_NAME = db.VISITORS;
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
 
-    var TIME_OUT = 90000; //1.5min
-    var CONFIG = {timeout: TIME_OUT};
-
     var EMAIL_TEMPLATE = 'Hello &&first_name&& &&last_name&&,\n\nYour account with visitor privileges has ' +
       'successfully been created.\n\nYou can now log on using either Phone Number: &&phone&& '
       + 'OR Pass Code: &&pass_code&&\n\nNigerian Communication Commission';
@@ -28,7 +25,7 @@ angular.module('viLoggedClientApp')
 
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + '/?' + field + '=' + value, CONFIG)
+      $http.get(BASE_URL + DB_NAME + '/?' + field + '=' + value)
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -47,7 +44,7 @@ angular.module('viLoggedClientApp')
       //return storageService.all(DB_NAME);
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + '/nested/', CONFIG)
+      $http.get(BASE_URL + DB_NAME + '/nested/')
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -179,4 +176,5 @@ angular.module('viLoggedClientApp')
     this.DBNAME = DB_NAME;
     this.EMAIL_TEMPLATE = EMAIL_TEMPLATE;
     this.SMS_TEMPLATE = SMS_TEMPLATE;
+    this.getUpdates = syncService.getUpdates;
   });

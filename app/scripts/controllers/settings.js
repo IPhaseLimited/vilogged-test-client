@@ -38,9 +38,11 @@ angular.module('viLoggedClientApp')
 
     $http.get('/api/save-settings')
       .success(function(response) {
+        $rootScope.busy = false;
         $scope.settings = response;
       })
       .error(function(reason) {
+        $rootScope.busy = false;
         console.log(reason);
       });
 

@@ -8,13 +8,10 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('visitorsLocationService', function visitorsLocationService($q, storageService, db, $http, config) {
+  .service('visitorsLocationService', function visitorsLocationService($q, storageService, db, $http, config, syncService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
     var DB_NAME = db.VISITORS_LOCATION.replace(/_/, '-');
-
-    var TIME_OUT = 90000; //1.5min
-    var CONFIG = {timeout: TIME_OUT};
 
     this.save = function(object) {
       return storageService.save(DB_NAME, object);
@@ -27,7 +24,7 @@ angular.module('viLoggedClientApp')
     this.findByField = function(field, value) {
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + '?' + field + '=' + value, CONFIG)
+      $http.get(BASE_URL + DB_NAME + '?' + field + '=' + value)
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -40,5 +37,7 @@ angular.module('viLoggedClientApp')
         });
 
       return deferred.promise;
-    }
+    };
+
+    this.getUpdates = syncService.getUpdates;
   });

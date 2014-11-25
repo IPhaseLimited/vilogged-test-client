@@ -37,10 +37,14 @@
       <label class="control-label col-sm-2" for="server_Type">Server Type</label>
 
       <div class="col-sm-6">
-        <input class="form-control" name="server_url" id="server_type"  ng-model="settings.databaseSetting.server_type" type="text"/>
+        <select id="server_type" class="form-control" ng-model="settings.databaseSetting.server_type">
+          <option ng-selected="settings.databaseSetting.server_type === sqlite || settings.databaseSetting.server_type === undefined" value="sqlite">SQLite</option>
+          <option ng-selected="settings.databaseSetting.server_type === mysql" value="mysql">Mysql</option>
+          <option ng-selected="settings.databaseSetting.server_type === postgres" value="postgres">PostgreSQL</option>
+          <option ng-selected="settings.databaseSetting.server_type === mssql" value="mssql">SQL Server</option>
+        </select>
       </div>
     </div>
-
     <hr/>
   </fieldset>
 

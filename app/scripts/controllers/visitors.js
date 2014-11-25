@@ -91,6 +91,7 @@ angular.module('viLoggedClientApp')
   })
   .controller('VisitorsCtrl', function($scope, visitorService, $rootScope, guestGroupConstant) {
     $scope.visitors = [];
+
     function getVisitors() {
       $rootScope.busy = true;
       visitorService.all()

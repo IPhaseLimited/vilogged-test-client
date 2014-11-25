@@ -75,6 +75,8 @@ angular.module('viLoggedClientApp', [
     $httpProvider.interceptors.push([
       '$cookieStore', '$location', '$q',
       function($cookieStore, $location, $q) {
+        var TIMEOUT = 90000; //1.5 minutes
+
         return {
           'request': function(config) {
             if ($cookieStore.get('vi-token')) {
@@ -83,12 +85,18 @@ angular.module('viLoggedClientApp', [
                 delete $httpProvider.defaults.headers.common['Authorization'];
               }
             }
+            config.timeout = TIMEOUT;
             return config;
           },
           // Intercept 401s and redirect you to login
           responseError: function(response) {
             if (response.status === 401) {
-              $location.path('/login');
+              var currentUrl = $location.path();
+              var back = '?back=/';
+              if (currentUrl !== '/login') {
+                back = currentUrl;
+              }
+              $location.path('/login'+back);
               return $q.reject(response);
             }
             else {

@@ -8,13 +8,10 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('appointmentService', function appointmentService($q, db, $http, config, storageService, utility) {
+  .service('appointmentService', function appointmentService($q, db, $http, config, storageService, utility, syncService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var DB_NAME = db.APPOINTMENTS;
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
-
-    var TIME_OUT = 90000; //1.5min
-    var CONFIG = {timeout: TIME_OUT};
 
     var APPOINTMENT_APPROVAL_EMAIL_TEMPLATE = 'Hello &&first_name&& &&last_name&&,\n\nYour appointment with &&host_first_name&& &&host_last_name&& has been approved.'
       + '\n\nYour appointment is scheduled for\n\nDate:&&date&& \nExpected Check in Time: &&start_time&&' +
@@ -33,7 +30,7 @@ angular.module('viLoggedClientApp')
 
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + '/nested/', CONFIG)
+      $http.get(BASE_URL + DB_NAME + '/nested/')
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -47,7 +44,7 @@ angular.module('viLoggedClientApp')
     function findByField(field, value) {
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + '/?' + field + '=' + value, CONFIG)
+      $http.get(BASE_URL + DB_NAME + '/?' + field + '=' + value)
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -61,7 +58,7 @@ angular.module('viLoggedClientApp')
     function findByFieldNested(field, value) {
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + '/nested/?' + field + '=' + value, CONFIG)
+      $http.get(BASE_URL + DB_NAME + '/nested/?' + field + '=' + value)
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -130,7 +127,7 @@ angular.module('viLoggedClientApp')
     function getNested(id) {
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + '/nested/' + id, CONFIG)
+      $http.get(BASE_URL + DB_NAME + '/nested/' + id)
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -267,4 +264,5 @@ angular.module('viLoggedClientApp')
     this.APPOINTMENT_APPROVAL_SMS_TEMPLATE = APPOINTMENT_APPROVAL_SMS_TEMPLATE;
     this.APPOINTMENT_CREATED_EMAIL_TEMPLATE = APPOINTMENT_CREATED_EMAIL_TEMPLATE;
     this.APPOINTMENT_CREATED_SMS_TEMPLATE = APPOINTMENT_CREATED_SMS_TEMPLATE;
+    this.getUpdates = syncService.getUpdates;
   });
