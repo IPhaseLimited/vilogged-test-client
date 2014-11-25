@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-12 clearfix">
-    <a class="btn btn-primary btn-lg pull-right block" ng-hide="!isAppointmentUpcoming(appointment.appointment_date)"
+    <a class="btn btn-primary btn-lg pull-right block" ng-hide="!isAppointmentUpcoming(appointment.appointment_date) || appointment.is_expired"
        ng-click="printLabel()">
       <i class="fa fa-print"></i> Print Label
     </a>
@@ -23,7 +23,8 @@
             <div class="col-sm-8">
               <div class="row">
                 <div class="col-sm-6"><strong>Name</strong></div>
-                <div class="col-sm-6">{{ ((appointment).visitor_id).first_name + ' ' + ((appointment).visitor_id).last_name
+                <div class="col-sm-6">{{ ((appointment).visitor_id).first_name + ' ' +
+                  ((appointment).visitor_id).last_name
                   }}
                 </div>
               </div>
@@ -41,7 +42,8 @@
               </div>
             </div>
             <div class="col-sm-4">
-              <img ng-if="((appointment).visitor_id).image !== undefined" ng-src="{{appointment.visitor_id.image}}" alt=""
+              <img ng-if="((appointment).visitor_id).image !== undefined" ng-src="{{appointment.visitor_id.image}}"
+                   alt=""
                    class="img-responsive"/>
               <img ng-if="!((appointment).visitor_id).image" ng-src="img/place_holder.jpg" alt=""
                    class="img-responsive"/>
@@ -70,7 +72,9 @@
             <div class="col-sm-8">
               <div class="row">
                 <div class="col-sm-6"><strong>Name</strong></div>
-                <div class="col-sm-6">{{ ((appointment).host_id).first_name + ' ' + ((appointment).host_id).last_name }}</div>
+                <div class="col-sm-6">{{ ((appointment).host_id).first_name + ' ' + ((appointment).host_id).last_name
+                  }}
+                </div>
               </div>
               <div class="row">
                 <div class="col-sm-6"><strong>Department</strong></div>
@@ -107,8 +111,8 @@
     <div class="pull-left">Appointment Detail</div>
     <div class="widget-icons pull-right">
       <!--<a class="btn btn-primary btn-xs" ui-sref="edit-appointment({appointment_id: appointment.uuid})"-->
-         <!--ng-show="isAppointmentUpcoming(appointment.appointment_date)">-->
-        <!--<i class="fa fa-edit"></i> Edit Appointment-->
+      <!--ng-show="isAppointmentUpcoming(appointment.appointment_date)">-->
+      <!--<i class="fa fa-edit"></i> Edit Appointment-->
       <!--</a>-->
     </div>
     <div class="clearfix"></div>
@@ -120,12 +124,14 @@
           <h3>Purpose of Visit</h3>
           <hr/>
           <p ng-show="appointment.purpose">{{ appointment.purpose }}</p>
+
           <p ng-show="!appointment.purpose">None</p>
         </div>
         <div class="col-sm-6">
           <h3>Representing</h3>
           <hr/>
           <p ng-show="appointment.purpose">{{ appointment.representing }}</p>
+
           <p ng-show="!appointment.purpose">None</p>
         </div>
       </div>
@@ -150,7 +156,83 @@
       </table>
     </div>
     <div class="widget-foot">
-      <div ng-show="!appointment.is_approved && !appointment.is_expired && isAppointmentUpcoming(appointment.appointment_date) && user.id === appointment.host_id.id">
+      <div
+        ng-show="!appointment.is_approved && !appointment.is_expired && isAppointmentUpcoming(appointment.appointment_date) && user.id === appointment.host_id.id">
+        <a class="btn btn-success" ng-click="toggleAppointmentApproval(true)">Approve</a>
+        <a class="btn btn-danger" ng-click="toggleAppointmentApproval(false)">Reject</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="widget" ng-show="appointment.checked_in">
+  <div class="widget-head">
+    <div class="pull-left">Vehicle Detail</div>
+    <div class="widget-icons pull-right">
+      <!--<a class="btn btn-primary btn-xs" ui-sref="edit-appointment({appointment_id: appointment.uuid})"-->
+      <!--ng-show="isAppointmentUpcoming(appointment.appointment_date)">-->
+      <!--<i class="fa fa-edit"></i> Edit Appointment-->
+      <!--</a>-->
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <div class="widget-content">
+    <div class="padd">
+      <table class="table table-condensed">
+        <tr>
+          <th>License</th>
+          <th>Model</th>
+          <th>Color</th>
+          <th>Type</th>
+        </tr>
+        <tr>
+          <td>{{ appointment.vehicle_id.license }}</td>
+          <td>{{ appointment.vehicle_id.model }}</td>
+          <td>{{ appointment.vehicle_id.color }}</td>
+          <td>{{ appointment.vehicle_id.vehicle_type }}</td>
+        </tr>
+      </table>
+    </div>
+    <div class="widget-foot"></div>
+  </div>
+</div>
+
+<div class="widget" ng-show="appointment.checked_in && appointment">
+  <div class="widget-head">
+    <div class="pull-left">Restricted Items</div>
+    <div class="widget-icons pull-right">
+      <!--<a class="btn btn-primary btn-xs" ui-sref="edit-appointment({appointment_id: appointment.uuid})"-->
+      <!--ng-show="isAppointmentUpcoming(appointment.appointment_date)">-->
+      <!--<i class="fa fa-edit"></i> Edit Appointment-->
+      <!--</a>-->
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <div class="widget-content">
+    <div class="padd">
+      <table class="table table-condensed">
+        <tr>
+          <th>Appointment Date</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Is Approved?</th>
+          <th>Pass Code</th>
+        </tr>
+        <tr>
+          <td>{{ appointment.appointment_date | date: 'MMM d, y' }}</td>
+          <td>{{ appointment.visit_start_time }}</td>
+          <td>{{ appointment.visit_end_time }}</td>
+          <td>
+            <span ng-if="appointment.is_approved === null">Awaiting Approval</span>
+            <span ng-if="appointment.is_approved !== null">{{ appointment.is_approved }}</span>
+          </td>
+          <td>{{ appointment.visitor_id.visitors_pass_code }}</td>
+        </tr>
+      </table>
+    </div>
+    <div class="widget-foot">
+      <div
+        ng-show="!appointment.is_approved && !appointment.is_expired && isAppointmentUpcoming(appointment.appointment_date) && user.id === appointment.host_id.id">
         <a class="btn btn-success" ng-click="toggleAppointmentApproval(true)">Approve</a>
         <a class="btn btn-danger" ng-click="toggleAppointmentApproval(false)">Reject</a>
       </div>

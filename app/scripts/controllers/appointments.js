@@ -401,12 +401,23 @@ angular.module('viLoggedClientApp')
       }
     };
 
-    if (angular.isDefined($scope.user)) {
+    if (angular.isDefined($scope.user) && !angular.isDefined($stateParams.appointment_id)) {
       if (!$scope.user.is_staff && $scope.user.is_active) $scope.host = $scope.user;
 
       if ($scope.user.is_staff) $scope.hostLookUp.listHosts();
 
       if ($scope.user.is_active) $scope.visitorLookUp.listVisitors();
+    }
+
+    if ($stateParams.appointment_id) {
+      $rootScope.busy = true;
+      appointmentService.getNested($stateParams.appointment_id)
+        .then(function(response){
+          $scope.appointment = response;
+        })
+        .catch(function(reason) {
+          console.log(reason);
+        });
     }
 
     if ($stateParams.visitor_id) {

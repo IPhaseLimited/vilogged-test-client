@@ -112,7 +112,7 @@ angular.module('viLoggedClientApp')
     $scope.maxSize = 5;
     $scope.itemsPerPage = 10;
 
-    $scope.getGroupType = function (index) {
+    $scope.confirm = function (index) {
       return guestGroupConstant[index];
     }
   })
