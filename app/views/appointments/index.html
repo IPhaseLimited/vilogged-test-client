@@ -10,19 +10,36 @@
   </div>
   <div class="widget-content">
     <div class="padd">
-      <div class="alert alert-info" ng-if="!appointments.length">
+      <!--div class="alert alert-info" ng-if="!appointments.length">
         <p>
           No appointment have been created. Click on the create appointment button to create one.
         </p>
-      </div>
+      </div-->
 
-      <div flash-alert active-class="in" class="alert fade" ng-show="flash.message">
-        <span class="alert-message">{{flash.message}}</span>
-      </div>
-
-      <div ng-if="appointments.length">
+      <div >
         <table class="table table-responsive table-condensed table-bordered table-striped">
           <thead>
+          <tr>
+            <th></th>
+            <th><input style="width: 80%" class="form-control" ng-model="search.visitors_name"></th>
+            <th><input style="width: 80%" class="form-control" ng-model="search.host_name"></th>
+            <th>
+              <div style="max-width: 200px" class="input-group">
+                <input type="text" class="form-control" ng-model="search.appointment_date"
+                       datepicker-popup is-open="createdDate.opened"
+                       date-disabled="disabled(date, mode)"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="createdDate.open($event)">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </button>
+                </span>
+              </div>
+            </th>
+            <th><input style="width: 80%" class="form-control" ng-model="search.start_time"></th>
+            <th><input style="width: 80%" class="form-control" ng-model="search.end_time"></th>
+            <th></th>
+            <th></th>
+          </tr>
           <tr>
             <th>S/N</th>
             <th>Visitor Name</th>
@@ -35,7 +52,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="appointment in appointments track by appointment.uuid | paginationOffset:currentPage:itemsPerPage | orderBy: appointment.created"
+          <tr ng-repeat="appointment in appointments track by $index | paginationOffset:currentPage:itemsPerPage | orderBy: appointment.created"
               ng-class="{'text-danger': expired(appointment.appointment_date), 'text-success': upcoming(appointment.appointment_date)}">
             <td>{{ $index+1 }}</td>
             <td>{{ ((appointment).visitor_id).first_name + ' ' + ((appointment).visitor_id).last_name }}</td>
