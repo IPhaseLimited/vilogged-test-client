@@ -133,6 +133,20 @@ angular.module('viLoggedClientApp')
     $scope.currentPage = 1;
     $scope.maxSize = 5;
     $scope.itemsPerPage = 10;
+    $scope.appointments = [];
+
+    $scope.search = {};
+    var rows = [];
+
+    $scope.createdDate = {
+      opened: false,
+      date: moment().endOf('day').toDate(),
+      open: function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        this.opened = true;
+      }
+    };
 
     $scope.isAppointmentUpcoming = function(appointmentDate) {
       var appointmentTimeStamp = utility.getTimeStamp(appointmentDate);
@@ -143,18 +157,61 @@ angular.module('viLoggedClientApp')
       var appointmentTimeStamp = utility.getTimeStamp(appointmentDate);
       return new Date().getTime() > appointmentTimeStamp;
     };
+    function getAppointments() {
+      appointmentService.all()
+        .then(function(response) {
+          rows = response;
+          $scope.totalItems = rows.length;
+          $scope.numPages = Math.ceil($scope.totalItems / $scope.itemsPerPage);
+          $rootScope.busy = false
+          updateTableData();
+        })
+        .catch(function(reason) {
+          notificationService.setTimeOutNotification(reason);
+          $rootScope.busy = false
+        });
+    }
 
-    appointmentService.all()
-      .then(function(response) {
-        $scope.appointments = response;
-        $scope.totalItems = $scope.appointments.length;
-        $scope.numPages = Math.ceil($scope.totalItems / $scope.itemsPerPage);
-        $rootScope.busy = false
-      })
-      .catch(function(reason) {
-        notificationService.setTimeOutNotification(reason);
-        $rootScope.busy = false
+    getAppointments();
+
+    $scope.$watch('search', function () {
+      updateTableData();
+    }, true);
+
+    function updateTableData() {
+      console.log($scope.search);
+      $scope.appointments = rows.filter(function (row) {
+
+        var date = moment(row.appointment_date);
+        var include = true;
+
+        if (include && $scope.search.visitors_name) {
+          console.log(row);
+          include = row.visitor_id.first_name.toLowerCase().indexOf($scope.search.visitors_name.toLowerCase()) > -1 ||
+          row.visitor_id.last_name.toLowerCase().indexOf($scope.search.visitors_name.toLowerCase()) > -1;
+        }
+
+        if (include && $scope.search.host_name) {
+          include = row.host_id.first_name.toLowerCase().indexOf($scope.search.host_name.toLowerCase()) > -1 ||
+          row.host_id.last_name.toLowerCase().indexOf($scope.search.host_name.toLowerCase()) > -1;
+        }
+
+        if (include && $scope.search.start_time) {
+          include = row.visit_start_time.toLowerCase().indexOf($scope.search.start_time.toLowerCase()) > -1;
+        }
+
+        if (include && $scope.search.end_time) {
+          include = row.visit_end_time.toLowerCase().indexOf($scope.search.visit_end_time.toLowerCase()) > -1;
+        }
+
+        if (include && $scope.search.appointment_date) {
+          include = include && (date.isSame($scope.search.appointment_date, 'day'));
+        }
+
+        return include;
       });
+    }
+
   })
   .controller('AppointmentDetailCtrl', function($scope, $state, $stateParams, appointmentService, utility, $modal, growl,
                                                  notificationService, $rootScope) {
