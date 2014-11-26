@@ -37,8 +37,14 @@
             </th>
             <th><input style="width: 80%" class="form-control" ng-model="search.start_time"></th>
             <th><input style="width: 80%" class="form-control" ng-model="search.end_time"></th>
-            <th></th>
-            <th></th>
+            <th>
+              <select class="form-control" ng-model="search.is_approved">
+                <option value=""></option>
+                <option value="true">Approved</option>
+                <option value="false">Not Approved</option>
+              </select>
+            </th>
+            <th><button ng-click="search={}" class="btn btn-info">Clear</button></th>
           </tr>
           <tr>
             <th>S/N</th>
