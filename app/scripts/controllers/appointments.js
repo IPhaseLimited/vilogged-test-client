@@ -259,35 +259,43 @@ angular.module('viLoggedClientApp')
 
       //sends email and sms to visitor whose appointment has been approved
       function sendMessage () {
-        var appointment = {
-          first_name: $scope.appointment.visitor_id.first_name,
-          last_name: $scope.appointment.visitor_id.last_name,
-          start_time: $scope.appointment.visit_start_time,
-          host_first_name: $scope.appointment.host_id.first_name,
-          host_last_name: $scope.appointment.host_id.last_name,
-          date: $scope.appointment.appointment_date
-        };
+        appointmentService.getNested($scope.appointment.uuid)
+          .then(function(response) {
+            var appointmentObject = response;
+            var appointment = {
+              first_name: appointmentObject.visitor_id.first_name,
+              last_name: appointmentObject.visitor_id.last_name,
+              start_time: appointmentObject.visit_start_time,
+              host_first_name: appointmentObject.host_id.first_name,
+              host_last_name: appointmentObject.host_id.last_name,
+              date: appointmentObject.appointment_date
+            };
 
-        var emailTemplate = appointmentService.APPOINTMENT_APPROVAL_EMAIL_TEMPLATE;
-        var compiledEmailTemplate = utility.compileTemplate(appointment, emailTemplate);
+            var emailTemplate = appointmentService.APPOINTMENT_APPROVAL_EMAIL_TEMPLATE;
+            var compiledEmailTemplate = utility.compileTemplate(appointment, emailTemplate);
 
-        var smsTemplate = appointmentService.APPOINTMENT_APPROVAL_SMS_TEMPLATE;
-        var compiledSMSTemplate = utility.compileTemplate(appointment, smsTemplate);
+            var smsTemplate = appointmentService.APPOINTMENT_APPROVAL_SMS_TEMPLATE;
+            var compiledSMSTemplate = utility.compileTemplate(appointment, smsTemplate);
 
-        if (angular.isDefined($scope.appointment.visitor_id.visitors_phone) && $scope.appointment.visitor_id.visitors_phone !== '') {
-          notificationService.send.sms({
-            message: compiledSMSTemplate,
-            mobiles: $scope.visitor.visitors_phone
+            if (angular.isDefined(appointmentObject.visitor_id.visitors_phone) && appointmentObject.visitor_id.visitors_phone !== '') {
+              notificationService.send.sms({
+                message: compiledSMSTemplate,
+                mobiles: $scope.visitor.visitors_phone
+              });
+            }
+
+            if (angular.isDefined(appointmentObject.visitor_id.visitors_email) && appointmentObject.visitor_id.visitors_email !== '') {
+              notificationService.send.email({
+                to: $scope.visitor.visitors_email,
+                subject: 'Appointment Schedule Approved.',
+                message: compiledEmailTemplate
+              });
+            }
+          })
+          .catch(function() {
+
           });
-        }
 
-        if (angular.isDefined($scope.appointment.visitor_id.visitors_email) && $scope.appointment.visitor_id.visitors_email !== '') {
-          notificationService.send.email({
-            to: $scope.visitor.visitors_email,
-            subject: 'Appointment Schedule Approved.',
-            message: compiledEmailTemplate
-          });
-        }
       }
 
       $rootScope.busy = true;
@@ -296,7 +304,6 @@ angular.module('viLoggedClientApp')
           appointmentService.get($stateParams.appointment_id)
             .then(function(response) {
               response.is_approved = approvalStatus;
-              response.entrance_id = '3bc509b67ae34abdc24774a8826507d4';
               appointmentService.save(response)
                 .then(function() {
                   approvalStatus ? growl.addSuccessMessage('The selected appointment has been approved.') :
@@ -344,31 +351,41 @@ angular.module('viLoggedClientApp')
 
     //sends email and sms to host when appointment is created
     function sendMessage () {
-      var appointment = {
-        first_name: $scope.appointment.host_id.first_name,
-        last_name: $scope.appointment.host_id.last_name
-      };
 
-      var emailTemplate = appointmentService.APPOINTMENT_CREATED_EMAIL_TEMPLATE;
-      var compiledEmailTemplate = utility.compileTemplate(appointment, emailTemplate);
+      appointmentService.getNested($scope.appointment.uuid)
+        .then(function(response) {
+          var appointmentObject = response;
+          var appointment = {
+            first_name: appointmentObject.host_id.first_name,
+            last_name: appointmentObject.host_id.last_name
+          };
 
-      var smsTemplate = appointmentService.APPOINTMENT_CREATED_SMS_TEMPLATE;
-      var compiledSMSTemplate = utility.compileTemplate(appointment, smsTemplate);
+          var emailTemplate = appointmentService.APPOINTMENT_CREATED_EMAIL_TEMPLATE;
+          var compiledEmailTemplate = utility.compileTemplate(appointment, emailTemplate);
 
-      if (angular.isDefined($scope.appointment.host_id.user_profile.phone) && $scope.appointment.host_id.user_profile.phone !== '') {
-        notificationService.send.sms({
-          message: compiledSMSTemplate,
-          mobiles: $scope.appointment.host_id.user_profile.phone
+          var smsTemplate = appointmentService.APPOINTMENT_CREATED_SMS_TEMPLATE;
+          var compiledSMSTemplate = utility.compileTemplate(appointment, smsTemplate);
+
+          if (angular.isDefined(appointmentObject.host_id.user_profile.phone) && appointmentObject.host_id.user_profile.phone !== '') {
+            notificationService.send.sms({
+              message: compiledSMSTemplate,
+              mobiles: appointmentObject.host_id.user_profile.phone
+            });
+          }
+
+          if (angular.isDefined(appointmentObject.host_id.email) && appointmentObject.host_id.email !== '') {
+            notificationService.send.email({
+              to: appointmentObject.host_id.email,
+              subject: 'Appointment created.',
+              message: compiledEmailTemplate
+            });
+          }
+        })
+        .catch(function() {
+
         });
-      }
 
-      if (angular.isDefined($scope.appointment.host_id.email) && $scope.appointment.host_id.email !== '') {
-        notificationService.send.email({
-          to: $scope.appointment.host_id.email,
-          subject: 'Appointment created.',
-          message: compiledEmailTemplate
-        });
-      }
+
     }
 
     $scope.appointmentDate = {
