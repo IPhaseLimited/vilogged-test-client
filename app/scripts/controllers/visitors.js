@@ -89,17 +89,33 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('VisitorsCtrl', function($scope, visitorService, $rootScope, guestGroupConstant) {
+  .controller('VisitorsCtrl', function($scope, visitorService, $rootScope, guestGroupConstant, $filter) {
     $scope.visitors = [];
+    $scope.search = {};
+    var rows = [];
+
+
+    $scope.createdDate = {
+      opened: false,
+      date: moment().endOf('day').toDate(),
+      open: function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        this.opened = true;
+      }
+    };
+
+    $scope.search = {};
 
     function getVisitors() {
       $rootScope.busy = true;
       visitorService.all()
         .then(function(response) {
           $rootScope.busy = false;
-          $scope.visitors = response;
-          $scope.totalItems = $scope.visitors.length;
+          rows = response;
+          $scope.totalItems = rows.length;
           $scope.numPages = Math.ceil($scope.totalItems / $scope.itemsPerPage);
+          updateTableData();
         })
         .catch(function(reason) {
           $rootScope.busy = false;
@@ -108,6 +124,46 @@ angular.module('viLoggedClientApp')
     }
 
     getVisitors();
+    $scope.$watch('search', function () {
+      updateTableData();
+    }, true);
+
+    function updateTableData() {
+      $scope.visitors = rows.filter(function(row) {
+        var date = moment(row.created);
+        var include = true;
+
+        if (include && $scope.search.name) {
+          include = row.first_name.toLowerCase().indexOf($scope.search.name.toLowerCase()) > -1 ||
+          row.last_name.toLowerCase().indexOf($scope.search.name.toLowerCase()) > -1;
+        }
+
+        if (include && $scope.search.visitors_email) {
+            include = row.visitors_email.toLowerCase().indexOf($scope.search.visitors_email.toLowerCase()) > -1;
+        }
+
+        if (include && $scope.search.visitors_phone) {
+          include = row.visitors_phone.toLowerCase().indexOf($scope.search.visitors_phone.toLowerCase()) > -1;
+        }
+
+        if (include && $scope.search.company_name) {
+          include = row.company_name.toLowerCase().indexOf($scope.search.company_name.toLowerCase()) > -1;
+        }
+
+        if (include && $scope.search.group_type && row.group_type) {
+          include = guestGroupConstant[row.group_type].toLowerCase().indexOf($scope.search.company_name.toLowerCase()) > -1;
+        }
+
+        if (include && $scope.search.created) {
+          include = include && (date.isSame($scope.search.created, 'day'));
+        }
+
+
+        return include;
+      });
+
+    }
+
 
     $scope.currentPage = 1;
     $scope.maxSize = 5;
