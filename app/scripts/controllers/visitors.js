@@ -105,8 +105,6 @@ angular.module('viLoggedClientApp')
       }
     };
 
-    $scope.search = {};
-
     function getVisitors() {
       $rootScope.busy = true;
       visitorService.all()
