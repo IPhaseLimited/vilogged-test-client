@@ -179,14 +179,12 @@ angular.module('viLoggedClientApp')
     }, true);
 
     function updateTableData() {
-      console.log($scope.search);
       $scope.appointments = rows.filter(function (row) {
 
         var date = moment(row.appointment_date);
         var include = true;
 
         if (include && $scope.search.visitors_name) {
-          console.log(row);
           include = row.visitor_id.first_name.toLowerCase().indexOf($scope.search.visitors_name.toLowerCase()) > -1 ||
           row.visitor_id.last_name.toLowerCase().indexOf($scope.search.visitors_name.toLowerCase()) > -1;
         }
@@ -206,6 +204,11 @@ angular.module('viLoggedClientApp')
 
         if (include && $scope.search.appointment_date) {
           include = include && (date.isSame($scope.search.appointment_date, 'day'));
+        }
+
+        if (include && $scope.search.is_approved) {
+          var bool = $scope.search.is_approved === 'true';
+          include = include && bool === row.is_approved;
         }
 
         return include;
@@ -352,16 +355,16 @@ angular.module('viLoggedClientApp')
       var smsTemplate = appointmentService.APPOINTMENT_CREATED_SMS_TEMPLATE;
       var compiledSMSTemplate = utility.compileTemplate(appointment, smsTemplate);
 
-      if (angular.isDefined($scope.appointment.host_id.user.phone) && $scope.appointment.host_id.user.phone !== '') {
+      if (angular.isDefined($scope.appointment.host_id.user_profile.phone) && $scope.appointment.host_id.user_profile.phone !== '') {
         notificationService.send.sms({
           message: compiledSMSTemplate,
-          mobiles: $scope.appointment.host_id.user.phone
+          mobiles: $scope.appointment.host_id.user_profile.phone
         });
       }
 
-      if (angular.isDefined($scope.appointment.host_id.user.email) && $scope.appointment.host_id.user.email !== '') {
+      if (angular.isDefined($scope.appointment.host_id.email) && $scope.appointment.host_id.email !== '') {
         notificationService.send.email({
-          to: $scope.appointment.host_id.user.email,
+          to: $scope.appointment.host_id.email,
           subject: 'Appointment created.',
           message: compiledEmailTemplate
         });
@@ -514,7 +517,10 @@ angular.module('viLoggedClientApp')
       appointmentService.findByField('visitor_id', $scope.visitor.selected.uuid)
         .then(function(response){
           var existingAppointment = response.filter(function(appointment) {
-            return appointment.host_id === $scope.appointment.host.selected.id  && !appointment.checked_out
+            if ($scope.host.selected.id === undefined) {
+              return false;
+            }
+            return appointment.host_id === $scope.host.selected.id  && !appointment.checked_out
               && (!appointment.is_expired || utility.getTimeStamp(appointment) < new Date().getTime());
           });
 
@@ -552,9 +558,8 @@ angular.module('viLoggedClientApp')
 
       $scope.validationErrors = validationService.validateFields(validationParams, $scope.appointment);
       if (!Object.keys($scope.validationErrors).length) {
-        $scope.appointment.entrance_id = '3bc509b67ae34abdc24774a8826507d4';
+
         $rootScope.busy = true;
-        $scope.appointment.entrance_id = '3bc509b67ae34abdc24774a8826507d4';
         appointmentService.save($scope.appointment)
           .then(function(response) {
             $rootScope.busy = false;
