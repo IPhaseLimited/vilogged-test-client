@@ -480,7 +480,7 @@ angular.module('viLoggedClientApp')
       .then(function(response) {
         $scope.upcomingAppointments = response
           .filter(function(appointment) {
-            return appointment.approved &&
+            return appointment.is_approved &&
               new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.expired;
           });
       })

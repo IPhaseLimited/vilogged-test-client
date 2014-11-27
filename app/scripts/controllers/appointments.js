@@ -163,12 +163,12 @@ angular.module('viLoggedClientApp')
           rows = response;
           $scope.totalItems = rows.length;
           $scope.numPages = Math.ceil($scope.totalItems / $scope.itemsPerPage);
-          $rootScope.busy = false
+          $rootScope.busy = false;
           updateTableData();
         })
         .catch(function(reason) {
           notificationService.setTimeOutNotification(reason);
-          $rootScope.busy = false
+          $rootScope.busy = false;
         });
     }
 
@@ -412,10 +412,13 @@ angular.module('viLoggedClientApp')
         .then(function(response) {
           $rootScope.busy = false;
           $scope.host.selected = response[0];
+          $scope.host.errorMessage = '';
           console.log(response[0]);
         })
         .catch(function(reason) {
           $rootScope.busy = false;
+          $scope.host.selected = '';
+          $scope.host.errorMessage = 'Host not found';
           notificationService.setTimeOutNotification(reason);
         });
     };
