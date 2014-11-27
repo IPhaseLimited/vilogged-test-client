@@ -238,6 +238,11 @@ angular.module('viLoggedClientApp')
           appointmentService.getNested($stateParams.appointment_id)
             .then(function(response) {
               $scope.appointment = response;
+              if (!$scope.appointment.label_code) {
+                $scope.appointment.label_code = $scope.appointment.uuid;
+              }
+              $("#barcode").JsBarcode($scope.appointment.label_code,{width:1,height:25});
+
               $rootScope.busy = false;
             })
             .catch(function(reason) {
