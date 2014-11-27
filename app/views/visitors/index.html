@@ -45,9 +45,9 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="visitor in visitors | paginationOffset:currentPage:itemsPerPage | orderBy: 'visitor.created'"
+          <tr ng-repeat="visitor in visitors | paginationOffset:pagination.currentPage:pagination.itemsPerPage | orderBy: 'visitor.created'"
             ng-class="{'text-danger': confirm(visitor.group_type) === 'Banned'}">
-            <td>{{ $index + 1 }}</td>
+            <td>{{ $index + 1 + ((pagination.currentPage-1) * pagination.itemsPerPage) }}</td>
             <td>
               <a class="btn-link" ui-sref="edit-visitor-profile({visitor_id: visitor.uuid})"
                  title="Edit {{ visitor.first_name }}'s details" ng-show="user.is_staff">
@@ -87,11 +87,11 @@
         <br/>
         <div class="row">
           <div class="col-sm-6" style="padding-top: 15px;">
-            Showing Page: {{currentPage}} of {{numPages}}
+            Showing Page: {{pagination.currentPage}} of {{pagination.numPages}}
           </div>
           <div class="col-sm-6">
-            <pagination total-items="totalItems" ng-model="currentPage" max-size="maxSize" class="pagination-sm pull-right"
-                        boundary-links="true" rotate="false" items-per-page="itemsPerPage"></pagination>
+            <pagination total-items="pagination.totalItems" ng-model="pagination.currentPage" max-size="pagination.maxSize" class="pagination-sm pull-right"
+                        boundary-links="true" rotate="false" items-per-page="pagination.itemsPerPage"></pagination>
           </div>
         </div>
       </div>

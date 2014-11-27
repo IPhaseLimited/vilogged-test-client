@@ -132,7 +132,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="appointment in appointments | paginationOffset:appointmentsCurrentPage:appointmentsPerPage | orderBy: 'appointment.created'">
+        <tr ng-repeat="appointment in appointments | paginationOffset:pagination.appointmentsCurrentPage:pagination.appointmentsPerPage | orderBy: 'appointment.created'">
           <td>{{ $index+1 }}</td>
           <td>{{ appointment.host_id.first_name + ' ' + appointment.host_id.last_name }}</td>
           <td>{{ appointment.appointment_date }}</td>
@@ -147,9 +147,9 @@
           Showing Page: {{appointmentsCurrentPage}} of {{appointmentNumPages}}
         </div>
         <div class="col-sm-6">
-          <pagination total-items="totalAppointments" ng-model="appointmentsCurrentPage" max-size="maxSize"
+          <pagination total-items="pagination.totalAppointments" ng-model="pagination.appointmentsCurrentPage" max-size="pagination.maxSize"
                       class="pagination-sm pull-right" boundary-links="true" rotate="false"
-                      items-per-page="appointmentsPerPage"></pagination>
+                      items-per-page="pagination.appointmentsPerPage"></pagination>
         </div>
       </div>
     </div>
