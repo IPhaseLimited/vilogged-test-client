@@ -95,8 +95,7 @@ angular.module('viLoggedClientApp')
       .then(function(response) {
         $scope.upcomingAppointments = response.filter(function(appointment) {
           return appointment.is_approved &&
-            new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.is_expired
-              && appointment.is_approved !== true;
+            (new Date(appointment.appointment_date).getTime() > new Date().getTime() || !appointment.is_expired);
         });
         $scope.upcomingAppointmentCount = $scope.upcomingAppointments.length;
       })
@@ -108,9 +107,8 @@ angular.module('viLoggedClientApp')
       .then(function(response) {
         $scope.appointmentsAwaitingApproval = response
           .filter(function(appointment) {
-            return !appointment.is_approved && !appointment.is_expired &&
-              utility.getTimeStamp(appointment.appointment_date) > new Date().getTime()
-              && appointment.is_approved === null;
+            return !appointment.is_approved && (!appointment.is_expired ||
+              utility.getTimeStamp(appointment.appointment_date) > new Date().getTime());
           });
         $scope.appointmentsAwaitingApprovalCount = $scope.appointmentsAwaitingApproval.length;
       })
