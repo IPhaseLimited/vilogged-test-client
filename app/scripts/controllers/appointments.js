@@ -250,7 +250,7 @@ angular.module('viLoggedClientApp')
 
   })
   .controller('AppointmentDetailCtrl', function($scope, $state, $stateParams, appointmentService, utility, $modal, growl,
-                                                 notificationService, $rootScope) {
+                                                notificationService, $rootScope) {
     $rootScope.busy = true;
     appointmentService.getNested($stateParams.appointment_id)
       .then(function(response) {
@@ -373,8 +373,8 @@ angular.module('viLoggedClientApp')
     };
   })
   .controller('AppointmentFormCtrl', function($scope, $stateParams, $state, $timeout, $filter, visitorService, growl,
-                                               userService, appointmentService, utility, validationService, $rootScope,
-                                               notificationService) {
+                                              userService, appointmentService, utility, validationService, $rootScope,
+                                              notificationService) {
 
     appointmentService.defaultEntrance()
       .then(function(response) {
@@ -650,8 +650,8 @@ angular.module('viLoggedClientApp')
     };
   })
   .controller('CheckInCtrl', function($scope, $state, $stateParams, $q, visitorService, appointmentService, entranceService,
-                                       vehicleTypeConstant, notificationService, utility, restrictedItemsService,
-                                       vehicleService, growl, $rootScope) {
+                                      vehicleTypeConstant, notificationService, utility, restrictedItemsService,
+                                      vehicleService, growl, $rootScope) {
     $scope.appointment = {};
     $scope.restricted_items = [{
       item_code: '',

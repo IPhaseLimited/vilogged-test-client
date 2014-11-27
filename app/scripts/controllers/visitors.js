@@ -8,7 +8,7 @@
  * Controller of the viLoggedClientApp
  */
 angular.module('viLoggedClientApp')
-  .config(function($stateProvider) {
+  .config(function ($stateProvider) {
     $stateProvider
       .state('visitors', {
         parent: 'root.index',
@@ -29,7 +29,7 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/visitors/widget-form.html',
         controller: 'VisitorFormCtrl',
         resolve: {
-          countryState: function(countryStateService) {
+          countryState: function (countryStateService) {
             return countryStateService.all();
           }
         },
@@ -47,7 +47,7 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/visitors/widget-form.html',
         controller: 'VisitorFormCtrl',
         resolve: {
-          countryState: function(countryStateService) {
+          countryState: function (countryStateService) {
             return countryStateService.all();
           }
         },
@@ -61,7 +61,7 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/visitors/widget-form.html',
         controller: 'VisitorFormCtrl',
         resolve: {
-          countryState: function(countryStateService) {
+          countryState: function (countryStateService) {
             return countryStateService.all();
           }
         },
@@ -89,7 +89,7 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('VisitorsCtrl', function($scope, visitorService, $rootScope, guestGroupConstant, $filter) {
+  .controller('VisitorsCtrl', function ($scope, visitorService, $rootScope, guestGroupConstant, $filter) {
     $scope.visitors = [];
     $scope.search = {};
     var rows = [];
@@ -98,7 +98,7 @@ angular.module('viLoggedClientApp')
     $scope.createdDate = {
       opened: false,
       date: moment().endOf('day').toDate(),
-      open: function($event) {
+      open: function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
         this.opened = true;
@@ -108,14 +108,14 @@ angular.module('viLoggedClientApp')
     function getVisitors() {
       $rootScope.busy = true;
       visitorService.all()
-        .then(function(response) {
+        .then(function (response) {
           $rootScope.busy = false;
           rows = response;
-          $scope.totalItems = rows.length;
-          $scope.numPages = Math.ceil($scope.totalItems / $scope.itemsPerPage);
+          $scope.pagination.totalItems = rows.length;
+          $scope.pagination.numPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
           updateTableData();
         })
-        .catch(function(reason) {
+        .catch(function (reason) {
           $rootScope.busy = false;
           console.log(reason);
         });
@@ -127,7 +127,7 @@ angular.module('viLoggedClientApp')
     }, true);
 
     function updateTableData() {
-      $scope.visitors = rows.filter(function(row) {
+      $scope.visitors = rows.filter(function (row) {
         var date = moment(row.created);
         var include = true;
 
@@ -137,7 +137,7 @@ angular.module('viLoggedClientApp')
         }
 
         if (include && $scope.search.visitors_email) {
-            include = row.visitors_email.toLowerCase().indexOf($scope.search.visitors_email.toLowerCase()) > -1;
+          include = row.visitors_email.toLowerCase().indexOf($scope.search.visitors_email.toLowerCase()) > -1;
         }
 
         if (include && $scope.search.visitors_phone) {
@@ -162,16 +162,17 @@ angular.module('viLoggedClientApp')
 
     }
 
-
-    $scope.currentPage = 1;
-    $scope.maxSize = 5;
-    $scope.itemsPerPage = 10;
+    $scope.pagination = {
+      currentPage: 1,
+      maxSize: 5,
+      itemsPerPage: 10
+    };
 
     $scope.confirm = function (index) {
       return guestGroupConstant[index];
     }
   })
-  .controller('VisitorFormCtrl', function($scope, $state, $stateParams, $rootScope, $window, $filter, visitorService,
+  .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, $rootScope, $window, $filter, visitorService,
                                            validationService, countryStateService, guestGroupConstant, userService,
                                            countryState, visitorsLocationService, notificationService, utility, growl) {
     $scope.visitors = [];
@@ -190,7 +191,7 @@ angular.module('viLoggedClientApp')
 
     $scope.dob = {
       opened: false,
-      open: function($event) {
+      open: function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
 
@@ -199,13 +200,13 @@ angular.module('viLoggedClientApp')
     };
 
 
-    $scope.setFiles = function(element, field) {
-      $scope.$apply(function() {
+    $scope.setFiles = function (element, field) {
+      $scope.$apply(function () {
 
         var fileToUpload = element.files[0];
         if (fileToUpload.type.match('image*')) {
           var reader = new $window.FileReader();
-          reader.onload = function(theFile) {
+          reader.onload = function (theFile) {
             $scope.visitor[field] = theFile.target.result;
           };
           reader.readAsDataURL(fileToUpload);
@@ -232,7 +233,7 @@ angular.module('viLoggedClientApp')
     if ($stateParams.visitor_id !== null && $stateParams.visitor_id !== undefined) {
       $rootScope.busy = true;
       visitorService.get($stateParams.visitor_id)
-        .then(function(response) {
+        .then(function (response) {
           $scope.visitor = response;
 
           if ($scope.visitor.nationality) {
@@ -245,7 +246,7 @@ angular.module('viLoggedClientApp')
             }
           }
           visitorsLocationService.findByField('visitor_id', response.uuid)
-            .then(function(response) {
+            .then(function (response) {
               if (response.length) {
                 $scope.visitorsLocation = response[0];
 
@@ -256,19 +257,19 @@ angular.module('viLoggedClientApp')
               }
               $rootScope.busy = false;
             })
-            .catch(function(reason) {
+            .catch(function (reason) {
               $rootScope.busy = false;
               console.log(reason);
             });
           $scope.title = 'Edit ' + $scope.visitor.firstName + '\'s Profile';
         })
-        .catch(function(reason) {
+        .catch(function (reason) {
           notificationService.setTimeOutNotification(reason);
           $rootScope.busy = false;
         });
     }
 
-    $scope.saveProfile = function() {
+    $scope.saveProfile = function () {
 
       /**
        * sends email and sms to new visitor account
@@ -332,7 +333,7 @@ angular.module('viLoggedClientApp')
       }
 
       $scope.validationErrors = validationService.validateFields(validationParams, $scope.visitor);
-      (Object.keys(validateLocation)).forEach(function(key) {
+      (Object.keys(validateLocation)).forEach(function (key) {
         $scope.validationErrors[key] = validateLocation[key];
       });
       if (!Object.keys($scope.validationErrors).length) {
@@ -355,7 +356,7 @@ angular.module('viLoggedClientApp')
         };
 
         visitorService.save($scope.visitor)
-          .then(function(response) {
+          .then(function (response) {
             $scope.visitor = response;
 
             function afterRegistration() {
@@ -372,12 +373,12 @@ angular.module('viLoggedClientApp')
 
             $scope.visitorsLocation.visitor_id = response.uuid;
             visitorsLocationService.save($scope.visitorsLocation)
-              .then(function() {
+              .then(function () {
                 $rootScope.busy = false;
                 afterRegistration();
               })
-              .catch(function(reason) {
-                Object.keys(reason).forEach(function(key) {
+              .catch(function (reason) {
+                Object.keys(reason).forEach(function (key) {
                   $scope.validationErrors[key] = reason[key];
                   $rootScope.busy = false;
                 });
@@ -385,7 +386,7 @@ angular.module('viLoggedClientApp')
                 //afterRegistration();
               });
           })
-          .catch(function(reason) {
+          .catch(function (reason) {
             notificationService.setTimeOutNotification(reason);
             $rootScope.busy = false;
           });
@@ -393,49 +394,51 @@ angular.module('viLoggedClientApp')
 
     };
 
-    $scope.getStates = function(country) {
+    $scope.getStates = function (country) {
       $scope.visitor.state_of_origin = '';
       $scope.states = Object.keys($scope.countryState[country].states).sort();
     };
 
-    $scope.getLGAs = function(state, country) {
+    $scope.getLGAs = function (state, country) {
       $scope.visitor.lga_of_origin = '';
       if ($scope.countryState[country].states[state]) {
         $scope.lgas = $scope.countryState[country].states[state].lga.sort();
       }
     };
 
-    $scope.getResidentialStates = function(country) {
+    $scope.getResidentialStates = function (country) {
       $scope.visitorsLocation.residential_state = '';
       $scope.locationStates = Object.keys($scope.countryState[country].states).sort();
     };
 
-    $scope.getResidentialLGAS = function(state, country) {
+    $scope.getResidentialLGAS = function (state, country) {
       $scope.visitorsLocation.residential_lga = '';
       if ($scope.countryState[country].states[state]) {
         $scope.locationLgas = $scope.countryState[country].states[state].lga.sort();
       }
     };
   })
-  .controller('VisitorDetailCtrl', function($scope, $stateParams, visitorService, appointmentService,
-                                            visitorsLocationService, $rootScope, notificationService) {
+  .controller('VisitorDetailCtrl', function ($scope, $stateParams, visitorService, appointmentService,
+                                             visitorsLocationService, $rootScope, notificationService) {
     $scope.visitor = {};
     $scope.visitorsLocation = {};
     $scope.appointments = [];
     $scope.upcomingAppointments = [];
-    $scope.appointmentsCurrentPage = 1;
-    $scope.appointmentsPerPage = 10;
-    $scope.maxSize = 5;
+    $scope.pagination = {
+      appointmentsCurrentPage: 1,
+      appointmentsPerPage: 10,
+      maxSize: 5
+    }
     $rootScope.busy = true;
     $scope.visitorLoaded = false;
     $scope.appointmentLoaded = false;
 
     visitorService.get($stateParams.visitor_id)
-      .then(function(response) {
+      .then(function (response) {
         $scope.visitor = response;
         if (response.uuid) {
           visitorsLocationService.findByField('visitor_id', response.uuid)
-            .then(function(response) {
+            .then(function (response) {
               if (response.length) {
                 $scope.visitorsLocation = response[0];
               }
@@ -444,7 +447,7 @@ angular.module('viLoggedClientApp')
                 $rootScope.busy = false;
               }
             })
-            .catch(function(reason) {
+            .catch(function (reason) {
               $scope.visitorLoaded = true;
               if ($scope.appointmentLoaded) {
                 $rootScope.busy = false;
@@ -454,7 +457,7 @@ angular.module('viLoggedClientApp')
         }
 
       })
-      .catch(function(reason) {
+      .catch(function (reason) {
         notificationService.setTimeOutNotification(reason);
 
       });
@@ -462,13 +465,13 @@ angular.module('viLoggedClientApp')
     var appointments = appointmentService.getNestedAppointmentsByVisitor($stateParams.visitor_id);
 
     appointments
-      .then(function() {
+      .then(function () {
         $scope.appointmentLoaded = true;
         if ($scope.appointmentLoaded) {
           $rootScope.busy = false;
         }
       })
-      .catch(function(reason) {
+      .catch(function (reason) {
         notificationService.setTimeOutNotification(reason);
         $scope.appointmentLoaded = true;
         if ($scope.visitorLoaded) {
@@ -477,25 +480,25 @@ angular.module('viLoggedClientApp')
       });
 
     appointments
-      .then(function(response) {
+      .then(function (response) {
         $scope.upcomingAppointments = response
-          .filter(function(appointment) {
+          .filter(function (appointment) {
             return appointment.is_approved &&
               new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.expired;
           });
       })
-      .catch(function(reason) {
+      .catch(function (reason) {
         notificationService.setTimeOutNotification(reason);
       });
 
     appointments
-      .then(function(response) {
+      .then(function (response) {
         $scope.appointments = response;
-        $scope.totalAppointments = $scope.appointments.length;
-        $scope.appointmentNumPages =
-          Math.ceil($scope.totalAppointments / $scope.appointmentsPerPage);
+        $scope.pagination.totalAppointments = $scope.appointments.length;
+        $scope.pagination.appointmentNumPages =
+          Math.ceil($scope.pagination.totalAppointments / $scope.pagination.appointmentsPerPage);
       })
-      .catch(function(reason) {
+      .catch(function (reason) {
         notificationService.setTimeOutNotification(reason);
       });
   })

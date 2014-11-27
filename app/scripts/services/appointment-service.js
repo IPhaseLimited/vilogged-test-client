@@ -286,6 +286,31 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     }
 
+    /*
+     * Finds an existing but unexpired appointment with a host.
+     * cancel save if one is found
+     * */
+    function findExistingAppointment (visitorId, hostId) {
+      var deferred = $q.defer();
+      appointmentService.findByField('visitor_id', visitorId)
+        .then(function(response){
+          var existingAppointment = response.filter(function(appointment) {
+            if (visitorId === undefined) {
+              return false;
+            }
+            return appointment.host_id === hostId && !appointment.checked_out
+              && (!appointment.is_expired || utility.getTimeStamp(appointment) < new Date().getTime());
+          });
+
+
+          existingAppointment.length ? deferred.reject('An appointment can not be created with this host') :
+            deferred.resolve('');
+        })
+        .catch(function(reason) {
+          console.log(reason);
+        });
+    }
+
     this.get = get;
     this.getNested = getNested;
     this.all = getAllAppointments;
@@ -302,6 +327,7 @@ angular.module('viLoggedClientApp')
     this.getAppointmentsByMonth = appointmentByMonth;
     this.getAppointmentsByDay = appointmentsByDay;
     this.defaultEntrance = defaultEntrance;
+    this.findExistingAppointment = findExistingAppointment;
     this.APPOINTMENT_APPROVAL_EMAIL_TEMPLATE = APPOINTMENT_APPROVAL_EMAIL_TEMPLATE;
     this.APPOINTMENT_APPROVAL_SMS_TEMPLATE = APPOINTMENT_APPROVAL_SMS_TEMPLATE;
     this.APPOINTMENT_CREATED_EMAIL_TEMPLATE = APPOINTMENT_CREATED_EMAIL_TEMPLATE;
