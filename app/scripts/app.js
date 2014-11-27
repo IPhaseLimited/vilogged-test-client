@@ -14,9 +14,13 @@ angular.module('viLoggedClientApp', [
   'db.names',
   'webcam',
   'ngResource',
-  'ncy-angular-breadcrumb'
+  'ncy-angular-breadcrumb',
+  'ngSanitize',
+  'ngCsv'
 ])
-  .run(function($cookieStore, $rootScope, $state, $http, $location, $interval, loginService, growl, authorizationService) {
+  .run(function($cookieStore, $rootScope, $state, $http, $location, $interval, loginService, growl, authorizationService,
+                utility) {
+    $rootScope.getFileName = utility.getFileName;
 
     $rootScope.pageTitle = 'Visitor Management System';
     $rootScope.pageHeader = 'Dashboard';
