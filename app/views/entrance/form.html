@@ -1,7 +1,7 @@
 <form ng-submit="addEntrance()" name="entranceForm" class="form-horizontal">
   <fieldset>
-    <legend ng-if="entrance._id">Edit Entrance</legend>
-    <legend ng-if="!entrance._id">Add Entrance</legend>
+    <legend ng-if="entrance.uuid">Edit Entrance</legend>
+    <legend ng-if="!entrance.uuid">Add Entrance</legend>
     <div class="form-group">
       <label class="control-label col-sm-2" for="entranceName">Entrance Name</label>
 
@@ -15,9 +15,9 @@
 
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-6">
-        <button class="btn btn-primary" ng-if="!entrance._id">Add Entrance</button>
+        <button class="btn btn-primary" ng-if="!entrance.uuid">Add Entrance</button>
 
-        <button class="btn btn-primary" ng-if="entrance._id">Update Entrance</button>
+        <button class="btn btn-primary" ng-if="entrance.uuid">Update Entrance</button>
       </div>
     </div>
   </fieldset>
