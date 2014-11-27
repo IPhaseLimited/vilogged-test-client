@@ -57,9 +57,9 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="appointment in appointments | paginationOffset:currentPage:itemsPerPage | orderBy: 'appointment.created'"
+          <tr ng-repeat="appointment in appointments | paginationOffset:pagination.currentPage:pagination.itemsPerPage | orderBy: 'appointment.created'"
               ng-class="{'text-danger': isAppointmentExpired(appointment.appointment_date), 'text-success': isAppointmentUpcoming(appointment.appointment_date)}">
-            <td>{{ $index+1 }}</td>
+            <td>{{ $index + 1 + ((pagination.currentPage-1) * pagination.itemsPerPage)}}</td>
             <td>{{ ((appointment).visitor_id).first_name + ' ' + ((appointment).visitor_id).last_name }}</td>
             <td>{{ ((appointment).host_id).first_name + ' ' + ((appointment).host_id).last_name }}</td>
             <td>{{ appointment.appointment_date | date:'EEE, MMM d, y' }}</td>
@@ -89,11 +89,11 @@
         <br/>
         <div class="row">
           <div class="col-sm-6" style="padding-top: 15px;">
-            Showing Page: {{currentPage}} of {{numPages}}
+            Showing Page: {{ pagination.currentPage }} of {{ pagination.numPages }}
           </div>
           <div class="col-sm-6">
-            <pagination total-items="totalItems" ng-model="currentPage" max-size="maxSize" class="pagination-sm pull-right"
-                        boundary-links="true" rotate="false" items-per-page="itemsPerPage"></pagination>
+            <pagination total-items="pagination.totalItems" ng-model="pagination.currentPage" max-size="maxSize" class="pagination-sm pull-right"
+                        boundary-links="true" rotate="false" items-per-page="pagination.itemsPerPage"></pagination>
           </div>
         </div>
       </div>
