@@ -153,32 +153,81 @@ angular.module('viLoggedClientApp')
     };
   })
   .controller('UsersCtrl', function($scope, userService, notificationService, growl, $rootScope) {
+    var rows = [];
     var exports = [];
+
+    $scope.search = {};
 
     $scope.csvHeader = [
       'User\'s Name',
       'Username',
-      'Email',
-      'Phone',
+      'Role',
       'Department',
-      'Appointment Date',
-      'Start Time',
-      'End Time',
-      'Date Checked in',
-      'Date Checked out'
+      'Office Phone'
     ];
 
     function getUsers() {
+      $rootScope.busy = true;
       userService.usersNested()
         .then(function(response) {
-          $scope.users = response;
+          rows = response;
+          updateTableData();
+          $rootScope.busy = false;
         })
         .catch(function(reason) {
           notificationService.setTimeOutNotification(reason);
+          $rootScope.busy = false;
         });
     }
 
     getUsers();
+    $scope.$watch('search', function () {
+      updateTableData();
+    }, true);
+
+    function updateTableData() {
+      $scope.users = rows.filter(function (row) {
+        var date = moment(row.created);
+        var include = true;
+
+        if (include && $scope.search.name) {
+          include = row.first_name.toLowerCase().indexOf($scope.search.name.toLowerCase()) > -1 ||
+          row.last_name.toLowerCase().indexOf($scope.search.name.toLowerCase()) > -1;
+        }
+
+        if (include && $scope.search.username) {
+          include = row.username.toLowerCase().indexOf($scope.search.username.toLowerCase()) > -1;
+        }
+
+        if (include && $scope.search.role) {
+          if ($scope.search.role === 'superadmin') include = row.is_active && row.is_staff && row.is_superadmin;
+          if ($scope.search.role === 'admin') include = row.is_active && row.is_staff && !row.is_superadmin;
+          if ($scope.search.role === 'staff') include = row.is_active && !row.is_staff && !row.is_superadmin;
+          if ($scope.search.role === 'not active') include = !row.is_active;
+        }
+
+        if (include && $scope.search.department) {
+          include = row.user_profile.department.department_name.toLowerCase().indexOf($scope.search.department.toLowerCase()) > -1;
+        }
+
+        if (include && $scope.search.phone) {
+          include = row.user_profile.phone.indexOf($scope.search.phone) > -1;
+        }
+
+        return include;
+      });
+
+      $scope.users.forEach(function (row) {
+        exports.push({
+          name: row.first_name + ' ' + row.last_name,
+          username: row.username,
+          role: row.role,
+          department: row.user_profile.department.department_name,
+          phone: row.phone
+        });
+      });
+      $scope.export = exports;
+    }
 
     $scope.toggleActive = function(id) {
       userService.toggleUserActivationStatus(id)

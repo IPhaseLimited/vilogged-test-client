@@ -94,6 +94,16 @@ angular.module('viLoggedClientApp')
     $scope.search = {};
     var rows = [];
 
+    var exports = [];
+
+    $scope.csvHeader = [
+      'Visitor\'s Name',
+      'Email',
+      'Phone',
+      'Company Name',
+      'Group Type',
+      'Created Date'
+    ];
 
     $scope.createdDate = {
       opened: false,
@@ -160,6 +170,17 @@ angular.module('viLoggedClientApp')
         return include;
       });
 
+      $scope.visitors.forEach(function (row) {
+        exports.push({
+          name: row.first_name + ' ' + row.last_name,
+          email: row.email,
+          phone: row.phone,
+          company_name: row.company_name,
+          group_type: row.group_type,
+          created_date: row.created
+        });
+      });
+      $scope.export = exports;
     }
 
     $scope.pagination = {
