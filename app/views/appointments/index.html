@@ -67,7 +67,7 @@
             <td>
               <a ui-sref="visitor-check-in({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
                  ng-if="!appointment.checked_in && confirm(appointment.visitor_id.group_type) !== 'Banned'" ng-show="isAppointmentUpcoming(appointment.appointment_date) && user.is_staff"
-                 ng-class="{disabled: !appointment.is_approved, disabled: confirm(appointment.visitor_id.group_type) === 'Banned'}">Check In</a>
+                 ng-class="{disabled: !appointment.is_approved}">Check In</a>
               <a ui-sref="visitor-check-out({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
                  ng-show="(isAppointmentUpcoming(appointment.appointment_date))
                  && user.is_staff && appointment.checked_in !== null && appointment.checked_out === null">Check Out</a>

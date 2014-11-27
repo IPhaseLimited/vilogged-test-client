@@ -280,13 +280,13 @@ angular.module('viLoggedClientApp')
             if (angular.isDefined(appointmentObject.visitor_id.visitors_phone) && appointmentObject.visitor_id.visitors_phone !== '') {
               notificationService.send.sms({
                 message: compiledSMSTemplate,
-                mobiles: $scope.visitor.visitors_phone
+                mobiles: appointmentObject.visitor_id.visitors_phone
               });
             }
 
             if (angular.isDefined(appointmentObject.visitor_id.visitors_email) && appointmentObject.visitor_id.visitors_email !== '') {
               notificationService.send.email({
-                to: $scope.visitor.visitors_email,
+                to: appointmentObject.visitor_id.visitors_email,
                 subject: 'Appointment Schedule Approved.',
                 message: compiledEmailTemplate
               });
@@ -578,7 +578,6 @@ angular.module('viLoggedClientApp')
 
       $scope.validationErrors = validationService.validateFields(validationParams, $scope.appointment);
       if (!Object.keys($scope.validationErrors).length) {
-
         $rootScope.busy = true;
         appointmentService.save($scope.appointment)
           .then(function(response) {
@@ -625,10 +624,11 @@ angular.module('viLoggedClientApp')
       });
 
     $rootScope.busy = true;
-    appointmentService.get($stateParams.appointment_id)
+    appointmentService.getNested($stateParams.appointment_id)
       .then(function(response) {
         $rootScope.busy = false;
         $scope.appointment = response;
+        console.log($scope.appointment)
         if (angular.isUndefined($scope.restricted_items)) {
           $scope.restricted_items = [{
             item_code: '',
@@ -721,7 +721,6 @@ angular.module('viLoggedClientApp')
     $scope.checkVisitorIn = function() {
 
       $scope.appointment.checked_in = utility.getISODateTime();
-      $scope.appointment.label_code = utility.generateRandomInteger();
 
       var restricted = [];
       $scope.restricted_items.forEach(function(item) {
