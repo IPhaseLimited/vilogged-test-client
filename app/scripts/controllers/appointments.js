@@ -250,7 +250,7 @@ angular.module('viLoggedClientApp')
 
   })
   .controller('AppointmentDetailCtrl', function($scope, $state, $stateParams, appointmentService, utility, $modal, growl,
-                                                 notificationService, $rootScope) {
+                                                notificationService, $rootScope) {
     $rootScope.busy = true;
     appointmentService.getNested($stateParams.appointment_id)
       .then(function(response) {
@@ -373,8 +373,17 @@ angular.module('viLoggedClientApp')
     };
   })
   .controller('AppointmentFormCtrl', function($scope, $stateParams, $state, $timeout, $filter, visitorService, growl,
-                                               userService, appointmentService, utility, validationService, $rootScope,
-                                               notificationService) {
+                                              userService, appointmentService, utility, validationService, $rootScope,
+                                              notificationService) {
+
+    appointmentService.defaultEntrance()
+      .then(function(response) {
+        $scope.defaultEntrance = response;
+      })
+      .catch(function(reason) {
+        notificationService.setTimeOutNotification(reason);
+      });
+
     $rootScope.busy = false;
     $scope.appointment = {};
     $scope.visit_start_time = new Date();
@@ -419,8 +428,8 @@ angular.module('viLoggedClientApp')
             });
           }
         })
-        .catch(function() {
-
+        .catch(function(reason) {
+          notificationService.setTimeOutNotification(reason);
         });
 
 
@@ -571,88 +580,78 @@ angular.module('viLoggedClientApp')
       $scope.appointment.is_expired = false;
       $scope.appointment.checked_in = null;
       $scope.appointment.checked_out = null;
-      var cancelSave = false;
 
-      ///*
-      //* Finds an existing but unexpired appointment with a host.
-      //* cancel save if one is found
-      //* */
-      //appointmentService.findByField('visitor_id', $scope.visitor.selected.uuid)
-      //  .then(function(response){
-      //    var existingAppointment = response.filter(function(appointment) {
-      //      if ($scope.host.selected.id === undefined) {
-      //        return false;
-      //      }
-      //      return appointment.host_id === $scope.host.selected.id  && !appointment.checked_out
-      //        && (!appointment.is_expired || utility.getTimeStamp(appointment) < new Date().getTime());
-      //    });
-      //
-      //
-      //    if (existingAppointment.length) {
-      //      growl.addErrorMessage('An appointment with this host can\'t be created.');
-      //      if (!$scope.user.is_active) {
-      //        $rootScope.busy = false;
-      //        cancelSave = !cancelSave;
-      //        $state.go('show-visitor', {visitor_id: $scope.visitor.selected.uuid});
-      //      } else {
-      //        $rootScope.busy = false;
-      //        cancelSave = !cancelSave;
-      //        $state.go('appointments');
-      //      }
-      //    }
-      //  })
-      //  .catch(function(reason) {
-      //    $rootScope.busy = false;
-      //    notificationService.setTimeOutNotification(reason);
-      //  });
+      appointmentService.findByField('visitor_id', $scope.visitor.selected.uuid)
+        .then(function(response){
+          var existingAppointment = response.filter(function(appointment) {
+            if ($scope.host.selected.id === undefined) {
+              return false;
+            }
+            return appointment.host_id === $scope.host.selected.id  && !appointment.checked_out
+              && (!appointment.is_expired || utility.getTimeStamp(appointment) < new Date().getTime());
+          });
 
-      appointmentService.findExistingAppointment($scope.visitor.selected.uuid, $scope.host.selected.id)
-        .then(function() {
-          $scope.appointment.visit_start_time = $filter('date')($scope.visit_start_time, 'hh:mm a');
-          $scope.appointment.visit_end_time = $filter('date')($scope.visit_end_time, 'hh:mm a');
 
-          $scope.appointment.host_id = angular.isDefined($scope.host.selected) ? $scope.host.selected.id : undefined;
-          $scope.appointment.visitor_id = angular.isDefined($scope.visitor.selected) ? $scope.visitor.selected.uuid : undefined;
-
-          var validationParams = {
-            appointment_date: validationService.BASIC,
-            visit_start_time: validationService.BASIC,
-            visit_end_time: validationService.BASIC,
-            purpose: validationService.BASIC,
-            host_id: validationService.BASIC,
-            visitor_id: validationService.BASIC
-          };
-
-          $scope.validationErrors = validationService.validateFields(validationParams, $scope.appointment);
-          if (!Object.keys($scope.validationErrors).length) {
-            $rootScope.busy = true;
-            appointmentService.save($scope.appointment)
-              .then(function(response) {
-                $rootScope.busy = false;
-                sendMessage();
-                growl.addSuccessMessage( 'Appointment was successfully created' );
-                $scope.user.is_active ? $state.go('appointments') : $state.go('visitors', {visitor_id: $stateParams.visitor_id});
-              })
-              .catch(function(reason) {
-                $rootScope.busy = false;
-                if (angular.isObject(reason)) {
-                  Object.keys(reason).forEach(function(key) {
-                    $scope.validationErrors[key] = reason[key];
-                  });
-                }
-                notificationService.setTimeOutNotification(reason);
-              });
+          if (existingAppointment.length) {
+            growl.addErrorMessage('An appointment with this host can\'t be created.');
+            if (!$scope.user.is_active) {
+              $rootScope.busy = false;
+              $state.go('show-visitor', {visitor_id: $scope.visitor.selected.uuid});
+            } else {
+              $rootScope.busy = false;
+              $state.go('appointments');
+            }
           }
         })
-        .catch(function(reason){
-          growl.addErrorMessage(reason);
-          $scope.user.is_active ? $state.go('appointments') : $state.go('visitors', {visitor_id: $stateParams.visitor_id});
-        })
+        .catch(function(reason) {
+          $rootScope.busy = false;
+
+          notificationService.setTimeOutNotification(reason);
+        });
+
+      $scope.appointment.visit_start_time = $filter('date')($scope.visit_start_time, 'hh:mm a');
+      $scope.appointment.visit_end_time = $filter('date')($scope.visit_end_time, 'hh:mm a');
+
+      $scope.appointment.host_id = angular.isDefined($scope.host.selected) ? $scope.host.selected.id : undefined;
+      $scope.appointment.visitor_id = angular.isDefined($scope.visitor.selected) ? $scope.visitor.selected.uuid : undefined;
+
+      var validationParams = {
+        appointment_date: validationService.BASIC,
+        visit_start_time: validationService.BASIC,
+        visit_end_time: validationService.BASIC,
+        purpose: validationService.BASIC,
+        host_id: validationService.BASIC,
+        visitor_id: validationService.BASIC
+      };
+
+      $scope.validationErrors = validationService.validateFields(validationParams, $scope.appointment);
+      if (!Object.keys($scope.validationErrors).length) {
+        $rootScope.busy = true;
+        if (!$scope.appointment.entrance_id) {
+          $scope.appointment.entrance_id = $scope.defaultEntrance;
+        }
+        appointmentService.save($scope.appointment)
+          .then(function(response) {
+            $rootScope.busy = false;
+            sendMessage();
+            growl.addSuccessMessage( 'Appointment was successfully created' );
+            $scope.user.is_active ? $state.go('appointments') : $state.go('visitors', {visitor_id: $stateParams.visitor_id});
+          })
+          .catch(function(reason) {
+            $rootScope.busy = false;
+            if (angular.isObject(reason)) {
+              Object.keys(reason).forEach(function(key) {
+                $scope.validationErrors[key] = reason[key];
+              });
+            }
+            notificationService.setTimeOutNotification(reason);
+          });
+      }
     };
   })
   .controller('CheckInCtrl', function($scope, $state, $stateParams, $q, visitorService, appointmentService, entranceService,
-                                       vehicleTypeConstant, notificationService, utility, restrictedItemsService,
-                                       vehicleService, growl, $rootScope) {
+                                      vehicleTypeConstant, notificationService, utility, restrictedItemsService,
+                                      vehicleService, growl, $rootScope) {
     $scope.appointment = {};
     $scope.restricted_items = [{
       item_code: '',
