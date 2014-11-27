@@ -153,6 +153,21 @@ angular.module('viLoggedClientApp')
     };
   })
   .controller('UsersCtrl', function($scope, userService, notificationService, growl, $rootScope) {
+    var exports = [];
+
+    $scope.csvHeader = [
+      'User\'s Name',
+      'Username',
+      'Email',
+      'Phone',
+      'Department',
+      'Appointment Date',
+      'Start Time',
+      'End Time',
+      'Date Checked in',
+      'Date Checked out'
+    ];
+
     function getUsers() {
       userService.usersNested()
         .then(function(response) {
