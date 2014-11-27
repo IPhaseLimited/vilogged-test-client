@@ -132,7 +132,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="appointment in appointments track by appointment.uuid | paginationOffset:currentPage:itemsPerPage | orderBy: created">
+        <tr ng-repeat="appointment in appointments | paginationOffset:appointmentsCurrentPage:appointmentsPerPage | orderBy: 'appointment.created'">
           <td>{{ $index+1 }}</td>
           <td>{{ appointment.host_id.first_name + ' ' + appointment.host_id.last_name }}</td>
           <td>{{ appointment.appointment_date }}</td>
@@ -142,8 +142,7 @@
         </tr>
         </tbody>
       </table>
-      <pre>{{appointment|json}}</pre>
-      <div class="row">
+      <div class="row" ng-if="appointments.length">
         <div class="col-sm-6" style="padding-top: 15px;">
           Showing Page: {{appointmentsCurrentPage}} of {{appointmentNumPages}}
         </div>

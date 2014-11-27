@@ -57,8 +57,8 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="appointment in appointments track by $index | paginationOffset:currentPage:itemsPerPage | orderBy: appointment.created"
-              ng-class="{'text-danger': expired(appointment.appointment_date), 'text-success': upcoming(appointment.appointment_date)}">
+          <tr ng-repeat="appointment in appointments | paginationOffset:currentPage:itemsPerPage | orderBy: 'appointment.created'"
+              ng-class="{'text-danger': isAppointmentExpired(appointment.appointment_date), 'text-success': isAppointmentUpcoming(appointment.appointment_date)}">
             <td>{{ $index+1 }}</td>
             <td>{{ ((appointment).visitor_id).first_name + ' ' + ((appointment).visitor_id).last_name }}</td>
             <td>{{ ((appointment).host_id).first_name + ' ' + ((appointment).host_id).last_name }}</td>
@@ -80,7 +80,7 @@
                  && !appointment.is_expired && !appointment.is_approved">Edit</a>
               <a ui-sref="show-appointment({appointment_id: appointment.uuid})" class="btn btn-xs btn-success">View</a>
               <span class="label label-danger" ng-show="isAppointmentExpired(appointment.appointment_date) || appointment.checked_out === ''">
-                Expired Appointment
+                Expired
               </span>
             </td>
           </tr>
