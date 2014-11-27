@@ -151,7 +151,7 @@
             <span ng-if="appointment.is_approved === null">Awaiting Approval</span>
             <span ng-if="appointment.is_approved !== null">{{ appointment.is_approved }}</span>
           </td>
-          <td>{{ appointment.visitor_id.visitors_pass_code }}</td>
+          <td>{{ appointment.label_code }}</td>
         </tr>
       </table>
     </div>
@@ -218,9 +218,10 @@
           <th>Item Type</th>
         </tr>
         <tr ng-repeat="item in appointment.restricted_items">
-          <td>{{ item.item_code| date: 'MMM d, y' }}</td>
-          <td>{{ item.item_name| date: 'MMM d, y' }}</td>
-          <td>{{ item.item_type| date: 'MMM d, y' }}</td>
+          <td>{{ $index+1 }}</td>
+          <td>{{ item.item_code }}</td>
+          <td>{{ item.item_name }}</td>
+          <td>{{ item.item_type }}</td>
         </tr>
       </table>
     </div>

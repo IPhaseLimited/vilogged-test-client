@@ -176,6 +176,14 @@ angular.module('viLoggedClientApp')
       return (str||"").replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     };
 
+
+    this.getFileName = function(prefix, ext) {
+      prefix = (prefix || '').toLowerCase().replace(/ /g, '-');
+      ext = ext || '.csv';
+      var now = $filter('date')(new Date(), 'yyyy-MM-dd-HH-mm-ss');
+      return prefix + '-' + now + ext;
+    };
+
     /**
      * calculates the timestamp for a particular date and time (if given)
      * @param date Date to calculate timestamp

@@ -8,7 +8,8 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('appointmentService', function appointmentService($q, db, $http, config, storageService, utility, syncService) {
+  .service('appointmentService', function appointmentService($q, db, $http, config, storageService, utility, syncService,
+                                                             entranceService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var DB_NAME = db.APPOINTMENTS;
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
@@ -260,6 +261,56 @@ angular.module('viLoggedClientApp')
       return appointmentsByPeriod(date, 'month');
     }
 
+    function defaultEntrance() {
+      var deferred = $q.defer();
+      entranceService.all()
+        .then(function(response) {
+          if (response.length) {
+            deferred.resolve(response[0].uuid);
+          } else {
+            entranceService.save({
+              entrance_name: 'Main Gate'
+            })
+              .then(function(response) {
+                deferred.resolve(response.uuid);
+              })
+              .catch(function(reason) {
+                deferred.reject(reason);
+              });
+          }
+
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
+        });
+      return deferred.promise;
+    }
+
+    /*
+     * Finds an existing but unexpired appointment with a host.
+     * cancel save if one is found
+     * */
+    function findExistingAppointment (visitorId, hostId) {
+      var deferred = $q.defer();
+      appointmentService.findByField('visitor_id', visitorId)
+        .then(function(response){
+          var existingAppointment = response.filter(function(appointment) {
+            if (visitorId === undefined) {
+              return false;
+            }
+            return appointment.host_id === hostId && !appointment.checked_out
+              && (!appointment.is_expired || utility.getTimeStamp(appointment) < new Date().getTime());
+          });
+
+
+          existingAppointment.length ? deferred.reject('An appointment can not be created with this host') :
+            deferred.resolve('');
+        })
+        .catch(function(reason) {
+          console.log(reason);
+        });
+    }
+
     this.get = get;
     this.getNested = getNested;
     this.all = getAllAppointments;
@@ -275,6 +326,8 @@ angular.module('viLoggedClientApp')
     this.getAppointmentsByWeek = appointmentByWeek;
     this.getAppointmentsByMonth = appointmentByMonth;
     this.getAppointmentsByDay = appointmentsByDay;
+    this.defaultEntrance = defaultEntrance;
+    this.findExistingAppointment = findExistingAppointment;
     this.APPOINTMENT_APPROVAL_EMAIL_TEMPLATE = APPOINTMENT_APPROVAL_EMAIL_TEMPLATE;
     this.APPOINTMENT_APPROVAL_SMS_TEMPLATE = APPOINTMENT_APPROVAL_SMS_TEMPLATE;
     this.APPOINTMENT_CREATED_EMAIL_TEMPLATE = APPOINTMENT_CREATED_EMAIL_TEMPLATE;

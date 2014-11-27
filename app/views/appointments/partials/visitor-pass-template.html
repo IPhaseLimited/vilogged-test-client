@@ -6,7 +6,9 @@
   <div>
     <div style="float: left; width: 40%;">
       <div style="width: 95%; background: #cccccc; margin-top: 5%; margin-bottom: 5%; height: 100px">
-        <img ng-src="{{ appointment.visitor_id.image }}" alt="" width="100%" height="100px"/>
+        <img ng-if="((appointment).visitor).image" ng-src="{{ appointment.visitor_id.image }}" alt="" width="100%" height="100px"/>
+        <img ng-if="!((appointment).visitor).image" ng-src="img/place_holder.jpg" alt=""
+             class="img-responsive"/>
       </div>
     </div>
     <div style="float: right; width: 55%;">
@@ -17,5 +19,5 @@
     </div>
     <div style="clear: both"></div>
   </div>
-  <div barcode-generator="{{ appointment.label_code }}" style="height:30px; margin-top: 20px;"></div>
+  <img id="barcode"  style="height:30px; margin-top: 20px; max-width: 350px">
 </div>

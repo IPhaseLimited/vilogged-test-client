@@ -9,10 +9,30 @@
 
   <div class="widget-content">
     <div class="padd">
-
-      <div ng-if="visitors.length">
+      <div >
         <table class="table table-striped table-condensed table-responsive table-bordered">
           <thead>
+          <tr>
+            <th></th>
+            <th><input class="form-control" ng-model="search.name"></th>
+            <th><input class="form-control" ng-model="search.visitors_email"></th>
+            <th><input class="form-control" ng-model="search.visitors_phone"></th>
+            <th><input class="form-control" ng-model="search.company_name"></th>
+            <th><input class="form-control" ng-model="search.group_type"></th>
+            <th>
+              <div style="max-width: 200px" class="input-group">
+                <input type="text" class="form-control" ng-model="search.created"
+                       datepicker-popup is-open="createdDate.opened"
+                       date-disabled="disabled(date, mode)"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="createdDate.open($event)">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </button>
+                </span>
+              </div>
+            </th>
+            <th><button ng-click="search={}" class="btn btn-info">Clear</button></th>
+          </tr>
           <tr>
             <th>S/N</th>
             <th>Visitor's Names</th>
@@ -25,10 +45,19 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="visitor in visitors track by visitor.visitors_phone | paginationOffset:currentPage:itemsPerPage | orderBy: 'visitor.created'"
+          <tr ng-repeat="visitor in visitors | paginationOffset:pagination.currentPage:pagination.itemsPerPage | orderBy: 'visitor.created'"
             ng-class="{'text-danger': confirm(visitor.group_type) === 'Banned'}">
-            <td>{{ $index + 1 }}</td>
-            <td>{{ visitor.first_name }} {{ visitor.last_name }}</td>
+            <td>{{ $index + 1 + ((pagination.currentPage-1) * pagination.itemsPerPage) }}</td>
+            <td>
+              <a class="btn-link" ui-sref="edit-visitor-profile({visitor_id: visitor.uuid})"
+                 title="Edit {{ visitor.first_name }}'s details" ng-show="user.is_staff">
+                {{ visitor.first_name }} {{ visitor.last_name }}
+              </a>
+              <span ng-show="!user.is_staff">
+                {{ visitor.first_name }} {{ visitor.last_name }}
+
+              </span>
+            </td>
             <td>{{ visitor.visitors_email }}</td>
             <td>{{ visitor.visitors_phone }}</td>
             <td>{{ visitor.company_name }}</td>
@@ -42,11 +71,6 @@
             </td>
             <td>{{ visitor.created |date: 'dd MMM, yyyy' }}</td>
             <td>
-              <a class="btn btn-primary btn-xs" ui-sref="edit-visitor-profile({visitor_id: visitor.uuid})"
-                title="Edit {{ visitor.first_name }}'s details" ng-show="user.is_staff">
-                <i class="fa fa-edit"></i> Edit
-              </a>
-
               <a class="btn btn-success btn-xs" ui-sref="show-visitor({visitor_id: visitor.uuid})"
                  title="View {{ visitor.first_name }}'s details" ng-show="user.is_active">
                 <i class="fa fa-eye"></i> View
@@ -63,20 +87,20 @@
         <br/>
         <div class="row">
           <div class="col-sm-6" style="padding-top: 15px;">
-            Showing Page: {{currentPage}} of {{numPages}}
+            Showing Page: {{pagination.currentPage}} of {{pagination.numPages}}
           </div>
           <div class="col-sm-6">
-            <pagination total-items="totalItems" ng-model="currentPage" max-size="maxSize" class="pagination-sm pull-right"
-                        boundary-links="true" rotate="false" items-per-page="itemsPerPage"></pagination>
+            <pagination total-items="pagination.totalItems" ng-model="pagination.currentPage" max-size="pagination.maxSize" class="pagination-sm pull-right"
+                        boundary-links="true" rotate="false" items-per-page="pagination.itemsPerPage"></pagination>
           </div>
         </div>
       </div>
 
-      <div class="alert alert-info" ng-if="!visitors.length">
+      <!--div class="alert alert-info" ng-if="!visitors.length">
         <p>
           No visitor's profile have been created. Click on the create visitor profile button to create one.
         </p>
-      </div>
+      </div-->
     </div>
     <div class="widget-foot">
       <!-- Footer goes here -->
