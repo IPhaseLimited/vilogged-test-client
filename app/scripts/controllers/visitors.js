@@ -418,7 +418,7 @@ angular.module('viLoggedClientApp')
     };
   })
   .controller('VisitorDetailCtrl', function($scope, $stateParams, visitorService, appointmentService,
-                                            visitorsLocationService, $rootScope) {
+                                            visitorsLocationService, $rootScope, notificationService) {
     $scope.visitor = {};
     $scope.visitorsLocation = {};
     $scope.appointments = [];

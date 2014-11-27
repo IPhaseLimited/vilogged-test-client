@@ -134,6 +134,7 @@ angular.module('viLoggedClientApp')
     $scope.maxSize = 5;
     $scope.itemsPerPage = 10;
     $scope.appointments = [];
+    var exports = [];
 
     $scope.search = {};
     var rows = [];
@@ -148,6 +149,19 @@ angular.module('viLoggedClientApp')
       }
     };
 
+    $scope.csvHeader = [
+      'Vsistor\'s Name',
+      'Gender',
+      'Host',
+      'Gender',
+      'Department',
+      'Appointment Date',
+      'Start Time',
+      'End Time',
+      'Date Checked in',
+      'Date Checked out'
+    ];
+
     $scope.isAppointmentUpcoming = function(appointmentDate) {
       var appointmentTimeStamp = utility.getTimeStamp(appointmentDate);
       return new Date().getTime() < appointmentTimeStamp;
@@ -157,6 +171,7 @@ angular.module('viLoggedClientApp')
       var appointmentTimeStamp = utility.getTimeStamp(appointmentDate);
       return new Date().getTime() > appointmentTimeStamp;
     };
+
     function getAppointments() {
       appointmentService.all()
         .then(function(response) {
@@ -213,6 +228,21 @@ angular.module('viLoggedClientApp')
 
         return include;
       });
+
+      $scope.appointments.forEach(function(row) {
+        exports.push({
+          visitor: row.visitor_id.first_name +' '+ row.visitor_id.last_name,
+          visitorsGender: row.visitor_id.gender,
+          host: row.host_id.first_name + ' '+ row.host_id.last_name,
+          hostGender: row.host_id.gender,
+          appointmentDate: row.appointment_date,
+          startTime: row.visit_start_time,
+          endTime: row.visit_end_time,
+          checkedIn: row.checked_in,
+          checkedOut: row.checked_out
+        });
+      });
+      $scope.export = exports;
     }
 
   })
@@ -238,6 +268,11 @@ angular.module('viLoggedClientApp')
           appointmentService.getNested($stateParams.appointment_id)
             .then(function(response) {
               $scope.appointment = response;
+              if (!$scope.appointment.label_code) {
+                $scope.appointment.label_code = $scope.appointment.uuid;
+              }
+              $("#barcode").JsBarcode($scope.appointment.label_code,{width:1,height:25});
+
               $rootScope.busy = false;
             })
             .catch(function(reason) {
