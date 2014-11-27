@@ -372,6 +372,15 @@ angular.module('viLoggedClientApp')
   .controller('AppointmentFormCtrl', function($scope, $stateParams, $state, $timeout, $filter, visitorService, growl,
                                                userService, appointmentService, utility, validationService, $rootScope,
                                                notificationService) {
+
+    appointmentService.defaultEntrance()
+      .then(function(response) {
+        $scope.defaultEntrance = response;
+      })
+      .catch(function(reason) {
+        notificationService.setTimeOutNotification(reason);
+      });
+
     $rootScope.busy = false;
     $scope.appointment = {};
     $scope.visit_start_time = new Date();
@@ -416,8 +425,8 @@ angular.module('viLoggedClientApp')
             });
           }
         })
-        .catch(function() {
-
+        .catch(function(reason) {
+          notificationService.setTimeOutNotification(reason);
         });
 
 
@@ -593,6 +602,7 @@ angular.module('viLoggedClientApp')
         })
         .catch(function(reason) {
           $rootScope.busy = false;
+
           notificationService.setTimeOutNotification(reason);
         });
 
@@ -614,6 +624,9 @@ angular.module('viLoggedClientApp')
       $scope.validationErrors = validationService.validateFields(validationParams, $scope.appointment);
       if (!Object.keys($scope.validationErrors).length) {
         $rootScope.busy = true;
+        if (!$scope.appointment.entrance_id) {
+          $scope.appointment.entrance_id = $scope.defaultEntrance;
+        }
         appointmentService.save($scope.appointment)
           .then(function(response) {
             $rootScope.busy = false;
