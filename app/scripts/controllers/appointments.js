@@ -130,10 +130,13 @@ angular.module('viLoggedClientApp')
   })
   .controller('AppointmentCtrl', function($scope, appointmentService, utility, $rootScope, notificationService) {
     $rootScope.busy = true;
-    $scope.currentPage = 1;
-    $scope.maxSize = 5;
-    $scope.itemsPerPage = 10;
+
     $scope.appointments = [];
+    $scope.pagination = {
+      currentPage: 1,
+      maxSize: 5,
+      itemsPerPage: 10
+    };
     var exports = [];
 
     $scope.search = {};
@@ -176,8 +179,8 @@ angular.module('viLoggedClientApp')
       appointmentService.all()
         .then(function(response) {
           rows = response;
-          $scope.totalItems = rows.length;
-          $scope.numPages = Math.ceil($scope.totalItems / $scope.itemsPerPage);
+          $scope.pagination.totalItems = rows.length;
+          $scope.pagination.numPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
           $rootScope.busy = false;
           updateTableData();
         })
