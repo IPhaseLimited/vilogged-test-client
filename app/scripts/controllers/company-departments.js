@@ -108,6 +108,7 @@ angular.module('viLoggedClientApp')
   })
   .controller('CompanyDepartmentsCtrl', function($scope, companyDepartmentsService, $modal, notificationService,
                                                  $interval, $rootScope, alertService) {
+
     $scope.departments = [];
     function getDepartments() {
       $rootScope.busy = true;

@@ -32,6 +32,7 @@ angular.module('viLoggedClientApp', [
     }
 
     $rootScope.$on('$stateChangeSuccess', function() {
+      utility.scrollToTop();
 
       if (angular.isDefined($state.$current.self.data)) {
         $rootScope.pageTitle =

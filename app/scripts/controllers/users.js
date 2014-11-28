@@ -80,7 +80,7 @@ angular.module('viLoggedClientApp')
       });
   })
   .controller('UserProfileCtrl', function($scope, $interval, userService, appointmentService, utility,
-                                           notificationService, $rootScope, alertSevice) {
+                                           notificationService, $rootScope, alertService) {
     var appointments = appointmentService.getNestedAppointmentsByUser($rootScope.user);
 
     appointments
@@ -249,7 +249,7 @@ angular.module('viLoggedClientApp')
         .then(function() {
           userService.remove(id)
             .then(function(response) {
-              alertService.success('Account deleted successfully.');
+              alertService.messageToTop.success('Account deleted successfully.');
               getUsers();
               $rootScope.busy = false;
             })
@@ -262,6 +262,7 @@ angular.module('viLoggedClientApp')
   })
   .controller('UserFormCtrl', function($scope, $state, $stateParams, $window, userService, companyDepartmentsService, growl,
                                        $rootScope, $cookieStore, notificationService, alertService) {
+
     $rootScope.busy = true;
     $scope.userLoaded = false;
     $scope.departmentLoaded = false;
@@ -359,6 +360,7 @@ angular.module('viLoggedClientApp')
     }
   })
   .controller('ChangePasswordCtrl', function($scope, $state, $stateParams, userService, alertService, $rootScope) {
+
     $rootScope.busy = false;
     $scope.userPassword = {};
 
@@ -366,7 +368,7 @@ angular.module('viLoggedClientApp')
       $rootScope.busy = true;
       userService.updatePassword($scope.userPassword)
         .then(function(response) {
-          alertService.success('Password changed successfully.');
+          alertService.messageToTop.success('Password changed successfully.');
           $rootScope.busy = false;
           $state.go("home");
         })
