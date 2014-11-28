@@ -8,7 +8,7 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('utility', function utility($filter) {
+  .service('utility', function utility($filter, $location, $anchorScroll) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     /**
