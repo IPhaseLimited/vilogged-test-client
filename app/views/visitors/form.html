@@ -42,7 +42,7 @@
 
           <div class="col-sm-9">
             <div class="input-group">
-              <input type="text" class="form-control" ng-model="visitor.date_of_birth" datepicker-popup is-open="dob.opened"/>
+              <input type="text" ng-change="validateBirthDate(visitor.date_of_birth)" class="form-control" ng-model="visitor.date_of_birth" datepicker-popup is-open="dob.opened"/>
               <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="dob.open($event)">
                   <i class="glyphicon glyphicon-calendar"></i>
@@ -51,7 +51,7 @@
             </div>
 
             <div class="text-danger bold" ng-show="(validationErrors).date_of_birth.length">
-              <span ng-repeat="error in (validationErrors).date_of_birth">
+              <span ng-repeat="error in (validationErrors).date_of_birth track by $index">
                 {{ error }}<br>
               </span>
             </div>

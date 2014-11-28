@@ -206,6 +206,7 @@ angular.module('viLoggedClientApp')
     $scope.visitorGroups = guestGroupConstant;
     $scope.countryState = countryState;
     $scope.countries = Object.keys(countryState);
+    $scope.validationErrors = {};
 
 
     // Disable weekend selection
@@ -220,6 +221,31 @@ angular.module('viLoggedClientApp')
       }
     };
 
+    $scope.validateBirthDate = function (dateString) {
+      var checkAge = [];
+      var today = new Date();
+      var birthDate = new Date(dateString);
+      var age = today.getFullYear() - birthDate.getFullYear();
+      var m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+
+      if (age < 14) {
+        var minYear = today.getFullYear() - 14;
+        checkAge.push('Birth year can\'t be less than year ' + minYear);
+      }
+
+      if (age <= 0) {
+        checkAge.push('Date of birth can\'t be in the future or present');
+      }
+
+      if (checkAge.length) {
+        $scope.validationErrors['date_of_birth'] = checkAge;
+      } else {
+        delete $scope.validationErrors['date_of_birth'];
+      }
+    };
 
     $scope.setFiles = function (element, field) {
       $scope.$apply(function () {
