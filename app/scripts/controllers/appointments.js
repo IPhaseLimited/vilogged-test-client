@@ -502,8 +502,6 @@ angular.module('viLoggedClientApp')
         checkStartTime.push('start time can\'t be lesser than current time');
       }
 
-
-
       if (checkStartTime.length) {
         $scope.validationErrors['visit_start_time'] = checkStartTime;
       } else {
