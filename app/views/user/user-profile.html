@@ -48,7 +48,7 @@
               </table>
             </div>
             <div class="col-sm-4">
-              <img ng-if="((appointment).visitor).image !== undefined" ng-src="{{ appointment.visitor.image }}" alt=""
+              <img ng-if="((appointment).visitor_id).image !== undefined" ng-src="{{ appointment.visitor_id.image }}" alt=""
                    class="img-responsive"/>
               <img ng-if="!((appointment).visitor).image" src="../../img/place_holder.jpg" alt=""
                    class="img-responsive"/>
@@ -132,7 +132,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="appointment in upcomingAppointments | limitTo:5">
+          <tr ng-repeat="appointment in upcomingAppointments | limitTo:5 | orderBy: 'appointment.modified'">
             <td>{{ $index+1 }}</td>
             <td>{{ appointment.visitor_id.first_name + " " + appointment.visitor_id.last_name }}</td>
             <td>{{ appointment.appointment_date | date: 'EEE, MMM d, y' }}</td>
@@ -178,7 +178,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="appointment in appointmentsAwaitingApproval | limitTo: 5 | orderBy: appointment.created">
+          <tr ng-repeat="appointment in appointmentsAwaitingApproval | limitTo: 5 | orderBy: 'appointment.created'">
             <td>{{ $index+1 }}</td>
             <td>{{ appointment.visitor_id.first_name + " " + appointment.visitor_id.last_name }}</td>
             <td>{{ appointment.appointment_date | date: 'EEE, MMM d, y' }}</td>

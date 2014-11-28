@@ -81,7 +81,7 @@ angular.module('viLoggedClientApp')
   })
   .controller('UserProfileCtrl', function($scope, $interval, userService, appointmentService, utility,
                                            notificationService, $rootScope) {
-    var appointments = appointmentService.getNestedAppointmentsByUser($scope.user);
+    var appointments = appointmentService.getNestedAppointmentsByUser($rootScope.user);
 
     appointments
       .then(function(response) {
@@ -260,13 +260,14 @@ angular.module('viLoggedClientApp')
         });
     }
   })
-  .controller('UserFormCtrl', function($scope, $state, $stateParams, userService, companyDepartmentsService, growl,
-                                       $rootScope, $cookieStore) {
+  .controller('UserFormCtrl', function($scope, $state, $stateParams, $window, userService, companyDepartmentsService, growl,
+                                       $rootScope, $cookieStore, notificationService) {
     $rootScope.busy = true;
     $scope.userLoaded = false;
     $scope.departmentLoaded = false;
     $scope.userProfile = {};
     $scope.userProfile.user_profile = {};
+    $scope.activateCamera = false;
 
     if ($stateParams.user_id) {
       userService.get($stateParams.user_id)
@@ -304,12 +305,29 @@ angular.module('viLoggedClientApp')
         }
       });
 
+    $scope.setFiles = function (element, field) {
+      $scope.$apply(function () {
+
+        var fileToUpload = element.files[0];
+        if (fileToUpload.type.match('image*')) {
+          var reader = new $window.FileReader();
+          reader.onload = function (theFile) {
+            $scope.userProfile.user_profile[field] = theFile.target.result;
+          };
+          reader.readAsDataURL(fileToUpload);
+        }
+
+      });
+    };
+
     $scope.createUserAccount = function() {
       $rootScope.busy = true;
       if ($scope.userProfile.user_profile !== undefined || $scope.userProfile.user_profile === null) {
         $scope.userProfile.user_profile.home_phone = $scope.userProfile.user_profile.home_phone || null;
         $scope.userProfile.user_profile.work_phone = $scope.userProfile.user_profile.work_phone || null;
       }
+
+      console.log($scope.userProfile.user_profile.image);
 
       if (toString.call($scope.userProfile.user_profile.department) === '[object String]') {
         //$scope.user.user_profile.department = JSON.parse($scope.user.user_profile.department);
@@ -327,12 +345,12 @@ angular.module('viLoggedClientApp')
               .catch(function(reason) {
                 $rootScope.busy = false;
                 notificationService.setTimeOutNotification(reason);
-                $state.go("users");
+                $rootScope.user.is_superuser ? $state.go("users") : $state.go("profile");
               });
           }
 
           $rootScope.busy = false;
-          $state.go("users");
+          $rootScope.user.is_superuser ? $state.go("users") : $state.go("profile");
         })
         .catch(function(reason) {
           $rootScope.busy = false;
