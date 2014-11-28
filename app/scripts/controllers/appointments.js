@@ -391,6 +391,9 @@ angular.module('viLoggedClientApp')
     $scope.host = {};
     $scope.visitor = {};
     $scope.customErrors = {};
+    $scope.validationErrors = {};
+
+
 
     $scope.clearError = function(key) {
       delete $scope.customErrors[key];
@@ -437,6 +440,7 @@ angular.module('viLoggedClientApp')
 
     $scope.appointmentDate = {
       opened: false,
+      minDate: new Date(),
       open: function($event) {
         $event.preventDefault();
         $event.stopPropagation();
@@ -468,6 +472,29 @@ angular.module('viLoggedClientApp')
           $scope.host.errorMessage = 'Host not found';
           notificationService.setTimeOutNotification(reason);
         });
+    };
+
+    $scope.validateTimeDate = function(type) {
+      var now = new Date().getTime();
+      var checkStartTime = [];
+      var checkEndTime = [];
+      var checkAppointmentDate = [];
+
+      if ($scope.visit_start_time.getTime() > $scope.visit_end_time.getTime()){
+        checkStartTime.push('start time can\'t be greater than end time');
+      }
+      if ($scope.visit_start_time.getTime() < now) {
+        checkStartTime.push('start time can\'t be lesser than current time');
+      }
+
+
+
+      if (checkStartTime.length) {
+        $scope.validationErrors['visit_start_time'] = checkStartTime;
+      } else {
+        delete $scope.validationErrors['visit_start_time'];
+      }
+
     };
 
     $scope.hostLookUp = {
