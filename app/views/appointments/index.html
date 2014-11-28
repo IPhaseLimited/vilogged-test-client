@@ -6,7 +6,7 @@
               ng-csv="export" csv-header="csvHeader"  filename="{{getFileName('appointments')}}">
         Export
       </button>
-      <a class="btn btn-primary" ui-sref="create-appointment" ng-show="user.is_staff">
+      <a class="btn btn-primary" ui-sref="create-appointment" ng-show="user.is_active">
         <i class="fa fa-plus-circle"></i> Create Appointment
       </a>
     </div>

@@ -190,7 +190,22 @@ angular.module('viLoggedClientApp')
         });
     }
 
-    getAppointments();
+    function getUserAppointments() {
+      appointmentService.getNestedAppointmentsByUser($rootScope.user)
+        .then(function(response) {
+          rows = response;
+          $scope.pagination.totalItems = rows.length;
+          $scope.pagination.numPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
+          $rootScope.busy = false;
+          updateTableData();
+        })
+        .catch(function(reason) {
+          growl.addErrorMessage(reason.message);
+          $rootScope.busy = false;
+        })
+    }
+
+    $scope.user.is_staff ? getAppointments() : getUserAppointments();
 
     $scope.$watch('search', function () {
       updateTableData();
@@ -669,7 +684,6 @@ angular.module('viLoggedClientApp')
       .then(function(response) {
         $rootScope.busy = false;
         $scope.appointment = response;
-        console.log($scope.appointment)
         if (angular.isUndefined($scope.restricted_items)) {
           $scope.restricted_items = [{
             item_code: '',
