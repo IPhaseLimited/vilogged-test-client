@@ -81,7 +81,7 @@ angular.module('viLoggedClientApp')
   })
   .controller('UserProfileCtrl', function($scope, $interval, userService, appointmentService, utility,
                                            notificationService, $rootScope) {
-    var appointments = appointmentService.getNestedAppointmentsByUser($scope.user);
+    var appointments = appointmentService.getNestedAppointmentsByUser($rootScope.user);
 
     appointments
       .then(function(response) {
@@ -261,7 +261,7 @@ angular.module('viLoggedClientApp')
     }
   })
   .controller('UserFormCtrl', function($scope, $state, $stateParams, userService, companyDepartmentsService, growl,
-                                       $rootScope, $cookieStore) {
+                                       $rootScope, $cookieStore, notificationService) {
     $rootScope.busy = true;
     $scope.userLoaded = false;
     $scope.departmentLoaded = false;
@@ -327,12 +327,12 @@ angular.module('viLoggedClientApp')
               .catch(function(reason) {
                 $rootScope.busy = false;
                 notificationService.setTimeOutNotification(reason);
-                $state.go("users");
+                $rootScope.user.is_superuser ? $state.go("users") : $state.go("profile");
               });
           }
 
           $rootScope.busy = false;
-          $state.go("users");
+          $rootScope.user.is_superuser ? $state.go("users") : $state.go("profile");
         })
         .catch(function(reason) {
           $rootScope.busy = false;
