@@ -9,7 +9,7 @@
  */
 
 function formController($scope, $state, companyDepartmentsService, $stateParams, $modalInstance, _id, validationService,
-                        $rootScope) {
+                        $rootScope, alertService) {
   var id = angular.isDefined(_id) ? _id : $stateParams.id;
   $scope.companyDepartments = {};
   if (angular.isDefined($modalInstance)) {
@@ -106,7 +106,8 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('CompanyDepartmentsCtrl', function($scope, companyDepartmentsService, $modal, notificationService, $interval, $rootScope) {
+  .controller('CompanyDepartmentsCtrl', function($scope, companyDepartmentsService, $modal, notificationService,
+                                                 $interval, $rootScope, alertService) {
     $scope.departments = [];
     function getDepartments() {
       $rootScope.busy = true;
@@ -168,6 +169,6 @@ angular.module('viLoggedClientApp')
 
   })
   .controller('CompanyDepartmentsFormCtrl', function($scope, $state, companyDepartmentsService, $stateParams,
-                                                     validationService, $rootScope) {
-    formController($scope, $state, companyDepartmentsService, $stateParams, validationService, $rootScope);
+                                                     validationService, $rootScope, alertService) {
+    formController($scope, $state, companyDepartmentsService, $stateParams, validationService, $rootScope, alertService);
   });

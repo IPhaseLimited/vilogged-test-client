@@ -89,7 +89,7 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('VisitorsCtrl', function ($scope, visitorService, $rootScope, guestGroupConstant, $filter) {
+  .controller('VisitorsCtrl', function ($scope, visitorService, $rootScope, guestGroupConstant, alertService, $filter) {
     $scope.visitors = [];
     $scope.search = {};
     var rows = [];
@@ -195,7 +195,7 @@ angular.module('viLoggedClientApp')
   })
   .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, $rootScope, $window, $filter, visitorService,
                                            validationService, countryStateService, guestGroupConstant, userService,
-                                           countryState, visitorsLocationService, notificationService, utility, growl) {
+                                           countryState, visitorsLocationService, notificationService, utility, alertService) {
     $scope.visitors = [];
     $scope.visitor = {};
     $scope.visitorsLocation = {};
@@ -410,10 +410,10 @@ angular.module('viLoggedClientApp')
             function afterRegistration() {
 
               if ($scope.user.is_staff) {
-                growl.addSuccessMessage('Visitor profile was saved successfully.');
+                alertService.success('Visitor profile was saved successfully.');
                 $state.go('visitors');
               } else {
-                growl.addSuccessMessage('Your profile was saved successfully.');
+                alertService.success('Your profile was saved successfully.');
                 $state.go('show-visitor', {visitor_id: $scope.visitor.uuid});
               }
               sendNotification();
