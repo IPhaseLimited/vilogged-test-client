@@ -505,8 +505,8 @@ module.exports = function(grunt) {
       'ngconstant:development',
       'concurrent:server',
       'autoprefixer',
-      'express:web',
-      //'express:livereload',
+      //'express:web',
+      'connect:livereload',
       'watch'
     ]);
   });
