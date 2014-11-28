@@ -5,7 +5,7 @@
     <label class="control-label col-sm-2" for="backend">Backend Url</label>
 
     <div class="col-sm-6">
-      <input class="form-control" name="backend" id="backend"  type="text" ng-model="settings.localSetting.backend"/>
+      <input class="form-control" name="backend" id="backend" ng-change="logChange()"  type="text" ng-model="settings.localSetting.backend"/>
     </div>
   </div>
 
@@ -34,7 +34,7 @@
   </div>
 
   <div class="form-group">
-    <label class="control-label col-sm-2" for="localDB">Server Type</label>
+    <label class="control-label col-sm-2" for="localDB">Local DB</label>
 
     <div class="col-sm-6">
       <input class="form-control" name="localDB" id="localDB"  ng-model="settings.localSetting.localDB" type="text"/>
