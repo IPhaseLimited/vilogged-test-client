@@ -206,7 +206,6 @@ angular.module('viLoggedClientApp')
         return (str + '').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
       }
 
-
       var objectTest = Object.prototype.toString.call(_replacements) === '[object Object]';
       var replacements = objectTest ? _replacements : {};
       var delimiter = _delimiter === undefined ? '&&' : _delimiter;
@@ -217,7 +216,6 @@ angular.module('viLoggedClientApp')
           template = template.replace(new RegExp(patternString, 'g'), replacements[key]);
         });
       return template;
-    }
-
+    };
 
   });
