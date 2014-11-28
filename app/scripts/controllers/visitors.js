@@ -189,7 +189,7 @@ angular.module('viLoggedClientApp')
       itemsPerPage: 10
     };
 
-    $scope.confirm = function (index) {
+    $scope.getGroupType = function (index) {
       return guestGroupConstant[index];
     }
   })

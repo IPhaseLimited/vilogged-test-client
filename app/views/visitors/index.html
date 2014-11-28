@@ -50,7 +50,7 @@
           </thead>
           <tbody>
           <tr ng-repeat="visitor in visitors | paginationOffset:pagination.currentPage:pagination.itemsPerPage | orderBy: 'visitor.created'"
-            ng-class="{'text-danger': confirm(visitor.group_type) === 'Banned'}">
+            ng-class="{'text-danger': getGroupType(visitor.group_type) === 'Banned'}">
             <td>{{ $index + 1 + ((pagination.currentPage-1) * pagination.itemsPerPage) }}</td>
             <td>
               <a class="btn-link" ui-sref="edit-visitor-profile({visitor_id: visitor.uuid})"
@@ -66,11 +66,11 @@
             <td>{{ visitor.visitors_phone }}</td>
             <td>{{ visitor.company_name }}</td>
             <td>
-              <span class="label" ng-class="{'label-danger': confirm(visitor.group_type) === 'Banned',
-                'label-warning': confirm(visitor.group_type) === 'Normal',
-                'label-success': confirm(visitor.group_type) === 'Success'
+              <span class="label" ng-class="{'label-danger': getGroupType(visitor.group_type) === 'Banned',
+                'label-warning': getGroupType(visitor.group_type) === 'Normal',
+                'label-success': getGroupType(visitor.group_type) === 'Success'
                 }">
-                {{ confirm(visitor.group_type) }}
+                {{ getGroupType(visitor.group_type) }}
               </span>
             </td>
             <td>{{ visitor.created |date: 'dd MMM, yyyy' }}</td>
@@ -81,7 +81,7 @@
               </a>
 
               <a class="btn btn-success btn-xs" ui-sref="create-appointment-visitor({visitor_id: visitor.uuid})"
-                 title="Create appointment" ng-show="user.is_active && confirm(visitor.group_type) !== 'Banned'">
+                 title="Create appointment" ng-show="user.is_active && getGroupType(visitor.group_type) !== 'Banned'">
                 <i class="fa fa-plus-circle"></i> Create Appointment
               </a>
             </td>
