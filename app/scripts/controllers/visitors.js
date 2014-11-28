@@ -94,6 +94,16 @@ angular.module('viLoggedClientApp')
     $scope.search = {};
     var rows = [];
 
+    var exports = [];
+
+    $scope.csvHeader = [
+      'Visitor\'s Name',
+      'Email',
+      'Phone',
+      'Company Name',
+      'Group Type',
+      'Created Date'
+    ];
 
     $scope.createdDate = {
       opened: false,
@@ -160,6 +170,17 @@ angular.module('viLoggedClientApp')
         return include;
       });
 
+      $scope.visitors.forEach(function (row) {
+        exports.push({
+          name: row.first_name + ' ' + row.last_name,
+          email: row.email,
+          phone: row.phone,
+          company_name: row.company_name,
+          group_type: row.group_type,
+          created_date: row.created
+        });
+      });
+      $scope.export = exports;
     }
 
     $scope.pagination = {
@@ -315,6 +336,7 @@ angular.module('viLoggedClientApp')
       var validationParams = {
         first_name: validationService.BASIC,
         last_name: validationService.BASIC,
+        gender: validationService.BASIC,
         visitors_phone: phoneNumberValidation,
         visitors_email: emailValidation
       };
@@ -428,7 +450,7 @@ angular.module('viLoggedClientApp')
       appointmentsCurrentPage: 1,
       appointmentsPerPage: 10,
       maxSize: 5
-    }
+    };
     $rootScope.busy = true;
     $scope.visitorLoaded = false;
     $scope.appointmentLoaded = false;
@@ -484,7 +506,7 @@ angular.module('viLoggedClientApp')
         $scope.upcomingAppointments = response
           .filter(function (appointment) {
             return appointment.is_approved &&
-              new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.expired;
+              new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.is_expired;
           });
       })
       .catch(function (reason) {

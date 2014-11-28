@@ -1,5 +1,5 @@
 <div>
-  <form class="form-horizontal" ng-submit="createUserAccount()" name="userAccount">
+  <form class="form-horizontal" ng-submit="createUserAccount()" name="userAccount" enctype="multipart/form-data">
     <legend>User Account Detail</legend>
     <div class="form-group">
       <label for="username" class="control-label col-sm-2">Username <span class="text-danger">*</span></label>
@@ -20,7 +20,8 @@
     </div>
 
     <div class="form-group" ng-if="!userProfile.id">
-      <label for="confirm_password" class="control-label col-sm-2">Confirm Password <span class="text-danger">*</span></label>
+      <label for="confirm_password" class="control-label col-sm-2">Confirm Password <span
+        class="text-danger">*</span></label>
 
       <div class="col-sm-6">
         <input class="form-control" type="password" name="confirm_password" id="confirm_password"
@@ -57,10 +58,47 @@
     </div>
 
     <div class="form-group">
+      <label for="image" class="col-sm-2 control-label">Image</label>
+
+      <div class="col-sm-6">
+        <input id="image" type="file" ng-model-instant ng-if="!activateCamera"
+               onchange="angular.element(this).scope().setFiles(this, 'image')">
+
+        <div class="row">
+          <div ng-if="activateCamera" class="col-sm-4" vi-camera>
+            <div camera-control-snapshot></div>
+          </div>
+          <div class="col-sm-6 col-sm-offset-2" ng-if="activateCamera">
+            <canvas></canvas>
+          </div>
+        </div>
+
+        <a ng-click="activateCamera = !activateCamera" class="btn btn-success" ng-show="!activateCamera">
+          <i class="fa fa-camera"></i> Activate Camera
+        </a>
+        <a ng-click="activateCamera = !activateCamera" class="btn btn-success" ng-show="activateCamera">
+          <i class="fa fa-camera"></i> Deactivate Camera
+        </a>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="gender" class="control-label col-sm-2">Gender <span class="text-danger">*</span></label>
+
+      <div class="col-sm-6">
+        <select class="form-control" name="gender" id="gender" ng-model="userProfile.user_profile.gender" required>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
       <label for="phone" class="control-label col-sm-2">Phone <span class="text-danger">*</span></label>
 
       <div class="col-sm-6">
-        <input class="form-control" type="text" name="phone" id="phone" ng-model="userProfile.user_profile.phone" required/>
+        <input class="form-control" type="text" name="phone" id="phone" ng-model="userProfile.user_profile.phone"
+               required/>
       </div>
     </div>
 
@@ -88,7 +126,9 @@
       <div class="col-sm-6">
         <select class="form-control" name="department" id="department" ng-model="userProfile.user_profile.department">
           <option value=""></option>
-          <option ng-selected="userProfile.user_profile.department === department.uuid" value="{{ department.uuid }}" ng-repeat="department in departments">{{ department.department_name }}</option>
+          <option ng-selected="userProfile.user_profile.department === department.uuid" value="{{ department.uuid }}"
+                  ng-repeat="department in departments">{{ department.department_name }}
+          </option>
         </select>
       </div>
     </div>

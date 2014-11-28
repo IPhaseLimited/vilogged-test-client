@@ -91,8 +91,12 @@
 
             <div class="col-sm-6">
               <div class="input-group">
-                <input type="text" class="form-control" ng-model="appointment.appointment_date"
-                       datepicker-popup is-open="appointmentDate.opened" id="appointmentDate" name="appointmentDate"
+                <input ng-change="validateTimeDate('date')" type="text" class="form-control"
+                       ng-model="appointment.appointment_date"
+                       datepicker-popup is-open="appointmentDate.opened"
+                       id="appointmentDate"
+                       name="appointmentDate"
+                       min-date="appointmentDate.minDate"
                        date-disabled="disabled(date, mode)"/>
                 <span class="input-group-btn">
                   <button type="button" class="btn btn-default" ng-click="appointmentDate.open($event)">
@@ -114,9 +118,9 @@
             </label>
 
             <div class="col-sm-6">
-              <timepicker ng-model="visit_start_time" hour-step="1" minute-step="1"></timepicker>
+              <timepicker ng-change="validateTimeDate('startTime')" ng-model="visit_start_time" hour-step="1" minute-step="1"></timepicker>
               <div class="text-danger bold" ng-show="(validationErrors).visit_start_time.length">
-                <span ng-repeat="error in validationErrors.visit_start_time">
+                <span ng-repeat="error in validationErrors.visit_start_time track by $index">
                   {{ error }}<br/>
                 </span>
               </div>
@@ -129,9 +133,9 @@
             </label>
 
             <div class="col-sm-6">
-              <timepicker ng-model="visit_end_time" hour-step="1" minute-step="1"></timepicker>
+              <timepicker ng-change="validateTimeDate('endTime')" ng-model="visit_end_time" hour-step="1" minute-step="1"></timepicker>
               <div class="text-danger bold" ng-show="(validationErrors).visit_end_time.length">
-              <span ng-repeat="error in validationErrors.visit_end_time">
+              <span ng-repeat="error in validationErrors.visit_end_time track by $index">
                 {{ error }}<br/>
               </span>
             </div>

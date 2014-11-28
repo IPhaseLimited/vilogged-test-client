@@ -8,7 +8,7 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('utility', function utility($filter) {
+  .service('utility', function utility($filter, $location, $anchorScroll) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     /**
@@ -206,7 +206,6 @@ angular.module('viLoggedClientApp')
         return (str + '').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
       }
 
-
       var objectTest = Object.prototype.toString.call(_replacements) === '[object Object]';
       var replacements = objectTest ? _replacements : {};
       var delimiter = _delimiter === undefined ? '&&' : _delimiter;
@@ -217,7 +216,6 @@ angular.module('viLoggedClientApp')
           template = template.replace(new RegExp(patternString, 'g'), replacements[key]);
         });
       return template;
-    }
-
+    };
 
   });

@@ -286,6 +286,23 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     }
 
+    function findByMultipleFields(object){
+      var deferred = $q.defer();
+      var params = [];
+      Object.keys(object).forEach(function(key) {
+        params.push(key+'='+object[key]);
+      });
+      params = params.join('&');
+      $http.get(BASE_URL+DB_NAME+'?'+params)
+        .success(function(response) {
+          deferred.resolve(response);
+        })
+        .error(function(reason) {
+          deferred.reject(reason);
+        });
+      return deferred.promise;
+    }
+
     /*
      * Finds an existing but unexpired appointment with a host.
      * cancel save if one is found
@@ -303,12 +320,34 @@ angular.module('viLoggedClientApp')
           });
 
 
-          existingAppointment.length ? deferred.reject('An appointment can not be created with this host') :
+          existingAppointment.length ? deferred.reject('Selected visitor has pending appointment with selected host, ' +
+          'kindly conclude pending appointment first') :
             deferred.resolve('');
         })
         .catch(function(reason) {
           console.log(reason);
         });
+    }
+
+    function hasPendingAppointment(appointmentObject) {
+      var deferred = $q.defer();
+      var params = {
+        visitor_id: appointmentObject.visitor_id,
+        host_id: appointmentObject.host_id,
+        is_expired: false
+      };
+      findByMultipleFields(params)
+        .then(function(response) {
+          if (response.length) {
+            deferred.resolve(true);
+          } else {
+            deferred.resolve(false);
+          }
+        })
+        .catch(function(reason) {
+          deferred.reject(reason);
+        });
+      return deferred.promise;
     }
 
     this.get = get;
@@ -328,9 +367,11 @@ angular.module('viLoggedClientApp')
     this.getAppointmentsByDay = appointmentsByDay;
     this.defaultEntrance = defaultEntrance;
     this.findExistingAppointment = findExistingAppointment;
+    this.hasPendingAppointment = hasPendingAppointment;
+    this.getUpdates = syncService.getUpdates;
     this.APPOINTMENT_APPROVAL_EMAIL_TEMPLATE = APPOINTMENT_APPROVAL_EMAIL_TEMPLATE;
     this.APPOINTMENT_APPROVAL_SMS_TEMPLATE = APPOINTMENT_APPROVAL_SMS_TEMPLATE;
     this.APPOINTMENT_CREATED_EMAIL_TEMPLATE = APPOINTMENT_CREATED_EMAIL_TEMPLATE;
     this.APPOINTMENT_CREATED_SMS_TEMPLATE = APPOINTMENT_CREATED_SMS_TEMPLATE;
-    this.getUpdates = syncService.getUpdates;
+
   });

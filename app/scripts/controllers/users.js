@@ -81,7 +81,7 @@ angular.module('viLoggedClientApp')
   })
   .controller('UserProfileCtrl', function($scope, $interval, userService, appointmentService, utility,
                                            notificationService, $rootScope) {
-    var appointments = appointmentService.getNestedAppointmentsByUser($scope.user);
+    var appointments = appointmentService.getNestedAppointmentsByUser($rootScope.user);
 
     appointments
       .then(function(response) {
@@ -95,8 +95,7 @@ angular.module('viLoggedClientApp')
       .then(function(response) {
         $scope.upcomingAppointments = response.filter(function(appointment) {
           return appointment.is_approved &&
-            new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.is_expired
-              && appointment.is_approved !== true;
+            (new Date(appointment.appointment_date).getTime() > new Date().getTime() || !appointment.is_expired);
         });
         $scope.upcomingAppointmentCount = $scope.upcomingAppointments.length;
       })
@@ -108,9 +107,8 @@ angular.module('viLoggedClientApp')
       .then(function(response) {
         $scope.appointmentsAwaitingApproval = response
           .filter(function(appointment) {
-            return !appointment.is_approved && !appointment.is_expired &&
-              utility.getTimeStamp(appointment.appointment_date) > new Date().getTime()
-              && appointment.is_approved === null;
+            return !appointment.is_approved && (!appointment.is_expired ||
+              utility.getTimeStamp(appointment.appointment_date) > new Date().getTime());
           });
         $scope.appointmentsAwaitingApprovalCount = $scope.appointmentsAwaitingApproval.length;
       })
@@ -153,32 +151,81 @@ angular.module('viLoggedClientApp')
     };
   })
   .controller('UsersCtrl', function($scope, userService, notificationService, growl, $rootScope) {
+    var rows = [];
     var exports = [];
+
+    $scope.search = {};
 
     $scope.csvHeader = [
       'User\'s Name',
       'Username',
-      'Email',
-      'Phone',
+      'Role',
       'Department',
-      'Appointment Date',
-      'Start Time',
-      'End Time',
-      'Date Checked in',
-      'Date Checked out'
+      'Office Phone'
     ];
 
     function getUsers() {
+      $rootScope.busy = true;
       userService.usersNested()
         .then(function(response) {
-          $scope.users = response;
+          rows = response;
+          updateTableData();
+          $rootScope.busy = false;
         })
         .catch(function(reason) {
           notificationService.setTimeOutNotification(reason);
+          $rootScope.busy = false;
         });
     }
 
     getUsers();
+    $scope.$watch('search', function () {
+      updateTableData();
+    }, true);
+
+    function updateTableData() {
+      $scope.users = rows.filter(function (row) {
+        var date = moment(row.created);
+        var include = true;
+
+        if (include && $scope.search.name) {
+          include = row.first_name.toLowerCase().indexOf($scope.search.name.toLowerCase()) > -1 ||
+          row.last_name.toLowerCase().indexOf($scope.search.name.toLowerCase()) > -1;
+        }
+
+        if (include && $scope.search.username) {
+          include = row.username.toLowerCase().indexOf($scope.search.username.toLowerCase()) > -1;
+        }
+
+        if (include && $scope.search.role) {
+          if ($scope.search.role === 'superadmin') include = row.is_active && row.is_staff && row.is_superadmin;
+          if ($scope.search.role === 'admin') include = row.is_active && row.is_staff && !row.is_superadmin;
+          if ($scope.search.role === 'staff') include = row.is_active && !row.is_staff && !row.is_superadmin;
+          if ($scope.search.role === 'not active') include = !row.is_active;
+        }
+
+        if (include && $scope.search.department) {
+          include = row.user_profile.department.department_name.toLowerCase().indexOf($scope.search.department.toLowerCase()) > -1;
+        }
+
+        if (include && $scope.search.phone) {
+          include = row.user_profile.phone.indexOf($scope.search.phone) > -1;
+        }
+
+        return include;
+      });
+
+      $scope.users.forEach(function (row) {
+        exports.push({
+          name: row.first_name + ' ' + row.last_name,
+          username: row.username,
+          role: row.role,
+          department: row.user_profile.department.department_name,
+          phone: row.phone
+        });
+      });
+      $scope.export = exports;
+    }
 
     $scope.toggleActive = function(id) {
       userService.toggleUserActivationStatus(id)
@@ -213,13 +260,14 @@ angular.module('viLoggedClientApp')
         });
     }
   })
-  .controller('UserFormCtrl', function($scope, $state, $stateParams, userService, companyDepartmentsService, growl,
-                                       $rootScope, $cookieStore) {
+  .controller('UserFormCtrl', function($scope, $state, $stateParams, $window, userService, companyDepartmentsService, growl,
+                                       $rootScope, $cookieStore, notificationService) {
     $rootScope.busy = true;
     $scope.userLoaded = false;
     $scope.departmentLoaded = false;
     $scope.userProfile = {};
     $scope.userProfile.user_profile = {};
+    $scope.activateCamera = false;
 
     if ($stateParams.user_id) {
       userService.get($stateParams.user_id)
@@ -257,12 +305,29 @@ angular.module('viLoggedClientApp')
         }
       });
 
+    $scope.setFiles = function (element, field) {
+      $scope.$apply(function () {
+
+        var fileToUpload = element.files[0];
+        if (fileToUpload.type.match('image*')) {
+          var reader = new $window.FileReader();
+          reader.onload = function (theFile) {
+            $scope.userProfile.user_profile[field] = theFile.target.result;
+          };
+          reader.readAsDataURL(fileToUpload);
+        }
+
+      });
+    };
+
     $scope.createUserAccount = function() {
       $rootScope.busy = true;
       if ($scope.userProfile.user_profile !== undefined || $scope.userProfile.user_profile === null) {
         $scope.userProfile.user_profile.home_phone = $scope.userProfile.user_profile.home_phone || null;
         $scope.userProfile.user_profile.work_phone = $scope.userProfile.user_profile.work_phone || null;
       }
+
+      console.log($scope.userProfile.user_profile.image);
 
       if (toString.call($scope.userProfile.user_profile.department) === '[object String]') {
         //$scope.user.user_profile.department = JSON.parse($scope.user.user_profile.department);
@@ -280,12 +345,12 @@ angular.module('viLoggedClientApp')
               .catch(function(reason) {
                 $rootScope.busy = false;
                 notificationService.setTimeOutNotification(reason);
-                $state.go("users");
+                $rootScope.user.is_superuser ? $state.go("users") : $state.go("profile");
               });
           }
 
           $rootScope.busy = false;
-          $state.go("users");
+          $rootScope.user.is_superuser ? $state.go("users") : $state.go("profile");
         })
         .catch(function(reason) {
           $rootScope.busy = false;
