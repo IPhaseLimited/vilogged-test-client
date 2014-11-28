@@ -108,6 +108,7 @@ angular.module('viLoggedClientApp')
   })
   .controller('CompanyDepartmentsCtrl', function($scope, companyDepartmentsService, $modal, notificationService,
                                                  $interval, $rootScope, alertService) {
+    utility.scrollToTop();
     $scope.departments = [];
     function getDepartments() {
       $rootScope.busy = true;
@@ -170,5 +171,6 @@ angular.module('viLoggedClientApp')
   })
   .controller('CompanyDepartmentsFormCtrl', function($scope, $state, companyDepartmentsService, $stateParams,
                                                      validationService, $rootScope, alertService) {
+    utility.scrollToTop();
     formController($scope, $state, companyDepartmentsService, $stateParams, validationService, $rootScope, alertService);
   });
