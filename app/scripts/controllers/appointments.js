@@ -129,7 +129,7 @@ angular.module('viLoggedClientApp')
       })
   })
   .controller('AppointmentCtrl', function($scope, appointmentService, utility, $rootScope, notificationService, $location) {
-    utility.scrollToTop();
+
     $rootScope.busy = true;
 
     $scope.appointments = [];
@@ -267,7 +267,7 @@ angular.module('viLoggedClientApp')
   })
   .controller('AppointmentDetailCtrl', function($scope, $state, $stateParams, appointmentService, utility, $modal, growl,
                                                 notificationService, $rootScope, alertService) {
-    utility.scrollToTop();
+
     $rootScope.busy = true;
     appointmentService.getNested($stateParams.appointment_id)
       .then(function(response) {
@@ -392,7 +392,7 @@ angular.module('viLoggedClientApp')
   .controller('AppointmentFormCtrl', function($scope, $stateParams, $state, $timeout, $filter, visitorService, growl,
                                               userService, appointmentService, utility, validationService, $rootScope,
                                               notificationService, alertService) {
-    utility.scrollToTop();
+
     appointmentService.defaultEntrance()
       .then(function(response) {
         $scope.defaultEntrance = response;
@@ -684,7 +684,7 @@ angular.module('viLoggedClientApp')
   .controller('CheckInCtrl', function($scope, $state, $stateParams, $q, visitorService, appointmentService, entranceService,
                                       vehicleTypeConstant, notificationService, utility, restrictedItemsService,
                                       vehicleService, growl, $rootScope, alertService) {
-    utility.scrollToTop();
+
     $scope.appointment = {};
     $scope.restricted_items = [{
       item_code: '',
@@ -843,7 +843,7 @@ angular.module('viLoggedClientApp')
   })
   .controller('CheckOutCtrl', function ($scope, $state, $stateParams, appointmentService, utility, notificationService,
                                         growl, $rootScope, alertService) {
-    utility.scrollToTop();
+
     $rootScope.busy = true;
     appointmentService.get($stateParams.appointment_id)
       .then(function (response) {
@@ -870,7 +870,7 @@ angular.module('viLoggedClientApp')
     }
   })
   .controller('VisitorPassCtrl', function($scope, $state, $stateParams, appointmentService, $rootScope) {
-    utility.scrollToTop();
+
     $scope.appointment = {};
     console.log($stateParams.appointment_id);
 

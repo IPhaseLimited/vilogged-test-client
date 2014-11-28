@@ -22,7 +22,7 @@ angular.module('viLoggedClientApp')
       });
   })
   .controller('LoginCtrl', function($scope, $state, loginService, $rootScope, notificationService, $location) {
-    utility.scrollToTop();
+
     $scope.displayVisitorLogin = true;
 
     $scope.visitorCredential = {};

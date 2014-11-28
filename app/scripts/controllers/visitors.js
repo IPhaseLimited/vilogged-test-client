@@ -90,7 +90,6 @@ angular.module('viLoggedClientApp')
       });
   })
   .controller('VisitorsCtrl', function ($scope, visitorService, $rootScope, guestGroupConstant, alertService, $filter) {
-    utility.scrollToTop();
     $scope.visitors = [];
     $scope.search = {};
     var rows = [];
@@ -197,7 +196,6 @@ angular.module('viLoggedClientApp')
   .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, $rootScope, $window, $filter, visitorService,
                                            validationService, countryStateService, guestGroupConstant, userService,
                                            countryState, visitorsLocationService, notificationService, utility, alertService) {
-    utility.scrollToTop();
     $scope.visitors = [];
     $scope.visitor = {};
     $scope.visitorsLocation = {};
@@ -470,7 +468,6 @@ angular.module('viLoggedClientApp')
   })
   .controller('VisitorDetailCtrl', function ($scope, $stateParams, visitorService, appointmentService,
                                              visitorsLocationService, $rootScope, notificationService) {
-    utility.scrollToTop();
     $scope.visitor = {};
     $scope.visitorsLocation = {};
     $scope.appointments = [];

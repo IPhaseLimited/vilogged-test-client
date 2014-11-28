@@ -25,7 +25,6 @@ angular.module('viLoggedClientApp')
       });
   })
   .controller('ReportsCtrl', function($scope, appointmentService, visitorService, utility, $rootScope) {
-    utility.scrollToTop();
     $rootScope.busy = true;
     $scope.maxSize = 5;
     $scope.currentPage = 1;

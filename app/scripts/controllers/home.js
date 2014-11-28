@@ -33,7 +33,7 @@ angular.module('viLoggedClientApp')
       })
   })
   .controller('MainCtrl', function($scope, appointmentService, utility, $rootScope, notificationService) {
-    utility.scrollToTop();
+
     $rootScope.busy = true;
     var appointments = appointmentService.all();
 
