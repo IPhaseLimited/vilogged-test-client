@@ -336,6 +336,7 @@ angular.module('viLoggedClientApp')
       var validationParams = {
         first_name: validationService.BASIC,
         last_name: validationService.BASIC,
+        gender: validationService.BASIC,
         visitors_phone: phoneNumberValidation,
         visitors_email: emailValidation
       };
@@ -449,7 +450,7 @@ angular.module('viLoggedClientApp')
       appointmentsCurrentPage: 1,
       appointmentsPerPage: 10,
       maxSize: 5
-    }
+    };
     $rootScope.busy = true;
     $scope.visitorLoaded = false;
     $scope.appointmentLoaded = false;
@@ -505,7 +506,7 @@ angular.module('viLoggedClientApp')
         $scope.upcomingAppointments = response
           .filter(function (appointment) {
             return appointment.is_approved &&
-              new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.expired;
+              new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.is_expired;
           });
       })
       .catch(function (reason) {
