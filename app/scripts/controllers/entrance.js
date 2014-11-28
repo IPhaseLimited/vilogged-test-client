@@ -47,7 +47,6 @@ angular.module('viLoggedClientApp')
   .controller('CompanyEntranceCtrl', function($scope, entranceService, $rootScope) {
     $rootScope.busy = false;
     $scope.entrance = [];
-    utility.scrollToTop();
 
     $scope.deleteEntrance = function(id) {
       $rootScope.busy = true;
@@ -73,7 +72,6 @@ angular.module('viLoggedClientApp')
   })
   .controller('EntranceFormCtrl', function($scope, $state, $stateParams, entranceService, $rootScope, notificationService) {
     $scope.entrance = {};
-    utility.scrollToTop();
 
     if ($stateParams.entrance_id) {
       $rootScope.busy = true;

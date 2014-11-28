@@ -81,7 +81,6 @@ angular.module('viLoggedClientApp')
   })
   .controller('UserProfileCtrl', function($scope, $interval, userService, appointmentService, utility,
                                            notificationService, $rootScope, alertSevice) {
-    utility.scrollToTop();
     var appointments = appointmentService.getNestedAppointmentsByUser($rootScope.user);
 
     appointments
@@ -152,7 +151,6 @@ angular.module('viLoggedClientApp')
     };
   })
   .controller('UsersCtrl', function($scope, userService, notificationService, alertService, $rootScope) {
-    utility.scrollToTop();
     var rows = [];
     var exports = [];
 
@@ -251,7 +249,7 @@ angular.module('viLoggedClientApp')
         .then(function() {
           userService.remove(id)
             .then(function(response) {
-              alertService.messageToTop.success('Account deleted successfully.');
+              alertService.success('Account deleted successfully.');
               getUsers();
               $rootScope.busy = false;
             })
@@ -264,7 +262,6 @@ angular.module('viLoggedClientApp')
   })
   .controller('UserFormCtrl', function($scope, $state, $stateParams, $window, userService, companyDepartmentsService, growl,
                                        $rootScope, $cookieStore, notificationService, alertService) {
-    utility.scrollToTop();
     $rootScope.busy = true;
     $scope.userLoaded = false;
     $scope.departmentLoaded = false;
@@ -362,7 +359,6 @@ angular.module('viLoggedClientApp')
     }
   })
   .controller('ChangePasswordCtrl', function($scope, $state, $stateParams, userService, alertService, $rootScope) {
-    utility.scrollToTop();
     $rootScope.busy = false;
     $scope.userPassword = {};
 
@@ -370,7 +366,7 @@ angular.module('viLoggedClientApp')
       $rootScope.busy = true;
       userService.updatePassword($scope.userPassword)
         .then(function(response) {
-          alertService.messageToTop.success('Password changed successfully.');
+          alertService.success('Password changed successfully.');
           $rootScope.busy = false;
           $state.go("home");
         })

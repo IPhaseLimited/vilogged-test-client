@@ -90,7 +90,6 @@ angular.module('viLoggedClientApp')
       });
   })
   .controller('VisitorsCtrl', function ($scope, visitorService, $rootScope, guestGroupConstant, alertService, $filter) {
-    utility.scrollToTop();
     $scope.visitors = [];
     $scope.search = {};
     var rows = [];
@@ -197,7 +196,6 @@ angular.module('viLoggedClientApp')
   .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, $rootScope, $window, $filter, visitorService,
                                            validationService, countryStateService, guestGroupConstant, userService,
                                            countryState, visitorsLocationService, notificationService, utility, alertService) {
-    utility.scrollToTop();
     $scope.visitors = [];
     $scope.visitor = {};
     $scope.visitorsLocation = {};
@@ -412,10 +410,10 @@ angular.module('viLoggedClientApp')
             function afterRegistration() {
 
               if ($scope.user.is_staff) {
-                alertService.messageToTop.success('Visitor profile was saved successfully.');
+                alertService.success('Visitor profile was saved successfully.');
                 $state.go('visitors');
               } else {
-                alertService.messageToTop.success('Your profile was saved successfully.');
+                alertService.success('Your profile was saved successfully.');
                 $state.go('show-visitor', {visitor_id: $scope.visitor.uuid});
               }
               sendNotification();
@@ -470,7 +468,6 @@ angular.module('viLoggedClientApp')
   })
   .controller('VisitorDetailCtrl', function ($scope, $stateParams, visitorService, appointmentService,
                                              visitorsLocationService, $rootScope, notificationService) {
-    utility.scrollToTop();
     $scope.visitor = {};
     $scope.visitorsLocation = {};
     $scope.appointments = [];

@@ -25,7 +25,6 @@ angular.module('viLoggedClientApp')
       })
   })
   .controller('SettingFormCtrl', function ($scope, utility, $http, $rootScope) {
-    utility.scrollToTop();
     $rootScope.busy = true;
     $scope.currentPage = 'server-setting';
     $scope.pageTile = utility.toTitleCase('Server Setting');
