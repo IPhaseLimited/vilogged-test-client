@@ -136,24 +136,21 @@ angular.module('viLoggedClientApp')
       updateTableData();
     }, true);
 
-    var sortObject= {
-      columnToSortBy: '',
-      order: function (predicate, reverse) {
-        $scope.visitors = $filter('orderBy')($scope.visitors, predicate, reverse);
-      },
-      reverse: false
+    $scope.orderByColumn = {
+      created: {
+        reverse: true
+      }
+
     };
 
     $scope.sort = function(column) {
-      if (sortObject.columnToSortBy === column) {
-        sortObject.reverse = !sortObject.reverse;
+      if ($scope.orderByColumn[column]) {
+        $scope.orderByColumn[column].reverse = !$scope.orderByColumn[column].reverse;
+      } else {
+        $scope.orderByColumn = {};
+        $scope.orderByColumn[column]= {reverse: true};
       }
-
-      if (sortObject.columnToSortBy !== column) {
-        sortObject.columnToSortBy = column;
-      }
-
-      sortObject.order(column, sortObject.reverse);
+      $scope.visitors = $filter('orderBy')($scope.visitors, column, $scope.orderByColumn[column].reverse);
     };
 
     function updateTableData() {
