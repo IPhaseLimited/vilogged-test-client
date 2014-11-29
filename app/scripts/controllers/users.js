@@ -150,7 +150,7 @@ angular.module('viLoggedClientApp')
         });
     };
   })
-  .controller('UsersCtrl', function($scope, userService, notificationService, alertService, $rootScope) {
+  .controller('UsersCtrl', function($scope, $filter, userService, notificationService, alertService, $rootScope) {
     var rows = [];
     var exports = [];
 
@@ -182,6 +182,26 @@ angular.module('viLoggedClientApp')
     $scope.$watch('search', function () {
       updateTableData();
     }, true);
+
+    var sortObject= {
+      columnToSortBy: '',
+      order: function (predicate, reverse) {
+        $scope.users = $filter('orderBy')($scope.users, predicate, reverse);
+      },
+      reverse: false
+    };
+
+    $scope.sort = function(column) {
+      if (sortObject.columnToSortBy === column) {
+        sortObject.reverse = !sortObject.reverse;
+      }
+
+      if (sortObject.columnToSortBy !== column) {
+        sortObject.columnToSortBy = column;
+      }
+
+      sortObject.order(column, sortObject.reverse);
+    };
 
     function updateTableData() {
       $scope.users = rows.filter(function (row) {
