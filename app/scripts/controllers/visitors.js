@@ -227,6 +227,9 @@ angular.module('viLoggedClientApp')
     $scope.countryState = countryState;
     $scope.countries = Object.keys(countryState);
     $scope.validationErrors = {};
+    $scope.activateImageUploader = false;
+    $scope.activateCamera = false;
+    $scope.imageCapture = false;
 
     $scope.dob = {
       opened: false,
@@ -235,6 +238,24 @@ angular.module('viLoggedClientApp')
         $event.stopPropagation();
 
         this.opened = true;
+      }
+    };
+
+    $scope.activateImageCapturing = function () {
+      $scope.imageCapture = true;
+      $scope.activateCamera = true;
+      $scope.btnText = 'Activate Image Uploader';
+    };
+
+    $scope.activateImageCapture = function () {
+      if ($scope.activateCamera) {
+        $scope.activateImageUploader = true;
+        $scope.activateCamera = false;
+        $scope.btnText = 'Activate Camera';
+      } else {
+        $scope.activateImageUploader = false;
+        $scope.activateCamera = true;
+        $scope.btnText = 'Activate Image Uploader';
       }
     };
 
