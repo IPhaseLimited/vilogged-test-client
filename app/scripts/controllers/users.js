@@ -197,7 +197,7 @@ angular.module('viLoggedClientApp')
         $scope.orderByColumn = {};
         $scope.orderByColumn[column]= {reverse: true};
       }
-      $scope.users = $filter('orderBy')($scope.appointments, column, $scope.orderByColumn[column].reverse);
+      $scope.users = $filter('orderBy')($scope.users, column, $scope.orderByColumn[column].reverse);
     };
 
     function updateTableData() {

@@ -39,12 +39,48 @@
           </tr>
           <tr>
             <th>S/N</th>
-            <th><a class="sort" ng-click="sort('first_name')">Visitor's Names</a></th>
-            <th><a class="sort" ng-click="sort('visitors_email')">Visitor's Email</a></th>
-            <th><a class="sort" ng-click="sort('visitors_phone')">Visitor's Phone</a></th>
-            <th><a class="sort" ng-click="sort('company_name')">Company Name</a></th>
-            <th><a class="sort" ng-click="sort('group_type')">Group Type</a></th>
-            <th><a class="sort" ng-click="sort('created')">Created Date</a></th>
+            <th>
+              <a class="pointer block" ng-click="sort('first_name')">Visitor's Names
+                <span ng-show="orderByColumn['first_name']"
+                      ng-class="{'fa fa-sort-amount-asc': orderByColumn['first_name'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['first_name'].reverse}">
+                </span>
+              </a>
+            </th>
+            <th>
+              <a class="pointer block" ng-click="sort('visitors_email')">Visitor's Email
+                <span ng-show="orderByColumn['visitors_email']"
+                      ng-class="{'fa fa-sort-amount-asc': orderByColumn['visitors_email'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['visitors_email'].reverse}">
+                </span>
+              </a>
+            </th>
+            <th>
+              <a class="pointer block" ng-click="sort('visitors_phone')">Visitor's Phone
+                <span ng-show="orderByColumn['visitors_phone']"
+                      ng-class="{'fa fa-sort-amount-asc': orderByColumn['visitors_phone'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['visitors_phone'].reverse}">
+                </span>
+              </a>
+            </th>
+            <th>
+              <a class="pointer block" ng-click="sort('company_name')">Company Name
+                <span ng-show="orderByColumn['company_name']"
+                      ng-class="{'fa fa-sort-amount-asc': orderByColumn['company_name'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['company_name'].reverse}">
+                </span>
+              </a>
+            </th>
+            <th>
+              <a class="pointer block" ng-click="sort('group_type')">Group Type
+                <span ng-show="orderByColumn['group_type']"
+                      ng-class="{'fa fa-sort-amount-asc': orderByColumn['group_type'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['group_type'].reverse}">
+                </span>
+              </a>
+            </th>
+            <th>
+              <a class="pointer block" ng-click="sort('created')">Created Date
+                <span ng-show="orderByColumn['created']"
+                      ng-class="{'fa fa-sort-amount-asc': orderByColumn['created'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['created'].reverse}">
+                </span>
+              </a>
+            </th>
             <th></th>
           </tr>
           </thead>
