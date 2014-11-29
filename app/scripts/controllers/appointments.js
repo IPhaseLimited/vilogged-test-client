@@ -144,6 +144,23 @@ angular.module('viLoggedClientApp')
     var rows = [];
     var orderBy = $filter('orderBy');
 
+    $scope.orderByColumn = {
+      appointment_date: {
+        reverse: true
+      }
+
+    };
+
+    $scope.sort = function(column) {
+      if ($scope.orderByColumn[column]) {
+        $scope.orderByColumn[column].reverse = !$scope.orderByColumn[column].reverse;
+      } else {
+        $scope.orderByColumn = {};
+        $scope.orderByColumn[column]= {reverse: true};
+      }
+      $scope.appointments = $filter('orderBy')($scope.appointments, column, $scope.orderByColumn[column].reverse);
+    };
+
     $scope.createdDate = {
       opened: false,
       date: moment().endOf('day').toDate(),
@@ -153,6 +170,8 @@ angular.module('viLoggedClientApp')
         this.opened = true;
       }
     };
+
+
 
     $scope.csvHeader = [
       'Vsistor\'s Name',
@@ -206,32 +225,6 @@ angular.module('viLoggedClientApp')
           $rootScope.busy = false;
         })
     }
-
-    var sortObject= {
-      columnToSortBy: '',
-      order: function (predicate, reverse) {
-        $scope.appointments = orderBy($scope.appointments, predicate, reverse);
-      },
-      reverse: false
-    };
-
-    $scope.sort = function(column) {
-      if (sortObject.columnToSortBy === column) {
-        sortObject.reverse = !sortObject.reverse;
-      }
-
-      if (sortObject.columnToSortBy !== column) {
-        sortObject.columnToSortBy = column;
-      }
-
-      if (column === 'visitor_name') {
-        sortObject.order('visitor_id.first_name', sortObject.reverse);
-      } else if (column === 'host_name') {
-        sortObject.order('host_id.first_name', sortObject.reverse);
-      } else {
-        sortObject.order(column, sortObject.reverse)
-      }
-    };
 
     $scope.user.is_staff ? getAppointments() : getUserAppointments();
 
