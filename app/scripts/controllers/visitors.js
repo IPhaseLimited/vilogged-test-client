@@ -136,6 +136,26 @@ angular.module('viLoggedClientApp')
       updateTableData();
     }, true);
 
+    var sortObject= {
+      columnToSortBy: '',
+      order: function (predicate, reverse) {
+        $scope.visitors = $filter('orderBy')($scope.visitors, predicate, reverse);
+      },
+      reverse: false
+    };
+
+    $scope.sort = function(column) {
+      if (sortObject.columnToSortBy === column) {
+        sortObject.reverse = !sortObject.reverse;
+      }
+
+      if (sortObject.columnToSortBy !== column) {
+        sortObject.columnToSortBy = column;
+      }
+
+      sortObject.order(column, sortObject.reverse);
+    };
+
     function updateTableData() {
       $scope.visitors = rows.filter(function (row) {
         var date = moment(row.created);
@@ -258,7 +278,6 @@ angular.module('viLoggedClientApp')
 
       });
     };
-
 
     $scope.visitor = {};
     $scope.visitor_location = {};
