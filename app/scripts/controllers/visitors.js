@@ -208,9 +208,6 @@ angular.module('viLoggedClientApp')
     $scope.countries = Object.keys(countryState);
     $scope.validationErrors = {};
 
-
-    // Disable weekend selection
-
     $scope.dob = {
       opened: false,
       open: function ($event) {
