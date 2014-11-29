@@ -128,7 +128,7 @@ angular.module('viLoggedClientApp')
         }
       })
   })
-  .controller('AppointmentCtrl', function($scope, appointmentService, utility, $rootScope, notificationService, $location) {
+  .controller('AppointmentCtrl', function($scope, $filter, appointmentService, utility, $rootScope, notificationService, $location) {
 
     $rootScope.busy = true;
 
@@ -142,6 +142,7 @@ angular.module('viLoggedClientApp')
 
     $scope.search = {};
     var rows = [];
+    var orderBy = $filter('orderBy');
 
     $scope.createdDate = {
       opened: false,
@@ -205,6 +206,32 @@ angular.module('viLoggedClientApp')
           $rootScope.busy = false;
         })
     }
+
+    var sortObject= {
+      columnToSortBy: '',
+      order: function (predicate, reverse) {
+        $scope.appointments = orderBy($scope.appointments, predicate, reverse);
+      },
+      reverse: false
+    };
+
+    $scope.sort = function(column) {
+      if (sortObject.columnToSortBy === column) {
+        sortObject.reverse = !sortObject.reverse;
+      }
+
+      if (sortObject.columnToSortBy !== column) {
+        sortObject.columnToSortBy = column;
+      }
+
+      if (column === 'visitor_name') {
+        sortObject.order('visitor_id.first_name', sortObject.reverse);
+      } else if (column === 'host_name') {
+        sortObject.order('host_id.first_name', sortObject.reverse);
+      } else {
+        sortObject.order(column, sortObject.reverse)
+      }
+    };
 
     $scope.user.is_staff ? getAppointments() : getUserAppointments();
 
