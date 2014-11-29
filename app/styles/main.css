@@ -111,6 +111,9 @@
   left: 50%;
   font-size: 25px;
 }
+.block {
+  display: block;
+}
 
 @media screen {
   #printSection {
