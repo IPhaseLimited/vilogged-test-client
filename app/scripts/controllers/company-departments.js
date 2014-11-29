@@ -108,6 +108,11 @@ angular.module('viLoggedClientApp')
   })
   .controller('CompanyDepartmentsCtrl', function($scope, companyDepartmentsService, $modal, notificationService,
                                                  $interval, $rootScope, alertService) {
+    $scope.pagination = {
+      itemsPerPage: 10,
+      currentPage: 1,
+      maxSize: 5
+    };
 
     $scope.departments = [];
     function getDepartments() {
@@ -116,6 +121,8 @@ angular.module('viLoggedClientApp')
         .then(function(departments) {
           $rootScope.busy = false;
           $scope.departments = departments;
+          $scope.pagination.totalItems = departments.length;
+          $scope.pagination.numberOfPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
         })
         .catch(function(reason) {
           $rootScope.busy = false;
