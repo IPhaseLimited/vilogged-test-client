@@ -34,7 +34,8 @@ angular.module('viLoggedClientApp')
       serverSetting: {},
       databaseSetting: {},
       systemSetting: {},
-      localSetting: {}
+      localSetting: {},
+      ldapSetting: {}
     };
 
     $scope.settings.localSetting = {
@@ -45,8 +46,6 @@ angular.module('viLoggedClientApp')
       couchDB: "http://ncc.db.vilogged.com:5984",
       localDB: "http://localhost:5984"
     };
-
-    console.log($scope.settings)
 
     $http.get('/api/save-settings')
       .success(function (response) {
@@ -88,6 +87,11 @@ angular.module('viLoggedClientApp')
           $scope.currentPage = 'local-setting';
           $scope.pageTile = utility.toTitleCase('local setting');
           $scope.currentPageTemplateUrl = '/views/settings/local-setting.html';
+          break;
+        case 'ldap-setting':
+          $scope.currentPage = 'ldap-setting';
+          $scope.pageTile = utility.toTitleCase('ldap setting');
+          $scope.currentPageTemplateUrl = '/views/settings/ldap-setting.html';
           break;
         default:
           $scope.currentPage = 'about';
