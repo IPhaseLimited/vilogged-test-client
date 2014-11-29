@@ -129,7 +129,7 @@
           <label for="image" class="col-sm-3 control-label">Image</label>
 
           <div class="col-sm-9">
-            <input id="image" type="file" ng-model-instant ng-if="!activateCamera"
+            <input id="image" type="file" ng-model-instant ng-if="activateImageUploader"
                    onchange="angular.element(this).scope().setFiles(this, 'image')">
 
             <div class="row">
@@ -141,11 +141,14 @@
               </div>
             </div>
 
-            <a ng-click="activateCamera = !activateCamera" class="btn btn-success" ng-show="!activateCamera">
-              <i class="fa fa-camera"></i> Activate Camera
+            <a ng-click="activateImageCapture()" class="btn btn-success" ng-show="imageCapture">
+              <i class="fa fa-camera" ng-show="activateCamera"></i>
+              <i class="fa fa-image" ng-show="activateImageUploader"></i>
+              &nbsp;{{ btnText }}
             </a>
-            <a ng-click="activateCamera = !activateCamera" class="btn btn-success" ng-show="activateCamera">
-              <i class="fa fa-camera"></i> Deactivate Camera
+            <a ng-click="activateImageCapturing()" class="btn btn-success" ng-show="!imageCapture">
+              <i class="fa fa-check-circle"></i>
+              Enable Image Capturing
             </a>
           </div>
         </div>
