@@ -170,8 +170,6 @@ angular.module('viLoggedClientApp')
       }
     };
 
-
-
     $scope.csvHeader = [
       'Vsistor\'s Name',
       'Gender',
