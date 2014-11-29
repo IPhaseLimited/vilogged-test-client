@@ -325,7 +325,7 @@ angular.module('viLoggedClientApp')
             deferred.resolve('');
         })
         .catch(function(reason) {
-          console.log(reason);
+          deferred.reject(reason);
         });
     }
 

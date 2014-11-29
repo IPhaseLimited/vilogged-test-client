@@ -10,21 +10,7 @@
 angular.module('viLoggedClientApp')
   .service('syncService', function syncService($q, $http, pouchdb, config, db, $cookieStore, $interval, $rootScope) {
     var dbNames = db;
-    // AngularJS will instantiate a singleton by calling "new" on this function
-    /*var db = pouchdb.create('visitors');
-    db.replicate.to(config.api.localDB+'/visitors', {live: true})
-      .then(function(response) {
-        console.log(response);
-      }).catch(function(reason){
-        console.log(reason);
-      });
 
-    db.replicate.from(config.api.localDB+'/visitors', {live: true})
-      .then(function(response) {
-        console.log(response);
-      }).catch(function(reason){
-        console.log(reason);
-      });*/
 
     function updateRecord(fn, _delay) {
       var delay = angular.isDefined(_delay) ? _delay : 30000; //3 minutes
@@ -136,11 +122,11 @@ angular.module('viLoggedClientApp')
 
               })
               .catch(function(reason) {
-                console.log(reason);
+
               });
           })
           .catch(function(reason) {
-            console.log(reason);
+
           });
       });
     }

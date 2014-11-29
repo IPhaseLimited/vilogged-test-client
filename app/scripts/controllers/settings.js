@@ -46,8 +46,6 @@ angular.module('viLoggedClientApp')
       localDB: "http://localhost:5984"
     };
 
-    console.log($scope.settings)
-
     $http.get('/api/save-settings')
       .success(function (response) {
         $rootScope.busy = false;
@@ -55,7 +53,7 @@ angular.module('viLoggedClientApp')
       })
       .error(function (reason) {
         $rootScope.busy = false;
-        console.log(reason);
+
       });
 
     $scope.save = function () {
@@ -64,7 +62,7 @@ angular.module('viLoggedClientApp')
 
         })
         .error(function (reason) {
-          console.log(reason);
+
         });
     };
 

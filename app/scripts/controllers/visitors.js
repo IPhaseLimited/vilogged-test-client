@@ -127,7 +127,7 @@ angular.module('viLoggedClientApp')
         })
         .catch(function (reason) {
           $rootScope.busy = false;
-          console.log(reason);
+
         });
     }
 
@@ -340,7 +340,7 @@ angular.module('viLoggedClientApp')
             })
             .catch(function (reason) {
               $rootScope.busy = false;
-              console.log(reason);
+
             });
           $scope.title = 'Edit ' + $scope.visitor.firstName + '\'s Profile';
         })
@@ -365,11 +365,11 @@ angular.module('viLoggedClientApp')
 
         var emailTemplate = visitorService.EMAIL_TEMPLATE;
         var compiledEmailTemplate = utility.compileTemplate(visitor, emailTemplate);
-        //console.log(compiledEmailTemplate);
+
 
         var smsTemplate = visitorService.SMS_TEMPLATE;
         var compiledSMSTemplate = utility.compileTemplate(visitor, smsTemplate, '&&');
-        //console.log(compiledSMSTemplate);
+
 
         if (angular.isDefined($scope.visitor.visitors_phone) && $scope.visitor.visitors_phone !== '') {
           notificationService.send.sms({
