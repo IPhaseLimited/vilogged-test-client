@@ -142,7 +142,6 @@ angular.module('viLoggedClientApp')
 
     $scope.search = {};
     var rows = [];
-    var orderBy = $filter('orderBy');
 
     $scope.orderByColumn = {
       appointment_date: {
