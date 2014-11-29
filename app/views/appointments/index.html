@@ -43,6 +43,7 @@
                 <option value="false">Not Approved</option>
               </select>
             </th>
+            <th></th>
             <th><button ng-click="search={}" class="btn btn-info">Clear</button></th>
           </tr>
           <tr>
@@ -90,6 +91,13 @@
                 </span>
               </a>
             </th>
+            <th>
+              <a class="pointer block" ng-click="sort('is_approved')">Created
+                 <span ng-show="orderByColumn['created']"
+                       ng-class="{'fa fa-sort-amount-asc': orderByColumn['created'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['created'].reverse}">
+                </span>
+              </a>
+            </th>
             <th></th>
           </tr>
           </thead>
@@ -105,6 +113,7 @@
             <td class="text-center">
               <i class="fa " ng-class="{'fa-check-circle text-success bold' : appointment.is_approved, 'fa-ban text-danger bold' : !appointment.is_approved}"></i>
             </td>
+            <td>{{ appointment.created | date:'EEE, MMM d, y' }}</td>
             <td>
               <a ui-sref="visitor-check-in({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
                  ng-if="!appointment.checked_in && confirm(appointment.visitor_id.group_type) !== 'Banned'" ng-show="isAppointmentUpcoming(appointment.appointment_date) && user.is_staff"
