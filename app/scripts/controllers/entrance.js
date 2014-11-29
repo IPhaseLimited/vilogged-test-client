@@ -48,6 +48,12 @@ angular.module('viLoggedClientApp')
     $rootScope.busy = false;
     $scope.entrance = [];
 
+    $scope.pagination = {
+      itemsPerPage: 10,
+      maxSize: 5,
+      currentPage: 1
+    };
+
     $scope.deleteEntrance = function(id) {
       $rootScope.busy = true;
       entranceService.remove(id)
@@ -64,6 +70,8 @@ angular.module('viLoggedClientApp')
       .then(function(response) {
         $rootScope.busy = false;
         $scope.entrance = response;
+        $scope.pagination.totalItems = $scope.entrance.length;
+        $scope.pagination.numberOfPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
       })
       .catch(function(reason) {
         $rootScope.busy = false;

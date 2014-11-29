@@ -26,6 +26,9 @@
               <th>#</th>
               <th>Department</th>
               <th>Description</th>
+              <th>Created</th>
+              <th>Modified</th>
+              <th>Created By</th>
               <th></th>
             </tr>
             </thead>
@@ -34,6 +37,9 @@
               <td>{{ $index + 1}}</td>
               <td>{{ department.department_name }}</td>
               <td>{{ department.description }}</td>
+              <td>{{ department.created | date: 'EEE, MMM d, y' }}</td>
+              <td>{{ department.modified | date: 'EEE, MMM d, y' }}</td>
+              <td>{{ department.created_by | date: 'EEE, MMM d, y' }}</td>
               <td>
                 <a class="hidden-xs pointer btn btn-info btn-xs" ng-click="addDepartment(department.uuid)">
                   <i class="fa fa-edit"></i> Edit
@@ -48,6 +54,15 @@
             </tr>
             </tbody>
           </table>
+          <div class="row">
+            <div class="col-sm-6" style="padding-top: 15px;">
+              Showing Page: {{ pagination.currentPage }} of {{ pagination.numberOfPages }}
+            </div>
+            <div class="col-sm-6">
+              <pagination total-items="pagination.totalItems" ng-model="pagination.currentPage" max-size="maxSize" class="pagination-sm pull-right"
+                          boundary-links="true" rotate="false" items-per-page="pagination.itemsPerPage"></pagination>
+            </div>
+          </div>
         </div>
       </div>
     </div>
