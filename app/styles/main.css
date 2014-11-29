@@ -131,3 +131,7 @@
     top:0;
   }
 }
+
+.sort {
+  cursor: pointer;
+}
