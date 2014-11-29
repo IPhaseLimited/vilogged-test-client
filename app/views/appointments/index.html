@@ -47,17 +47,17 @@
           </tr>
           <tr>
             <th>S/N</th>
-            <th>Visitor Name</th>
-            <th>Host Name</th>
-            <th>Date</th>
-            <th>Start Time</th>
-            <th>Ends Time</th>
-            <th>Approved</th>
+            <th><a ng-click="sort('visitor_id.first_name')">Visitor Name</a></th>
+            <th><a ng-click="sort('host_id.first_name')">Host Name</a></th>
+            <th><a ng-click="sort('appointment_date')">Date</a></th>
+            <th><a ng-click="sort('visitor_start_time')">Start Time</a></th>
+            <th><a ng-click="sort('visitor_end_time')">End Time</a></th>
+            <th><a ng-click="sort('is_approved')">Approved</a></th>
             <th></th>
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="appointment in appointments | paginationOffset:pagination.currentPage:pagination.itemsPerPage | orderBy: 'appointment.created'"
+          <tr ng-repeat="appointment in appointments | paginationOffset:pagination.currentPage:pagination.itemsPerPage"
               ng-class="{'text-danger': isAppointmentExpired(appointment.appointment_date), 'text-success': isAppointmentUpcoming(appointment.appointment_date)}">
             <td>{{ $index + 1 + ((pagination.currentPage-1) * pagination.itemsPerPage)}}</td>
             <td>{{ ((appointment).visitor_id).first_name + ' ' + ((appointment).visitor_id).last_name }}</td>

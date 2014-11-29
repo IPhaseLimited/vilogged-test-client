@@ -208,9 +208,6 @@ angular.module('viLoggedClientApp')
     $scope.countries = Object.keys(countryState);
     $scope.validationErrors = {};
 
-
-    // Disable weekend selection
-
     $scope.dob = {
       opened: false,
       open: function ($event) {
@@ -410,10 +407,10 @@ angular.module('viLoggedClientApp')
             function afterRegistration() {
 
               if ($scope.user.is_staff) {
-                alertService.messageToTop.success('Visitor profile was saved successfully.');
+                alertService.success('Visitor profile was saved successfully.');
                 $state.go('visitors');
               } else {
-                alertService.messageToTop.success('Your profile was saved successfully.');
+                alertService.success('Your profile was saved successfully.');
                 $state.go('show-visitor', {visitor_id: $scope.visitor.uuid});
               }
               sendNotification();
