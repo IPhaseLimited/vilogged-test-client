@@ -42,7 +42,7 @@
 
           <div class="col-sm-9">
             <div class="input-group">
-              <input type="text" class="form-control" ng-model="visitor.date_of_birth" datepicker-popup is-open="dob.opened"/>
+              <input type="text" ng-change="validateBirthDate(visitor.date_of_birth)" class="form-control" ng-model="visitor.date_of_birth" datepicker-popup is-open="dob.opened"/>
               <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="dob.open($event)">
                   <i class="glyphicon glyphicon-calendar"></i>
@@ -51,7 +51,7 @@
             </div>
 
             <div class="text-danger bold" ng-show="(validationErrors).date_of_birth.length">
-              <span ng-repeat="error in (validationErrors).date_of_birth">
+              <span ng-repeat="error in (validationErrors).date_of_birth track by $index">
                 {{ error }}<br>
               </span>
             </div>
@@ -129,7 +129,7 @@
           <label for="image" class="col-sm-3 control-label">Image</label>
 
           <div class="col-sm-9">
-            <input id="image" type="file" ng-model-instant ng-if="!activateCamera"
+            <input id="image" type="file" ng-model-instant ng-if="activateImageUploader"
                    onchange="angular.element(this).scope().setFiles(this, 'image')">
 
             <div class="row">
@@ -141,23 +141,26 @@
               </div>
             </div>
 
-            <a ng-click="activateCamera = !activateCamera" class="btn btn-success" ng-show="!activateCamera">
-              <i class="fa fa-camera"></i> Activate Camera
+            <a ng-click="activateImageCapture()" class="btn btn-success" ng-show="imageCapture">
+              <i class="fa fa-camera" ng-show="activateCamera"></i>
+              <i class="fa fa-image" ng-show="activateImageUploader"></i>
+              &nbsp;{{ btnText }}
             </a>
-            <a ng-click="activateCamera = !activateCamera" class="btn btn-success" ng-show="activateCamera">
-              <i class="fa fa-camera"></i> Deactivate Camera
+            <a ng-click="activateImageCapturing()" class="btn btn-success" ng-show="!imageCapture">
+              <i class="fa fa-check-circle"></i>
+              Enable Image Capturing
             </a>
           </div>
         </div>
 
-        <div class="form-group">
+        <!--<div class="form-group">
           <label for="fingerprint" class="col-sm-3 control-label">Fingerprint Image</label>
 
           <div class="col-sm-6">
             <input type="file" id="fingerprint" ng-model-instant
                    onchange="angular.element(this).scope().setFiles(this, 'fingerprint')">
           </div>
-        </div>
+        </div>-->
       </div>
       <div class="col-sm-4">
         <img ng-src="{{visitor.image}}" ng-if="visitor.image" alt="" width="200" height="150"/>

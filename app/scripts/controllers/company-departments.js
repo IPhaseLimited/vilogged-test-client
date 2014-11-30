@@ -9,7 +9,7 @@
  */
 
 function formController($scope, $state, companyDepartmentsService, $stateParams, $modalInstance, _id, validationService,
-                        $rootScope) {
+                        $rootScope, alertService) {
   var id = angular.isDefined(_id) ? _id : $stateParams.id;
   $scope.companyDepartments = {};
   if (angular.isDefined($modalInstance)) {
@@ -22,11 +22,11 @@ function formController($scope, $state, companyDepartmentsService, $stateParams,
       .then(function(response) {
         $rootScope.busy = false;
         $scope.companyDepartments = response;
-        console.log(response);
+
       })
       .catch(function(reason) {
         $rootScope.busy = false;
-        console.error(reason)
+
       });
   }
 
@@ -106,7 +106,14 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('CompanyDepartmentsCtrl', function($scope, companyDepartmentsService, $modal, notificationService, $interval, $rootScope) {
+  .controller('CompanyDepartmentsCtrl', function($scope, companyDepartmentsService, $modal, notificationService,
+                                                 $interval, $rootScope, alertService) {
+    $scope.pagination = {
+      itemsPerPage: 10,
+      currentPage: 1,
+      maxSize: 5
+    };
+
     $scope.departments = [];
     function getDepartments() {
       $rootScope.busy = true;
@@ -114,6 +121,8 @@ angular.module('viLoggedClientApp')
         .then(function(departments) {
           $rootScope.busy = false;
           $scope.departments = departments;
+          $scope.pagination.totalItems = departments.length;
+          $scope.pagination.numberOfPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
         })
         .catch(function(reason) {
           $rootScope.busy = false;
@@ -168,6 +177,6 @@ angular.module('viLoggedClientApp')
 
   })
   .controller('CompanyDepartmentsFormCtrl', function($scope, $state, companyDepartmentsService, $stateParams,
-                                                     validationService, $rootScope) {
-    formController($scope, $state, companyDepartmentsService, $stateParams, validationService, $rootScope);
+                                                     validationService, $rootScope, alertService) {
+    formController($scope, $state, companyDepartmentsService, $stateParams, validationService, $rootScope, alertService);
   });

@@ -111,6 +111,9 @@
   left: 50%;
   font-size: 25px;
 }
+.block {
+  display: block;
+}
 
 @media screen {
   #printSection {
@@ -130,4 +133,8 @@
     left:0;
     top:0;
   }
+}
+
+.sort {
+  cursor: pointer;
 }

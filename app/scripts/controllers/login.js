@@ -22,6 +22,7 @@ angular.module('viLoggedClientApp')
       });
   })
   .controller('LoginCtrl', function($scope, $state, loginService, $rootScope, notificationService, $location) {
+
     $scope.displayVisitorLogin = true;
 
     $scope.visitorCredential = {};

@@ -19,7 +19,7 @@ angular.module('viLoggedClientApp')
           deferred.resolve(response);
         })
         .error(function(reason) {
-          console.log(reason);
+          deferred.reject(reason);
         });
 
       return deferred.promise;
@@ -32,7 +32,7 @@ angular.module('viLoggedClientApp')
       } else if (Object.prototype.toString.call(reason) === '[object Object]' && parseInt(reason.status) === 0) {
         growl.addErrorMessage('it looks like your network is experiencing some problem');
       } else {
-        console.log(reason);
+
       }
       return reason;
     };
@@ -63,7 +63,7 @@ angular.module('viLoggedClientApp')
             var message = response;
           })
           .catch(function(reason) {
-            console.log(reason)
+
           });
       },
       email: function(emailParams) {
@@ -72,7 +72,7 @@ angular.module('viLoggedClientApp')
             var message = response;
           })
           .catch(function(reason) {
-            console.log(reason);
+
           });
       }
     };

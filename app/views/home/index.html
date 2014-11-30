@@ -44,220 +44,210 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-sm-6">
-      <div class="widget">
-        <div class="widget-head">
-          <div class="pull-left">Appointments Awaiting Approval</div>
-          <div class="widget-icons pull-right">
+  <div class="col-sm-6">
+    <div class="widget">
+      <div class="widget-head">
+        <div class="pull-left">Appointments Awaiting Approval</div>
+        <div class="widget-icons pull-right">
 
-          </div>
-          <div class="clearfix"></div>
         </div>
-        <div class="widget-content">
-          <div class="padd">
-            <div class="alert alert-info" ng-show="!appointmentsAwaitingApproval.length">
-              <p>
-                There are no appointments awaiting approval.
-              </p>
-            </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="widget-content">
+        <div class="padd">
+          <div class="alert alert-info" ng-show="!appointmentsAwaitingApproval.length">
+            <p>
+              There are no appointments awaiting approval.
+            </p>
+          </div>
 
-            <table class="table table-condense table-bordered" ng-show="appointmentsAwaitingApproval.length">
-              <thead>
-              <tr>
-                <th>S/N</th>
-                <th>Host's Name</th>
-                <th>Visitor's Name</th>
-                <th>Date</th>
-                <th></th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr ng-repeat="appointmentAwaitingApproval in appointmentsAwaitingApproval | limitTo:5">
-                <td>{{ $index+1 }}</td>
-                <td>{{ appointmentAwaitingApproval.host_id.first_name + ' ' +
-                  appointmentAwaitingApproval.host_id.last_name }}
-                </td>
-                <td>{{ appointmentAwaitingApproval.visitor_id.first_name + ' ' +
-                  appointmentAwaitingApproval.visitor_id.last_name }}
-                </td>
-                <td>{{ appointmentAwaitingApproval.appointment_date }}</td>
-                <td>
-                  <a class="btn btn-primary btn-xs"
-                     ui-sref="show-appointment({appointment_id: appointmentAwaitingApproval.uuid})">
-                    View
-                  </a>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="widget-foot">
-            <!-- Footer goes here -->
-          </div>
+          <table class="table table-condense table-bordered" ng-show="appointmentsAwaitingApproval.length">
+            <thead>
+            <tr>
+              <th>S/N</th>
+              <th>Host's Name</th>
+              <th>Visitor's Name</th>
+              <th>Date</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="appointmentAwaitingApproval in appointmentsAwaitingApproval | limitTo:5">
+              <td>{{ $index+1 }}</td>
+              <td>{{ appointmentAwaitingApproval.host_id.first_name + ' ' +
+                appointmentAwaitingApproval.host_id.last_name }}
+              </td>
+              <td>{{ appointmentAwaitingApproval.visitor_id.first_name + ' ' +
+                appointmentAwaitingApproval.visitor_id.last_name }}
+              </td>
+              <td>{{ appointmentAwaitingApproval.appointment_date }}</td>
+              <td>
+                <a class="btn btn-primary btn-xs"
+                   ui-sref="show-appointment({appointment_id: appointmentAwaitingApproval.uuid})">
+                  View
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="widget-foot">
+          <!-- Footer goes here -->
         </div>
       </div>
     </div>
+    <div class="widget">
+      <div class="widget-head">
+        <div class="pull-left">Approved Appointments never used</div>
+        <div class="widget-icons pull-right">
 
-    <div class="col-sm-6">
-      <div class="widget">
-        <div class="widget-head">
-          <div class="pull-left">Approved not checked-in</div>
-          <div class="widget-icons pull-right">
-
-          </div>
-          <div class="clearfix"></div>
         </div>
-        <div class="widget-content">
-          <div class="padd">
-            <div class="alert alert-info" ng-show="!appointmentsNotCheckedIn.length">
-              <p>
-                There are no appointments approved that are not checked in.
-              </p>
-            </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="widget-content">
+        <div class="padd">
+          <div class="alert alert-info" ng-show="!appointmentsNeverUsed.length">
+            <p>
+              There are no appointments approved but never used.
+            </p>
+          </div>
 
-            <table class="table table-condense table-bordered" ng-show="appointmentsNotCheckedIn.length">
-              <thead>
-              <tr>
-                <th>S/N</th>
-                <th>Host's Name</th>
-                <th>Visitor's Name</th>
-                <th>Date</th>
-                <th></th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr ng-repeat="appointmentNotCheckedIn in appointmentsNotCheckedIn | limitTo:5">
-                <td>{{ $index+1 }}</td>
-                <td>{{ appointmentNotCheckedIn.host_id.first_name + ' ' +
-                  appointmentNotCheckedIn.host_id.last_name }}
-                </td>
-                <td>{{ appointmentNotCheckedIn.visitor_id.first_name + ' ' +
-                  appointmentNotCheckedIn.visitor_id.last_name }}
-                </td>
-                <td>{{ appointmentNotCheckedIn.appointment_date }}</td>
-                <td>
-                  <a class="btn btn-primary btn-xs"
-                     ui-sref="show-appointment({appointment_id: appointmentNotCheckedIn.uuid})">
-                    View
-                  </a>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="widget-foot">
-            <!-- Footer goes here -->
-          </div>
+          <table class="table table-condense table-bordered" ng-show="appointmentsNeverUsed.length">
+            <thead>
+            <tr>
+              <th>S/N</th>
+              <th>Host's Name</th>
+              <th>Visitor's Name</th>
+              <th>Date</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="appointmentNeverUsed in appointmentsNeverUsed | limitTo:5">
+              <td>{{ $index+1 }}</td>
+              <td>{{ appointmentNeverUsed.host_id.first_name + ' ' +
+                appointmentNeverUsed.host_id.last_name }}
+              </td>
+              <td>{{ appointmentNeverUsed.visitor_id.first_name + ' ' +
+                appointmentNeverUsed.visitor_id.last_name }}
+              </td>
+              <td>{{ appointmentNeverUsed.appointment_date }}</td>
+              <td>
+                <a class="btn btn-primary btn-xs"
+                   ui-sref="show-appointment({appointment_id: appointmentNeverUsed.uuid})">
+                  View
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="widget-foot">
+          <!-- Footer goes here -->
         </div>
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-sm-6">
-      <div class="widget">
-        <div class="widget-head">
-          <div class="pull-left">Approved Appointments never used</div>
-          <div class="widget-icons pull-right">
+  <div class="col-sm-6">
+    <div class="widget">
+      <div class="widget-head">
+        <div class="pull-left">Approved not checked-in</div>
+        <div class="widget-icons pull-right">
 
-          </div>
-          <div class="clearfix"></div>
         </div>
-        <div class="widget-content">
-          <div class="padd">
-            <div class="alert alert-info" ng-show="!appointmentsNeverUsed.length">
-              <p>
-                There are no appointments approved but never used.
-              </p>
-            </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="widget-content">
+        <div class="padd">
+          <div class="alert alert-info" ng-show="!appointmentsNotCheckedIn.length">
+            <p>
+              There are no appointments approved that are not checked in.
+            </p>
+          </div>
 
-            <table class="table table-condense table-bordered" ng-show="appointmentsNeverUsed.length">
-              <thead>
-              <tr>
-                <th>S/N</th>
-                <th>Host's Name</th>
-                <th>Visitor's Name</th>
-                <th>Date</th>
-                <th></th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr ng-repeat="appointmentNeverUsed in appointmentsNeverUsed | limitTo:5">
-                <td>{{ $index+1 }}</td>
-                <td>{{ appointmentNeverUsed.host_id.first_name + ' ' +
-                  appointmentNeverUsed.host_id.last_name }}
-                </td>
-                <td>{{ appointmentNeverUsed.visitor_id.first_name + ' ' +
-                  appointmentNeverUsed.visitor_id.last_name }}
-                </td>
-                <td>{{ appointmentNeverUsed.appointment_date }}</td>
-                <td>
-                  <a class="btn btn-primary btn-xs"
-                     ui-sref="show-appointment({appointment_id: appointmentNeverUsed.uuid})">
-                    View
-                  </a>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="widget-foot">
-            <!-- Footer goes here -->
-          </div>
+          <table class="table table-condense table-bordered" ng-show="appointmentsNotCheckedIn.length">
+            <thead>
+            <tr>
+              <th>S/N</th>
+              <th>Host's Name</th>
+              <th>Visitor's Name</th>
+              <th>Date</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="appointmentNotCheckedIn in appointmentsNotCheckedIn | limitTo:5">
+              <td>{{ $index+1 }}</td>
+              <td>{{ appointmentNotCheckedIn.host_id.first_name + ' ' +
+                appointmentNotCheckedIn.host_id.last_name }}
+              </td>
+              <td>{{ appointmentNotCheckedIn.visitor_id.first_name + ' ' +
+                appointmentNotCheckedIn.visitor_id.last_name }}
+              </td>
+              <td>{{ appointmentNotCheckedIn.appointment_date }}</td>
+              <td>
+                <a class="btn btn-primary btn-xs"
+                   ui-sref="show-appointment({appointment_id: appointmentNotCheckedIn.uuid})">
+                  View
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="widget-foot">
+          <!-- Footer goes here -->
         </div>
       </div>
     </div>
+    <div class="widget">
+      <div class="widget-head">
+        <div class="pull-left">Expired Appointments</div>
+        <div class="widget-icons pull-right">
 
-    <div class="col-sm-6">
-      <div class="widget">
-        <div class="widget-head">
-          <div class="pull-left">Expired Appointments</div>
-          <div class="widget-icons pull-right">
-
-          </div>
-          <div class="clearfix"></div>
         </div>
-        <div class="widget-content">
-          <div class="padd">
-            <div class="alert alert-info" ng-show="!expiredAppointments.length">
-              <p>
-                There are no expired appointments.
-              </p>
-            </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="widget-content">
+        <div class="padd">
+          <div class="alert alert-info" ng-show="!expiredAppointments.length">
+            <p>
+              There are no expired appointments.
+            </p>
+          </div>
 
-            <table class="table table-condense table-bordered" ng-show="expiredAppointments.length">
-              <thead>
-              <tr>
-                <th>S/N</th>
-                <th>Host's Name</th>
-                <th>Visitor's Name</th>
-                <th>Date</th>
-                <th></th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr ng-repeat="expiredAppointment in expiredAppointments | limitTo:5">
-                <td>{{ $index+1 }}</td>
-                <td>{{ expiredAppointment.host_id.first_name + ' ' +
-                  expiredAppointment.host_id.last_name }}
-                </td>
-                <td>{{ expiredAppointment.visitor_id.first_name + ' ' +
-                  expiredAppointment.visitor_id.last_name }}
-                </td>
-                <td>{{ expiredAppointment.appointment_date }}</td>
-                <td>
-                  <a class="btn btn-primary btn-xs"
-                     ui-sref="show-appointment({appointment_id: expiredAppointment.uuid})">
-                    View
-                  </a>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="widget-foot">
-            <!-- Footer goes here -->
-          </div>
+          <table class="table table-condense table-bordered" ng-show="expiredAppointments.length">
+            <thead>
+            <tr>
+              <th>S/N</th>
+              <th>Host's Name</th>
+              <th>Visitor's Name</th>
+              <th>Date</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="expiredAppointment in expiredAppointments | limitTo:5">
+              <td>{{ $index+1 }}</td>
+              <td>{{ expiredAppointment.host_id.first_name + ' ' +
+                expiredAppointment.host_id.last_name }}
+              </td>
+              <td>{{ expiredAppointment.visitor_id.first_name + ' ' +
+                expiredAppointment.visitor_id.last_name }}
+              </td>
+              <td>{{ expiredAppointment.appointment_date }}</td>
+              <td>
+                <a class="btn btn-primary btn-xs"
+                   ui-sref="show-appointment({appointment_id: expiredAppointment.uuid})">
+                  View
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="widget-foot">
+          <!-- Footer goes here -->
         </div>
       </div>
     </div>

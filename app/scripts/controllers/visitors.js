@@ -89,7 +89,7 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('VisitorsCtrl', function ($scope, visitorService, $rootScope, guestGroupConstant, $filter) {
+  .controller('VisitorsCtrl', function ($scope, visitorService, $rootScope, guestGroupConstant, alertService, $filter) {
     $scope.visitors = [];
     $scope.search = {};
     var rows = [];
@@ -127,7 +127,7 @@ angular.module('viLoggedClientApp')
         })
         .catch(function (reason) {
           $rootScope.busy = false;
-          console.log(reason);
+
         });
     }
 
@@ -135,6 +135,23 @@ angular.module('viLoggedClientApp')
     $scope.$watch('search', function () {
       updateTableData();
     }, true);
+
+    $scope.orderByColumn = {
+      created: {
+        reverse: true
+      }
+
+    };
+
+    $scope.sort = function(column) {
+      if ($scope.orderByColumn[column]) {
+        $scope.orderByColumn[column].reverse = !$scope.orderByColumn[column].reverse;
+      } else {
+        $scope.orderByColumn = {};
+        $scope.orderByColumn[column]= {reverse: true};
+      }
+      $scope.visitors = $filter('orderBy')($scope.visitors, column, $scope.orderByColumn[column].reverse);
+    };
 
     function updateTableData() {
       $scope.visitors = rows.filter(function (row) {
@@ -189,13 +206,13 @@ angular.module('viLoggedClientApp')
       itemsPerPage: 10
     };
 
-    $scope.confirm = function (index) {
+    $scope.getGroupType = function (index) {
       return guestGroupConstant[index];
     }
   })
   .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, $rootScope, $window, $filter, visitorService,
                                            validationService, countryStateService, guestGroupConstant, userService,
-                                           countryState, visitorsLocationService, notificationService, utility, growl) {
+                                           countryState, visitorsLocationService, notificationService, utility, alertService) {
     $scope.visitors = [];
     $scope.visitor = {};
     $scope.visitorsLocation = {};
@@ -206,9 +223,10 @@ angular.module('viLoggedClientApp')
     $scope.visitorGroups = guestGroupConstant;
     $scope.countryState = countryState;
     $scope.countries = Object.keys(countryState);
-
-
-    // Disable weekend selection
+    $scope.validationErrors = {};
+    $scope.activateImageUploader = false;
+    $scope.activateCamera = false;
+    $scope.imageCapture = false;
 
     $scope.dob = {
       opened: false,
@@ -220,6 +238,49 @@ angular.module('viLoggedClientApp')
       }
     };
 
+    $scope.activateImageCapturing = function () {
+      $scope.imageCapture = true;
+      $scope.activateCamera = true;
+      $scope.btnText = 'Activate Image Uploader';
+    };
+
+    $scope.activateImageCapture = function () {
+      if ($scope.activateCamera) {
+        $scope.activateImageUploader = true;
+        $scope.activateCamera = false;
+        $scope.btnText = 'Activate Camera';
+      } else {
+        $scope.activateImageUploader = false;
+        $scope.activateCamera = true;
+        $scope.btnText = 'Activate Image Uploader';
+      }
+    };
+
+    $scope.validateBirthDate = function (dateString) {
+      var checkAge = [];
+      var today = new Date();
+      var birthDate = new Date(dateString);
+      var age = today.getFullYear() - birthDate.getFullYear();
+      var m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+
+      if (age < 14) {
+        var minYear = today.getFullYear() - 14;
+        checkAge.push('Birth year can\'t be less than year ' + minYear);
+      }
+
+      if (age <= 0) {
+        checkAge.push('Date of birth can\'t be in the future or present');
+      }
+
+      if (checkAge.length) {
+        $scope.validationErrors['date_of_birth'] = checkAge;
+      } else {
+        delete $scope.validationErrors['date_of_birth'];
+      }
+    };
 
     $scope.setFiles = function (element, field) {
       $scope.$apply(function () {
@@ -235,7 +296,6 @@ angular.module('viLoggedClientApp')
 
       });
     };
-
 
     $scope.visitor = {};
     $scope.visitor_location = {};
@@ -280,7 +340,7 @@ angular.module('viLoggedClientApp')
             })
             .catch(function (reason) {
               $rootScope.busy = false;
-              console.log(reason);
+
             });
           $scope.title = 'Edit ' + $scope.visitor.firstName + '\'s Profile';
         })
@@ -305,11 +365,11 @@ angular.module('viLoggedClientApp')
 
         var emailTemplate = visitorService.EMAIL_TEMPLATE;
         var compiledEmailTemplate = utility.compileTemplate(visitor, emailTemplate);
-        //console.log(compiledEmailTemplate);
+
 
         var smsTemplate = visitorService.SMS_TEMPLATE;
         var compiledSMSTemplate = utility.compileTemplate(visitor, smsTemplate, '&&');
-        //console.log(compiledSMSTemplate);
+
 
         if (angular.isDefined($scope.visitor.visitors_phone) && $scope.visitor.visitors_phone !== '') {
           notificationService.send.sms({
@@ -384,10 +444,10 @@ angular.module('viLoggedClientApp')
             function afterRegistration() {
 
               if ($scope.user.is_staff) {
-                growl.addSuccessMessage('Visitor profile was saved successfully.');
+                alertService.success('Visitor profile was saved successfully.');
                 $state.go('visitors');
               } else {
-                growl.addSuccessMessage('Your profile was saved successfully.');
+                alertService.success('Your profile was saved successfully.');
                 $state.go('show-visitor', {visitor_id: $scope.visitor.uuid});
               }
               sendNotification();

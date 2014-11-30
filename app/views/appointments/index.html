@@ -43,21 +43,66 @@
                 <option value="false">Not Approved</option>
               </select>
             </th>
+            <th></th>
             <th><button ng-click="search={}" class="btn btn-info">Clear</button></th>
           </tr>
           <tr>
             <th>S/N</th>
-            <th>Visitor Name</th>
-            <th>Host Name</th>
-            <th>Date</th>
-            <th>Start Time</th>
-            <th>Ends Time</th>
-            <th>Approved</th>
+            <th>
+              <a class="pointer block" ng-click="sort('visitor_id.first_name')">
+                Visitor Name
+                <span ng-show="orderByColumn['visitor_id.first_name']"
+                      ng-class="{'fa fa-sort-amount-asc': !orderByColumn['visitor_id.first_name'].reverse, 'fa fa-sort-amount-desc': orderByColumn['visitor_id.first_name'].reverse}">
+                </span>
+              </a>
+            </th>
+            <th>
+              <a class="pointer block" ng-click="sort('host_id.first_name')">Host Name
+                 <span ng-show="orderByColumn['host_id.first_name']"
+                       ng-class="{'fa fa-sort-amount-asc': !orderByColumn['host_id.first_name'].reverse, 'fa fa-sort-amount-desc': orderByColumn['host_id.first_name'].reverse}">
+                </span>
+              </a>
+            </th>
+            <th>
+              <a class="pointer block" ng-click="sort('appointment_date')">Date
+                 <span ng-show="orderByColumn['appointment_date']"
+                       ng-class="{'fa fa-sort-amount-asc': !orderByColumn['appointment_date'].reverse, 'fa fa-sort-amount-desc': orderByColumn['appointment_date'].reverse}">
+                </span>
+              </a>
+            </th>
+            <th>
+              <a class="pointer block" ng-click="sort('visit_start_time')">Start Time
+                 <span ng-show="orderByColumn['visit_start_time']"
+                       ng-class="{'fa fa-sort-amount-asc': !orderByColumn['visit_start_time'].reverse, 'fa fa-sort-amount-desc': orderByColumn['visit_start_time'].reverse}">
+                </span>
+              </a>
+            </th>
+            <th>
+              <a class="pointer block" ng-click="sort('visit_end_time')">End Time
+                 <span ng-show="orderByColumn['visit_end_time']"
+                       ng-class="{'fa fa-sort-amount-asc': !orderByColumn['visit_end_time'].reverse, 'fa fa-sort-amount-desc': orderByColumn['visit_end_time'].reverse}">
+                </span>
+              </a>
+            </th>
+            <th>
+              <a class="pointer block" ng-click="sort('is_approved')">Approved
+                 <span ng-show="orderByColumn['is_approved']"
+                       ng-class="{'fa fa-sort-amount-asc': !orderByColumn['is_approved'].reverse, 'fa fa-sort-amount-desc': orderByColumn['is_approved'].reverse}">
+                </span>
+              </a>
+            </th>
+            <th>
+              <a class="pointer block" ng-click="sort('is_approved')">Created
+                 <span ng-show="orderByColumn['created']"
+                       ng-class="{'fa fa-sort-amount-asc': orderByColumn['created'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['created'].reverse}">
+                </span>
+              </a>
+            </th>
             <th></th>
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="appointment in appointments | paginationOffset:pagination.currentPage:pagination.itemsPerPage | orderBy: 'appointment.created'"
+          <tr ng-repeat="appointment in appointments | paginationOffset:pagination.currentPage:pagination.itemsPerPage"
               ng-class="{'text-danger': isAppointmentExpired(appointment.appointment_date), 'text-success': isAppointmentUpcoming(appointment.appointment_date)}">
             <td>{{ $index + 1 + ((pagination.currentPage-1) * pagination.itemsPerPage)}}</td>
             <td>{{ ((appointment).visitor_id).first_name + ' ' + ((appointment).visitor_id).last_name }}</td>
@@ -68,6 +113,7 @@
             <td class="text-center">
               <i class="fa " ng-class="{'fa-check-circle text-success bold' : appointment.is_approved, 'fa-ban text-danger bold' : !appointment.is_approved}"></i>
             </td>
+            <td>{{ appointment.created | date:'EEE, MMM d, y' }}</td>
             <td>
               <a ui-sref="visitor-check-in({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
                  ng-if="!appointment.checked_in && confirm(appointment.visitor_id.group_type) !== 'Banned'" ng-show="isAppointmentUpcoming(appointment.appointment_date) && user.is_staff"

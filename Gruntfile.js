@@ -22,31 +22,6 @@ module.exports = function(grunt) {
       dist: 'dist'
     },
 
-    express: {
-      options: {
-// Override defaults here
-        hostname: 'localhost',
-        livereload: 35729
-      },
-      web: {
-        options: {
-          script: '../viLogged-Cron/index.js',
-          base: [
-            '.tmp',
-            '<%= yeoman.app %>'
-          ]
-        }
-      },
-      livereload: {
-        options: {
-          base: [
-            '.tmp',
-            '<%= yeoman.app %>'
-          ]
-        }
-      }
-    },
-
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       jsTest: {
@@ -63,7 +38,7 @@ module.exports = function(grunt) {
       },
       livereload: {
         options: {
-          livereload: '<%= express.options.livereload %>'
+          livereload: '<%= connect.options.livereload %>'
         },
         files: [
           '<%= yeoman.app %>/*.html',
@@ -75,22 +50,6 @@ module.exports = function(grunt) {
           '<%= yeoman.app %>/scripts/{,*/}*.js',
           '<%= yeoman.app %>/scripts/fixtures/*.json'
         ]
-      },
-      express: {
-        files:  [
-          '<%= yeoman.app %>/*.html',
-          '.tmp/styles/{,*/}*.css',
-          '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-          '<%= yeoman.app %>/views/**/*.html',
-          '<%= yeoman.app %>/manifest.json',
-          '<%= yeoman.app %>/_locales/{,*/}*.json',
-          '<%= yeoman.app %>/scripts/{,*/}*.js',
-          '<%= yeoman.app %>/scripts/fixtures/*.json'
-        ],
-        tasks:  [ 'express:web' ],
-        options: {
-          spawn: false
-        }
       },
       fixtures: {
         files: ['<%= yeoman.app %>/scripts/fixtures/*.json'],
@@ -426,22 +385,6 @@ module.exports = function(grunt) {
       }
     },
 
-    bump: {
-      options: {
-        files: [
-          'package.json',
-          'bower.json',
-          'app/manifest.json',
-          'app/manifest.mobile.json'
-        ],
-        commitFiles: '<%= bump.options.files %>',
-        pushTo: 'origin'
-      }
-    },
-
-    bumpCCA: {
-      target: {}
-    },
 
     wiredepCopy: {
       snapshot: {
@@ -505,8 +448,7 @@ module.exports = function(grunt) {
       'ngconstant:development',
       'concurrent:server',
       'autoprefixer',
-      'express:web',
-      //'express:livereload',
+      'connect:livereload',
       'watch'
     ]);
   });
@@ -577,14 +519,7 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('release', function(versionType) {
-    var bump = 'bump';
-    if (versionType) {
-      bump += ':' + versionType;
-    }
-    grunt.task.run([
-      'bumpCCA',
-      bump
-    ]);
+
   });
 
   grunt.registerTask('checkstyle', [

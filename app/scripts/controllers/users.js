@@ -80,7 +80,7 @@ angular.module('viLoggedClientApp')
       });
   })
   .controller('UserProfileCtrl', function($scope, $interval, userService, appointmentService, utility,
-                                           notificationService, $rootScope) {
+                                           notificationService, $rootScope, alertService) {
     var appointments = appointmentService.getNestedAppointmentsByUser($rootScope.user);
 
     appointments
@@ -88,7 +88,6 @@ angular.module('viLoggedClientApp')
         $scope.numberOfAppointments = response.length;
       })
       .catch(function(reason) {
-        console.log(reason);
       });
 
     appointments
@@ -100,7 +99,7 @@ angular.module('viLoggedClientApp')
         $scope.upcomingAppointmentCount = $scope.upcomingAppointments.length;
       })
       .catch(function(reason) {
-        console.log(reason);
+
       });
 
     appointments
@@ -113,10 +112,10 @@ angular.module('viLoggedClientApp')
         $scope.appointmentsAwaitingApprovalCount = $scope.appointmentsAwaitingApproval.length;
       })
       .catch(function(reason) {
-        console.log(reason);
+
       });
 
-    $scope.toggleAppointmentApproval = function(appointment_id, approvalStatus) {
+    $scope.toggleAppointmentApproval = function(appointment_id, approvalStatus, alertService) {
       var dialogParams = {
         modalHeader: 'Appointment Approval'
       };
@@ -133,24 +132,24 @@ angular.module('viLoggedClientApp')
               appointmentService.save(response)
                 .then(function(){
                   var message = approvalStatus ? 'The selected appointment has been approved.' : 'The selected appointment has been rejected.';
-                  growl.addSuccessMessage(message);
+                  alertService.success(message);
 
                   $rootScope.busy = false;
                   if (!$scope.upcomingAppointments) $scope.upcomingAppointments = [];
                 })
                 .catch(function(reason){
                   $rootScope.busy = false;
-                  console.log(reason);
+
                 });
             })
             .catch(function(reason){
               $rootScope.busy = false;
-              console.log(reason);
+
             });
         });
     };
   })
-  .controller('UsersCtrl', function($scope, userService, notificationService, growl, $rootScope) {
+  .controller('UsersCtrl', function($scope, $filter, userService, notificationService, alertService, $rootScope) {
     var rows = [];
     var exports = [];
 
@@ -182,6 +181,23 @@ angular.module('viLoggedClientApp')
     $scope.$watch('search', function () {
       updateTableData();
     }, true);
+
+    $scope.orderByColumn = {
+      created: {
+        reverse: true
+      }
+
+    };
+
+    $scope.sort = function(column) {
+      if ($scope.orderByColumn[column]) {
+        $scope.orderByColumn[column].reverse = !$scope.orderByColumn[column].reverse;
+      } else {
+        $scope.orderByColumn = {};
+        $scope.orderByColumn[column]= {reverse: true};
+      }
+      $scope.users = $filter('orderBy')($scope.users, column, $scope.orderByColumn[column].reverse);
+    };
 
     function updateTableData() {
       $scope.users = rows.filter(function (row) {
@@ -249,7 +265,7 @@ angular.module('viLoggedClientApp')
         .then(function() {
           userService.remove(id)
             .then(function(response) {
-              growl.addSuccessMessage('Account deleted successfully.');
+              alertService.messageToTop.success('Account deleted successfully.');
               getUsers();
               $rootScope.busy = false;
             })
@@ -261,7 +277,8 @@ angular.module('viLoggedClientApp')
     }
   })
   .controller('UserFormCtrl', function($scope, $state, $stateParams, $window, userService, companyDepartmentsService, growl,
-                                       $rootScope, $cookieStore, notificationService) {
+                                       $rootScope, $cookieStore, notificationService, alertService) {
+
     $rootScope.busy = true;
     $scope.userLoaded = false;
     $scope.departmentLoaded = false;
@@ -327,7 +344,7 @@ angular.module('viLoggedClientApp')
         $scope.userProfile.user_profile.work_phone = $scope.userProfile.user_profile.work_phone || null;
       }
 
-      console.log($scope.userProfile.user_profile.image);
+
 
       if (toString.call($scope.userProfile.user_profile.department) === '[object String]') {
         //$scope.user.user_profile.department = JSON.parse($scope.user.user_profile.department);
@@ -358,7 +375,8 @@ angular.module('viLoggedClientApp')
         });
     }
   })
-  .controller('ChangePasswordCtrl', function($scope, $state, $stateParams, userService, growl, $rootScope) {
+  .controller('ChangePasswordCtrl', function($scope, $state, $stateParams, userService, alertService, $rootScope) {
+
     $rootScope.busy = false;
     $scope.userPassword = {};
 
@@ -366,7 +384,7 @@ angular.module('viLoggedClientApp')
       $rootScope.busy = true;
       userService.updatePassword($scope.userPassword)
         .then(function(response) {
-          growl.addSuccessMessage('Password changed successfully.');
+          alertService.messageToTop.success('Password changed successfully.');
           $rootScope.busy = false;
           $state.go("home");
         })

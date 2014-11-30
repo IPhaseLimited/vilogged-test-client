@@ -22,6 +22,9 @@
           <tr>
             <th>S/N</th>
             <th>Entrance Name</th>
+            <th>Created</th>
+            <th>Modified</th>
+            <th>Created By</th>
             <th></th>
           </tr>
         </thead>
@@ -29,6 +32,9 @@
           <tr ng-repeat="ent in entrance">
             <td>{{ $index + 1 }}</td>
             <td>{{ ent.entrance_name }}</td>
+            <td>{{ ent.created | date: 'EEE MMM dd, yyyy' }}</td>
+            <td>{{ ent.modified | date: 'EEE MMM dd, yyyy' }}</td>
+            <td>{{ ent.created_by }}</td>
             <td>
               <a class="btn btn-danger btn-xs" ng-click="deleteEntrance(ent._id)" ng-show="user.is_superuser">
                 <i class="fa fa-times-circle"></i> Delete
@@ -42,6 +48,15 @@
           </tr>
         </tbody>
       </table>
+      <div class="row">
+        <div class="col-sm-6" style="padding-top: 15px;">
+          Showing Page: {{ pagination.currentPage }} of {{ pagination.numberOfPages }}
+        </div>
+        <div class="col-sm-6">
+          <pagination total-items="pagination.totalItems" ng-model="pagination.currentPage" max-size="maxSize" class="pagination-sm pull-right"
+                      boundary-links="true" rotate="false" items-per-page="pagination.itemsPerPage"></pagination>
+        </div>
+      </div>
     </div>
     <div class="widget-foot">
       <!-- Footer goes here -->

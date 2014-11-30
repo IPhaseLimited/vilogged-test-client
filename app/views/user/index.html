@@ -4,7 +4,7 @@
     </div>
     <div class="widget-icons pull-right">
       <button ng-disabled="!export.length" class="btn btn-primary hidden-print" type="button"
-              ng-csv="export" csv-header="csvHeader"  filename="{{getFileName('users')}}">
+              ng-csv="export" csv-header="csvHeader" filename="{{getFileName('users')}}">
         Export
       </button>
       <a class="btn btn-primary" ui-sref="createUser"><i class="fa fa-plus-circle"></i> Create User Account</a>
@@ -18,61 +18,94 @@
       <div class="row">
         <table class="table table-condensed table-bordered">
           <thead>
-            <tr>
-              <th></th>
-              <th><input class="form-control" type="text" ng-model="search.name"/></th>
-              <th><input class="form-control" type="text" ng-model="search.username"/></th>
-              <th>
-                <select class="form-control" ng-model="search.role">
-                  <option value="superadmin">Super Admin</option>
-                  <option value="admin">Admin</option>
-                  <option value="staff">Staff</option>
-                  <option value="not active">Not Active</option>
-                </select>
-              </th>
-              <th><input class="form-control" type="text" ng-model="search.department"/></th>
-              <th><input class="form-control" type="text" ng-model="search.phone"/></th>
-              <th><button ng-click="search={}" class="btn btn-info">Clear</button></th>
-            </tr>
-            <tr>
-              <th>S/N</th>
-              <th>Name</th>
-              <th>Username</th>
-              <th>Role</th>
-              <th>Department</th>
-              <th>Office Phone</th>
-              <th></th>
-            </tr>
+          <tr>
+            <th></th>
+            <th><input class="form-control" type="text" ng-model="search.name"/></th>
+            <th><input class="form-control" type="text" ng-model="search.username"/></th>
+            <th>
+              <select class="form-control" ng-model="search.role">
+                <option value="superadmin">Super Admin</option>
+                <option value="admin">Admin</option>
+                <option value="staff">Staff</option>
+                <option value="not active">Not Active</option>
+              </select>
+            </th>
+            <th><input class="form-control" type="text" ng-model="search.department"/></th>
+            <th><input class="form-control" type="text" ng-model="search.phone"/></th>
+            <th>
+              <button ng-click="search={}" class="btn btn-info">Clear</button>
+            </th>
+          </tr>
+          <tr>
+            <th>S/N</th>
+            <th>
+              <a class="pointer block" ng-click="sort('first_name')">Name
+                <span ng-show="orderByColumn['first_name']"
+                        ng-class="{'fa fa-sort-amount-asc': orderByColumn['first_name'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['first_name'].reverse}">
+                </span>
+              </a>
+            </th>
+            <th>
+              <a class="pointer block" ng-click="sort('username')">Username
+                <span ng-show="orderByColumn['username']"
+                    ng-class="{'fa fa-sort-amount-asc': orderByColumn['username'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['username'].reverse}">
+                </span>
+              </a>
+            </th>
+            <th>
+              <a class="pointer block" ng-click="sort('role')">Role
+                <span ng-show="orderByColumn['role']"
+                      ng-class="{'fa fa-sort-amount-asc': orderByColumn['role'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['role'].reverse}">
+                </span>
+              </a>
+            </th>
+            <th>
+              <a class="pointer block" ng-click="sort('user_profile.department.department_name')">Department
+                <span ng-show="orderByColumn['user_profile.department.department_name']"
+                      ng-class="{'fa fa-sort-amount-asc': orderByColumn['user_profile.department.department_name'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['user_profile.department.department_name'].reverse}">
+                </span>
+              </a>
+            </th>
+            <th>
+              <a class="pointer block" ng-click="sort('user_profile.work_phone')">Work Phone
+                <span ng-show="orderByColumn['user_profile.work_phone']"
+                      ng-class="{'fa fa-sort-amount-asc': orderByColumn['user_profile.work_phone'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['user_profile.work_phone'].reverse}">
+                </span>
+              </a>
+            </th>
+            <th></th>
+          </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="user in users | limitTo:10">
-              <td>{{ $index + 1 }}</td>
-              <td>{{ user.first_name + ' ' + user.last_name }}</td>
-              <td>{{ user.username }}</td>
-              <td>
-                <span ng-show="user.is_superuser">Superuser</span>
-                <span ng-show="!user.is_superuser && user.is_staff">Admin</span>
-                <span ng-show="!user.is_superuser && !user.is_staff && user.is_active">Staff</span>
-                <span ng-show="!user.is_superuser && !user.is_staff && !user.is_active">Not Active</span>
-              </td>
-              <td>{{ user.user_profile.department.department_name }}</td>
-              <td>{{ user.user_profile.phone }}</td>
-              <td>
-                <a class="btn btn-success btn-xs" ui-sref="editUser({user_id: user.id})"><i class="fa fa-edit"></i> Edit</a>
-                <a class="btn btn-primary btn-xs" ng-show="user.is_active"
-                   ng-click="toggleActive(user.id)">
-                  <i class="fa fa-times-circle"></i> Deactivate
-                </a>
-                <a class="btn btn-primary btn-xs" ng-show="!user.is_active"
-                   ng-click="toggleActive(user.id)">
-                  <i class="fa fa-check-circle"></i> Activate
-                </a>
+          <tr ng-repeat="user in users | limitTo:10">
+            <td>{{ $index + 1 }}</td>
+            <td>{{ user.first_name + ' ' + user.last_name }}</td>
+            <td>{{ user.username }}</td>
+            <td>
+              <span ng-show="user.is_superuser">Superuser</span>
+              <span ng-show="!user.is_superuser && user.is_staff">Admin</span>
+              <span ng-show="!user.is_superuser && !user.is_staff && user.is_active">Staff</span>
+              <span ng-show="!user.is_superuser && !user.is_staff && !user.is_active">Not Active</span>
+            </td>
+            <td>{{ user.user_profile.department.department_name }}</td>
+            <td>{{ user.user_profile.phone }}</td>
+            <td>
+              <a class="btn btn-success btn-xs" ui-sref="editUser({user_id: user.id})"><i class="fa fa-edit"></i>
+                Edit</a>
+              <a class="btn btn-primary btn-xs" ng-show="user.is_active"
+                 ng-click="toggleActive(user.id)">
+                <i class="fa fa-times-circle"></i> Deactivate
+              </a>
+              <a class="btn btn-primary btn-xs" ng-show="!user.is_active"
+                 ng-click="toggleActive(user.id)">
+                <i class="fa fa-check-circle"></i> Activate
+              </a>
 
-                <a class="btn btn-danger btn-xs" ng-click="deleteAccount(user.id)">
-                  <i class="fa fa-minus-circle"></i> Delete
-                </a>
-              </td>
-            </tr>
+              <a class="btn btn-danger btn-xs" ng-click="deleteAccount(user.id)">
+                <i class="fa fa-minus-circle"></i> Delete
+              </a>
+            </td>
+          </tr>
           </tbody>
         </table>
       </div>
