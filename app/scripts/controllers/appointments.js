@@ -519,7 +519,7 @@ angular.module('viLoggedClientApp')
           $rootScope.busy = false;
           $scope.host.selected = response[0];
           $scope.host.errorMessage = '';
-          console.log(response[0]);
+
         })
         .catch(function(reason) {
           $rootScope.busy = false;
@@ -623,7 +623,7 @@ angular.module('viLoggedClientApp')
           $scope.appointment = response;
         })
         .catch(function(reason) {
-          console.log(reason);
+
         });
     }
 
@@ -778,7 +778,7 @@ angular.module('viLoggedClientApp')
       })
       .catch(function(reason) {
         $rootScope.busy = false;
-        console.log(reason);
+
       });
 
     $scope.checkItemScope = function() {
@@ -910,8 +910,6 @@ angular.module('viLoggedClientApp')
   .controller('VisitorPassCtrl', function($scope, $state, $stateParams, appointmentService, $rootScope) {
 
     $scope.appointment = {};
-    console.log($stateParams.appointment_id);
-
     $rootScope.busy = true;
     appointmentService.getNested($stateParams.appointment_id)
       .then(function(response) {

@@ -52,42 +52,42 @@
               <a class="pointer block" ng-click="sort('visitor_id.first_name')">
                 Visitor Name
                 <span ng-show="orderByColumn['visitor_id.first_name']"
-                      ng-class="{'fa fa-sort-amount-asc': orderByColumn['visitor_id.first_name'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['visitor_id.first_name'].reverse}">
+                      ng-class="{'fa fa-sort-amount-asc': !orderByColumn['visitor_id.first_name'].reverse, 'fa fa-sort-amount-desc': orderByColumn['visitor_id.first_name'].reverse}">
                 </span>
               </a>
             </th>
             <th>
               <a class="pointer block" ng-click="sort('host_id.first_name')">Host Name
                  <span ng-show="orderByColumn['host_id.first_name']"
-                       ng-class="{'fa fa-sort-amount-asc': orderByColumn['host_id.first_name'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['host_id.first_name'].reverse}">
+                       ng-class="{'fa fa-sort-amount-asc': !orderByColumn['host_id.first_name'].reverse, 'fa fa-sort-amount-desc': orderByColumn['host_id.first_name'].reverse}">
                 </span>
               </a>
             </th>
             <th>
               <a class="pointer block" ng-click="sort('appointment_date')">Date
                  <span ng-show="orderByColumn['appointment_date']"
-                       ng-class="{'fa fa-sort-amount-asc': orderByColumn['appointment_date'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['appointment_date'].reverse}">
+                       ng-class="{'fa fa-sort-amount-asc': !orderByColumn['appointment_date'].reverse, 'fa fa-sort-amount-desc': orderByColumn['appointment_date'].reverse}">
                 </span>
               </a>
             </th>
             <th>
               <a class="pointer block" ng-click="sort('visit_start_time')">Start Time
                  <span ng-show="orderByColumn['visit_start_time']"
-                       ng-class="{'fa fa-sort-amount-asc': orderByColumn['visit_start_time'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['visit_start_time'].reverse}">
+                       ng-class="{'fa fa-sort-amount-asc': !orderByColumn['visit_start_time'].reverse, 'fa fa-sort-amount-desc': orderByColumn['visit_start_time'].reverse}">
                 </span>
               </a>
             </th>
             <th>
               <a class="pointer block" ng-click="sort('visit_end_time')">End Time
                  <span ng-show="orderByColumn['visit_end_time']"
-                       ng-class="{'fa fa-sort-amount-asc': orderByColumn['visit_end_time'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['visit_end_time'].reverse}">
+                       ng-class="{'fa fa-sort-amount-asc': !orderByColumn['visit_end_time'].reverse, 'fa fa-sort-amount-desc': orderByColumn['visit_end_time'].reverse}">
                 </span>
               </a>
             </th>
             <th>
               <a class="pointer block" ng-click="sort('is_approved')">Approved
                  <span ng-show="orderByColumn['is_approved']"
-                       ng-class="{'fa fa-sort-amount-asc': orderByColumn['is_approved'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['is_approved'].reverse}">
+                       ng-class="{'fa fa-sort-amount-asc': !orderByColumn['is_approved'].reverse, 'fa fa-sort-amount-desc': orderByColumn['is_approved'].reverse}">
                 </span>
               </a>
             </th>

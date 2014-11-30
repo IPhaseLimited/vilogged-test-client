@@ -8,7 +8,7 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('couchDbService', function couchDbService(pouchdb, utility, config, couchDbFactory) {
+  .service('couchDbService', function couchDbService(pouchdb, utility, couchDbFactory) {
   // AngularJS will instantiate a singleton by calling "new" on this function
 
     this.put = function(db, data) {

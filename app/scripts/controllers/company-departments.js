@@ -22,11 +22,11 @@ function formController($scope, $state, companyDepartmentsService, $stateParams,
       .then(function(response) {
         $rootScope.busy = false;
         $scope.companyDepartments = response;
-        console.log(response);
+
       })
       .catch(function(reason) {
         $rootScope.busy = false;
-        console.error(reason)
+
       });
   }
 

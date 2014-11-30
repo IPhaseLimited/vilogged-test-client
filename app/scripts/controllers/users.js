@@ -88,7 +88,6 @@ angular.module('viLoggedClientApp')
         $scope.numberOfAppointments = response.length;
       })
       .catch(function(reason) {
-        console.log(reason);
       });
 
     appointments
@@ -100,7 +99,7 @@ angular.module('viLoggedClientApp')
         $scope.upcomingAppointmentCount = $scope.upcomingAppointments.length;
       })
       .catch(function(reason) {
-        console.log(reason);
+
       });
 
     appointments
@@ -113,10 +112,10 @@ angular.module('viLoggedClientApp')
         $scope.appointmentsAwaitingApprovalCount = $scope.appointmentsAwaitingApproval.length;
       })
       .catch(function(reason) {
-        console.log(reason);
+
       });
 
-    $scope.toggleAppointmentApproval = function(appointment_id, approvalStatus) {
+    $scope.toggleAppointmentApproval = function(appointment_id, approvalStatus, alertService) {
       var dialogParams = {
         modalHeader: 'Appointment Approval'
       };
@@ -133,19 +132,19 @@ angular.module('viLoggedClientApp')
               appointmentService.save(response)
                 .then(function(){
                   var message = approvalStatus ? 'The selected appointment has been approved.' : 'The selected appointment has been rejected.';
-                  alertSevice.success(message);
+                  alertService.success(message);
 
                   $rootScope.busy = false;
                   if (!$scope.upcomingAppointments) $scope.upcomingAppointments = [];
                 })
                 .catch(function(reason){
                   $rootScope.busy = false;
-                  console.log(reason);
+
                 });
             })
             .catch(function(reason){
               $rootScope.busy = false;
-              console.log(reason);
+
             });
         });
     };
@@ -345,7 +344,7 @@ angular.module('viLoggedClientApp')
         $scope.userProfile.user_profile.work_phone = $scope.userProfile.user_profile.work_phone || null;
       }
 
-      console.log($scope.userProfile.user_profile.image);
+
 
       if (toString.call($scope.userProfile.user_profile.department) === '[object String]') {
         //$scope.user.user_profile.department = JSON.parse($scope.user.user_profile.department);

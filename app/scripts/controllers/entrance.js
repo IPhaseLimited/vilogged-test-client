@@ -62,7 +62,7 @@ angular.module('viLoggedClientApp')
         })
         .catch(function(reason) {
           $rootScope.busy = false;
-          console.log(reason);
+
         })
     };
 
@@ -75,7 +75,7 @@ angular.module('viLoggedClientApp')
       })
       .catch(function(reason) {
         $rootScope.busy = false;
-        console.log(reason);
+
       });
   })
   .controller('EntranceFormCtrl', function($scope, $state, $stateParams, entranceService, $rootScope, notificationService) {

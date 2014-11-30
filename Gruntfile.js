@@ -22,31 +22,6 @@ module.exports = function(grunt) {
       dist: 'dist'
     },
 
-    express: {
-      options: {
-// Override defaults here
-        hostname: 'localhost',
-        livereload: 35729
-      },
-      web: {
-        options: {
-          script: '../viLogged-Cron/index.js',
-          base: [
-            '.tmp',
-            '<%= yeoman.app %>'
-          ]
-        }
-      },
-      livereload: {
-        options: {
-          base: [
-            '.tmp',
-            '<%= yeoman.app %>'
-          ]
-        }
-      }
-    },
-
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       jsTest: {
@@ -63,34 +38,19 @@ module.exports = function(grunt) {
       },
       livereload: {
         options: {
-          livereload: '<%= express.options.livereload %>'
+          livereload: '<%= connect.options.livereload %>'
         },
         files: [
           '<%= yeoman.app %>/*.html',
           '.tmp/styles/{,*/}*.css',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
+          '<%= yeoman.app %>/img/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
           '<%= yeoman.app %>/views/**/*.html',
           '<%= yeoman.app %>/manifest.json',
           '<%= yeoman.app %>/_locales/{,*/}*.json',
           '<%= yeoman.app %>/scripts/{,*/}*.js',
           '<%= yeoman.app %>/scripts/fixtures/*.json'
         ]
-      },
-      express: {
-        files:  [
-          '<%= yeoman.app %>/*.html',
-          '.tmp/styles/{,*/}*.css',
-          '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-          '<%= yeoman.app %>/views/**/*.html',
-          '<%= yeoman.app %>/manifest.json',
-          '<%= yeoman.app %>/_locales/{,*/}*.json',
-          '<%= yeoman.app %>/scripts/{,*/}*.js',
-          '<%= yeoman.app %>/scripts/fixtures/*.json'
-        ],
-        tasks:  [ 'express:web' ],
-        options: {
-          spawn: false
-        }
       },
       fixtures: {
         files: ['<%= yeoman.app %>/scripts/fixtures/*.json'],
@@ -193,6 +153,7 @@ module.exports = function(grunt) {
         files: {
           src: [
             '<%= yeoman.dist %>/scripts/{,*/}*.js',
+            '!<%= yeoman.dist %>/scripts/config.js',
             '<%= yeoman.dist %>/styles/{,*/}*.css',
             '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
             '<%= yeoman.dist %>/styles/fonts/*',
@@ -306,7 +267,9 @@ module.exports = function(grunt) {
               'images/{,*/}*.{webp}',
               '_locales/{,*/}*.json',
               'media/*',
+              'img/*',
               'scripts/fixtures/*.json',
+              'scripts/config.js',
               'manifest.mobile.json'
             ]
           },
@@ -385,7 +348,7 @@ module.exports = function(grunt) {
       }
     },
 
-    ngconstant: {
+    /*ngconstant: {
       options: {
         name: 'config',
         dest: '<%= yeoman.app %>/scripts/config.js',
@@ -409,7 +372,7 @@ module.exports = function(grunt) {
           config: grunt.file.readJSON('config/production.json')
         }
       }
-    },
+    },*/
 
     chromeManifest: {
       dist: {
@@ -426,22 +389,6 @@ module.exports = function(grunt) {
       }
     },
 
-    bump: {
-      options: {
-        files: [
-          'package.json',
-          'bower.json',
-          'app/manifest.json',
-          'app/manifest.mobile.json'
-        ],
-        commitFiles: '<%= bump.options.files %>',
-        pushTo: 'origin'
-      }
-    },
-
-    bumpCCA: {
-      target: {}
-    },
 
     wiredepCopy: {
       snapshot: {
@@ -502,17 +449,16 @@ module.exports = function(grunt) {
     grunt.task.run([
       'clean:server',
       'wiredep',
-      'ngconstant:development',
+      //'ngconstant:development',
       'concurrent:server',
       'autoprefixer',
-      //'express:web',
       'connect:livereload',
       'watch'
     ]);
   });
 
   grunt.registerTask('test', function(target) {
-    grunt.task.run(['ngconstant:test']);
+    //grunt.task.run(['ngconstant:test']);
     if (target === 'unit') {
       return grunt.task.run(['karma:unit']);
     } else if (target === 'e2e') {
@@ -536,7 +482,7 @@ module.exports = function(grunt) {
     ];
 
     var release = [
-      'ngconstant:production',
+      //'ngconstant:production',
       'useminPrepare',
       'concurrent:dist',
       'autoprefixer',
@@ -552,7 +498,7 @@ module.exports = function(grunt) {
     ];
 
     var snapshot = [
-      'ngconstant:development',
+      //'ngconstant:development',
       'autoprefixer',
       'copy:snapshot',
       'wiredepCopy:snapshot'
@@ -577,14 +523,7 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('release', function(versionType) {
-    var bump = 'bump';
-    if (versionType) {
-      bump += ':' + versionType;
-    }
-    grunt.task.run([
-      'bumpCCA',
-      bump
-    ]);
+
   });
 
   grunt.registerTask('checkstyle', [
