@@ -107,7 +107,7 @@ angular.module('viLoggedClientApp')
     };
 
 
-    $http.get('http:localhost:8088/api/settings')
+    $http.get('http://localhost:8088/api/settings')
       .success(function (response) {
         $rootScope.busy = false;
         $scope.settings = response;
@@ -118,7 +118,7 @@ angular.module('viLoggedClientApp')
       });
 
     $scope.save = function () {
-      $http.post('http:localhost:8088/api/settings', $scope.settings)
+      $http.post('http://localhost:8088/api/settings', $scope.settings)
         .success(function (response) {
 
         })
