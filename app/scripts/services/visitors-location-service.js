@@ -8,11 +8,7 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('visitorsLocationService', function visitorsLocationService($q, storageService, db, $http, config, syncService,
-                                                                       $rootScope) {
-    if ($rootScope.config) {
-      config = $rootScope.config
-    }
+  .service('visitorsLocationService', function visitorsLocationService($q, storageService, db, $http, config, syncService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
     var DB_NAME = db.VISITORS_LOCATION.replace(/_/, '-');

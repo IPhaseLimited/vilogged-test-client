@@ -8,10 +8,7 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('pouchStorageService', function pouchStorageService(pouchdb, utility, config, $rootScope) {
-    if ($rootScope.config) {
-      config = $rootScope.config
-    }
+  .service('pouchStorageService', function pouchStorageService(pouchdb, utility, config) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     this.put = function(db, data) {

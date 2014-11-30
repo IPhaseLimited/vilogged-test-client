@@ -8,12 +8,8 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('userService', function userService($q, $http, config, $cookieStore, $rootScope) {
+  .service('userService', function userService($q, $http, config, $cookieStore) {
     // AngularJS will instantiate a singleton by calling "new" on this function
-
-    if ($rootScope.config) {
-      config = $rootScope.config
-    }
 
     var TIME_OUT = 90000; //1.5min
     var CONFIG = {timeout: TIME_OUT};
