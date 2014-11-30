@@ -363,9 +363,12 @@ angular.module('viLoggedClientApp')
                 message: compiledEmailTemplate
               });
             }
-          })
-          .catch(function() {
 
+            $rootScope.busy = false;
+          })
+          .catch(function(reason) {
+            notificationService.setTimeOutNotification(reason);
+            $rootScope.busy = false;
           });
 
       }
@@ -464,8 +467,10 @@ angular.module('viLoggedClientApp')
               message: compiledEmailTemplate
             });
           }
+          $rootScope.busy = false;
         })
         .catch(function(reason) {
+          $rootScope.busy = false;
           notificationService.setTimeOutNotification(reason);
         });
 
@@ -599,10 +604,11 @@ angular.module('viLoggedClientApp')
       $rootScope.busy = true;
       appointmentService.getNested($stateParams.appointment_id)
         .then(function(response){
+          $rootScope.busy = false;
           $scope.appointment = response;
         })
         .catch(function(reason) {
-
+          $rootScope.busy = false;
         });
     }
 
@@ -757,7 +763,7 @@ angular.module('viLoggedClientApp')
       })
       .catch(function(reason) {
         $rootScope.busy = false;
-
+        notificationService.setTimeOutNotification(reason);
       });
 
     $scope.checkItemScope = function() {
@@ -864,6 +870,7 @@ angular.module('viLoggedClientApp')
     $rootScope.busy = true;
     appointmentService.get($stateParams.appointment_id)
       .then(function (response) {
+        $rootScope.busy = false;
         $scope.appointment = response;
         checkOut(response);
       })

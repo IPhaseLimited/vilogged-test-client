@@ -24,7 +24,7 @@ angular.module('viLoggedClientApp')
   .controller('LoginCtrl', function($scope, $state, loginService, $rootScope, notificationService, $location) {
 
     $scope.displayVisitorLogin = true;
-
+    $rootScope.busy = false;
     $scope.visitorCredential = {};
     $scope.visitorLogin = function() {
       $rootScope.busy = true;
@@ -67,7 +67,8 @@ angular.module('viLoggedClientApp')
         });
     }
   })
-  .controller('LogoutCtrl', function($scope, $state, $location, loginService) {
+  .controller('LogoutCtrl', function($scope, $state, $location, loginService, $rootScope) {
+    $rootScope.busy = false;
     var currentUrl = $location.search().back;
     var back = '/';
     if (currentUrl) {

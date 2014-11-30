@@ -32,19 +32,20 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('ConfigCtrl', function($scope, $rootScope, settingsService, $http, $q, alertService) {
+  .controller('ConfigCtrl', function($scope, $rootScope, settingsService, $http, $q, alertService, config) {
     $scope.settings = {
       localSetting: {
-        backend: 'http://localhost:8000',
-        localBrowserPort: 80,
-        remoteBackend: 'http://ncc.vilogged.com:8088',
-        backendCommon: '/api/v1',
-        couchDB: 'http://ncc.db.vilogged.com:5984',
-        localDB: 'http://localhost:5984'
+        backend: config.api.backend,
+        localBrowserPort: config.api.localBrowserPort,
+        remoteBackend: config.api.remoteBackend,
+        backendCommon: config.api.backendCommon,
+        couchDB: config.api.couchDB,
+        localDB: config.api.localDB
       }
     };
 
     $scope.save = function() {
+      $rootScope.busy = false;
       $scope.validationErrors = {};
       var promises = [
         settingsService.testUrl($scope.settings.localSetting.backend),
@@ -86,9 +87,10 @@ angular.module('viLoggedClientApp')
             $scope.validationErrors['backend'] = ['Server not responding, please check url and make sure server ' +
             'is running'];
           }
+          $rootScope.busy = false;
         })
         .catch(function(reason) {
-          console.log(reason);
+          $rootScope.busy = false;
         });
 
     }

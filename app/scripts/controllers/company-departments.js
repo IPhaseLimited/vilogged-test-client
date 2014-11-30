@@ -9,7 +9,7 @@
  */
 
 function formController($scope, $state, companyDepartmentsService, $stateParams, $modalInstance, _id, validationService,
-                        $rootScope, alertService) {
+                        $rootScope, alertService, notificationService) {
   var id = angular.isDefined(_id) ? _id : $stateParams.id;
   $scope.companyDepartments = {};
   if (angular.isDefined($modalInstance)) {
@@ -26,7 +26,7 @@ function formController($scope, $state, companyDepartmentsService, $stateParams,
       })
       .catch(function(reason) {
         $rootScope.busy = false;
-
+        notificationService.setTimeOutNotification(reason);
       });
   }
 
@@ -50,13 +50,12 @@ function formController($scope, $state, companyDepartmentsService, $stateParams,
         })
         .catch(function(reason) {
           if (angular.isDefined($modalInstance)) {
-            //$modalInstance.close(true);
             $rootScope.busy = false;
           }
           (Object.keys(reason)).forEach(function(key) {
             $scope.validationErrors[key] = reason[key];
           });
-          console.log(reason);
+          notificationService.setTimeOutNotification(reason);
         });
     }
   }
@@ -144,7 +143,6 @@ angular.module('viLoggedClientApp')
           companyDepartmentsService.remove(id)
             .then(function(response) {
               $rootScope.busy = false;
-              console.log(response);
               getDepartments();
             })
             .catch(function(reason) {
