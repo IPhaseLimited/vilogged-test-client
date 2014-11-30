@@ -19,13 +19,13 @@
                 <i class="fa fa-lock"></i> Login
               </div>
               <div class="col-md-6">
-                <a class="btn btn-warning btn btn-xs pull-right" ng-click="displayVisitorLogin=!displayVisitorLogin"
-                   ng-show="displayVisitorLogin">
+                <a class="btn btn-warning btn btn-xs pull-right" ng-click="displayUserLogin=!displayUserLogin"
+                   ng-show="displayUserLogin">
                   <i class="fa"></i> User Login
                 </a>
 
-                <a class="btn btn-primary btn btn-xs pull-right" ng-click="displayVisitorLogin=!displayVisitorLogin"
-                   ng-show="!displayVisitorLogin">
+                <a class="btn btn-primary btn btn-xs pull-right" ng-click="displayUserLogin=!displayUserLogin"
+                   ng-show="!displayUserLogin">
                   Guest Login
                 </a>
               </div>
@@ -41,7 +41,7 @@
                 {{ errorMessages }}
               </div>
 
-              <div ng-show="displayVisitorLogin">
+              <div ng-show="!displayVisitorLogin">
                 <form novalidate="" name="visitorLoginForm">
                   <div class="form-group">
                     <label for="identity">Phone Number or Pass Code <span class="text-danger">*</span></label>
@@ -58,7 +58,7 @@
                 </form>
               </div>
 
-              <div ng-show="!displayVisitorLogin">
+              <div ng-show="displayVisitorLogin">
                 <form method="post">
                   <!-- Email -->
                   <div class="form-group">
