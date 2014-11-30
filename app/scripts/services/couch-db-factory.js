@@ -8,7 +8,10 @@
  * Factory in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .factory('couchDbFactory', function($resource, config) {
+  .factory('couchDbFactory', function($resource, $rootScope, config) {
+    if ($rootScope.config) {
+      config = $rootScope.config
+    }
     return $resource(config.api.localDB +'/'+ ':_db/:_action/:_param/:_sub/:_sub_param',
       {
         _db: '@_db'

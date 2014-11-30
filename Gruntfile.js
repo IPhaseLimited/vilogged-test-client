@@ -344,7 +344,7 @@ module.exports = function(grunt) {
       }
     },
 
-    ngconstant: {
+    /*ngconstant: {
       options: {
         name: 'config',
         dest: '<%= yeoman.app %>/scripts/config.js',
@@ -368,7 +368,7 @@ module.exports = function(grunt) {
           config: grunt.file.readJSON('config/production.json')
         }
       }
-    },
+    },*/
 
     chromeManifest: {
       dist: {
@@ -445,7 +445,7 @@ module.exports = function(grunt) {
     grunt.task.run([
       'clean:server',
       'wiredep',
-      'ngconstant:development',
+      //'ngconstant:development',
       'concurrent:server',
       'autoprefixer',
       'connect:livereload',
@@ -454,7 +454,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('test', function(target) {
-    grunt.task.run(['ngconstant:test']);
+    //grunt.task.run(['ngconstant:test']);
     if (target === 'unit') {
       return grunt.task.run(['karma:unit']);
     } else if (target === 'e2e') {
@@ -478,7 +478,7 @@ module.exports = function(grunt) {
     ];
 
     var release = [
-      'ngconstant:production',
+      //'ngconstant:production',
       'useminPrepare',
       'concurrent:dist',
       'autoprefixer',
@@ -494,7 +494,7 @@ module.exports = function(grunt) {
     ];
 
     var snapshot = [
-      'ngconstant:development',
+      //'ngconstant:development',
       'autoprefixer',
       'copy:snapshot',
       'wiredepCopy:snapshot'

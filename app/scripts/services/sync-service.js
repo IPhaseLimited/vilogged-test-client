@@ -11,6 +11,9 @@ angular.module('viLoggedClientApp')
   .service('syncService', function syncService($q, $http, pouchdb, config, db, $cookieStore, $interval, $rootScope) {
     var dbNames = db;
 
+    if ($rootScope.config) {
+      config = $rootScope.config
+    }
 
     function updateRecord(fn, _delay) {
       var delay = angular.isDefined(_delay) ? _delay : 30000; //3 minutes

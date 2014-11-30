@@ -10,6 +10,9 @@
 angular.module('viLoggedClientApp')
   .service('loginService', function loginService($q, $cookieStore, $http, $rootScope, userService, config, visitorService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
+    if ($rootScope.config) {
+      config = $rootScope.config
+    }
 
     function login(credentials) {
       var ERROR_MESSAGE = 'username and password didn\'t match. Please try again';

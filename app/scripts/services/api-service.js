@@ -8,8 +8,11 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('apiService', function apiService($http, apiFactory, config, $q) {
+  .service('apiService', function apiService($http, apiFactory, $q, $rootScope, config) {
     // AngularJS will instantiate a singleton by calling "new" on this function
+    if ($rootScope.config) {
+      config = $rootScope.config;
+    }
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
     this.put = function(db, data) {
       var deferred = $q.defer();

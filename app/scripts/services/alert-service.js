@@ -10,6 +10,23 @@
 angular.module('viLoggedClientApp')
   .service('alertService', function alertService(utility, growl) {
     // AngularJS will instantiate a singleton by calling "new" on this function
+
+    function error(message) {
+      growl.addErrorMessage(message);
+    }
+
+    function success(message) {
+      growl.addSuccessMessage(message);
+    }
+
+    function info(message) {
+      growl.addInfoMessage(message);
+    }
+
+    function warning(message) {
+      growl.addWarnMessage(message);
+    }
+
     this.messageToTop = {
       error: function(message) {
         utility.scrollToTop();
@@ -28,4 +45,11 @@ angular.module('viLoggedClientApp')
         growl.addErrorMessage(message);
       }
     };
+
+    this.error = error;
+    this.success = success;
+    this.warning = warning;
+    this.info = info;
+
+
   });
