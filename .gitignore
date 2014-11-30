@@ -8,6 +8,7 @@ app/demo
 npm-debug.log
 test/bower_components
 coverage
+app/config.js
 app/scripts/config.js
 app/scripts/config.json
 build
