@@ -351,6 +351,10 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     }
 
+    function remove(appointmentId) {
+      return storageService.removeRecord(DB_NAME, appointmentId);
+    }
+
     this.get = get;
     this.getNested = getNested;
     this.all = getAllAppointments;
@@ -370,6 +374,7 @@ angular.module('viLoggedClientApp')
     this.findExistingAppointment = findExistingAppointment;
     this.hasPendingAppointment = hasPendingAppointment;
     this.getUpdates = syncService.getUpdates;
+    this.remove = remove;
     this.APPOINTMENT_APPROVAL_EMAIL_TEMPLATE = APPOINTMENT_APPROVAL_EMAIL_TEMPLATE;
     this.APPOINTMENT_APPROVAL_SMS_TEMPLATE = APPOINTMENT_APPROVAL_SMS_TEMPLATE;
     this.APPOINTMENT_CREATED_EMAIL_TEMPLATE = APPOINTMENT_CREATED_EMAIL_TEMPLATE;

@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-12 clearfix">
-    <a class="btn btn-primary btn-lg pull-right block" ng-hide="(!isAppointmentUpcoming(appointment.appointment_date) || appointment.is_expired) && user.is_staff"
+    <a class="btn btn-primary btn-lg pull-right block" ng-show="(isAppointmentUpcoming(appointment.appointment_date) || appointment.is_expired) && user.is_staff"
        ng-click="printLabel()">
       <i class="fa fa-print"></i> Print Label
     </a>
