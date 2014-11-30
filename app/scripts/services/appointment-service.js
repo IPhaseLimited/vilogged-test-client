@@ -351,7 +351,7 @@ angular.module('viLoggedClientApp')
     }
 
     function remove(appointmentId) {
-      return storageService.removeData(DB_NAME, appointmentId);
+      return storageService.removeRecord(DB_NAME, appointmentId);
     }
 
     this.get = get;

@@ -193,6 +193,27 @@ angular.module('viLoggedClientApp')
       return new Date().getTime() > appointmentTimeStamp;
     };
 
+    $scope.deleteAppointment = function(id) {
+      var dialogParams = {
+        modalHeader: 'Delete Appointment',
+        modalBodyText: 'Are you sure you want to delete the following?'
+      };
+
+      notificationService.modal.confirm(dialogParams)
+        .then(function() {
+          $rootScope.busy = true;
+          appointmentService.remove(id)
+            .then(function(response) {
+              $rootScope.busy = false;
+              getAppointments();
+            })
+            .catch(function(reason) {
+              $rootScope.busy = false;
+              notificationService.setTimeOutNotification(reason);
+            });
+        });
+    };
+
     function getAppointments() {
       appointmentService.all()
         .then(function(response) {
