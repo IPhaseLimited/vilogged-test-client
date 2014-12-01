@@ -8,8 +8,9 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('appointmentService', function appointmentService($q, db, $http, config, storageService, utility, syncService,
-                                                             entranceService) {
+  .service('appointmentService', function appointmentService($q, db, $http, storageService, utility, syncService,
+                                                             entranceService, config) {
+
     // AngularJS will instantiate a singleton by calling "new" on this function
     var DB_NAME = db.APPOINTMENTS;
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
@@ -350,6 +351,10 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     }
 
+    function remove(appointmentId) {
+      return storageService.removeRecord(DB_NAME, appointmentId);
+    }
+
     this.get = get;
     this.getNested = getNested;
     this.all = getAllAppointments;
@@ -369,6 +374,7 @@ angular.module('viLoggedClientApp')
     this.findExistingAppointment = findExistingAppointment;
     this.hasPendingAppointment = hasPendingAppointment;
     this.getUpdates = syncService.getUpdates;
+    this.remove = remove;
     this.APPOINTMENT_APPROVAL_EMAIL_TEMPLATE = APPOINTMENT_APPROVAL_EMAIL_TEMPLATE;
     this.APPOINTMENT_APPROVAL_SMS_TEMPLATE = APPOINTMENT_APPROVAL_SMS_TEMPLATE;
     this.APPOINTMENT_CREATED_EMAIL_TEMPLATE = APPOINTMENT_CREATED_EMAIL_TEMPLATE;

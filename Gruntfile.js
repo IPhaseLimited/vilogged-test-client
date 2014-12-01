@@ -44,6 +44,7 @@ module.exports = function(grunt) {
           '<%= yeoman.app %>/*.html',
           '.tmp/styles/{,*/}*.css',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
+          '<%= yeoman.app %>/img/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
           '<%= yeoman.app %>/views/**/*.html',
           '<%= yeoman.app %>/manifest.json',
           '<%= yeoman.app %>/_locales/{,*/}*.json',
@@ -152,6 +153,7 @@ module.exports = function(grunt) {
         files: {
           src: [
             '<%= yeoman.dist %>/scripts/{,*/}*.js',
+            '!<%= yeoman.dist %>/scripts/config.js',
             '<%= yeoman.dist %>/styles/{,*/}*.css',
             '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
             '<%= yeoman.dist %>/styles/fonts/*',
@@ -265,7 +267,9 @@ module.exports = function(grunt) {
               'images/{,*/}*.{webp}',
               '_locales/{,*/}*.json',
               'media/*',
+              'img/*',
               'scripts/fixtures/*.json',
+              'config.js',
               'manifest.mobile.json'
             ]
           },
@@ -278,6 +282,13 @@ module.exports = function(grunt) {
           {
             expand: true,
             cwd: '<%= yeoman.app %>/bower_components/font-awesome',
+            dest: '<%= yeoman.dist %>',
+            src: ['fonts/*']
+          }
+          ,
+          {
+            expand: true,
+            cwd: '<%= yeoman.app %>/bower_components/bootstrap-css-only',
             dest: '<%= yeoman.dist %>',
             src: ['fonts/*']
           }
@@ -344,7 +355,7 @@ module.exports = function(grunt) {
       }
     },
 
-    ngconstant: {
+    /*ngconstant: {
       options: {
         name: 'config',
         dest: '<%= yeoman.app %>/scripts/config.js',
@@ -368,7 +379,7 @@ module.exports = function(grunt) {
           config: grunt.file.readJSON('config/production.json')
         }
       }
-    },
+    },*/
 
     chromeManifest: {
       dist: {
@@ -445,7 +456,7 @@ module.exports = function(grunt) {
     grunt.task.run([
       'clean:server',
       'wiredep',
-      'ngconstant:development',
+      //'ngconstant:development',
       'concurrent:server',
       'autoprefixer',
       'connect:livereload',
@@ -454,7 +465,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('test', function(target) {
-    grunt.task.run(['ngconstant:test']);
+    //grunt.task.run(['ngconstant:test']);
     if (target === 'unit') {
       return grunt.task.run(['karma:unit']);
     } else if (target === 'e2e') {
@@ -478,7 +489,7 @@ module.exports = function(grunt) {
     ];
 
     var release = [
-      'ngconstant:production',
+      //'ngconstant:production',
       'useminPrepare',
       'concurrent:dist',
       'autoprefixer',
@@ -494,7 +505,7 @@ module.exports = function(grunt) {
     ];
 
     var snapshot = [
-      'ngconstant:development',
+      //'ngconstant:development',
       'autoprefixer',
       'copy:snapshot',
       'wiredepCopy:snapshot'

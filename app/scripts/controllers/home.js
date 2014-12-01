@@ -72,6 +72,7 @@ angular.module('viLoggedClientApp')
         $rootScope.busy = false;
       })
       .catch(function(reason) {
+        $rootScope.busy = false;
         notificationService.setTimeOutNotification(reason);
       });
 

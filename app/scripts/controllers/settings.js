@@ -23,6 +23,78 @@ angular.module('viLoggedClientApp')
           label: 'Settings'
         }
       })
+      .state('app-config', {
+        url: '/app-config',
+        templateUrl: '/views/settings/config.html',
+        controller: 'ConfigCtrl',
+        data: {
+          label: 'App Configuration'
+        }
+      });
+  })
+  .controller('ConfigCtrl', function($scope, $rootScope, settingsService, $http, $q, alertService, config) {
+    $scope.settings = {
+      localSetting: {
+        backend: config.api.backend,
+        localBrowserPort: config.api.localBrowserPort,
+        remoteBackend: config.api.remoteBackend,
+        backendCommon: config.api.backendCommon,
+        couchDB: config.api.couchDB,
+        localDB: config.api.localDB
+      }
+    };
+
+    $scope.save = function() {
+      $rootScope.busy = false;
+      $scope.validationErrors = {};
+      var promises = [
+        settingsService.testUrl($scope.settings.localSetting.backend),
+        settingsService.testUrl($scope.settings.localSetting.remoteBackend),
+        settingsService.testUrl($scope.settings.localSetting.couchDB),
+        settingsService.testUrl($scope.settings.localSetting.localDB)
+      ];
+      $q.all(promises)
+        .then(function(response) {
+          var messages = [];
+
+          if (parseInt(response[1].status) === 0) {
+            messages.push('remote settings is wrong, you won\'t be able to access online server');
+            $scope.validationErrors['couchDB'] = ['remote settings is wrong, you won\'t be able to access online server'];
+          }
+          if (parseInt(response[2].status) === 0) {
+            messages.push('remote settings is wrong, you won\'t be able to access online couch db server ');
+            $scope.validationErrors['remoteBackend'] = ['remote settings is wrong, you won\'t be able to access ' +
+            'online couch db server '];
+          }
+          if (parseInt(response[3].status) === 0) {
+            messages.push('remote settings is wrong, you won\'t be able to access local couch db server ');
+            $scope.validationErrors['localDB'] = ['remote settings is wrong, you won\'t be able to access' +
+            ' local couch db server '];
+          }
+
+          if (parseInt(response[0].status) !== 0) {
+            if (messages.length) {
+              alertService.error(messages.join('\n'));
+            }
+            $http.post('http://localhost:8088/api/app-config', $scope.settings)
+              .success(function(response) {
+                console.log(response);
+              })
+              .error(function(reason) {
+                console.log(reason);
+              });
+          } else {
+            $scope.validationErrors['backend'] = ['Server not responding, please check url and make sure server ' +
+            'is running'];
+          }
+          $rootScope.busy = false;
+        })
+        .catch(function(reason) {
+          $rootScope.busy = false;
+        });
+
+    }
+
   })
   .controller('SettingFormCtrl', function ($scope, utility, $http, $rootScope) {
     $rootScope.busy = true;
@@ -33,31 +105,22 @@ angular.module('viLoggedClientApp')
     $scope.settings = {
       serverSetting: {},
       databaseSetting: {},
-      systemSetting: {},
-      localSetting: {}
+      systemSetting: {}
     };
 
-    $scope.settings.localSetting = {
-      backend: "http://localhost:8000",
-      cron: "http://localhost:8088",
-      remoteBackend: "http://ncc.vilogged.com:8088",
-      backendCommon: "/api/v1",
-      couchDB: "http://ncc.db.vilogged.com:5984",
-      localDB: "http://localhost:5984"
-    };
 
-    $http.get('/api/save-settings')
+    $http.get('http://localhost:8088/api/settings')
       .success(function (response) {
         $rootScope.busy = false;
         $scope.settings = response;
       })
-      .error(function (reason) {
+      .error(function () {
         $rootScope.busy = false;
 
       });
 
     $scope.save = function () {
-      $http.post('/api/save-settings', $scope.settings)
+      $http.post('http://localhost:8088/api/settings', $scope.settings)
         .success(function (response) {
 
         })
@@ -81,11 +144,6 @@ angular.module('viLoggedClientApp')
           $scope.currentPage = 'system-setting';
           $scope.pageTile = utility.toTitleCase('system setting');
           $scope.currentPageTemplateUrl = '/views/settings/system-setting.html';
-          break;
-        case 'local-setting':
-          $scope.currentPage = 'local-setting';
-          $scope.pageTile = utility.toTitleCase('local setting');
-          $scope.currentPageTemplateUrl = '/views/settings/local-setting.html';
           break;
         default:
           $scope.currentPage = 'about';

@@ -193,6 +193,27 @@ angular.module('viLoggedClientApp')
       return new Date().getTime() > appointmentTimeStamp;
     };
 
+    $scope.deleteAppointment = function(id) {
+      var dialogParams = {
+        modalHeader: 'Delete Appointment',
+        modalBodyText: 'Are you sure you want to delete the following?'
+      };
+
+      notificationService.modal.confirm(dialogParams)
+        .then(function() {
+          $rootScope.busy = true;
+          appointmentService.remove(id)
+            .then(function(response) {
+              $rootScope.busy = false;
+              getAppointments();
+            })
+            .catch(function(reason) {
+              $rootScope.busy = false;
+              notificationService.setTimeOutNotification(reason);
+            });
+        });
+    };
+
     function getAppointments() {
       appointmentService.all()
         .then(function(response) {
@@ -363,9 +384,12 @@ angular.module('viLoggedClientApp')
                 message: compiledEmailTemplate
               });
             }
-          })
-          .catch(function() {
 
+            $rootScope.busy = false;
+          })
+          .catch(function(reason) {
+            notificationService.setTimeOutNotification(reason);
+            $rootScope.busy = false;
           });
 
       }
@@ -464,8 +488,10 @@ angular.module('viLoggedClientApp')
               message: compiledEmailTemplate
             });
           }
+          $rootScope.busy = false;
         })
         .catch(function(reason) {
+          $rootScope.busy = false;
           notificationService.setTimeOutNotification(reason);
         });
 
@@ -599,10 +625,11 @@ angular.module('viLoggedClientApp')
       $rootScope.busy = true;
       appointmentService.getNested($stateParams.appointment_id)
         .then(function(response){
+          $rootScope.busy = false;
           $scope.appointment = response;
         })
         .catch(function(reason) {
-
+          $rootScope.busy = false;
         });
     }
 
@@ -757,7 +784,7 @@ angular.module('viLoggedClientApp')
       })
       .catch(function(reason) {
         $rootScope.busy = false;
-
+        notificationService.setTimeOutNotification(reason);
       });
 
     $scope.checkItemScope = function() {
@@ -864,6 +891,7 @@ angular.module('viLoggedClientApp')
     $rootScope.busy = true;
     appointmentService.get($stateParams.appointment_id)
       .then(function (response) {
+        $rootScope.busy = false;
         $scope.appointment = response;
         checkOut(response);
       })
