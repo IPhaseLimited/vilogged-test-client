@@ -269,7 +269,7 @@ module.exports = function(grunt) {
               'media/*',
               'img/*',
               'scripts/fixtures/*.json',
-              'scripts/config.js',
+              'config.js',
               'manifest.mobile.json'
             ]
           },
