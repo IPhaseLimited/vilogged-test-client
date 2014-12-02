@@ -214,16 +214,27 @@ angular.module('viLoggedClientApp')
       });
     };
   })
-  .controller('UserProfileCtrl', function($scope, $interval, userService, appointmentService, utility,
+  .controller('UserProfileCtrl', function($scope, $interval, $filter, userService, appointmentService, utility,
                                            notificationService, $rootScope, alertService) {
 
     var appointments = appointmentService.getNestedAppointmentsByUser($rootScope.user);
+    $rootScope.busy = true;
+
+    appointmentService.defaultEntrance()
+      .then(function(response) {
+        $scope.defaultEntrance = response;
+      })
+      .catch(function(reason) {
+        notificationService.setTimeOutNotification(reason);
+      });
 
     appointments
       .then(function(response) {
         $scope.numberOfAppointments = response.length;
+        $rootScope.busy = false;
       })
       .catch(function(reason) {
+        $rootScope.busy = false;
       });
 
     appointments
@@ -251,27 +262,39 @@ angular.module('viLoggedClientApp')
 
       });
 
-    $scope.toggleAppointmentApproval = function(appointment_id, approvalStatus, alertService) {
+    $scope.toggleAppointmentApproval = function(appointment_id, index) {
       var dialogParams = {
         modalHeader: 'Appointment Approval'
       };
 
-      dialogParams.modalBodyText = approvalStatus ? 'Are you sure you want to approve this appointment?' :
-        'Are you sure you want to disapprove this appointment?';
+      dialogParams.modalBodyText = 'Are you sure you want to approve this appointment?';
+
+      function removeApprovedAppointment(index, appointment) {
+        $scope.appointmentsAwaitingApproval.splice(index, 1);
+        var upcomingAppointmentLastIndex = $scope.upcomingAppointments.length - 1;
+        $scope.upcomingAppointments.splice(upcomingAppointmentLastIndex, 0, appointment);
+        $filter('limitTo')($scope.appointmentsAwaitingApproval, 5);
+        $filter('limitTo')($scope.upcomingAppointments, 5);
+      }
 
       $rootScope.busy = true;
       notificationService.modal.confirm(dialogParams)
         .then(function() {
           appointmentService.get(appointment_id)
             .then(function(response){
-              response.is_approved = approvalStatus;
+              $rootScope.busy = false;
+              response.is_approved = true;
+              if (!response.entrance) {
+                response.entrance_id = $scope.defaultEntrance;
+              }
               appointmentService.save(response)
                 .then(function(){
-                  var message = approvalStatus ? 'The selected appointment has been approved.' : 'The selected appointment has been rejected.';
+                  var message = 'The selected appointment has been approved.';
                   alertService.success(message);
 
                   $rootScope.busy = false;
                   if (!$scope.upcomingAppointments) $scope.upcomingAppointments = [];
+                  removeApprovedAppointment(index, response);
                 })
                 .catch(function(reason){
                   $rootScope.busy = false;
