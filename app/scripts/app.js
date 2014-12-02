@@ -114,7 +114,8 @@ angular.module('viLoggedClientApp', [
     ]);
   })
   .config(['growlProvider', function(growlProvider) {
-    growlProvider.globalTimeToLive(10000);
+    growlProvider.globalTimeToLive(20000);
+    growlProvider.globalEnableHtml(true);
   }])
   .config(function($compileProvider) {
     // to bypass Chrome app CSP for images.
