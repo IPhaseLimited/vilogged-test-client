@@ -169,13 +169,8 @@
           <hr/>
 
           <div class="col-sm-offset-2 col-sm-10">
-            <button class="btn btn-primary"
-                    ng-if="!appointment._id">
-              <i class="fa fa-plus-circle"></i> Create Appointment
-            </button>
-            <button class="btn btn-primary"
-                    ng-if="appointment._id">
-              <i class="fa fa-edit"></i> Edit Appointment {{appointment.appointment_id}}
+            <button class="btn btn-primary">
+              <i class="fa fa-plus-circle"></i> Save
             </button>
             <a class="btn btn-danger" ui-sref="appointments"><i class="fa fa-times"></i> Cancel</a>
           </div>

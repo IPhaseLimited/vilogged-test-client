@@ -188,9 +188,12 @@ angular.module('viLoggedClientApp')
       return new Date().getTime() < appointmentTimeStamp;
     };
 
-    $scope.isAppointmentExpired = function(appointmentDate) {
-      var appointmentTimeStamp = utility.getTimeStamp(appointmentDate);
-      return new Date().getTime() > appointmentTimeStamp;
+    $scope.isAppointmentExpired = function(appointmentDate, visitEndTime) {
+      var visitEndTimeArray = visitEndTime.split(':');
+      var appointmentEndsAt = new Date(appointmentDate);
+      appointmentEndsAt.setHours(visitEndTimeArray[1]);
+      appointmentEndsAt.setMinutes(visitEndTimeArray[2]);
+      return new Date().getTime() > appointmentEndsAt.getTime();
     };
 
     $scope.deleteAppointment = function(id) {
@@ -220,8 +223,8 @@ angular.module('viLoggedClientApp')
           rows = response;
           $scope.pagination.totalItems = rows.length;
           $scope.pagination.numPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
-          $rootScope.busy = false;
           updateTableData();
+          $rootScope.busy = false;
         })
         .catch(function(reason) {
           notificationService.setTimeOutNotification(reason);
