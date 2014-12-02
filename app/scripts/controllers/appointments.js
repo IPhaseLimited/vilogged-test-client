@@ -128,7 +128,7 @@ angular.module('viLoggedClientApp')
         }
       })
   })
-  .controller('AppointmentCtrl', function($scope, $filter, appointmentService, utility, $rootScope, notificationService, $location) {
+  .controller('AppointmentCtrl', function($scope, $filter, appointmentService, utility, $rootScope, notificationService, alertService) {
 
     $rootScope.busy = true;
 
