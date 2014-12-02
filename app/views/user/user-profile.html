@@ -132,7 +132,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="appointment in upcomingAppointments | limitTo:5 | orderBy: 'appointment.modified'">
+          <tr ng-repeat="appointment in upcomingAppointments | limitTo:5 | orderBy: 'appointment.appointment_date'">
             <td>{{ $index+1 }}</td>
             <td>{{ appointment.visitor_id.first_name + " " + appointment.visitor_id.last_name }}</td>
             <td>{{ appointment.appointment_date | date: 'EEE, MMM d, y' }}</td>
@@ -178,14 +178,14 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="appointment in appointmentsAwaitingApproval | limitTo: 5 | orderBy: 'appointment.created'">
+          <tr ng-repeat="appointment in appointmentsAwaitingApproval | limitTo: 5 | orderBy: 'appointment.appointment_date'">
             <td>{{ $index+1 }}</td>
             <td>{{ appointment.visitor_id.first_name + " " + appointment.visitor_id.last_name }}</td>
             <td>{{ appointment.appointment_date | date: 'EEE, MMM d, y' }}</td>
             <td>{{ appointment.visit_start_time }}</td>
             <td>{{ appointment.visit_end_time }}</td>
             <td>
-              <a ng-click="toggleAppointmentApproval(appointment.uuid, true)" class="btn btn-primary btn-xs">
+              <a ng-click="toggleAppointmentApproval(appointment.uuid, $index)" class="btn btn-primary btn-xs">
                 <span class="fa fa-check"></span>
               </a>
             </td>
