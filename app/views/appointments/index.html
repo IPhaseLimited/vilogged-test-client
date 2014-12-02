@@ -115,9 +115,6 @@
             </td>
             <td>{{ appointment.created | date:'EEE, MMM d, y' }}</td>
             <td>
-              <a href="#" class="btn btn-info btn-xs" ng-if="!appointment.checked_in && !appointment.is_expired"
-                ng-show="isAppointmentUpcoming(appointment.appointment_date) && appointment.host_id.id === user.id"
-                ><i class="fa fa-plus-circle"></i> Add To Outlook</a>
               <a ui-sref="visitor-check-in({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
                  ng-if="!appointment.checked_in && confirm(appointment.visitor_id.group_type) !== 'Banned'"
                  ng-show="isAppointmentUpcoming(appointment.appointment_date) && user.is_staff"
