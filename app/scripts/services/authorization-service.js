@@ -55,17 +55,26 @@ angular.module('viLoggedClientApp')
         'create-appointment-visitor',
         'appointments',
         'show-appointment',
-        'edit-appointment'],
+        'edit-appointment',
+        'logout',
+        'login'
+      ],
       visitors: [
         'show-visitor',
-        'create-appointment-visitor'
+        'create-appointment-visitor',
+        'logout',
+        'login'
       ],
       users: [
         'profile',
         'appointments',
         'create-appointment-host',
+        'create-appointment-visitor',
+        'create-appointment',
         'show-appointment',
-        'edit-appointment'
+        'edit-appointment',
+        'logout',
+        'login'
       ]
     };
 

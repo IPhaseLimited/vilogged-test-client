@@ -18,8 +18,8 @@ angular.module('viLoggedClientApp', [
   'ngSanitize',
   'ngCsv'
 ])
-  .run(function($cookieStore, $rootScope, $state, $http, $location, $interval, loginService, growl, authorizationService,
-                utility, settingsService) {
+  .run(function($cookieStore, $rootScope, $state, $http, $location, $interval, loginService, authorizationService,
+                utility, settingsService, alertService) {
     $rootScope.getFileName = utility.getFileName;
 
     $rootScope.pageTitle = 'Visitor Management System';
@@ -59,13 +59,13 @@ angular.module('viLoggedClientApp', [
         var page = $state.$current.name;
         var visitorsPages = authorizationService.allowedPages.visitors;
         if ($rootScope.user.is_vistor && visitorsPages.indexOf(page) === -1) {
-          growl.addErrorMessage('Access Denied');
+          alertService.error('Access Denied');
           $location.path('/visitors/'+$rootScope.user.id);
         }
 
         var staffPages = authorizationService.allowedPages.staff;
         if (($rootScope.user.is_staff && !$rootScope.user.is_superuser) &&  staffPages.indexOf(page) === -1) {
-          growl.addErrorMessage('Access Denied');
+          alertService.error('Access Denied');
           $location.path('/');
         }
 
@@ -114,7 +114,8 @@ angular.module('viLoggedClientApp', [
     ]);
   })
   .config(['growlProvider', function(growlProvider) {
-    growlProvider.globalTimeToLive(10000);
+    growlProvider.globalTimeToLive(20000);
+    growlProvider.globalEnableHtml(true);
   }])
   .config(function($compileProvider) {
     // to bypass Chrome app CSP for images.

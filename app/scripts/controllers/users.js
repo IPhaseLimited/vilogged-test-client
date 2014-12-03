@@ -23,6 +23,20 @@ angular.module('viLoggedClientApp')
           label: 'User Profile'
         }
       })
+      .state('import-users', {
+        parent: 'root.index',
+        url: '/import-users',
+        templateUrl: 'views/user/import.html',
+        controller: 'UserProfileImportCtrl',
+        data: {
+          label: 'User Profile',
+          requiredPermission: 'is_superuser'
+        },
+        ncyBreadcrumb: {
+          label: 'User Profile',
+          parent: 'users'
+        }
+      })
       .state('users', {
         parent: 'root.index',
         url: '/users',
@@ -79,15 +93,148 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('UserProfileCtrl', function($scope, $interval, userService, appointmentService, utility,
+  .controller('UserProfileImportCtrl', function($scope, userService, alertService,  $window, $http, config, $location) {
+    $scope.csvFIle = [];
+    var csvHeader = $scope.csvHeader =  {
+      'email': 'valid email address',
+      'password': 'any character or number or both',
+      'first_name': 'First name',
+      'last_name': 'Last Name',
+      'is_system_manager': 'Access for receptionist and security who can manage visitors',
+      'mobile': 'personnal phone number',
+      'office_phone': 'official (Office) phone number',
+      'home_phone': 'Other phone number',
+      'gender': 'gender should Male or Female',
+      'department': 'Department in organization'
+    };
+    $scope.sampleHeaders = Object.keys(csvHeader);
+
+    function csvToJSON(csvString, useFirstRowAsHeader) {
+      var csvArray = csvString.toString().split('\n');
+      var header;
+      var headKey = [];
+      var rows = [];
+      if (useFirstRowAsHeader === undefined || useFirstRowAsHeader) {
+        header = csvArray.shift().split(',');
+        header.forEach(function(key) {
+          headKey.push(key.toLowerCase().split(' ').join('_'));
+        });
+      }
+
+      csvArray.forEach(function(row) {
+        var rowArray = row.split(',');
+        var rowData = {};
+        if (rowArray.length > 0) {
+          rowArray.forEach(function(value, index) {
+            if (header[index] !== undefined) {
+              var headKey = header[index].toLowerCase().split(' ').join('_');
+              rowData[headKey] = value;
+            }
+          });
+          rows.push(rowData);
+        }
+      });
+
+      return rows;
+    }
+
+    function getHeader(arrayObject) {
+      return Object.keys(arrayObject[0]);
+    }
+
+    function validateColumns(header, compare) {
+      var failed = [];
+
+      header.forEach(function(key) {
+        if (compare.indexOf(key) === -1) {
+          failed.push(key);
+        }
+      });
+      if (failed.length) {
+        alertService.error('Please fix the following headers '+'<br>'+failed.join('<br>')+ '<br> they don\'t match our specification');
+        return false
+      }
+      return true;
+    }
+
+    function saveUsers(objectList, count) {
+      if (count < objectList.length && count !== objectList.length) {
+        var user = {
+          username: objectList[count].email,
+          email: objectList[count].email,
+          first_name: objectList[count].first_name,
+          last_name: objectList[count].last_name,
+          password: objectList[count].password,
+          is_superuser: false,
+          is_staff: objectList[count].is_system_manager,
+          is_active: true,
+          user_profile: {
+            phone: objectList[count].mobile,
+            work_phone: objectList[count].office_phone,
+            home_phone: objectList[count].home_phone,
+            gender: objectList[count].gender
+          }
+        };
+        $http.post(config.api.backend + '/api/v1/user/import', user)
+          .success(function(){
+            saveUsers(objectList, count + 1);
+          })
+          .error(function(reason) {
+            saveUsers(objectList, count + 1);
+          });
+      } else {
+        $location.path('/users');
+      }
+    }
+
+    $scope.importUsers = function() {
+      if ($scope.csvFIle.length) {
+        var header = getHeader($scope.csvFIle);
+
+        if (validateColumns(header, Object.keys(csvHeader))) {
+          saveUsers($scope.csvFIle, 0);
+        }
+      }
+    };
+
+    $scope.setFiles = function (element) {
+      $scope.$apply(function () {
+
+        var fileToUpload = element.files[0];
+        if (['application/csv', 'text/csv'].indexOf(fileToUpload.type) !== -1) {
+          var reader = new $window.FileReader();
+          reader.onload = function (theFile) {
+            $scope.csvFIle = csvToJSON(theFile.target.result);
+          };
+          reader.readAsText(fileToUpload);
+        } else {
+          alertService.error('Please only csv files supported for now');
+        }
+
+      });
+    };
+  })
+  .controller('UserProfileCtrl', function($scope, $interval, $filter, userService, appointmentService, utility,
                                            notificationService, $rootScope, alertService) {
+
     var appointments = appointmentService.getNestedAppointmentsByUser($rootScope.user);
+    $rootScope.busy = true;
+
+    appointmentService.defaultEntrance()
+      .then(function(response) {
+        $scope.defaultEntrance = response;
+      })
+      .catch(function(reason) {
+        notificationService.setTimeOutNotification(reason);
+      });
 
     appointments
       .then(function(response) {
         $scope.numberOfAppointments = response.length;
+        $rootScope.busy = false;
       })
       .catch(function(reason) {
+        $rootScope.busy = false;
       });
 
     appointments
@@ -115,27 +262,39 @@ angular.module('viLoggedClientApp')
 
       });
 
-    $scope.toggleAppointmentApproval = function(appointment_id, approvalStatus, alertService) {
+    $scope.toggleAppointmentApproval = function(appointment_id, index) {
       var dialogParams = {
         modalHeader: 'Appointment Approval'
       };
 
-      dialogParams.modalBodyText = approvalStatus ? 'Are you sure you want to approve this appointment?' :
-        'Are you sure you want to disapprove this appointment?';
+      dialogParams.modalBodyText = 'Are you sure you want to approve this appointment?';
+
+      function removeApprovedAppointment(index, appointment) {
+        $scope.appointmentsAwaitingApproval.splice(index, 1);
+        var upcomingAppointmentLastIndex = $scope.upcomingAppointments.length - 1;
+        $scope.upcomingAppointments.splice(upcomingAppointmentLastIndex, 0, appointment);
+        $filter('limitTo')($scope.appointmentsAwaitingApproval, 5);
+        $filter('limitTo')($scope.upcomingAppointments, 5);
+      }
 
       $rootScope.busy = true;
       notificationService.modal.confirm(dialogParams)
         .then(function() {
           appointmentService.get(appointment_id)
             .then(function(response){
-              response.is_approved = approvalStatus;
+              $rootScope.busy = false;
+              response.is_approved = true;
+              if (!response.entrance) {
+                response.entrance_id = $scope.defaultEntrance;
+              }
               appointmentService.save(response)
                 .then(function(){
-                  var message = approvalStatus ? 'The selected appointment has been approved.' : 'The selected appointment has been rejected.';
+                  var message = 'The selected appointment has been approved.';
                   alertService.success(message);
 
                   $rootScope.busy = false;
                   if (!$scope.upcomingAppointments) $scope.upcomingAppointments = [];
+                  removeApprovedAppointment(index, response);
                 })
                 .catch(function(reason){
                   $rootScope.busy = false;

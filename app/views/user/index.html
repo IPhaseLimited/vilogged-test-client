@@ -3,6 +3,7 @@
     <div class="pull-left">
     </div>
     <div class="widget-icons pull-right">
+      <button ui-sref="import-users" class="btn btn-primary">Import Users</button>
       <button ng-disabled="!export.length" class="btn btn-primary hidden-print" type="button"
               ng-csv="export" csv-header="csvHeader" filename="{{getFileName('users')}}">
         Export

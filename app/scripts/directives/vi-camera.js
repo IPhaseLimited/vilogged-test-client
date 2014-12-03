@@ -65,7 +65,7 @@ angular.module('viLoggedClientApp')
               maxWidth: w
             }
           },
-          audio: true
+          audio: false
         }, onSuccess, onFailure);
 
         scope.w = w;

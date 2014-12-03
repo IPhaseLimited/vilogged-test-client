@@ -1,0 +1,25 @@
+<form>
+  <div class="form-group">
+    <label>Import CSV</label>
+    <div class="col-sm-8">
+      <input type="file" ng-model-instant onchange="angular.element(this).scope().setFiles(this)">
+    </div>
+    <div class="form-group">
+      <button class="btn btn-success" ng-click="importUsers()">Import</button>
+    </div>
+  </div>
+
+</form>
+
+  <h3>Ensure your CSV header is as follows without any blank row before the header or get a
+    <button class="btn btn-primary btn-xs"
+            ng-csv="[{a:'', b:'', c:'', d:'', e:'', f:'', g:'', h:'', i:'', j:''}]" csv-header="sampleHeaders"  filename="sample.csv">Sample</button>
+  </h3>
+<table class="table table-bordered table-striped">
+  <tbody>
+  <tr ng-repeat="(key, v) in csvHeader">
+    <td><strong>{{ key }}</strong></td>
+    <td><strong>{{ v }}</strong></td>
+  </tr>
+  </tbody>
+</table>

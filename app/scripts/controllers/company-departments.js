@@ -17,7 +17,7 @@ function formController($scope, $state, companyDepartmentsService, $stateParams,
   }
 
   if (id !== undefined && id !== null) {
-    $rootScope.busy = true;
+
     companyDepartmentsService.get(id)
       .then(function(response) {
         $rootScope.busy = false;
