@@ -217,8 +217,31 @@ angular.module('viLoggedClientApp')
   .controller('UserProfileCtrl', function($scope, $interval, $filter, userService, appointmentService, utility,
                                            notificationService, $rootScope, alertService) {
 
-    var appointments = appointmentService.getNestedAppointmentsByUser($rootScope.user);
+
     $rootScope.busy = true;
+
+    appointmentService.getNestedAppointmentsByUser($rootScope.user)
+      .then(function(response) {
+        $scope.numberOfAppointments = response.length;
+
+        $scope.upcomingAppointments = response.filter(function(appointment) {
+          return appointment.is_approved &&
+            (new Date(appointment.appointment_date).getTime() > new Date().getTime());
+        });
+        $scope.upcomingAppointmentCount = $scope.upcomingAppointments.length;
+
+        $scope.appointmentsAwaitingApproval = response
+          .filter(function(appointment) {
+            return !appointment.is_approved && (utility.getTimeStamp(appointment.appointment_date) > new Date().getTime());
+          });
+        $scope.appointmentsAwaitingApprovalCount = $scope.appointmentsAwaitingApproval.length;
+
+        $rootScope.busy = false;
+      })
+      .catch(function(reason) {
+        $rootScope.busy = false;
+        notificationService.setTimeOutNotification(reason);
+      });
 
     appointmentService.defaultEntrance()
       .then(function(response) {
@@ -228,39 +251,8 @@ angular.module('viLoggedClientApp')
         notificationService.setTimeOutNotification(reason);
       });
 
-    appointments
-      .then(function(response) {
-        $scope.numberOfAppointments = response.length;
-        $rootScope.busy = false;
-      })
-      .catch(function(reason) {
-        $rootScope.busy = false;
-      });
 
-    appointments
-      .then(function(response) {
-        $scope.upcomingAppointments = response.filter(function(appointment) {
-          return appointment.is_approved &&
-            (new Date(appointment.appointment_date).getTime() > new Date().getTime() || !appointment.is_expired);
-        });
-        $scope.upcomingAppointmentCount = $scope.upcomingAppointments.length;
-      })
-      .catch(function(reason) {
 
-      });
-
-    appointments
-      .then(function(response) {
-        $scope.appointmentsAwaitingApproval = response
-          .filter(function(appointment) {
-            return !appointment.is_approved && (!appointment.is_expired ||
-              utility.getTimeStamp(appointment.appointment_date) > new Date().getTime());
-          });
-        $scope.appointmentsAwaitingApprovalCount = $scope.appointmentsAwaitingApproval.length;
-      })
-      .catch(function(reason) {
-
-      });
 
     $scope.toggleAppointmentApproval = function(appointment_id, index) {
       var dialogParams = {
