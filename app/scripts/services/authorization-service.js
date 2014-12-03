@@ -64,6 +64,8 @@ angular.module('viLoggedClientApp')
         'profile',
         'appointments',
         'create-appointment-host',
+        'create-appointment-visitor',
+        'create-appointment',
         'show-appointment',
         'edit-appointment'
       ]
