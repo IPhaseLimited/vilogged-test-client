@@ -108,8 +108,8 @@
             <td>{{ ((appointment).visitor_id).first_name + ' ' + ((appointment).visitor_id).last_name }}</td>
             <td>{{ ((appointment).host_id).first_name + ' ' + ((appointment).host_id).last_name }}</td>
             <td>{{ appointment.appointment_date | date:'EEE, MMM d, y' }}</td>
-            <td>{{ appointment.visit_start_time }}</td>
-            <td>{{ appointment.visit_end_time }}</td>
+            <td>{{ appointment.visit_start_time | date:'hh:mm a' }}</td>
+            <td>{{ appointment.visit_end_time | date:'hh:mm a' }}</td>
             <td class="text-center">
               <i class="fa " ng-class="{'fa-check-circle text-success bold' : appointment.is_approved, 'fa-ban text-danger bold' : !appointment.is_approved}"></i>
             </td>

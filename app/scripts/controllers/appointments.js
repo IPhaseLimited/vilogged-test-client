@@ -189,10 +189,12 @@ angular.module('viLoggedClientApp')
     };
 
     $scope.isAppointmentExpired = function(appointmentDate, visitEndTime) {
-      var visitEndTimeArray = visitEndTime.split(':');
       var appointmentEndsAt = new Date(appointmentDate);
-      appointmentEndsAt.setHours(visitEndTimeArray[1]);
-      appointmentEndsAt.setMinutes(visitEndTimeArray[2]);
+      var objVisitEndTime = $filter('date')(visitEndTime, 'HH:mm:ss');
+      var arrVisitEndTime = objVisitEndTime.split(':');
+      appointmentEndsAt.setHours(arrVisitEndTime[0]);
+      appointmentEndsAt.setMinutes(arrVisitEndTime[1]);
+      appointmentEndsAt.setSeconds(arrVisitEndTime[2]);
       return new Date().getTime() > appointmentEndsAt.getTime();
     };
 
@@ -664,16 +666,21 @@ angular.module('viLoggedClientApp')
 
     $scope.createAppointment = function() {
       $rootScope.busy = true;
-      $scope.appointment.label_code = utility.generateRandomInteger();
+      $scope.appointment.label_code = utility.generateRandomInteger().toString().substr(0,5);
       $scope.appointment.appointment_date = $filter('date')($scope.appointment.appointment_date, 'yyyy-MM-dd');
       $scope.appointment.is_expired = false;
       $scope.appointment.checked_in = null;
       $scope.appointment.checked_out = null;
 
-      $scope.appointment.visit_start_time = $filter('date')($scope.visit_start_time, 'hh:mm a');
-      $scope.appointment.visit_end_time = $filter('date')($scope.visit_end_time, 'hh:mm a');
+      $scope.appointment.visit_start_time = $filter('date')($scope.visit_start_time, 'HH:mm:ss');
+      $scope.appointment.visit_end_time = $filter('date')($scope.visit_end_time, 'HH:mm:ss');
 
-      $scope.appointment.host_id = angular.isDefined($scope.host.selected) ? $scope.host.selected.id : undefined;
+      if ($rootScope.user.is_active && !$rootScope.user.is_staff) {
+        $scope.appointment.host_id = $rootScope.user.id;
+      } else {
+        $scope.appointment.host_id = angular.isDefined($scope.host.selected) ? $scope.host.selected.id : undefined;
+      }
+
       $scope.appointment.visitor_id = angular.isDefined($scope.visitor.selected) ? $scope.visitor.selected.uuid : undefined;
 
       var validationParams = {
@@ -687,7 +694,6 @@ angular.module('viLoggedClientApp')
 
       $scope.validationErrors = validationService.validateFields(validationParams, $scope.appointment);
       if (!Object.keys($scope.validationErrors).length) {
-        $rootScope.busy = true;
         if (!$scope.appointment.entrance_id) {
           $scope.appointment.entrance_id = $scope.defaultEntrance;
         }
@@ -723,6 +729,7 @@ angular.module('viLoggedClientApp')
           })
           .catch(function(reason) {
             $rootScope.busy = false;
+            console.log(reason);
             notificationService.setTimeOutNotification(reason);
           });
       }
