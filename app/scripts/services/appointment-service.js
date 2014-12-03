@@ -74,13 +74,15 @@ angular.module('viLoggedClientApp')
     function getNestedAppointmentsByUser(user) {
       var deferred = $q.defer();
 
-      findByFieldNested('host_id__id', user.id)
-        .then(function(response) {
-          deferred.resolve(response);
-        })
-        .catch(function(reason) {
-          deferred.reject(reason);
-        });
+      if (user !== undefined) {
+        findByFieldNested('host_id__id', user.id)
+          .then(function(response) {
+            deferred.resolve(response);
+          })
+          .catch(function(reason) {
+            deferred.reject(reason);
+          });
+      }
 
       return deferred.promise;
     }
