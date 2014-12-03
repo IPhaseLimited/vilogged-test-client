@@ -315,16 +315,15 @@ angular.module('viLoggedClientApp')
     ];
 
     function getUsers() {
-      $rootScope.busy = true;
+
       userService.usersNested()
         .then(function(response) {
           rows = response;
           updateTableData();
-          $rootScope.busy = false;
+
         })
         .catch(function(reason) {
           notificationService.setTimeOutNotification(reason);
-          $rootScope.busy = false;
         });
     }
 
