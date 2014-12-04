@@ -28,6 +28,11 @@
       <i class="fa fa-table"></i> Company Entrance
     </a>
   </li>
+  <li id="li-visitors_group" ng-show="user.is_superuser">
+    <a ui-sref="visitor-groups">
+      <i class="fa fa-table"></i> Visitor Group
+    </a>
+  </li>
   <li id="li-reports" ng-show="user.is_superuser">
     <a ui-sref="reports"><i class="fa fa-bar-chart-o"></i> Reports</a>
   </li>
