@@ -212,7 +212,7 @@ angular.module('viLoggedClientApp')
   })
   .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, $rootScope, $window, $filter, visitorService,
                                            validationService, countryStateService, guestGroupConstant, userService,
-                                           countryState, visitorsLocationService, notificationService, utility, alertService) {
+                                           countryState, visitorGroupsService,visitorsLocationService, notificationService, utility, alertService) {
     $scope.visitors = [];
     $scope.visitor = {};
     $scope.visitorsLocation = {};
@@ -220,13 +220,20 @@ angular.module('viLoggedClientApp')
     $scope.countries = [];
     $scope.states = [];
     $scope.lgas = [];
-    $scope.visitorGroups = guestGroupConstant;
     $scope.countryState = countryState;
     $scope.countries = Object.keys(countryState);
     $scope.validationErrors = {};
     $scope.activateImageUploader = false;
     $scope.activateCamera = false;
     $scope.imageCapture = false;
+
+    visitorGroupsService.all()
+      .then(function(response) {
+        $scope.visitorGroups = response;
+      })
+      .catch(function(reason) {
+
+      });
 
     $scope.dob = {
       opened: false,

@@ -9,5 +9,6 @@ angular.module('db.names', [])
     RESTRICTED_ITEMS: 'restricted_items',
     VEHICLE: 'vehicle',
     VISITORS: 'visitors',
-    VISITORS_LOCATION: 'visitors_location'
+    VISITORS_LOCATION: 'visitors_location',
+    Visitor_Group: 'visitor_group'
   });

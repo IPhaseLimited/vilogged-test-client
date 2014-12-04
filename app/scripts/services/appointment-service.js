@@ -342,7 +342,19 @@ angular.module('viLoggedClientApp')
       findByMultipleFields(params)
         .then(function(response) {
           if (response.length) {
-            deferred.resolve(true);
+            var pendingAppointments = response.filter(function(appointment){
+              var date = new Date();
+              var todayTimeStamp = new Date(date.getYear(),date.getMonth(), date.getDate()).getTime();
+              var appointmentEndTime = appointment.appointment_date+'T'+appointment.visit_end_time+'Z';
+              var appointmentEndTimeStamp = new Date(appointmentEndTime).getTime();
+              return appointmentEndTimeStamp > todayTimeStamp;
+            });
+
+            if (pendingAppointments.length) {
+              deferred.resolve(true);
+            } else {
+              deferred.resolve(false);
+            }
           } else {
             deferred.resolve(false);
           }
@@ -396,6 +408,20 @@ angular.module('viLoggedClientApp')
 
       return utility.compileTemplate(params, outLookCalenderTemplate());
     }
+
+    this.isAppointmentUpcoming = function(appointmentDate, visitStartTime) {
+      var visitStartTime = $filter('date')(visitStartTime, 'HH:mm:ss');
+      var appointmentStartsAt = appointmentDate+'T'+visitStartTime+'Z';
+      var appointmentStartTimeStamp = utility.getTimeStamp(appointmentStartsAt);
+      return new Date().getTime() < appointmentStartTimeStamp;
+    };
+
+    this.isAppointmentExpired = function(appointmentDate, visitEndTime) {
+      var visitEndTime = $filter('date')(visitEndTime, 'HH:mm:ss');
+      var appointmentEndsAt = appointmentDate+'T'+visitEndTime+'Z';
+      var appointmentEndTimeStamp = utility.getTimeStamp(appointmentEndsAt);
+      return new Date().getTime() > appointmentEndTimeStamp;
+    };
 
     this.get = get;
     this.getNested = getNested;

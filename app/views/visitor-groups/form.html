@@ -1,0 +1,25 @@
+<div>
+  <form name="departmentForm" novalidate>
+    <div class="form-group" >
+      <label for="group_name">Department Name</label> <span class="text-danger bold">*</span>
+      <input id="group_name" class="form-control" ng-model="visitorGroup.group_name" required>
+      <div class="text-danger bold" ng-show="(validationErrors).group_name.length">
+        <ul ng-repeat="error in (validationErrors).group_name">
+          <li>{{ error }}</li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-8">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" ng-model="visitorGroup.black_listed"> Black List
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" ng-click="save()">Save</button>
+  </form>
+</div>
