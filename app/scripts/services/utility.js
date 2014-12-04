@@ -191,12 +191,8 @@ angular.module('viLoggedClientApp')
      * @returns {number} Timestamp
      */
     this.getTimeStamp = function(date, time) {
-      var timeStamp = new Date(date);
-      if (angular.isDefined(time)) {
-        var timeArray = time.split(':');
-        timeStamp.setHours(timeArray[0]);
-        timeStamp.setMinutes(timeArray[1]);
-      }
+      var dateTime = time !== undefined ? date+'T'+time+'Z' : date;
+      var timeStamp = new Date(dateTime);
       return timeStamp.getTime();
     };
 
