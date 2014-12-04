@@ -103,7 +103,8 @@
           </thead>
           <tbody>
           <tr ng-repeat="appointment in appointments | paginationOffset:pagination.currentPage:pagination.itemsPerPage"
-              ng-class="{'text-danger': isAppointmentExpired(appointment.appointment_date, appointment.visit_end_time), 'text-success': isAppointmentUpcoming(appointment.appointment_date)}">
+              ng-class="{'text-danger': isAppointmentExpired(appointment.appointment_date, appointment.visit_end_time),
+              'text-success': isAppointmentUpcoming(appointment.appointment_date, appointment.visit_start_time)}">
             <td>{{ $index + 1 + ((pagination.currentPage-1) * pagination.itemsPerPage)}}</td>
             <td>{{ ((appointment).visitor_id).first_name + ' ' + ((appointment).visitor_id).last_name }}</td>
             <td>{{ ((appointment).host_id).first_name + ' ' + ((appointment).host_id).last_name }}</td>
@@ -117,13 +118,13 @@
             <td>
               <a ui-sref="visitor-check-in({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
                  ng-if="!appointment.checked_in && confirm(appointment.visitor_id.group_type) !== 'Banned'"
-                 ng-show="isAppointmentUpcoming(appointment.appointment_date) && user.is_staff"
+                 ng-show="isAppointmentUpcoming(appointment.appointment_date, appointment.visit_start_time) && user.is_staff"
                  ng-class="{disabled: !appointment.is_approved}">Check In</a>
               <a ui-sref="visitor-check-out({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
-                 ng-show="(isAppointmentUpcoming(appointment.appointment_date))
+                 ng-show="(isAppointmentUpcoming(appointment.appointment_date, appointment.visit_start_time))
                  && user.is_staff && appointment.checked_in !== null && appointment.checked_out === null">Check Out</a>
               <a ui-sref="edit-appointment({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
-                 ng-if="!appointment.checked_in" ng-show="isAppointmentUpcoming(appointment.appointment_date)  && user.is_active
+                 ng-if="!appointment.checked_in" ng-show="isAppointmentUpcoming(appointment.appointment_date, appointment.visit_start_time)  && user.is_active
                  && !appointment.is_expired && !appointment.is_approved && appointment.host_id.id === user.id">
                 <i class="fa fa-edit"></i> Edit</a>
               <a ng-click="deleteAppointment(appointment.uuid)" ng-show="user.is_superuser"
