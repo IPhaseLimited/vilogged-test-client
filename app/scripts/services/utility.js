@@ -191,23 +191,13 @@ angular.module('viLoggedClientApp')
      * @returns {number} Timestamp
      */
     this.getTimeStamp = function(date, time) {
-      var dateTime = time !== undefined ? date+'T'+time+'Z' : date;
-      var timeStamp = new Date(dateTime);
+      var timeStamp = new Date(date);
+      if (angular.isDefined(time)) {
+        var timeArray = time.split(':');
+        timeStamp.setHours(timeArray[0]);
+        timeStamp.setMinutes(timeArray[1]);
+      }
       return timeStamp.getTime();
-    };
-
-    this.isAppointmentUpcoming = function(appointmentDate, visitStartTime) {
-      var visitStartTime = $filter('date')(visitStartTime, 'HH:mm:ss');
-      var appointmentStartsAt = appointmentDate+'T'+visitStartTime+'Z';
-      var appointmentStartTimeStamp = this.getTimeStamp(appointmentStartsAt);
-      return new Date().getTime() < appointmentStartTimeStamp;
-    };
-
-    this.isAppointmentExpired = function(appointmentDate, visitEndTime) {
-      var visitEndTime = $filter('date')(visitEndTime, 'HH:mm:ss');
-      var appointmentEndsAt = appointmentDate+'T'+visitEndTime+'Z';
-      var appointmentEndTimeStamp = this.getTimeStamp(appointmentEndsAt);
-      return new Date().getTime() > appointmentEndTimeStamp;
     };
 
     this.compileTemplate = function(_replacements, template, _delimiter) {
