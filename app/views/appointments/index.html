@@ -133,6 +133,11 @@
               <span class="label label-danger" ng-show="isAppointmentExpired(appointment.appointment_date, appointment.visit_end_time) || appointment.checked_out === ''">
                 Expired
               </span>
+
+              <button outlook-export="appointment.appointment_date" outlook-data="exportToOutlook(appointment)" class="btn btn-success btn-xs" >
+                add to outlook
+              </button>
+
             </td>
           </tr>
           </tbody>
