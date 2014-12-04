@@ -269,7 +269,6 @@ angular.module('viLoggedClientApp')
         $filter('limitTo')($scope.upcomingAppointments, 5);
       }
 
-      $rootScope.busy = true;
       notificationService.modal.confirm(dialogParams)
         .then(function() {
           appointmentService.get(appointment_id)
@@ -315,15 +314,16 @@ angular.module('viLoggedClientApp')
     ];
 
     function getUsers() {
-
+      $rootScope.busy = true;
       userService.usersNested()
         .then(function(response) {
           rows = response;
           updateTableData();
-
+          $rootScope.busy = false;
         })
         .catch(function(reason) {
           notificationService.setTimeOutNotification(reason);
+          $rootScope.busy = false;
         });
     }
 
