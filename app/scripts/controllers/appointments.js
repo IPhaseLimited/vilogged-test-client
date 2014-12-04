@@ -184,11 +184,11 @@ angular.module('viLoggedClientApp')
     ];
 
     $scope.isAppointmentUpcoming = function(appointmentDate, visitStartTime) {
-      return utility.isAppointmentUpcoming(appointmentDate, visitStartTime);
+      return appointmentService.isAppointmentUpcoming(appointmentDate, visitStartTime);
     };
 
     $scope.isAppointmentExpired = function(appointmentDate, visitEndTime) {
-      return utility.isAppointmentExpired(appointmentDate, visitEndTime)
+      return appointmentService.isAppointmentExpired(appointmentDate, visitEndTime)
     };
 
     $scope.deleteAppointment = function(id) {
@@ -422,11 +422,11 @@ angular.module('viLoggedClientApp')
     };
 
     $scope.isAppointmentUpcoming = function(appointmentDate, visitStartTime) {
-      return utility.isAppointmentUpcoming(appointmentDate, visitStartTime);
+      return appointmentService.isAppointmentUpcoming(appointmentDate, visitStartTime);
     };
 
     $scope.isAppointmentExpired = function(appointmentDate, visitEndTime) {
-      return utility.isAppointmentExpired(appointmentDate, visitEndTime);
+      return appointmentService.isAppointmentExpired(appointmentDate, visitEndTime);
     };
   })
   .controller('AppointmentFormCtrl', function($scope, $stateParams, $state, $timeout, $filter, visitorService, growl,
