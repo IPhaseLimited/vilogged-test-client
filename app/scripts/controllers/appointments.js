@@ -183,19 +183,12 @@ angular.module('viLoggedClientApp')
       'Date Checked out'
     ];
 
-    $scope.isAppointmentUpcoming = function(appointmentDate) {
-      var appointmentTimeStamp = utility.getTimeStamp(appointmentDate);
-      return new Date().getTime() < appointmentTimeStamp;
+    $scope.isAppointmentUpcoming = function(appointmentDate, visitStartTime) {
+      utility.isAppointmentUpcoming(appointmentDate, visitStartTime);
     };
 
     $scope.isAppointmentExpired = function(appointmentDate, visitEndTime) {
-      var appointmentEndsAt = new Date(appointmentDate);
-      var objVisitEndTime = $filter('date')(visitEndTime, 'HH:mm:ss');
-      var arrVisitEndTime = objVisitEndTime.split(':');
-      appointmentEndsAt.setHours(arrVisitEndTime[0]);
-      appointmentEndsAt.setMinutes(arrVisitEndTime[1]);
-      appointmentEndsAt.setSeconds(arrVisitEndTime[2]);
-      return new Date().getTime() > appointmentEndsAt.getTime();
+      utility.isAppointmentExpired(appointmentDate, visitEndTime)
     };
 
     $scope.deleteAppointment = function(id) {
@@ -425,14 +418,12 @@ angular.module('viLoggedClientApp')
         });
     };
 
-    $scope.isAppointmentUpcoming = function(appointmentDate) {
-      var appointmentTimeStamp = utility.getTimeStamp(appointmentDate);
-      return new Date().getTime() < appointmentTimeStamp;
+    $scope.isAppointmentUpcoming = function(appointmentDate, visitStartTime) {
+      return utility.isAppointmentUpcoming(appointmentDate, visitStartTime);
     };
 
-    $scope.isAppointmentExpired = function(appointmentDate) {
-      var appointmentTimeStamp = utility.getTimeStamp(appointmentDate);
-      return new Date().getTime() > appointmentTimeStamp;
+    $scope.isAppointmentExpired = function(appointmentDate, visitEndTime) {
+      return utility.isAppointmentExpired(appointmentDate, visitEndTime);
     };
   })
   .controller('AppointmentFormCtrl', function($scope, $stateParams, $state, $timeout, $filter, visitorService, growl,
