@@ -342,7 +342,19 @@ angular.module('viLoggedClientApp')
       findByMultipleFields(params)
         .then(function(response) {
           if (response.length) {
-            deferred.resolve(true);
+            var pendingAppointments = response.filter(function(appointment){
+              var date = new Date();
+              var todayTimeStamp = new Date(date.getYear(),date.getMonth(), date.getDate()).getTime();
+              var appointmentEndTime = appointment.appointment_date+'T'+appointment.visit_end_time+'Z';
+              var appointmentEndTimeStamp = new Date(appointmentEndTime).getTime();
+              return appointmentEndTimeStamp > todayTimeStamp;
+            });
+
+            if (pendingAppointments.length) {
+              deferred.resolve(true);
+            } else {
+              deferred.resolve(false);
+            }
           } else {
             deferred.resolve(false);
           }
