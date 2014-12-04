@@ -392,9 +392,9 @@ angular.module('viLoggedClientApp')
 
       }
 
-      $rootScope.busy = true;
       notificationService.modal.confirm(dialogParams)
         .then(function() {
+          $rootScope.busy = true;
           appointmentService.get($stateParams.appointment_id)
             .then(function(response) {
               response.is_approved = approvalStatus;
