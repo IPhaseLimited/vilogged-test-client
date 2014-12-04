@@ -307,6 +307,9 @@ angular.module('viLoggedClientApp')
       $scope.export = exports;
     }
 
+    $scope.exportToOutlook = function(appointment) {
+     return (appointmentService.getOutlookCalender(appointment));
+    };
   })
   .controller('AppointmentDetailCtrl', function($scope, $state, $stateParams, appointmentService, utility, $modal, growl,
                                                 notificationService, $rootScope, alertService) {
