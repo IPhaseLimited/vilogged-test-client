@@ -25,7 +25,6 @@
               });
               navigator.msSaveBlob(blob, 'appointment.ics');
             } else {
-              console.log(scope.icsData);
 
               var downloadLink = angular.element('<a></a>');
               downloadLink.attr('href', 'data:text/calender;charset=utf-8,'+encodeURIComponent(scope.icsData));
