@@ -397,7 +397,7 @@ angular.module('viLoggedClientApp')
           $rootScope.busy = true;
           appointmentService.get($stateParams.appointment_id)
             .then(function(response) {
-              response.is_approved = approvalStatus;
+              response.is_approved = approvalStatus ? 1 : 0;
               appointmentService.save(response)
                 .then(function() {
                   approvalStatus ? alertService.messageToTop.success('The selected appointment has been approved.') :

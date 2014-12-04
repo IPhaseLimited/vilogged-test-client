@@ -165,8 +165,8 @@
     <div class="widget-foot">
       <div
         ng-show="!appointment.is_approved && !appointment.is_expired && isAppointmentUpcoming(appointment.appointment_date) && user.id === appointment.host_id.id">
-        <a class="btn btn-success" ng-click="toggleAppointmentApproval(true)">Approve</a>
-        <a class="btn btn-danger" ng-click="toggleAppointmentApproval(false)">Reject</a>
+        <a class="btn btn-success" ng-click="toggleAppointmentApproval(1)">Approve</a>
+        <a class="btn btn-danger" ng-click="toggleAppointmentApproval(0)">Reject</a>
       </div>
     </div>
   </div>
@@ -237,6 +237,6 @@
   </div>
 </div>
 <div ng-show="appointment.is_approved === null && !appointment.is_expired && user.id === appointment.host_id.id">
-  <a class="btn btn-success" ng-click="toggleAppointmentApproval(true)">Approve</a>
-  <a class="btn btn-danger" ng-click="toggleAppointmentApproval(false)">Disapprove</a>
+  <a class="btn btn-success" ng-click="toggleAppointmentApproval(1)">Approve</a>
+  <a class="btn btn-danger" ng-click="toggleAppointmentApproval(0)">Disapprove</a>
 </div>
