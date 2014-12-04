@@ -535,11 +535,20 @@ angular.module('viLoggedClientApp')
       var checkStartTime = [];
       var checkEndTime = [];
       var checkAppointmentDate = [];
+      var appointmentDate =
+        angular.isUndefined($scope.appointment.appointment_date) ? $filter('date')(new Date(), 'yyyy-MM-dd') :
+          $filter('date')($scope.appointment.appointment_date, 'yyyy-MM-dd');
 
-      if ($scope.visit_start_time.getTime() > $scope.visit_end_time.getTime()){
+      var start = (appointmentDate+' '+$filter('date')($scope.visit_start_time, 'HH:mm:ss')).split(/[\s|:|-]/);
+      var end =  (appointmentDate+' '+$filter('date')($scope.visit_end_time, 'HH:mm:ss')).split(/[\s|:|-]/);
+
+      var startTime = new Date(start[0], start[1]-1, start[2], start[3], start[4], start[5]);
+      var endTime = new Date(end[0], end[1]-1, end[2], end[3], end[4], end[5]);
+
+      if (startTime.getTime() > endTime.getTime()){
         checkStartTime.push('start time can\'t be greater than end time');
       }
-      if ($scope.visit_start_time.getTime() < now) {
+      if (startTime.getTime() < now) {
         checkStartTime.push('start time can\'t be lesser than current time');
       }
 
