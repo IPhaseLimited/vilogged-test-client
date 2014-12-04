@@ -184,11 +184,11 @@ angular.module('viLoggedClientApp')
     ];
 
     $scope.isAppointmentUpcoming = function(appointmentDate, visitStartTime) {
-      utility.isAppointmentUpcoming(appointmentDate, visitStartTime);
+      return utility.isAppointmentUpcoming(appointmentDate, visitStartTime);
     };
 
     $scope.isAppointmentExpired = function(appointmentDate, visitEndTime) {
-      utility.isAppointmentExpired(appointmentDate, visitEndTime)
+      return utility.isAppointmentExpired(appointmentDate, visitEndTime)
     };
 
     $scope.deleteAppointment = function(id) {
@@ -717,13 +717,13 @@ angular.module('viLoggedClientApp')
                   notificationService.setTimeOutNotification(reason);
                 });
             } else {
-              alertService.messageToTop.error('An appointment with this host can\'t be created.');
+              alertService.messageToTop.error('Visitor has a pending appointment with this host.');
               if (!$scope.user.is_active) {
                 $rootScope.busy = false;
-                $state.go('show-visitor', {visitor_id: $scope.visitor.selected.uuid});
+                //$state.go('show-visitor', {visitor_id: $scope.visitor.selected.uuid});
               } else {
                 $rootScope.busy = false;
-                $state.go('appointments');
+                //$state.go('appointments');
               }
             }
           })
