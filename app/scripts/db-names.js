@@ -10,5 +10,5 @@ angular.module('db.names', [])
     VEHICLE: 'vehicle',
     VISITORS: 'visitors',
     VISITORS_LOCATION: 'visitors_location',
-    Visitor_Group: 'visitor_group'
+    Visitor_Group: 'visitors_group'
   });
