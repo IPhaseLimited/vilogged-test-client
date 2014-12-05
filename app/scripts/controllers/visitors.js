@@ -227,12 +227,14 @@ angular.module('viLoggedClientApp')
     $scope.activateCamera = false;
     $scope.imageCapture = false;
 
+    $rootScope.busy = true;
     visitorGroupsService.all()
       .then(function(response) {
         $scope.visitorGroups = response;
+        $rootScope.busy = false;
       })
       .catch(function(reason) {
-
+        $rootScope.busy = false;
       });
 
     $scope.dob = {
@@ -396,7 +398,6 @@ angular.module('viLoggedClientApp')
 
       $rootScope.busy = true;
       var emailValidation = validationService.EMAIL;
-      emailValidation.required = true;
       var phoneNumberValidation = validationService.BASIC;
       phoneNumberValidation.pattern = '/^[0-9]/';
 
@@ -406,13 +407,14 @@ angular.module('viLoggedClientApp')
         gender: validationService.BASIC,
         visitors_phone: phoneNumberValidation,
         visitors_email: emailValidation
+        //group_type_id: validationService.BASIC
       };
 
       var validationParams2 = {
-        contact_address: validationService.BASIC,
-        residential_country: validationService.BASIC,
-        residential_lga: validationService.BASIC,
-        residential_state: validationService.BASIC
+        contact_address: validationService.BASIC
+        //residential_country: validationService.BASIC,
+        //residential_lga: validationService.BASIC,
+        //residential_state: validationService.BASIC
       };
 
       var validateLocation = validationService.validateFields(validationParams2, $scope.visitorsLocation);
@@ -435,14 +437,12 @@ angular.module('viLoggedClientApp')
           $scope.visitor.date_of_birth = $filter('date')($scope.visitor.date_of_birth, 'yyyy-MM-dd');
         }
 
-        /* sets the default visitor group type to normal */
-        if (!angular.isDefined($scope.visitor.group_type) || $scope.visitor.group_type === '') {
-          $scope.visitor.group_type = guestGroupConstant.indexOf('Normal');
+        $scope.visitor.group_type = $scope.visitor.group_type_id;
+        if (!angular.isDefined($scope.visitorsLocation.residential_country)) {
+          $scope.visitorsLocation.residential_country = 'Other';
+          $scope.visitorsLocation.residential_state = 'Not set';
+          $scope.visitorsLocation.residential_lga = 'Not Set';
         }
-
-        var getGroupType = function (groupIndex) {
-          return guestGroupConstant[groupIndex];
-        };
 
         visitorService.save($scope.visitor)
           .then(function (response) {
