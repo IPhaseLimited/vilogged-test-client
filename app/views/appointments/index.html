@@ -116,29 +116,34 @@
             </td>
             <td>{{ appointment.created | date:'EEE, MMM d, y' }}</td>
             <td>
+              <button outlook-export="appointment.appointment_date" outlook-data="exportToOutlook(appointment)"
+                      class="btn btn-success btn-xs" ng-show="isAppointmentUpcoming(appointment.appointment_date, appointment.visit_start_time)">
+                Add to outlook
+              </button>
+
               <a ui-sref="visitor-check-in({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
-                 ng-if="!appointment.checked_in && confirm(appointment.visitor_id.group_type) !== 'Banned'"
+                 ng-if="!appointment.checked_in && !appointment.visitor_id.group_type.black_listed"
                  ng-show="isAppointmentUpcoming(appointment.appointment_date, appointment.visit_start_time) && user.is_staff"
                  ng-class="{disabled: !appointment.is_approved}">Check In</a>
+
               <a ui-sref="visitor-check-out({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
                  ng-show="(isAppointmentUpcoming(appointment.appointment_date, appointment.visit_start_time))
                  && user.is_staff && appointment.checked_in !== null && appointment.checked_out === null">Check Out</a>
+
               <a ui-sref="edit-appointment({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
                  ng-if="!appointment.checked_in" ng-show="isAppointmentUpcoming(appointment.appointment_date, appointment.visit_start_time)  && user.is_active
                  && !appointment.is_expired && !appointment.is_approved && appointment.host_id.id === user.id">
                 <i class="fa fa-edit"></i> Edit</a>
+
               <a ng-click="deleteAppointment(appointment.uuid)" ng-show="user.is_superuser"
                 class="btn btn-danger btn-xs pointer"><i class="fa fa-times-circle"></i> Delete</a>
+
               <a ui-sref="show-appointment({appointment_id: appointment.uuid})" class="btn btn-xs btn-success">
                 <i class="fa fa-eye"></i> View</a>
+
               <span class="label label-danger" ng-show="isAppointmentExpired(appointment.appointment_date, appointment.visit_end_time) || appointment.checked_out === ''">
                 Expired
               </span>
-
-              <button outlook-export="appointment.appointment_date" outlook-data="exportToOutlook(appointment)" class="btn btn-success btn-xs" >
-                add to outlook
-              </button>
-
             </td>
           </tr>
           </tbody>
