@@ -386,7 +386,7 @@ angular.module('viLoggedClientApp')
           name: row.first_name + ' ' + row.last_name,
           username: row.username,
           role: row.role,
-          department: row.user_profile.department.department_name,
+          department: angular.isDefined(row.user_profile.department) ? row.user_profile.department.department_name : '',
           phone: row.phone
         });
       });
