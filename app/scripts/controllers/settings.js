@@ -30,9 +30,43 @@ angular.module('viLoggedClientApp')
         data: {
           label: 'App Configuration'
         }
+      })
+      .state('ldap-config', {
+        url: '/ldap-config',
+        parent: 'root.index',
+        templateUrl: '/views/settings/active-directory.html',
+        controller: 'ActiveDirectoryConfigCtrl',
+        data: {
+          label: 'Active Directory Configuration'
+        },
+        ncyBreadcrumb: {
+          label: 'Active Directory Configuration',
+          parent: 'settings'
+        }
       });
   })
-  .controller('ConfigCtrl', function($scope, $rootScope, settingsService, $http, $q, alertService, config) {
+  .controller('ActiveDirectoryConfigCtrl', function($scope, $rootScope, settingsService, $http, $q, alertService,
+                                                    notificationService) {
+    $scope.ldapSettings = {};
+    $scope.showPassword = false;
+
+    $scope.save = function() {
+      $rootScope.busy = false;
+      $scope.validationErrors = {};
+      $http.post('http://localhost:8088/api/ldap-config', $scope.ldapSettings)
+        .success(function(response) {
+          alertService.success('settings saved successfully');
+        })
+        .error(function(reason) {
+          notificationService.setTimeOutNotification(reason);
+        });
+
+    }
+
+
+
+  })
+  .controller('ConfigCtrl', function($scope, $rootScope, settingsService, $http, $q, alertService, config, $state) {
     $scope.settings = {
       localSetting: {
         backend: config.api.backend,
@@ -78,7 +112,7 @@ angular.module('viLoggedClientApp')
             }
             $http.post('http://localhost:8088/api/app-config', $scope.settings)
               .success(function(response) {
-                console.log(response);
+                $state.go('home');
               })
               .error(function(reason) {
                 console.log(reason);
