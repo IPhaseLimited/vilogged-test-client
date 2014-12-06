@@ -167,14 +167,27 @@
       </div>
     </div>
 
+    <div class="form-group">
+      <label for="visitorGroup" class="col-sm-2 control-label">Visitor Group<span class="text-danger">*</span></label>
+
+      <div class="col-sm-6">
+        <select class="form-control col-sm-6" ng-model="visitor.group_type_id" name="visitorGroup"
+                id="visitorGroup">
+          <option value=""></option>
+          <option value="{{ visitorGroup.uuid }}" ng-repeat="visitorGroup in visitorGroups">
+            {{ visitorGroup.group_name }}
+          </option>
+        </select>
+      </div>
+    </div>
+
     <legend>Contact Information</legend>
 
     <div class="form-group">
-      <label for="visitorEmail" class="col-sm-2 control-label">Visitor's Email<span class="text-danger">*</span></label>
+      <label for="visitorEmail" class="col-sm-2 control-label">Visitor's Email</label>
 
       <div class="col-sm-6">
         <input type="text" class="form-control" id="visitorEmail" name="visitorEmail" ng-model="visitor.visitors_email">
-
         <div class="text-danger bold" ng-show="(validationErrors).visitors_email.length">
           <span ng-repeat="error in (validationErrors).visitors_email">
             {{ error }}<br>
@@ -216,7 +229,7 @@
     </div>
 
     <div class="form-group">
-      <label for="cCountry" class="col-sm-2 control-label">Country<span class="text-danger">*</span></label>
+      <label for="cCountry" class="col-sm-2 control-label">Country</label>
 
       <div class="col-sm-6">
         <select id="cCountry" ng-model="visitorsLocation.residential_country"
@@ -227,17 +240,11 @@
             {{ countryState[country].name }}
           </option>
         </select>
-
-        <div class="text-danger bold" ng-show="(validationErrors).residential_country.length">
-        <span ng-repeat="error in (validationErrors).residential_country">
-          {{ error }}<br>
-        </span>
-        </div>
       </div>
     </div>
 
     <div class="form-group">
-      <label for="cstate" class="col-sm-2 control-label">State<span class="text-danger">*</span></label>
+      <label for="cstate" class="col-sm-2 control-label">State</label>
 
       <div class="col-sm-6">
         <select name="cstate" id="cstate" class="form-control"
@@ -254,17 +261,11 @@
                class="form-control" name="cstate"
                data-ng-model="visitorsLocation.residential_state"
                ng-if="visitorsLocation.residential_country !== 'nigeria'">
-
-        <div class="text-danger bold" ng-show="(validationErrors).residential_state.length">
-        <span ng-repeat="error in (validationErrors).residential_state">
-          {{ error }}<br>
-        </span>
-        </div>
       </div>
     </div>
 
     <div class="form-group">
-      <label for="clga" class="col-sm-2 control-label">City/LGA<span class="text-danger">*</span></label>
+      <label for="clga" class="col-sm-2 control-label">City/LGA</label>
 
       <div class="col-sm-6">
         <select class="form-control" id="clga" name="clga" ng-model="visitorsLocation.residential_lga"
@@ -278,12 +279,6 @@
                class="form-control" name="clga"
                data-ng-model="visitorsLocation.residential_lga"
                ng-if="visitorsLocation.residential_country !== 'nigeria'">
-
-        <div class="text-danger bold" ng-show="(validationErrors).residential_lga.length">
-        <span ng-repeat="error in (validationErrors).residential_lga">
-          {{ error }}<br>
-        </span>
-        </div>
       </div>
     </div>
 
@@ -304,20 +299,6 @@
       <div class="col-sm-6">
         <textarea id="companyAddress" class="form-control"
                   name="companyAddress" data-ng-model="visitor.company_address"></textarea>
-      </div>
-    </div>
-
-    <div class="form-group" ng-if="visitor.uuid">
-      <label for="visitorGroup" class="col-sm-2 control-label">Visitor Group</label>
-
-      <div class="col-sm-6">
-        <select class="form-control col-sm-6" ng-model="visitor.group_type" name="visitorGroup"
-                id="visitorGroup">
-          <option value=""></option>
-          <option value="{{ $index }}" ng-repeat="visitorGroup in visitorGroups">
-            {{ visitorGroup }}
-          </option>
-        </select>
       </div>
     </div>
 

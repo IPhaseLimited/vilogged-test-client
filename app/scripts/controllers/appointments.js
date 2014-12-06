@@ -183,19 +183,12 @@ angular.module('viLoggedClientApp')
       'Date Checked out'
     ];
 
-    $scope.isAppointmentUpcoming = function(appointmentDate) {
-      var appointmentTimeStamp = utility.getTimeStamp(appointmentDate);
-      return new Date().getTime() < appointmentTimeStamp;
+    $scope.isAppointmentUpcoming = function(appointmentDate, visitStartTime) {
+      return appointmentService.isAppointmentUpcoming(appointmentDate, visitStartTime);
     };
 
     $scope.isAppointmentExpired = function(appointmentDate, visitEndTime) {
-      var appointmentEndsAt = new Date(appointmentDate);
-      var objVisitEndTime = $filter('date')(visitEndTime, 'HH:mm:ss');
-      var arrVisitEndTime = objVisitEndTime.split(':');
-      appointmentEndsAt.setHours(arrVisitEndTime[0]);
-      appointmentEndsAt.setMinutes(arrVisitEndTime[1]);
-      appointmentEndsAt.setSeconds(arrVisitEndTime[2]);
-      return new Date().getTime() > appointmentEndsAt.getTime();
+      return appointmentService.isAppointmentExpired(appointmentDate, visitEndTime)
     };
 
     $scope.deleteAppointment = function(id) {
@@ -307,6 +300,9 @@ angular.module('viLoggedClientApp')
       $scope.export = exports;
     }
 
+    $scope.exportToOutlook = function(appointment) {
+     return (appointmentService.getOutlookCalender(appointment));
+    };
   })
   .controller('AppointmentDetailCtrl', function($scope, $state, $stateParams, appointmentService, utility, $modal, growl,
                                                 notificationService, $rootScope, alertService) {
@@ -399,12 +395,12 @@ angular.module('viLoggedClientApp')
 
       }
 
-      $rootScope.busy = true;
       notificationService.modal.confirm(dialogParams)
         .then(function() {
+          $rootScope.busy = true;
           appointmentService.get($stateParams.appointment_id)
             .then(function(response) {
-              response.is_approved = approvalStatus;
+              response.is_approved = approvalStatus ? 1 : 0;
               appointmentService.save(response)
                 .then(function() {
                   approvalStatus ? alertService.messageToTop.success('The selected appointment has been approved.') :
@@ -425,14 +421,12 @@ angular.module('viLoggedClientApp')
         });
     };
 
-    $scope.isAppointmentUpcoming = function(appointmentDate) {
-      var appointmentTimeStamp = utility.getTimeStamp(appointmentDate);
-      return new Date().getTime() < appointmentTimeStamp;
+    $scope.isAppointmentUpcoming = function(appointmentDate, visitStartTime) {
+      return appointmentService.isAppointmentUpcoming(appointmentDate, visitStartTime);
     };
 
-    $scope.isAppointmentExpired = function(appointmentDate) {
-      var appointmentTimeStamp = utility.getTimeStamp(appointmentDate);
-      return new Date().getTime() > appointmentTimeStamp;
+    $scope.isAppointmentExpired = function(appointmentDate, visitEndTime) {
+      return appointmentService.isAppointmentExpired(appointmentDate, visitEndTime);
     };
   })
   .controller('AppointmentFormCtrl', function($scope, $stateParams, $state, $timeout, $filter, visitorService, growl,
@@ -544,11 +538,20 @@ angular.module('viLoggedClientApp')
       var checkStartTime = [];
       var checkEndTime = [];
       var checkAppointmentDate = [];
+      var appointmentDate =
+        angular.isUndefined($scope.appointment.appointment_date) ? $filter('date')(new Date(), 'yyyy-MM-dd') :
+          $filter('date')($scope.appointment.appointment_date, 'yyyy-MM-dd');
 
-      if ($scope.visit_start_time.getTime() > $scope.visit_end_time.getTime()){
+      var start = (appointmentDate+' '+$filter('date')($scope.visit_start_time, 'HH:mm:ss')).split(/[\s|:|-]/);
+      var end =  (appointmentDate+' '+$filter('date')($scope.visit_end_time, 'HH:mm:ss')).split(/[\s|:|-]/);
+
+      var startTime = new Date(start[0], start[1]-1, start[2], start[3], start[4], start[5]);
+      var endTime = new Date(end[0], end[1]-1, end[2], end[3], end[4], end[5]);
+
+      if (startTime.getTime() > endTime.getTime()){
         checkStartTime.push('start time can\'t be greater than end time');
       }
-      if ($scope.visit_start_time.getTime() < now) {
+      if (startTime.getTime() < now) {
         checkStartTime.push('start time can\'t be lesser than current time');
       }
 
@@ -717,13 +720,13 @@ angular.module('viLoggedClientApp')
                   notificationService.setTimeOutNotification(reason);
                 });
             } else {
-              alertService.messageToTop.error('An appointment with this host can\'t be created.');
+              alertService.messageToTop.error('Visitor has a pending appointment with this host.');
               if (!$scope.user.is_active) {
                 $rootScope.busy = false;
-                $state.go('show-visitor', {visitor_id: $scope.visitor.selected.uuid});
+                //$state.go('show-visitor', {visitor_id: $scope.visitor.selected.uuid});
               } else {
                 $rootScope.busy = false;
-                $state.go('appointments');
+                //$state.go('appointments');
               }
             }
           })

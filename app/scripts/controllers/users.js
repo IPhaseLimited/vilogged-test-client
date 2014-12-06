@@ -217,8 +217,31 @@ angular.module('viLoggedClientApp')
   .controller('UserProfileCtrl', function($scope, $interval, $filter, userService, appointmentService, utility,
                                            notificationService, $rootScope, alertService) {
 
-    var appointments = appointmentService.getNestedAppointmentsByUser($rootScope.user);
+
     $rootScope.busy = true;
+
+    appointmentService.getNestedAppointmentsByUser($rootScope.user)
+      .then(function(response) {
+        $scope.numberOfAppointments = response.length;
+
+        $scope.upcomingAppointments = response.filter(function(appointment) {
+          return appointment.is_approved &&
+            (new Date(appointment.appointment_date).getTime() > new Date().getTime());
+        });
+        $scope.upcomingAppointmentCount = $scope.upcomingAppointments.length;
+
+        $scope.appointmentsAwaitingApproval = response
+          .filter(function(appointment) {
+            return !appointment.is_approved && (utility.getTimeStamp(appointment.appointment_date) > new Date().getTime());
+          });
+        $scope.appointmentsAwaitingApprovalCount = $scope.appointmentsAwaitingApproval.length;
+
+        $rootScope.busy = false;
+      })
+      .catch(function(reason) {
+        $rootScope.busy = false;
+        notificationService.setTimeOutNotification(reason);
+      });
 
     appointmentService.defaultEntrance()
       .then(function(response) {
@@ -228,39 +251,8 @@ angular.module('viLoggedClientApp')
         notificationService.setTimeOutNotification(reason);
       });
 
-    appointments
-      .then(function(response) {
-        $scope.numberOfAppointments = response.length;
-        $rootScope.busy = false;
-      })
-      .catch(function(reason) {
-        $rootScope.busy = false;
-      });
 
-    appointments
-      .then(function(response) {
-        $scope.upcomingAppointments = response.filter(function(appointment) {
-          return appointment.is_approved &&
-            (new Date(appointment.appointment_date).getTime() > new Date().getTime() || !appointment.is_expired);
-        });
-        $scope.upcomingAppointmentCount = $scope.upcomingAppointments.length;
-      })
-      .catch(function(reason) {
 
-      });
-
-    appointments
-      .then(function(response) {
-        $scope.appointmentsAwaitingApproval = response
-          .filter(function(appointment) {
-            return !appointment.is_approved && (!appointment.is_expired ||
-              utility.getTimeStamp(appointment.appointment_date) > new Date().getTime());
-          });
-        $scope.appointmentsAwaitingApprovalCount = $scope.appointmentsAwaitingApproval.length;
-      })
-      .catch(function(reason) {
-
-      });
 
     $scope.toggleAppointmentApproval = function(appointment_id, index) {
       var dialogParams = {
@@ -277,7 +269,6 @@ angular.module('viLoggedClientApp')
         $filter('limitTo')($scope.upcomingAppointments, 5);
       }
 
-      $rootScope.busy = true;
       notificationService.modal.confirm(dialogParams)
         .then(function() {
           appointmentService.get(appointment_id)
@@ -373,9 +364,9 @@ angular.module('viLoggedClientApp')
         }
 
         if (include && $scope.search.role) {
-          if ($scope.search.role === 'superadmin') include = row.is_active && row.is_staff && row.is_superadmin;
-          if ($scope.search.role === 'admin') include = row.is_active && row.is_staff && !row.is_superadmin;
-          if ($scope.search.role === 'staff') include = row.is_active && !row.is_staff && !row.is_superadmin;
+          if ($scope.search.role === 'superuser') include = row.is_active && row.is_staff && row.is_superuser;
+          if ($scope.search.role === 'admin') include = row.is_active && row.is_staff && !row.is_superuser;
+          if ($scope.search.role === 'staff') include = row.is_active && !row.is_staff && !row.is_superuser;
           if ($scope.search.role === 'not active') include = !row.is_active;
         }
 
@@ -395,7 +386,7 @@ angular.module('viLoggedClientApp')
           name: row.first_name + ' ' + row.last_name,
           username: row.username,
           role: row.role,
-          department: row.user_profile.department.department_name,
+          department: angular.isDefined(row.user_profile.department) && row.user_profile.department !== null ? row.user_profile.department.department_name : '',
           phone: row.phone
         });
       });

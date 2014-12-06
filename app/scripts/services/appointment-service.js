@@ -9,7 +9,7 @@
  */
 angular.module('viLoggedClientApp')
   .service('appointmentService', function appointmentService($q, db, $http, storageService, utility, syncService,
-                                                             entranceService, config) {
+                                                             entranceService, config, $filter) {
 
     // AngularJS will instantiate a singleton by calling "new" on this function
     var DB_NAME = db.APPOINTMENTS;
@@ -342,7 +342,19 @@ angular.module('viLoggedClientApp')
       findByMultipleFields(params)
         .then(function(response) {
           if (response.length) {
-            deferred.resolve(true);
+            var pendingAppointments = response.filter(function(appointment){
+              var date = new Date();
+              var todayTimeStamp = new Date(date.getYear(),date.getMonth(), date.getDate()).getTime();
+              var appointmentEndTime = appointment.appointment_date+'T'+appointment.visit_end_time+'Z';
+              var appointmentEndTimeStamp = new Date(appointmentEndTime).getTime();
+              return appointmentEndTimeStamp > todayTimeStamp;
+            });
+
+            if (pendingAppointments.length) {
+              deferred.resolve(true);
+            } else {
+              deferred.resolve(false);
+            }
           } else {
             deferred.resolve(false);
           }
@@ -357,10 +369,65 @@ angular.module('viLoggedClientApp')
       return storageService.removeRecord(DB_NAME, appointmentId);
     }
 
+    function outLookCalenderTemplate() {
+
+      return 'BEGIN:VCALENDAR\n' +
+      'VERSION:2.0\n'+
+      'PRODID:-//vilogged.com v1.0//EN\n'+
+      'BEGIN:VEVENT\n'+
+      'DTSTAMP:&&startDate&&\n'+ //20140510T093846Z
+      'ORGANIZER;CN=&&visitorsName&&:MAILTO:&&visitorsMail&&\n'+
+      'STATUS:CONFIRMED\n'+
+      'DTSTART:&&startDate&&\n'+//20140510T093846Z
+      'DTEND:&&endDate&&\n'+ //20140511T093846Z
+      'SUMMARY:&&appointSummary&&\n'+
+      'DESCRIPTION:&&appointmentDesc&&\n'+
+      'X-ALT-DESC;FMTTYPE=text/html:&&appointmentDesc&&\n'+
+      'LOCATION:&&location&&\n'+
+      'END:VEVENT\n'+
+      'END:VCALENDAR';
+    }
+
+    function getOutlookCalender(appointment) {
+
+      var start = (appointment.appointment_date + ' '+ $filter('date')(appointment.visit_start_time, 'HH:mm:ss')).split(/[\s|:|-]/);
+      var end =  (appointment.appointment_date + ' '+ $filter('date')(appointment.visit_end_time, 'HH:mm:ss')).split(/[\s|:|-]/);
+
+      var startTime = (new Date(start[0], start[1]-1, start[2], start[3], start[4], start[5]).toJSON()).replace(/[-|:]/g, '').split('.')[0]+'Z';
+      var endTime = (new Date(end[0], end[1]-1, end[2], end[3], end[4], end[5]).toJSON()).replace(/[-|:]/g, '').split('.')[0]+'Z';
+
+      var params = {
+        startDate: startTime,
+        endDate: endTime,
+        visitorsName: appointment.visitor_id.first_name,
+        visitorsMail: appointment.visitor_id.visitors_email,
+        appointSummary: '',
+        appointmentDesc: '',
+        location: 'NCC Nigeria'
+      };
+
+      return utility.compileTemplate(params, outLookCalenderTemplate());
+    }
+
+    this.isAppointmentUpcoming = function(appointmentDate, visitStartTime) {
+      visitStartTime = $filter('date')(visitStartTime, 'HH:mm:ss');
+      var appointmentStartsAt = appointmentDate+'T'+visitStartTime+'Z';
+      var appointmentStartTimeStamp = utility.getTimeStamp(appointmentStartsAt);
+      return new Date().getTime() < appointmentStartTimeStamp;
+    };
+
+    this.isAppointmentExpired = function(appointmentDate, visitEndTime) {
+      visitEndTime = $filter('date')(visitEndTime, 'HH:mm:ss');
+      var appointmentEndsAt = appointmentDate+'T'+visitEndTime+'Z';
+      var appointmentEndTimeStamp = utility.getTimeStamp(appointmentEndsAt);
+      return new Date().getTime() > appointmentEndTimeStamp;
+    };
+
     this.get = get;
     this.getNested = getNested;
     this.all = getAllAppointments;
     this.save = save;
+    this.remove = remove;
     this.findByField = findByField;
     this.getUserUpcomingAppointments = getUserUpcomingAppointments;
     this.getAppointmentsByUser = getAppointmentsByUser;
@@ -375,8 +442,8 @@ angular.module('viLoggedClientApp')
     this.defaultEntrance = defaultEntrance;
     this.findExistingAppointment = findExistingAppointment;
     this.hasPendingAppointment = hasPendingAppointment;
+    this.getOutlookCalender = getOutlookCalender;
     this.getUpdates = syncService.getUpdates;
-    this.remove = remove;
     this.APPOINTMENT_APPROVAL_EMAIL_TEMPLATE = APPOINTMENT_APPROVAL_EMAIL_TEMPLATE;
     this.APPOINTMENT_APPROVAL_SMS_TEMPLATE = APPOINTMENT_APPROVAL_SMS_TEMPLATE;
     this.APPOINTMENT_CREATED_EMAIL_TEMPLATE = APPOINTMENT_CREATED_EMAIL_TEMPLATE;

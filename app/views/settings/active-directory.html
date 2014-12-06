@@ -1,0 +1,85 @@
+
+<div class="row">
+  <div class="col-sm-6">
+    <div class="widget">
+      <div class="widget-head">
+        <div class="pull-left">
+          <h3>{{ pageTile }}</h3>
+        </div>
+        <div class="widget-icons pull-right">
+
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="widget-content">
+        <div class="padd">
+          <div class="row">
+            <div class="col-xs-12 col-sm-12">
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-sm-4">
+                    Hostname
+                  </label>
+                  <div class="col-sm-8">
+                    <input class="form-control" ng-model="ldapSettings.serverURL" placeholder="example.local" >
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-sm-4">
+                    Port
+                  </label>
+                  <div class="col-sm-8">
+                    <input class="form-control" ng-model="ldapSettings.port" placeholder="389" >
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-sm-4">
+                    Bind DN
+                  </label>
+                  <div class="col-sm-8">
+                    <input class="form-control" ng-model="ldapSettings.bindDN" placeholder="" >
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-sm-4">
+                    Password
+                  </label>
+                  <div class="col-sm-8">
+                    <input ng-if="!showPassword" class="form-control" type="password" ng-model="ldapSettings.bindPassword" >
+                    <input ng-if="showPassword" class="form-control" type="text" ng-model="ldapSettings.bindPassword">
+                    Show password <input type="checkbox" ng-model="showPassword">
+                  </div>
+                </div>
+
+                <div class="form-group hide">
+                  <label class="control-label col-sm-4">
+                    Search Parameters
+                  </label>
+                  <div class="col-sm-8">
+                    <input class="form-control" ng-model="ldapSettings.searchParam" placeholder=""ou=users,dc=example,dc=com"" >
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <button ng-click="save()" class="btn btn-primary pull-right">Save Setting</button>
+                    <div class="clearfix"></div>
+                  </div>
+                </div>
+              </form>
+
+
+            </div>
+          </div>
+        </div>
+        <div class="widget-foot">
+          <!-- Footer goes here -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
