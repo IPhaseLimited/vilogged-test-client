@@ -21,7 +21,7 @@ angular.module('viLoggedClientApp')
       };
       if (credentials.username && credentials.password) {
         $http.defaults.useXDomain = true;
-        $http.post(config.api.backend + '/api-token-auth/', credentials)
+        $http.post(config.api.backend + '/auth-user/', credentials)
           .success(function(response, status) {
             loginResponse.status = status;
             loginResponse.loginMessage = 'login was successful';
