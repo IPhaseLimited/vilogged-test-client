@@ -371,7 +371,8 @@ angular.module('viLoggedClientApp')
         }
 
         if (include && $scope.search.department) {
-          include = row.user_profile.department.department_name.toLowerCase().indexOf($scope.search.department.toLowerCase()) > -1;
+          include = row.user_profile.department_name.toLowerCase().indexOf($scope.search.department_name.toLowerCase()) > -1;
+          //include = row.user_profile.department.department_name.toLowerCase().indexOf($scope.search.department.toLowerCase()) > -1;
         }
 
         if (include && $scope.search.phone) {
@@ -386,7 +387,7 @@ angular.module('viLoggedClientApp')
           name: row.first_name + ' ' + row.last_name,
           username: row.username,
           role: row.role,
-          department: angular.isDefined(row.user_profile.department) && row.user_profile.department !== null ? row.user_profile.department.department_name : '',
+          department: angular.isDefined(row.user_profile.department_name) && row.user_profile.department_name !== null ? row.user_profile.department_name : '',
           phone: row.phone
         });
       });
@@ -431,7 +432,7 @@ angular.module('viLoggedClientApp')
 
     $rootScope.busy = true;
     $scope.userLoaded = false;
-    $scope.departmentLoaded = false;
+    $scope.departmentLoaded = true;
     $scope.userProfile = {};
     $scope.userProfile.user_profile = {};
     $scope.activateCamera = false;
@@ -496,9 +497,9 @@ angular.module('viLoggedClientApp')
 
 
 
-      if (toString.call($scope.userProfile.user_profile.department) === '[object String]') {
-        //$scope.user.user_profile.department = JSON.parse($scope.user.user_profile.department);
-      }
+      //if (toString.call($scope.userProfile.user_profile.department) === '[object String]') {
+      //  //$scope.user.user_profile.department = JSON.parse($scope.user.user_profile.department);
+      //}
       userService.save($scope.userProfile)
         .then(function() {
           var message = 'User account was successfully saved.';
