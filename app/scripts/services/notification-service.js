@@ -13,8 +13,9 @@ angular.module('viLoggedClientApp')
 
     var BACKEND = config.api.backend.split(':');
     var PORT = BACKEND.pop();
-    var BASE_URL = BACKEND.join('');
+    var BASE_URL = BACKEND.join(':');
 
+    this.BASE_URL = BASE_URL;
 
     function sendMessage(objectParams, apiUrl) {
       var deferred = $q.defer();
