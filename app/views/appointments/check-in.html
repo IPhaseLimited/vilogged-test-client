@@ -67,10 +67,10 @@
               </div>
               <div class="row">
                 <div class="col-sm-6"><strong>Department</strong></div>
-                <div ng-if="(((appointment).host_id).user_profile).department" class="col-sm-6">
-                  {{ (((appointment).host_id).user_profile).department.department_name }}
+                <div ng-if="(((appointment).host_id).user_profile).department_name" class="col-sm-6">
+                  {{ (((appointment).host_id).user_profile).department_name }}
                 </div>
-                <div ng-if="!(((appointment).host_id).user_profile).department" class="col-sm-6"> Nil</div>
+                <div ng-if="!(((appointment).host_id).user_profile).department_name" class="col-sm-6"> Nil</div>
               </div>
               <div col-sm-12><strong>Contact Phone</strong></div>
               <div class="row">
