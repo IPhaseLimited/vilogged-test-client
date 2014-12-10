@@ -105,7 +105,7 @@
               <span class="label" ng-class="{'label-danger':  visitor.group_type.black_listed,
                 'label-success': getGroupType(visitor.group_type.black_listed)
                 }">
-                {{ getGroupType(visitor.group_type.group_name) }}
+                {{ visitor.group_type.group_name }}
               </span>
             </td>
             <td>{{ visitor.created |date: 'dd MMM, yyyy' }}</td>
