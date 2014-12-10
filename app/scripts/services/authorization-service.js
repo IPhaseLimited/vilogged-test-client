@@ -74,7 +74,9 @@ angular.module('viLoggedClientApp')
         'show-appointment',
         'edit-appointment',
         'logout',
-        'login'
+        'login',
+        'create-visitor-profile',
+        'show-visitor'
       ]
     };
 
