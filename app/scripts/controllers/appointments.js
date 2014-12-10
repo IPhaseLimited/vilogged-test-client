@@ -862,7 +862,7 @@ angular.module('viLoggedClientApp')
 
       $scope.appointment.checked_in = utility.getISODateTime();
       $scope.appointment.visitor_id = $scope.appointment.visitor_id.uuid;
-      $scope.appointment.host_id = $scope.appointment.host_id.uuid;
+      $scope.appointment.host_id = $scope.appointment.host_id.id;
 
       var restricted = [];
       $scope.restricted_items.forEach(function(item) {
