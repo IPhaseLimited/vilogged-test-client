@@ -874,9 +874,7 @@ angular.module('viLoggedClientApp')
 
       $scope.vehicle.appointment_id = $scope.appointment.uuid;
       var promises = [
-        appointmentService.save($scope.appointment),
-        vehicleService.save($scope.vehicle),
-        restricted
+        appointmentService.save($scope.appointment)
       ];
 
       if ($scope.withVehicle) {
