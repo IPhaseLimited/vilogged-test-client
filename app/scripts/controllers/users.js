@@ -401,6 +401,21 @@ angular.module('viLoggedClientApp')
         });
     };
 
+    //imports users from LDAP server
+    $scope.importUsers = function() {
+      $rootScope.busy = true;
+      userService.getLDAPUsers()
+        .then(function(response) {
+          alertService.messageToTop.success('Users from LDAP server has successfully been imported.');
+          getUsers();
+          $rootScope.busy = false;
+        })
+        .catch(function(reason) {
+          notificationService.setTimeOutNotification(reason);
+          $rootScope.busy = false;
+        });
+    };
+
     //TODO:: flash message
     $scope.deleteAccount = function(id) {
       $rootScope.busy = true;
