@@ -103,7 +103,7 @@
             <td>{{ visitor.company_name }}</td>
             <td>
               <span class="label" ng-class="{'label-danger':  visitor.group_type.black_listed,
-                'label-success': getGroupType(visitor.group_type.black_listed)
+                'label-success': !visitor.group_type.black_listed
                 }">
                 {{ visitor.group_type.group_name }}
               </span>
