@@ -61,9 +61,9 @@
               </a>
             </th>
             <th>
-              <a class="pointer block" ng-click="sort('user_profile.department_name')">Department
-                <span ng-show="orderByColumn['user_profile.department_name']"
-                      ng-class="{'fa fa-sort-amount-asc': orderByColumn['user_profile.department_name'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['user_profile.department.department_name'].reverse}">
+              <a class="pointer block" ng-click="sort('user_profile.department')">Department
+                <span ng-show="orderByColumn['user_profile.department']"
+                      ng-class="{'fa fa-sort-amount-asc': orderByColumn['user_profile.department'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['user_profile.department.department'].reverse}">
                 </span>
               </a>
             </th>
@@ -88,7 +88,7 @@
               <span ng-show="!user.is_superuser && !user.is_staff && user.is_active">Staff</span>
               <span ng-show="!user.is_superuser && !user.is_staff && !user.is_active">Not Active</span>
             </td>
-            <td>{{ user.user_profile.department.department_name }}</td>
+            <td>{{ user.user_profile.department.department }}</td>
             <td>{{ user.user_profile.phone }}</td>
             <td>
               <a class="btn btn-success btn-xs" ui-sref="editUser({user_id: user.id})"><i class="fa fa-edit"></i>

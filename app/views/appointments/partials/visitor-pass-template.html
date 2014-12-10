@@ -14,7 +14,7 @@
     <div style="float: right; width: 55%;">
       <div style="font-size: 110%; margin-bottom: 10px">Name: {{ appointment.visitor_id.first_name }} {{ appointment.visitor_id.last_name }}</div>
       <div style="font-size: 80%;">Host: {{ appointment.host_id.first_name }} {{ appointment.host_id.last_name }}</div>
-      <div style="font-size: 80%;">Department: {{ ((((appointment).host_id).user_profile).department).department_name }}</div>
+      <div style="font-size: 80%;">Department: {{ ((((appointment).host_id).user_profile).department).department }}</div>
       <div style="font-size: 90%; font-weight: bold">Appointment ID: {{ appointment.label_code }}</div>
     </div>
     <div style="clear: both"></div>

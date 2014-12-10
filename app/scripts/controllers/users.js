@@ -371,8 +371,8 @@ angular.module('viLoggedClientApp')
         }
 
         if (include && $scope.search.department) {
-          include = row.user_profile.department_name.toLowerCase().indexOf($scope.search.department_name.toLowerCase()) > -1;
-          //include = row.user_profile.department.department_name.toLowerCase().indexOf($scope.search.department.toLowerCase()) > -1;
+          include = row.user_profile.department.toLowerCase().indexOf($scope.search.department.toLowerCase()) > -1;
+          //include = row.user_profile.department.department.toLowerCase().indexOf($scope.search.department.toLowerCase()) > -1;
         }
 
         if (include && $scope.search.phone) {
@@ -387,7 +387,7 @@ angular.module('viLoggedClientApp')
           name: row.first_name + ' ' + row.last_name,
           username: row.username,
           role: row.role,
-          department: angular.isDefined(row.user_profile.department_name) && row.user_profile.department_name !== null ? row.user_profile.department_name : '',
+          department: angular.isDefined(row.user_profile.department) && row.user_profile.department !== null ? row.user_profile.department : '',
           phone: row.phone
         });
       });
