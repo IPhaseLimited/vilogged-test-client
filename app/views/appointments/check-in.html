@@ -35,7 +35,7 @@
               </div>
             </div>
             <div class="col-sm-4">
-              <img ng-if="((appointment).visitor_id).image !== undefined" ng-src="{{ appointment.visitor.image }}" alt=""
+              <img ng-if="((appointment).visitor_id).image !== undefined" ng-src="{{ appointment.visitor_id.image }}" alt=""
                    class="img-responsive"/>
               <img ng-if="!((appointment).visitor_id).image" ng-src="img/place_holder.jpg" alt=""
                    class="img-responsive"/>
@@ -88,9 +88,9 @@
               </div>
             </div>
             <div class="col-sm-4">
-              <img ng-if="((appointment).visitor_id).image !== undefined" ng-src="{{ appointment.visitor.image }}" alt=""
+              <img ng-if="((appointment).host_id).image !== undefined" ng-src="{{ appointment.host_id.image }}" alt=""
                    class="img-responsive"/>
-              <img ng-if="!((appointment).visitor_id).image" ng-src="img/place_holder.jpg" alt=""
+              <img ng-if="!((appointment).host_id).image" ng-src="img/place_holder.jpg" alt=""
                    class="img-responsive"/>
             </div>
           </div>
