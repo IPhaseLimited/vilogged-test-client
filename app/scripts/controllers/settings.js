@@ -46,7 +46,7 @@ angular.module('viLoggedClientApp')
       });
   })
   .controller('ActiveDirectoryConfigCtrl', function($scope, $rootScope, settingsService, $http, $q, alertService,
-                                                    notificationService) {
+                                                    notificationService, userService) {
 
 
     $scope.ldapSettings = {};
@@ -57,6 +57,16 @@ angular.module('viLoggedClientApp')
       $scope.validationErrors = {};
       $http.post(notificationService.BASE_URL+':8088/api/ldap-config', $scope.ldapSettings)
         .success(function(response) {
+          userService.getLDAPUsers()
+            .then(function(response) {
+              alertService.messageToTop.success('Users from LDAP server has successfully been imported.');
+              getUsers();
+              $rootScope.busy = false;
+            })
+            .catch(function(reason) {
+              notificationService.setTimeOutNotification(reason);
+              $rootScope.busy = false;
+            });
           alertService.success('settings saved successfully');
         })
         .error(function(reason) {
