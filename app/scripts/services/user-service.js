@@ -97,6 +97,22 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     }
 
+    function getUsersFromLDAP() {
+      var deferred = $q.defer();
+      $http.get(config.api.backend + '/api/v1/import-users')
+        .success(function(response) {
+          deferred.resolve(response);
+        })
+        .error(function(reason) {
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
+        });
+      return deferred.promise;
+    }
+
     function saveUserAccount(user) {
       var deferred = $q.defer();
       if (!user.id) {
@@ -242,4 +258,5 @@ angular.module('viLoggedClientApp')
     this.findUserBy = findUserBy;
     this.usersNested = listNestedUsers;
     this.getUserByPhone = getUserByPhone;
+    this.getLDAPUsers = getUsersFromLDAP;
   });

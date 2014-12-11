@@ -127,7 +127,7 @@
         <select class="form-control" name="department" id="department" ng-model="userProfile.user_profile.department">
           <option value=""></option>
           <option ng-selected="userProfile.user_profile.department === department.uuid" value="{{ department.uuid }}"
-                  ng-repeat="department in departments">{{ department.department_name }}
+                  ng-repeat="department in departments">{{ department.department }}
           </option>
         </select>
       </div>

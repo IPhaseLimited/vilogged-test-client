@@ -24,11 +24,16 @@ angular.module('viLoggedClientApp')
         }
       })
       .state('app-config', {
+        parent: 'root.index',
         url: '/app-config',
         templateUrl: '/views/settings/config.html',
         controller: 'ConfigCtrl',
         data: {
           label: 'App Configuration'
+        },
+        ncyBreadcrumb: {
+          label: 'App Configuration',
+          parent: 'settings'
         }
       })
       .state('ldap-config', {
@@ -46,15 +51,27 @@ angular.module('viLoggedClientApp')
       });
   })
   .controller('ActiveDirectoryConfigCtrl', function($scope, $rootScope, settingsService, $http, $q, alertService,
-                                                    notificationService) {
+                                                    notificationService, userService) {
+
+
     $scope.ldapSettings = {};
     $scope.showPassword = false;
 
     $scope.save = function() {
       $rootScope.busy = false;
       $scope.validationErrors = {};
-      $http.post('http://localhost:8088/api/ldap-config', $scope.ldapSettings)
+      $http.post(notificationService.BASE_URL+':8088/api/ldap-config', $scope.ldapSettings)
         .success(function(response) {
+          userService.getLDAPUsers()
+            .then(function(response) {
+              alertService.messageToTop.success('Users from LDAP server has successfully been imported.');
+              getUsers();
+              $rootScope.busy = false;
+            })
+            .catch(function(reason) {
+              notificationService.setTimeOutNotification(reason);
+              $rootScope.busy = false;
+            });
           alertService.success('settings saved successfully');
         })
         .error(function(reason) {
@@ -66,7 +83,7 @@ angular.module('viLoggedClientApp')
 
 
   })
-  .controller('ConfigCtrl', function($scope, $rootScope, settingsService, $http, $q, alertService, config, $state) {
+  .controller('ConfigCtrl', function($scope, $rootScope, settingsService, $http, $q, alertService, config, $state, notificationService) {
     $scope.settings = {
       localSetting: {
         backend: config.api.backend,
@@ -110,7 +127,7 @@ angular.module('viLoggedClientApp')
             if (messages.length) {
               alertService.error(messages.join('\n'));
             }
-            $http.post('http://localhost:8088/api/app-config', $scope.settings)
+            $http.post(notificationService.BASE_URL+':8088/api/app-config', $scope.settings)
               .success(function(response) {
                 $state.go('home');
               })
@@ -130,7 +147,7 @@ angular.module('viLoggedClientApp')
     }
 
   })
-  .controller('SettingFormCtrl', function ($scope, utility, $http, $rootScope) {
+  .controller('SettingFormCtrl', function ($scope, utility, $http, $rootScope, notificationService) {
     $rootScope.busy = true;
     $scope.currentPage = 'server-setting';
     $scope.pageTile = utility.toTitleCase('Server Setting');
@@ -143,7 +160,7 @@ angular.module('viLoggedClientApp')
     };
 
 
-    $http.get('http://localhost:8088/api/settings')
+    $http.get(notificationService.BASE_URL+':8088/api/settings')
       .success(function (response) {
         $rootScope.busy = false;
         $scope.settings = response;
@@ -154,12 +171,12 @@ angular.module('viLoggedClientApp')
       });
 
     $scope.save = function () {
-      $http.post('http://localhost:8088/api/settings', $scope.settings)
+      $http.post(notificationService.BASE_URL+':8088/api/settings', $scope.settings)
         .success(function (response) {
 
         })
         .error(function (reason) {
-
+          notificationService.setTimeOutNotification(reason);
         });
     };
 

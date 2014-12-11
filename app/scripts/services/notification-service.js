@@ -8,8 +8,14 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('notificationService', function notificationService($modal, $http, $q, growl) {
+  .service('notificationService', function notificationService($modal, $http, $q, growl, config) {
     // AngularJS will instantiate a singleton by calling "new" on this function
+
+    var BACKEND = config.api.backend.split(':');
+    var PORT = BACKEND.pop();
+    var BASE_URL = BACKEND.join(':');
+
+    this.BASE_URL = BASE_URL;
 
     function sendMessage(objectParams, apiUrl) {
       var deferred = $q.defer();
@@ -58,7 +64,7 @@ angular.module('viLoggedClientApp')
 
     this.send = {
       sms: function(smsParams) {
-        sendMessage(smsParams, 'http://localhost:8088/api/send-sms')
+        sendMessage(smsParams, BASE_URL+':8088/api/send-sms')
           .then(function(response) {
             var message = response;
           })
@@ -67,7 +73,7 @@ angular.module('viLoggedClientApp')
           });
       },
       email: function(emailParams) {
-        sendMessage(emailParams, 'http://localhost:8088/api/send-mail')
+        sendMessage(emailParams, BASE_URL+':8088/api/send-mail')
           .then(function(response) {
             var message = response;
           })

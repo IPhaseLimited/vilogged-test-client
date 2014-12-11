@@ -35,7 +35,7 @@
               </div>
             </div>
             <div class="col-sm-4">
-              <img ng-if="((appointment).visitor_id).image !== undefined" ng-src="{{ appointment.visitor.image }}" alt=""
+              <img ng-if="((appointment).visitor_id).image !== undefined" ng-src="{{ appointment.visitor_id.image }}" alt=""
                    class="img-responsive"/>
               <img ng-if="!((appointment).visitor_id).image" ng-src="img/place_holder.jpg" alt=""
                    class="img-responsive"/>
@@ -68,7 +68,7 @@
               <div class="row">
                 <div class="col-sm-6"><strong>Department</strong></div>
                 <div ng-if="(((appointment).host_id).user_profile).department" class="col-sm-6">
-                  {{ (((appointment).host_id).user_profile).department.department_name }}
+                  {{ (((appointment).host_id).user_profile).department }}
                 </div>
                 <div ng-if="!(((appointment).host_id).user_profile).department" class="col-sm-6"> Nil</div>
               </div>
@@ -88,9 +88,9 @@
               </div>
             </div>
             <div class="col-sm-4">
-              <img ng-if="((appointment).visitor_id).image !== undefined" ng-src="{{ appointment.visitor.image }}" alt=""
+              <img ng-if="((appointment).host_id).image !== undefined" ng-src="{{ appointment.host_id.image }}" alt=""
                    class="img-responsive"/>
-              <img ng-if="!((appointment).visitor_id).image" ng-src="img/place_holder.jpg" alt=""
+              <img ng-if="!((appointment).host_id).image" ng-src="img/place_holder.jpg" alt=""
                    class="img-responsive"/>
             </div>
           </div>

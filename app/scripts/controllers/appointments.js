@@ -861,6 +861,8 @@ angular.module('viLoggedClientApp')
     $scope.checkVisitorIn = function() {
 
       $scope.appointment.checked_in = utility.getISODateTime();
+      $scope.appointment.visitor_id = $scope.appointment.visitor_id.uuid;
+      $scope.appointment.host_id = $scope.appointment.host_id.id;
 
       var restricted = [];
       $scope.restricted_items.forEach(function(item) {
@@ -872,9 +874,7 @@ angular.module('viLoggedClientApp')
 
       $scope.vehicle.appointment_id = $scope.appointment.uuid;
       var promises = [
-        appointmentService.save($scope.appointment),
-        vehicleService.save($scope.vehicle),
-        restricted
+        appointmentService.save($scope.appointment)
       ];
 
       if ($scope.withVehicle) {
@@ -889,7 +889,7 @@ angular.module('viLoggedClientApp')
       $q.all(promises)
         .then(function() {
           $rootScope.busy = false;
-          alertService.messageToTop.success('User checked in successfully.');
+          alertService.messageToTop.success('Visitor checked in successfully.');
           $state.go('appointments');
         })
         .catch(function(reason) {
