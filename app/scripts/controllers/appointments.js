@@ -675,7 +675,7 @@ angular.module('viLoggedClientApp')
       $scope.appointment.checked_in = null;
       $scope.appointment.checked_out = null;
       
-      if ($scope.appointment.host_id === $rootScop.user.id) {
+      if ($scope.appointment.host_id === $rootScope.user.id) {
         $scope.appointment.is_approved = 1;
       }
 
