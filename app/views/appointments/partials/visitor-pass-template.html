@@ -1,17 +1,17 @@
 <div class="clearfix">
   <button class="btn btn-primary" ng-print print-element-id="printThisElement"><i class="fa fa-print"></i> Print</button>
 </div>
-<div id="printThisElement" style="width: 388px; height: 200px; border: 2px solid #000; padding-left: 10px; padding-right: 10px; margin:10px auto 20px;">
-  <div style="font-size: 150%; font-weight: bold; text-align: center">Visitor Pass</div>
+<div id="printThisElement" style="width: 222px; height: 384px; border: 2px solid #000; padding-left: 10px; padding-right: 10px; margin:10px auto 20px;">
+  <div style="font-size: 200%; font-weight: bold; text-align: center">Visitor Pass</div>
   <div>
-    <div style="float: left; width: 40%;">
+    <div>
       <div style="width: 95%; background: #cccccc; margin-top: 5%; margin-bottom: 5%; height: 100px">
         <img ng-if="((appointment).visitor_id).image" ng-src="{{ appointment.visitor_id.image }}" alt="" width="100%" height="100px"/>
         <img ng-if="!((appointment).visitor_id).image" ng-src="img/place_holder.jpg" alt=""
              class="img-responsive"/>
       </div>
     </div>
-    <div style="float: right; width: 55%;">
+    <div>
       <div style="font-size: 250%; margin-bottom: 10px"><h3>Name: {{ appointment.visitor_id.first_name }} {{ appointment.visitor_id.last_name }}</h3></div>
       <div style="font-size: 250%;"><h3>Host: {{ appointment.host_id.first_name }} {{ appointment.host_id.last_name }}</h3></div>
       <div style="font-size: 250%;"><h3>Department: {{ ((((appointment).host_id).user_profile).department_name) }}</h3></div>
