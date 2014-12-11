@@ -674,10 +674,6 @@ angular.module('viLoggedClientApp')
       $scope.appointment.is_expired = false;
       $scope.appointment.checked_in = null;
       $scope.appointment.checked_out = null;
-      
-      if ($scope.appointment.host_id === $rootScope.user.id) {
-        $scope.appointment.is_approved = 1;
-      }
 
       $scope.appointment.visit_start_time = $filter('date')($scope.visit_start_time, 'HH:mm:ss');
       $scope.appointment.visit_end_time = $filter('date')($scope.visit_end_time, 'HH:mm:ss');
@@ -686,6 +682,10 @@ angular.module('viLoggedClientApp')
         $scope.appointment.host_id = $rootScope.user.id;
       } else {
         $scope.appointment.host_id = angular.isDefined($scope.host.selected) ? $scope.host.selected.id : undefined;
+      }
+      
+      if ($scope.appointment.host_id === $rootScope.user.id) {
+        $scope.appointment.is_approved = 1;
       }
 
       $scope.appointment.visitor_id = angular.isDefined($scope.visitor.selected) ? $scope.visitor.selected.uuid : undefined;
