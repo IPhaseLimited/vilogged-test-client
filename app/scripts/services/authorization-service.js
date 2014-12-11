@@ -47,6 +47,7 @@ angular.module('viLoggedClientApp')
         'change-password',
         'visitors',
         'create-visitor-profile',
+        'edit-visitor-profile',
         'show-visitor',
         'home',
         'visitor-check-in',
