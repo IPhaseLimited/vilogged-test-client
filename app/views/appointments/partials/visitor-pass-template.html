@@ -12,10 +12,10 @@
       </div>
     </div>
     <div style="float: right; width: 55%;">
-      <div style="font-size: 250%; margin-bottom: 10px">Name: {{ appointment.visitor_id.first_name }} {{ appointment.visitor_id.last_name }}</div>
-      <div style="font-size: 250%;">Host: {{ appointment.host_id.first_name }} {{ appointment.host_id.last_name }}</div>
-      <div style="font-size: 250%;">Department: {{ ((((appointment).host_id).user_profile).department).department }}</div>
-      <div style="font-size: 250%; font-weight: bold">Appointment ID: {{ appointment.label_code }}</div>
+      <div style="font-size: 250%; margin-bottom: 10px"><h3>Name: {{ appointment.visitor_id.first_name }} {{ appointment.visitor_id.last_name }}</h3></div>
+      <div style="font-size: 250%;"><h3>Host: {{ appointment.host_id.first_name }} {{ appointment.host_id.last_name }}</h3></div>
+      <div style="font-size: 250%;"><h3>Department: {{ ((((appointment).host_id).user_profile).department_name) }}</h3></div>
+      <div style="font-size: 250%; font-weight: bold"><h3>Appointment ID: {{ appointment.label_code }}</h3></div>
     </div>
     <div style="clear: both"></div>
   </div>
