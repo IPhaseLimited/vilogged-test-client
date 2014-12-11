@@ -676,7 +676,7 @@ angular.module('viLoggedClientApp')
       $scope.appointment.checked_out = null;
       
       if ($stateParams.host_id) {
-        $scope.appointment.is_approved = true;
+        $scope.appointment.is_approved = 1;
       }
 
       $scope.appointment.visit_start_time = $filter('date')($scope.visit_start_time, 'HH:mm:ss');
