@@ -24,11 +24,16 @@ angular.module('viLoggedClientApp')
         }
       })
       .state('app-config', {
+        parent: 'root.index',
         url: '/app-config',
         templateUrl: '/views/settings/config.html',
         controller: 'ConfigCtrl',
         data: {
           label: 'App Configuration'
+        },
+        ncyBreadcrumb: {
+          label: 'App Configuration',
+          parent: 'settings'
         }
       })
       .state('ldap-config', {
