@@ -20,6 +20,7 @@
           <thead>
           <tr>
             <th></th>
+            <th><input style="width: 80%" class="form-control" ng-model="search.label_code"></th>
             <th><input style="width: 80%" class="form-control" ng-model="search.visitors_name"></th>
             <th><input style="width: 80%" class="form-control" ng-model="search.host_name"></th>
             <th>
@@ -48,6 +49,14 @@
           </tr>
           <tr>
             <th>S/N</th>
+            <th>
+              <a class="pointer block" ng-click="sort('label_code')">
+                Pass Code
+                <span ng-show="orderByColumn['label_code']"
+                      ng-class="{'fa fa-sort-amount-asc': !orderByColumn['label_code'].reverse, 'fa fa-sort-amount-desc': orderByColumn['label_code'].reverse}">
+                </span>
+              </a>
+            </th>
             <th>
               <a class="pointer block" ng-click="sort('visitor_id.first_name')">
                 Visitor Name
@@ -106,6 +115,7 @@
               ng-class="{'text-danger': isAppointmentExpired(appointment.appointment_date, appointment.visit_end_time),
               'text-success': isAppointmentUpcoming(appointment.appointment_date, appointment.visit_start_time)}">
             <td>{{ $index + 1 + ((pagination.currentPage-1) * pagination.itemsPerPage)}}</td>
+            <td>{{ appointment.label_code }}</td>
             <td>{{ ((appointment).visitor_id).first_name + ' ' + ((appointment).visitor_id).last_name }}</td>
             <td>{{ ((appointment).host_id).first_name + ' ' + ((appointment).host_id).last_name }}</td>
             <td>{{ appointment.appointment_date | date:'EEE, MMM d, y' }}</td>

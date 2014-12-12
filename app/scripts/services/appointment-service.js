@@ -344,8 +344,9 @@ angular.module('viLoggedClientApp')
           if (response.length) {
             var pendingAppointments = response.filter(function(appointment){
               var date = new Date();
+              var end =  (appointment.appointment_date + ' '+ $filter('date')(appointment.visit_end_time, 'HH:mm:ss')).split(/[\s|:|-]/);
               var todayTimeStamp = new Date(date.getYear(),date.getMonth(), date.getDate()).getTime();
-              var appointmentEndTime = appointment.appointment_date+'T'+appointment.visit_end_time+'Z';
+              var appointmentEndTime = (new Date(end[0], end[1]-1, end[2], end[3], end[4], end[5]).toJSON()).replace(/[-|:]/g, '').split('.')[0]+'Z';
               var appointmentEndTimeStamp = new Date(appointmentEndTime).getTime();
               return appointmentEndTimeStamp > todayTimeStamp;
             });

@@ -1,23 +1,30 @@
 <div class="clearfix">
   <button class="btn btn-primary" ng-print print-element-id="printThisElement"><i class="fa fa-print"></i> Print</button>
 </div>
-<div id="printThisElement" style="width: 388px; height: 200px; border: 2px solid #000; padding-left: 10px; padding-right: 10px; margin:10px auto 20px;">
-  <div style="font-size: 150%; font-weight: bold; text-align: center">Visitor Pass</div>
+<div id="printThisElement" style="width: 300px; height: 470px; border: 2px solid #000; padding-left: 10px; padding-right: 10px; margin:10px auto 20px;">
+  <div style="padding-top: 10px;">
+    <div style="font-size: 16px; font-weight: bold; float: left;">Visitor Pass</div>
+    <div style="float: right;">
+      <img src="img/ncc_small.jpg" style="height: 30px; width: 80px;">
+    </div>
+    <div style="clear: both;"></div>
+  </div>
   <div>
-    <div style="float: left; width: 40%;">
-      <div style="width: 95%; background: #cccccc; margin-top: 5%; margin-bottom: 5%; height: 100px">
-        <img ng-if="((appointment).visitor_id).image" ng-src="{{ appointment.visitor_id.image }}" alt="" width="100%" height="100px"/>
+    <div>
+      <div style="width: 100%; background: #cccccc; margin-top: 5%; margin-bottom: 5%; max-height: 210px">
+        <img ng-if="((appointment).visitor_id).image" ng-src="{{ appointment.visitor_id.image }}" alt="" width="100%"
+             style="margin:auto; width: 244px; height: 217px; display: block" class="img-responsive"/>
         <img ng-if="!((appointment).visitor_id).image" ng-src="img/place_holder.jpg" alt=""
-             class="img-responsive"/>
+             style="margin:auto; width: 244px; height: 217px; display: block" class="img-responsive"/>
       </div>
     </div>
-    <div style="float: right; width: 55%;">
-      <div style="font-size: 110%; margin-bottom: 10px">Name: {{ appointment.visitor_id.first_name }} {{ appointment.visitor_id.last_name }}</div>
-      <div style="font-size: 80%;">Host: {{ appointment.host_id.first_name }} {{ appointment.host_id.last_name }}</div>
-      <div style="font-size: 80%;">Department: {{ ((((appointment).host_id).user_profile).department).department }}</div>
-      <div style="font-size: 90%; font-weight: bold">Appointment ID: {{ appointment.label_code }}</div>
+    <div style="font-size: 16px;">
+      <div style="margin-bottom: 10px">Name: {{ appointment.visitor_id.first_name }} {{ appointment.visitor_id.last_name }}</div>
+      <div>Host: {{ appointment.host_id.first_name }} {{ appointment.host_id.last_name }}</div>
+      <div>Department: {{ ((((appointment).host_id).user_profile).department) }}</div>
+      <div>Appointment ID: <strong>{{ appointment.label_code }}</strong></div>
     </div>
     <div style="clear: both"></div>
   </div>
-  <img id="barcode"  style="height:30px; margin-top: 20px; max-width: 350px">
+  <img id="barcode"  style="max-height:30px; margin-top: 20px; width:100%">
 </div>

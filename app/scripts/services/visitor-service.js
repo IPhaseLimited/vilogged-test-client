@@ -13,11 +13,11 @@ angular.module('viLoggedClientApp')
     var DB_NAME = db.VISITORS;
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
 
-    var EMAIL_TEMPLATE = 'Hello &&first_name&& &&last_name&&,\n\nYour account with visitor privileges has ' +
-      'successfully been created.\n\nYou can now log on using either Phone Number: &&phone&& '
+    var EMAIL_TEMPLATE = 'Hello &&first_name&& &&last_name&&,\n\nYour profile as a visitor has ' +
+      'successfully been created.\n\nYou can gain access to out premises using either your Phone Number: &&phone&& '
       + 'OR Pass Code: &&pass_code&&\n\nNigerian Communication Commission';
 
-    var SMS_TEMPLATE = 'Hello &&first_name&& &&last_name&&, your account has been created. You can ' +
+    var SMS_TEMPLATE = 'Hello &&first_name&& &&last_name&&, your profile as a visitor has been created. You can ' +
       'now log on using either, Phone Number: &&phone&& OR Pass Code: &&pass_code&&';
 
     function findByField(field, value) {
