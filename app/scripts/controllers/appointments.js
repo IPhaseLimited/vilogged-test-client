@@ -259,6 +259,11 @@ angular.module('viLoggedClientApp')
           row.visitor_id.last_name.toLowerCase().indexOf($scope.search.visitors_name.toLowerCase()) > -1;
         }
 
+        if (include && $scope.search.label_code) {
+          include = row.visitor_id.first_name.toLowerCase().indexOf($scope.search.label_code.toLowerCase()) > -1 ||
+          row.visitor_id.last_name.toLowerCase().indexOf($scope.search.label_code.toLowerCase()) > -1;
+        }
+
         if (include && $scope.search.host_name) {
           include = row.host_id.first_name.toLowerCase().indexOf($scope.search.host_name.toLowerCase()) > -1 ||
           row.host_id.last_name.toLowerCase().indexOf($scope.search.host_name.toLowerCase()) > -1;
@@ -683,7 +688,7 @@ angular.module('viLoggedClientApp')
       } else {
         $scope.appointment.host_id = angular.isDefined($scope.host.selected) ? $scope.host.selected.id : undefined;
       }
-      
+
       if ($scope.appointment.host_id === $rootScope.user.id) {
         $scope.appointment.is_approved = 1;
       }
