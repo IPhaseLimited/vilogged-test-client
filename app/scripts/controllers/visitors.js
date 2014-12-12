@@ -432,7 +432,10 @@ angular.module('viLoggedClientApp')
           $scope.visitor.company_name = 'Anonymous';
         }
 
-        $scope.visitor.image = $scope.takenImg;
+        if ($scope.takenImg) {
+          $scope.visitor.image = $scope.takenImg;
+        }
+
         if ($scope.visitor.date_of_birth) {
           $scope.visitor.date_of_birth = $filter('date')($scope.visitor.date_of_birth, 'yyyy-MM-dd');
         }
