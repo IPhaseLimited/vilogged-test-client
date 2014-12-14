@@ -306,7 +306,6 @@ angular.module('viLoggedClientApp')
           checkedOut: row.checked_out
         });
       });
-      console.log(exports.length);
       $scope.export = exports;
     }
 
