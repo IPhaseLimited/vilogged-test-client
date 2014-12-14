@@ -21,6 +21,11 @@ angular.module('viLoggedClientApp')
         },
         ncyBreadcrumb: {
           label: 'Visitors'
+        },
+        resolve: {
+          hasAppointments: function(visitorService) {
+            return visitorService.hasAppointments();
+          }
         }
       })
       .state('create-visitor-profile', {
@@ -89,11 +94,10 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('VisitorsCtrl', function ($scope, visitorService, $rootScope, guestGroupConstant, alertService, $filter) {
+  .controller('VisitorsCtrl', function ($scope, visitorService, $rootScope, guestGroupConstant, alertService, $filter, hasAppointments) {
     $scope.visitors = [];
     $scope.search = {};
     var rows = [];
-
     var exports = [];
 
     $scope.csvHeader = [
@@ -159,6 +163,10 @@ angular.module('viLoggedClientApp')
     };
 
     function updateTableData() {
+      var createdBy = null;
+      if (!$scope.user.is_staff && !$scope.user.is_superuser) {
+        createdBy = $scope.user.id;
+      }
       $scope.visitors = rows.filter(function (row) {
         var date = moment(row.created);
         var include = true;
@@ -188,6 +196,9 @@ angular.module('viLoggedClientApp')
           include = include && (date.isSame($scope.search.created, 'day'));
         }
 
+        if (hasAppointments.length || createdBy !== null) {
+          include = include && (hasAppointments.indexOf(row.uuid) !== -1 || row.created_by === createdBy);
+        }
 
         return include;
       });
