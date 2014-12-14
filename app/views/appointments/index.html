@@ -1,6 +1,6 @@
 <div class="widget" ng-cloak>
   <div class="widget-head">
-    <div class="pull-left"></div>
+    <div class="pull-left"><div class="appointment-legend"><div class="text-danger">Expired</div>  <div class="text-success">Upcoming</div></div></div>
     <div class="widget-icons pull-right">
       <button ng-disabled="!export.length" class="btn btn-primary hidden-print" type="button"
               ng-csv="export" csv-header="csvHeader"  filename="{{getFileName('appointments')}}">
@@ -40,8 +40,9 @@
             <th>
               <select class="form-control" ng-model="search.is_approved">
                 <option value=""></option>
-                <option value="true">Approved</option>
-                <option value="false">Not Approved</option>
+                <option value="1">Approved</option>
+                <option value="0">Rejected</option>
+                <option value="null">pending</option>
               </select>
             </th>
             <th></th>
@@ -101,7 +102,7 @@
               </a>
             </th>
             <th>
-              <a class="pointer block" ng-click="sort('is_approved')">Created
+              <a class="pointer block" ng-click="sort('created')">Created
                  <span ng-show="orderByColumn['created']"
                        ng-class="{'fa fa-sort-amount-asc': orderByColumn['created'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['created'].reverse}">
                 </span>
@@ -122,7 +123,12 @@
             <td>{{ appointment.visit_start_time | date:'hh:mm a' }}</td>
             <td>{{ appointment.visit_end_time | date:'hh:mm a' }}</td>
             <td class="text-center">
-              <i class="fa " ng-class="{'fa-check-circle text-success bold' : appointment.is_approved, 'fa-ban text-danger bold' : !appointment.is_approved}"></i>
+              <i class="fa "
+                 ng-class="{
+                 'fa-check-circle text-success bold' : appointment.is_approved === 1,
+                 'fa-ban text-danger bold' : appointment.is_approved === 0,
+                 'fa-circle-o text-default': appointment.is_approved === null
+                 }"></i>
             </td>
             <td>{{ appointment.created | date:'EEE, MMM d, y' }}</td>
             <td>
@@ -150,10 +156,6 @@
 
               <a ui-sref="show-appointment({appointment_id: appointment.uuid})" class="btn btn-xs btn-success">
                 <i class="fa fa-eye"></i> View</a>
-
-              <span class="label label-danger" ng-show="isAppointmentExpired(appointment.appointment_date, appointment.visit_end_time) || appointment.checked_out === ''">
-                Expired
-              </span>
             </td>
           </tr>
           </tbody>
