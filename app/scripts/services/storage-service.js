@@ -9,18 +9,21 @@
  */
 angular.module('viLoggedClientApp')
   .service('storageService', function storageService($q, $window, utility, collections, pouchStorageService,
-                                                     couchDbService, db, userService, apiService) {
+                                                     couchDbService, db, apiService, $cookieStore) {
 
     var dataManagementService = apiService;
-    var currentUser = userService.user;
-    var DEFAULT_TIME = '0000-00-00T00:00:00.000Z';
+    var currentUser = $cookieStore.get('current-user');
+
     var DEFAULT_USER = {
       id: 1
     };
 
-    if (!currentUser) {
+    if (angular.isUndefined(currentUser)) {
       currentUser = DEFAULT_USER;
+    } else if (currentUser.is_vistor) {
+      currentUser.id = 1;
     }
+
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     /**
