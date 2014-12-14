@@ -81,7 +81,7 @@ angular.module('viLoggedClientApp')
         $scope.appointmentsNeverUsed = response
           .filter(function(appointment) {
             return appointment.is_approved && appointment.checked_in === null &&
-              (appointment.is_expired || utility.getTimeStamp(appointment.appointment_date) < new Date().getTime());
+              (utility.getTimeStamp(appointment.appointment_date) < new Date().getTime());
           });
         $rootScope.busy = false;
       })
