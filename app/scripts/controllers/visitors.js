@@ -202,7 +202,7 @@ angular.module('viLoggedClientApp')
           contact_address: row.visitors_address,
           company_name: row.company_name,
           company_address: row.company_address,
-          group_type: row.group_type.group_name,
+          group_type: row.group_type != null && angular.isDefined(row.group_type) ? row.group_type.group_name : 'None',
           created_date: $filter('date')(row.created, 'longDate'),
           created_by: row.created_by,
           modified_date:  $filter('date')(row.modified, 'longDate'),
