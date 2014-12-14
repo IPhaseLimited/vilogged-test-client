@@ -55,6 +55,14 @@ angular.module('viLoggedClientApp')
 
 
     $scope.ldapSettings = {};
+    $http.get(notificationService.BASE_URL+':8088/api/ldap-config')
+      .success(function(response) {
+        $scope.ldapSettings = response;
+      })
+      .error(function(reason) {
+        notificationService.setTimeOutNotification(reason);
+      });
+
     $scope.showPassword = false;
 
     $scope.save = function() {
