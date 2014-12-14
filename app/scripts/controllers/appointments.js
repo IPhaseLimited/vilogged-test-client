@@ -255,25 +255,25 @@ angular.module('viLoggedClientApp')
         var include = true;
 
         if (include && $scope.search.visitors_name) {
-          include = row.visitor_id.first_name.toLowerCase().indexOf($scope.search.visitors_name.toLowerCase()) > -1 ||
+          include = include && row.visitor_id.first_name.toLowerCase().indexOf($scope.search.visitors_name.toLowerCase()) > -1 ||
           row.visitor_id.last_name.toLowerCase().indexOf($scope.search.visitors_name.toLowerCase()) > -1;
         }
 
         if (include && $scope.search.label_code) {
-          include = row.label_code.toLowerCase().indexOf($scope.search.label_code.toLowerCase()) > -1;
+          include = include && row.label_code.toLowerCase().indexOf($scope.search.label_code.toLowerCase()) > -1;
         }
 
         if (include && $scope.search.host_name) {
-          include = row.host_id.first_name.toLowerCase().indexOf($scope.search.host_name.toLowerCase()) > -1 ||
+          include = include && row.host_id.first_name.toLowerCase().indexOf($scope.search.host_name.toLowerCase()) > -1 ||
           row.host_id.last_name.toLowerCase().indexOf($scope.search.host_name.toLowerCase()) > -1;
         }
 
         if (include && $scope.search.start_time) {
-          include = row.visit_start_time.toLowerCase().indexOf($scope.search.start_time.toLowerCase()) > -1;
+          include = include && row.visit_start_time.toLowerCase().indexOf($scope.search.start_time.toLowerCase()) > -1;
         }
 
         if (include && $scope.search.end_time) {
-          include = row.visit_end_time.toLowerCase().indexOf($scope.search.visit_end_time.toLowerCase()) > -1;
+          include = include && row.visit_end_time.toLowerCase().indexOf($scope.search.visit_end_time.toLowerCase()) > -1;
         }
 
         if (include && $scope.search.appointment_date) {
@@ -282,7 +282,7 @@ angular.module('viLoggedClientApp')
 
         if (include && $scope.search.is_approved) {
 
-          include =  String($scope.search.is_approved) === String(row.is_approved);
+          include = include &&  String($scope.search.is_approved) === String(row.is_approved);
         }
 
         return include;
