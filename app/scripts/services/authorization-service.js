@@ -77,7 +77,8 @@ angular.module('viLoggedClientApp')
         'logout',
         'login',
         'create-visitor-profile',
-        'show-visitor'
+        'show-visitor',
+        'visitors'
       ]
     };
 
