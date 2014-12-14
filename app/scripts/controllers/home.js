@@ -64,13 +64,12 @@ angular.module('viLoggedClientApp')
 
         $scope.appointmentsAwaitingApproval = response
           .filter(function(appointment) {
-            return !appointment.is_approved && (utility.getTimeStamp(appointment.appointment_date) > new Date().getTime()
-              || !appointment.is_expired);
+            return appointment.is_approved === null && (new Date(appointment.appointment_date).getTime() > new Date().getTime());
           });
 
         $scope.appointmentsNotCheckedIn = response
           .filter(function(appointment) {
-            return appointment.is_approved && appointment.checked_in === null;
+            return appointment.is_approved === 1 && appointment.checked_in === null;
           });
 
         $scope.expiredAppointments = response
