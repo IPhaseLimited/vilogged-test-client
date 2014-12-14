@@ -418,7 +418,6 @@ angular.module('viLoggedClientApp')
 
     //TODO:: flash message
     $scope.deleteAccount = function(id) {
-      $rootScope.busy = true;
       if (userService.user.id === id) {
         return;
       }
@@ -433,11 +432,9 @@ angular.module('viLoggedClientApp')
             .then(function(response) {
               alertService.messageToTop.success('Account deleted successfully.');
               getUsers();
-              $rootScope.busy = false;
             })
             .catch(function(reason) {
               notificationService.setTimeOutNotification(reason);
-              $rootScope.busy = false;
             });
         });
     }
