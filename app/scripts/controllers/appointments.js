@@ -295,7 +295,7 @@ angular.module('viLoggedClientApp')
           visitor: row.visitor_id.first_name +' '+ row.visitor_id.last_name,
           visitorsGender: row.visitor_id.gender,
           representing: row.representing,
-          purpose_of_visit: row.appointment.purpose,
+          purpose_of_visit: row.purpose,
           host: row.host_id.first_name + ' '+ row.host_id.last_name,
           hostGender: row.host_id.gender,
           hostDepartment: row.host_id.user_profile.department,
