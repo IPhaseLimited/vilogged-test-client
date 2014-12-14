@@ -44,7 +44,8 @@ angular.module('viLoggedClientApp')
         }
       })
   })
-  .controller('CompanyEntranceCtrl', function($scope, entranceService, $rootScope, notificationService) {
+  .controller('CompanyEntranceCtrl', function($scope, entranceService, $rootScope, notificationService, alertService,
+                                              appointmentService) {
 
     $scope.entrance = [];
 
@@ -65,15 +66,28 @@ angular.module('viLoggedClientApp')
       notificationService.modal.confirm(dialogParams)
         .then(function() {
           $rootScope.busy = true;
-          entranceService.remove(id)
+          entranceService.hasUsage(id)
             .then(function(response) {
-              $rootScope.busy = false;
-              getEntrance();
+              if (!response) {
+                entranceService.remove(id)
+                  .then(function(response) {
+                    $rootScope.busy = false;
+                    getEntrance();
+                  })
+                  .catch(function(reason) {
+                    $rootScope.busy = false;
+                    notificationService.setTimeOutNotification(reason);
+                  });
+              } else {
+                $rootScope.busy = false;
+                alertService.error('Please remove all reference to the entrance before deleting');
+              }
             })
             .catch(function(reason) {
               $rootScope.busy = false;
               notificationService.setTimeOutNotification(reason);
             });
+
         });
     };
     function getEntrance() {
