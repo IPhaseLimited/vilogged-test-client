@@ -56,8 +56,8 @@ angular.module('viLoggedClientApp')
       .then(function(response) {
         $scope.currentAppointments = response
           .filter(function(appointment) {
-            var startTime = utility.getTimeStamp(appointment.appointment_date, appointment.start_time);
-            var endTime = utility.getTimeStamp(appointment.appointment_date, appointment.end_time);
+            var startTime = utility.getTimeStamp(appointment.appointment_date, appointment.visit_start_time);
+            var endTime = utility.getTimeStamp(appointment.appointment_date, appointment.visit_end_time);
             var date = new Date().getTime();
             return appointment.is_approved && ( date >= startTime || date <= endTime) && appointment.checked_in && !appointment.checked_out;
           });
