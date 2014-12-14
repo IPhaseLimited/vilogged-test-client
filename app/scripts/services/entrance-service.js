@@ -25,7 +25,7 @@ angular.module('viLoggedClientApp')
     };
 
     this.remove = function(id) {
-      return storageService.remove(DB_NAME, id);
+      return storageService.removeRecord(DB_NAME, id);
     };
 
     this.all = getAllEntrance;
