@@ -36,23 +36,35 @@ angular.module('viLoggedClientApp')
           parent: 'settings'
         }
       })
+      .state('database-settings', {
+        parent: 'root.index',
+        url: '/app-config',
+        templateUrl: '/views/settings/config.html',
+        controller: 'ConfigCtrl',
+        data: {
+          label: 'App Configuration'
+        },
+        ncyBreadcrumb: {
+          label: 'App Configuration',
+          parent: 'settings'
+        }
+      })
       .state('ldap-config', {
         url: '/ldap-config',
         parent: 'root.index',
         templateUrl: '/views/settings/active-directory.html',
-        controller: 'ActiveDirectoryConfigCtrl',
+        controller: 'LDAPConfigCtrl',
         data: {
-          label: 'Active Directory Configuration'
+          label: 'LDAP Configuration'
         },
         ncyBreadcrumb: {
-          label: 'Active Directory Configuration',
+          label: 'LDAP Configuration',
           parent: 'settings'
         }
       });
   })
-  .controller('ActiveDirectoryConfigCtrl', function($scope, $rootScope, settingsService, $http, $q, alertService,
+  .controller('LDAPConfigCtrl', function($scope, $rootScope, settingsService, $http, $q, alertService,
                                                     notificationService, userService) {
-
 
     $scope.ldapSettings = {};
     $http.get(notificationService.BASE_URL+':8088/api/ldap-config')
@@ -87,9 +99,6 @@ angular.module('viLoggedClientApp')
         });
 
     }
-
-
-
   })
   .controller('ConfigCtrl', function($scope, $rootScope, settingsService, $http, $q, alertService, config, $state, notificationService) {
     $scope.settings = {
@@ -153,6 +162,9 @@ angular.module('viLoggedClientApp')
         });
 
     }
+
+  })
+  .controller('DatabaseSettingsCtrl', function() {
 
   })
   .controller('SettingFormCtrl', function ($scope, utility, $http, $rootScope, notificationService) {
