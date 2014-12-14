@@ -97,12 +97,17 @@ angular.module('viLoggedClientApp')
     var exports = [];
 
     $scope.csvHeader = [
-      'Visitor\'s Name',
+      'Passcode',
+      'Name',
+      'Gender',
       'Email',
       'Phone',
+      'contact Address',
       'Company Name',
+      'Company Address',
       'Group Type',
-      'Created Date'
+      'Created Date',
+      'Modified Date'
     ];
 
     $scope.createdDate = {
@@ -189,12 +194,19 @@ angular.module('viLoggedClientApp')
 
       $scope.visitors.forEach(function (row) {
         exports.push({
+          pass_code: row.visitors_pass_code,
           name: row.first_name + ' ' + row.last_name,
-          email: row.email,
-          phone: row.phone,
+          gender: row.gender,
+          email: row.visitors_email,
+          phone: row.visitors_phone,
+          contact_address: row.visitors_address,
           company_name: row.company_name,
-          group_type: row.group_type,
-          created_date: row.created
+          company_address: row.company_address,
+          group_type: row.group_type.group_name,
+          created_date: $filter('date')(row.created, 'longDate'),
+          created_by: row.created_by,
+          modified_date:  $filter('date')(row.modified, 'longDate'),
+          modified_by: row.modified_by
         });
       });
       $scope.export = exports;

@@ -33,9 +33,24 @@ angular.module('viLoggedClientApp')
       })
   })
   .controller('MainCtrl', function($scope, appointmentService, utility, $rootScope, notificationService) {
+    $scope.currentAppointments = [];
+    $scope.appointmentsAwaitingApproval = [];
 
     $rootScope.busy = true;
     var appointments = appointmentService.all();
+
+    var appointmentsInProgressExports = [];
+
+    $scope.csvHeader = [
+      'Visitor\'s Name',
+      'Host\'s Name',
+      'Appointment Date',
+      'Start Time',
+      'End Time',
+      'Checked In',
+      'Created',
+      'Modified'
+    ];
 
     appointments
       .then(function(response) {
@@ -75,6 +90,19 @@ angular.module('viLoggedClientApp')
         $rootScope.busy = false;
         notificationService.setTimeOutNotification(reason);
       });
+
+    $scope.currentAppointments.forEach(function (row) {
+      appointmentsInProgressExports.push({
+        visitor_name: row.visitor_id.first_name + ' ' + row.visitor_id.last_name,
+        host_name: row.host_id.first_name + ' ' + row.host_id.last_name,
+        appointment_date: row.appointment_date,
+        start_time: row.start_time,
+        end_time: row.end_time,
+        checked_in: row.checked_in,
+        created: row.created,
+        modified: row.modified
+      })
+    })
 
   })
 ;
