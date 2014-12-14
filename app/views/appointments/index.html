@@ -132,6 +132,12 @@
             </td>
             <td>{{ appointment.created | date:'EEE, MMM d, y' }}</td>
             <td>
+              <a ui-sref="show-appointment({appointment_id: appointment.uuid})" class="btn btn-xs btn-success">
+                <i class="fa fa-eye"></i> View</a>
+
+              <a ng-click="deleteAppointment(appointment.uuid)" ng-show="user.is_superuser"
+                 class="btn btn-danger btn-xs pointer"><i class="fa fa-times-circle"></i> Delete</a>
+
               <button outlook-export="appointment.appointment_date" outlook-data="exportToOutlook(appointment)"
                       class="btn btn-success btn-xs" ng-show="isAppointmentUpcoming(appointment.appointment_date, appointment.visit_start_time)">
                 Add to outlook
@@ -151,11 +157,9 @@
                  && !appointment.is_expired && !appointment.is_approved && appointment.host_id.id === user.id">
                 <i class="fa fa-edit"></i> Edit</a>
 
-              <a ng-click="deleteAppointment(appointment.uuid)" ng-show="user.is_superuser"
-                class="btn btn-danger btn-xs pointer"><i class="fa fa-times-circle"></i> Delete</a>
 
-              <a ui-sref="show-appointment({appointment_id: appointment.uuid})" class="btn btn-xs btn-success">
-                <i class="fa fa-eye"></i> View</a>
+
+
             </td>
           </tr>
           </tbody>
