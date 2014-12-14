@@ -281,8 +281,8 @@ angular.module('viLoggedClientApp')
         }
 
         if (include && $scope.search.is_approved) {
-          var bool = $scope.search.is_approved === 'true';
-          include = include && bool === row.is_approved;
+
+          include =  String($scope.search.is_approved) === String(row.is_approved);
         }
 
         return include;
