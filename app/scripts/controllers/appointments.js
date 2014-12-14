@@ -260,8 +260,7 @@ angular.module('viLoggedClientApp')
         }
 
         if (include && $scope.search.label_code) {
-          include = row.visitor_id.first_name.toLowerCase().indexOf($scope.search.label_code.toLowerCase()) > -1 ||
-          row.visitor_id.last_name.toLowerCase().indexOf($scope.search.label_code.toLowerCase()) > -1;
+          include = row.label_code.toLowerCase().indexOf($scope.search.label_code.toLowerCase()) > -1;
         }
 
         if (include && $scope.search.host_name) {
