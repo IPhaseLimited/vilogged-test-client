@@ -1,6 +1,6 @@
 <div class="widget" ng-cloak>
   <div class="widget-head">
-    <div class="pull-left"></div>
+    <div class="pull-left"><div class="appointment-legend"><div class="text-danger">Expired</div>  <div class="text-success">Upcoming</div></div></div>
     <div class="widget-icons pull-right">
       <button ng-disabled="!export.length" class="btn btn-primary hidden-print" type="button"
               ng-csv="export" csv-header="csvHeader"  filename="{{getFileName('appointments')}}">
@@ -150,10 +150,6 @@
 
               <a ui-sref="show-appointment({appointment_id: appointment.uuid})" class="btn btn-xs btn-success">
                 <i class="fa fa-eye"></i> View</a>
-
-              <span class="label label-danger" ng-show="isAppointmentExpired(appointment.appointment_date, appointment.visit_end_time) || appointment.checked_out === ''">
-                Expired
-              </span>
             </td>
           </tr>
           </tbody>
