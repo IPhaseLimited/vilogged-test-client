@@ -154,7 +154,7 @@ angular.module('viLoggedClientApp')
       getUser(id)
         .then(function(response) {
           response.is_active = !response.is_active;
-          updateUser(id, response)
+          updateUser(response)
             .then(function(response) {
               deferred.resolve(response);
             })
