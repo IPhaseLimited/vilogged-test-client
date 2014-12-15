@@ -429,7 +429,8 @@ angular.module('viLoggedClientApp')
         last_name: validationService.BASIC,
         gender: validationService.BASIC,
         visitors_phone: phoneNumberValidation,
-        visitors_email: emailValidation
+        visitors_email: emailValidation,
+        group_type_id: validationService.BASIC
         //group_type_id: validationService.BASIC
       };
 
