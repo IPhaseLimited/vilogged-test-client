@@ -403,14 +403,14 @@ angular.module('viLoggedClientApp')
         var compiledSMSTemplate = utility.compileTemplate(visitor, smsTemplate, '&&');
 
 
-        if (angular.isDefined($scope.visitor.visitors_phone) && $scope.visitor.visitors_phone !== '') {
+        if (angular.isDefined($scope.visitor.visitors_phone) && $scope.visitor.visitors_phone !== '' && $scope.visitor.visitors_phone !== null) {
           notificationService.send.sms({
             message: compiledSMSTemplate,
             mobiles: $scope.visitor.visitors_phone
           });
         }
 
-        if (angular.isDefined($scope.visitor.visitors_email) && $scope.visitor.visitors_email !== '') {
+        if (angular.isDefined($scope.visitor.visitors_email) && $scope.visitor.visitors_email !== '' && $scope.visitor.visitors_email !== null) {
           notificationService.send.email({
             to: $scope.visitor.visitors_email,
             subject: 'Visitor\'s account created.',
@@ -502,9 +502,15 @@ angular.module('viLoggedClientApp')
               });
           })
           .catch(function (reason) {
+            Object.keys(reason).forEach(function (key) {
+              $scope.validationErrors[key] = reason[key];
+              $rootScope.busy = false;
+            });
             notificationService.setTimeOutNotification(reason);
             $rootScope.busy = false;
           });
+      } else {
+        $rootScope.busy = false;
       }
 
     };
