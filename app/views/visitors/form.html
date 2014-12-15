@@ -178,6 +178,12 @@
             {{ visitorGroup.group_name }}
           </option>
         </select>
+
+        <div class="text-danger bold" ng-show="(validationErrors).group_type.length">
+          <span ng-repeat="error in (validationErrors).group_type">
+            {{ error }}<br>
+          </span>
+        </div>
       </div>
     </div>
 
