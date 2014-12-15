@@ -430,8 +430,7 @@ angular.module('viLoggedClientApp')
         gender: validationService.BASIC,
         visitors_phone: phoneNumberValidation,
         visitors_email: emailValidation,
-        group_type_id: validationService.BASIC
-        //group_type_id: validationService.BASIC
+        group_type: validationService.BASIC
       };
 
       var validationParams2 = {
@@ -464,7 +463,6 @@ angular.module('viLoggedClientApp')
           $scope.visitor.date_of_birth = $filter('date')($scope.visitor.date_of_birth, 'yyyy-MM-dd');
         }
 
-        $scope.visitor.group_type = $scope.visitor.group_type_id;
         if (!angular.isDefined($scope.visitorsLocation.residential_country)) {
           $scope.visitorsLocation.residential_country = 'Other';
           $scope.visitorsLocation.residential_state = 'Not set';
