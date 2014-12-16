@@ -383,12 +383,15 @@ angular.module('viLoggedClientApp')
       });
 
       $scope.users.forEach(function (row) {
-        exports.push({
+        var department = angular.isDefined(row.department) && row.department !== null ? row.department : '';
+        department = angular.isDefined(row.user_profile) && row.user_profile !== null? row.user_profile.department : department;
+        var phone = angular.isDefined(row.user_profile) && row.user_profile !== null? row.user_profile.phone : '';
+          exports.push({
           name: row.first_name + ' ' + row.last_name,
           username: row.username,
           role: row.role,
-          department: angular.isDefined(row.user_profile.department) && row.user_profile.department !== null ? row.user_profile.department : '',
-          phone: row.phone
+          department: department,
+          phone: phone
         });
       });
       $scope.export = exports;
