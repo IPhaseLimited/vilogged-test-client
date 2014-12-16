@@ -8,9 +8,10 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('entranceService', function entranceService($q, $http, db, storageService, syncService) {
+  .service('entranceService', function entranceService($q, $http, db, storageService, syncService, config) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var DB_NAME = db.ENTRANCE.replace(/_/, '-');
+    var BASE_URL = config.api.backend + config.api.backendCommon + '/';
 
     function getAllEntrance() {
       return storageService.all(DB_NAME)
@@ -25,10 +26,25 @@ angular.module('viLoggedClientApp')
     };
 
     this.remove = function(id) {
-      return storageService.remove(DB_NAME, id);
+      return storageService.removeRecord(DB_NAME, id);
     };
+
+    function hasUsage(id) {
+      var deferred = $q.defer();
+      var DB_NAME = db.APPOINTMENTS;
+
+      $http.get(BASE_URL+DB_NAME+'?entrance_id='+id)
+        .success(function(response) {
+          deferred.resolve(!(response.length === 0));
+        })
+        .error(function(reason) {
+          deferred.reject(reason);
+        });
+      return deferred.promise;
+    }
 
     this.all = getAllEntrance;
     this.get = getEntrance;
+    this.hasUsage = hasUsage;
     this.getUpdates = syncService.getUpdates;
   });

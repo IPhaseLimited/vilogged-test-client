@@ -8,7 +8,7 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('visitorService', function visitorService($q, storageService, db, syncService, $http, config) {
+  .service('visitorService', function visitorService($q, storageService, db, syncService, $http, config, $cookieStore) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var DB_NAME = db.VISITORS;
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
@@ -169,6 +169,35 @@ angular.module('viLoggedClientApp')
 
       return deferred.promise;
     };
+
+    function hasAppointments() {
+      var deferred = $q.defer();
+      var currentUser = $cookieStore.get('current-user');
+      var visitorsList = [];
+      if (!currentUser.is_vistor && !currentUser.is_staff) {
+        $http.get(BASE_URL+db.APPOINTMENTS+'?host_id='+currentUser.id)
+          .success(function(response) {
+            if (response.length) {
+              response.forEach(function(row) {
+                if (visitorsList.indexOf(row.visitor_id) === -1) {
+                  visitorsList.push(row.visitor_id);
+                }
+              });
+
+            }
+            deferred.resolve(visitorsList);
+          })
+          .error(function(reason) {
+            deferred.resolve(visitorsList);
+          });
+      } else {
+        deferred.resolve(visitorsList);
+      }
+
+      return deferred.promise;
+    }
+
+    this.hasAppointments = hasAppointments;
 
     this.all = getAllVisitors;
     this.changes = getChanges;

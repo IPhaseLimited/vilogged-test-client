@@ -411,17 +411,16 @@ angular.module('viLoggedClientApp')
     }
 
     this.isAppointmentUpcoming = function(appointmentDate, visitStartTime) {
-      visitStartTime = $filter('date')(visitStartTime, 'HH:mm:ss');
-      var appointmentStartsAt = appointmentDate+'T'+visitStartTime+'Z';
-      var appointmentStartTimeStamp = utility.getTimeStamp(appointmentStartsAt);
-      return new Date().getTime() < appointmentStartTimeStamp;
+      var start = (appointmentDate + ' '+ $filter('date')(visitStartTime, 'HH:mm:ss')).split(/[\s|:|-]/);
+      var startTime = new Date(start[0], start[1]-1, start[2], start[3], start[4], start[5]);
+
+      return new Date().getTime() < startTime.getTime();
     };
 
     this.isAppointmentExpired = function(appointmentDate, visitEndTime) {
-      visitEndTime = $filter('date')(visitEndTime, 'HH:mm:ss');
-      var appointmentEndsAt = appointmentDate+'T'+visitEndTime+'Z';
-      var appointmentEndTimeStamp = utility.getTimeStamp(appointmentEndsAt);
-      return new Date().getTime() > appointmentEndTimeStamp;
+      var end =  (appointmentDate + ' '+ $filter('date')(visitEndTime, 'HH:mm:ss')).split(/[\s|:|-]/);
+      var endTime = new Date(end[0], end[1]-1, end[2], end[3], end[4], end[5]);
+      return new Date().getTime() > endTime.getTime();
     };
 
     this.get = get;

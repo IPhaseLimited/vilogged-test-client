@@ -35,11 +35,18 @@ angular.module('viLoggedClientApp')
   .controller('MainCtrl', function($scope, appointmentService, utility, $rootScope, notificationService) {
     $scope.currentAppointments = [];
     $scope.appointmentsAwaitingApproval = [];
+    $scope.appointmentsNotCheckedIn= [];
+    $scope.expiredAppointments= [];
+    $scope.appointmentsNeverUsed= [];
 
     $rootScope.busy = true;
     var appointments = appointmentService.all();
 
     var appointmentsInProgressExports = [];
+    var appointmentsAwaitingApprovalExports = [];
+    var appointmentsNotCheckedInExports = [];
+    var expiredAppointmentsExports = [];
+    var appointmentsNeverUsedExports = [];
 
     $scope.csvHeader = [
       'Visitor\'s Name',
@@ -56,21 +63,20 @@ angular.module('viLoggedClientApp')
       .then(function(response) {
         $scope.currentAppointments = response
           .filter(function(appointment) {
-            var startTime = utility.getTimeStamp(appointment.appointment_date, appointment.start_time);
-            var endTime = utility.getTimeStamp(appointment.appointment_date, appointment.end_time);
+            var startTime = utility.getTimeStamp(appointment.appointment_date, appointment.visit_start_time);
+            var endTime = utility.getTimeStamp(appointment.appointment_date, appointment.visit_end_time);
             var date = new Date().getTime();
             return appointment.is_approved && ( date >= startTime || date <= endTime) && appointment.checked_in && !appointment.checked_out;
           });
 
         $scope.appointmentsAwaitingApproval = response
           .filter(function(appointment) {
-            return !appointment.is_approved && (utility.getTimeStamp(appointment.appointment_date) > new Date().getTime()
-              || !appointment.is_expired);
+            return appointment.is_approved === null && (new Date(appointment.appointment_date).getTime() > new Date().getTime());
           });
 
         $scope.appointmentsNotCheckedIn = response
           .filter(function(appointment) {
-            return appointment.is_approved && appointment.checked_in === null;
+            return appointment.is_approved === 1 && appointment.checked_in === null;
           });
 
         $scope.expiredAppointments = response
@@ -82,27 +88,91 @@ angular.module('viLoggedClientApp')
         $scope.appointmentsNeverUsed = response
           .filter(function(appointment) {
             return appointment.is_approved && appointment.checked_in === null &&
-              (appointment.is_expired || utility.getTimeStamp(appointment.appointment_date) < new Date().getTime());
+              (utility.getTimeStamp(appointment.appointment_date) < new Date().getTime());
           });
+
+
+
+        $scope.currentAppointments.forEach(function (row) {
+          appointmentsInProgressExports.push({
+            visitor_name: row.visitor_id.first_name + ' ' + row.visitor_id.last_name,
+            host_name: row.host_id.first_name + ' ' + row.host_id.last_name,
+            appointment_date: row.appointment_date,
+            start_time: row.start_time,
+            end_time: row.end_time,
+            checked_in: row.checked_in,
+            created: row.created,
+            modified: row.modified
+          })
+        });
+
+        $scope.appointmentsInProgressExport = appointmentsInProgressExports;
+
+        $scope.appointmentsAwaitingApproval.forEach(function (row) {
+          appointmentsAwaitingApprovalExports.push({
+            visitor_name: row.visitor_id.first_name + ' ' + row.visitor_id.last_name,
+            host_name: row.host_id.first_name + ' ' + row.host_id.last_name,
+            appointment_date: row.appointment_date,
+            start_time: row.start_time,
+            end_time: row.end_time,
+            checked_in: row.checked_in,
+            created: row.created,
+            modified: row.modified
+          })
+        });
+
+        $scope.appointmentsAwaitingApprovalExport = appointmentsAwaitingApprovalExports;
+
+        $scope.appointmentsNotCheckedIn.forEach(function (row) {
+          appointmentsNotCheckedInExports.push({
+            visitor_name: row.visitor_id.first_name + ' ' + row.visitor_id.last_name,
+            host_name: row.host_id.first_name + ' ' + row.host_id.last_name,
+            appointment_date: row.appointment_date,
+            start_time: row.start_time,
+            end_time: row.end_time,
+            checked_in: row.checked_in,
+            created: row.created,
+            modified: row.modified
+          })
+        });
+
+        $scope.appointmentsNotCheckedInExport = appointmentsNotCheckedInExports;
+
+        $scope.expiredAppointments.forEach(function (row) {
+          expiredAppointmentsExports.push({
+            visitor_name: row.visitor_id.first_name + ' ' + row.visitor_id.last_name,
+            host_name: row.host_id.first_name + ' ' + row.host_id.last_name,
+            appointment_date: row.appointment_date,
+            start_time: row.start_time,
+            end_time: row.end_time,
+            checked_in: row.checked_in,
+            created: row.created,
+            modified: row.modified
+          })
+        });
+
+        $scope.expiredAppointmentsExport = expiredAppointmentsExports;
+
+        $scope.appointmentsNeverUsed.forEach(function (row) {
+          appointmentsNeverUsedExports.push({
+            visitor_name: row.visitor_id.first_name + ' ' + row.visitor_id.last_name,
+            host_name: row.host_id.first_name + ' ' + row.host_id.last_name,
+            appointment_date: row.appointment_date,
+            start_time: row.start_time,
+            end_time: row.end_time,
+            checked_in: row.checked_in,
+            created: row.created,
+            modified: row.modified
+          })
+        });
+
+        $scope.appointmentsNeverUsedExport = appointmentsNeverUsedExports;
         $rootScope.busy = false;
       })
       .catch(function(reason) {
         $rootScope.busy = false;
         notificationService.setTimeOutNotification(reason);
       });
-
-    $scope.currentAppointments.forEach(function (row) {
-      appointmentsInProgressExports.push({
-        visitor_name: row.visitor_id.first_name + ' ' + row.visitor_id.last_name,
-        host_name: row.host_id.first_name + ' ' + row.host_id.last_name,
-        appointment_date: row.appointment_date,
-        start_time: row.start_time,
-        end_time: row.end_time,
-        checked_in: row.checked_in,
-        created: row.created,
-        modified: row.modified
-      })
-    })
 
   })
 ;

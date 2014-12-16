@@ -25,10 +25,10 @@
             <th><input class="form-control" type="text" ng-model="search.username"/></th>
             <th>
               <select class="form-control" ng-model="search.role">
-                <option value="superadmin">Super Admin</option>
-                <option value="admin">Admin</option>
-                <option value="staff">Staff</option>
-                <option value="not active">Not Active</option>
+                <option value="is_superuser">Super Admin</option>
+                <option value="is_staff">Admin</option>
+                <option value="is_active">Staff</option>
+                <option value="not_active">Not Active</option>
               </select>
             </th>
             <th><input class="form-control" type="text" ng-model="search.department"/></th>
@@ -88,7 +88,7 @@
               <span ng-show="!user.is_superuser && !user.is_staff && user.is_active">Staff</span>
               <span ng-show="!user.is_superuser && !user.is_staff && !user.is_active">Not Active</span>
             </td>
-            <td>{{ user.user_profile.department.department }}</td>
+            <td>{{ user.user_profile.department }}</td>
             <td>{{ user.user_profile.phone }}</td>
             <td>
               <a class="btn btn-success btn-xs" ui-sref="editUser({user_id: user.id})"><i class="fa fa-edit"></i>

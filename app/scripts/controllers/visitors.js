@@ -21,6 +21,11 @@ angular.module('viLoggedClientApp')
         },
         ncyBreadcrumb: {
           label: 'Visitors'
+        },
+        resolve: {
+          hasAppointments: function(visitorService) {
+            return visitorService.hasAppointments();
+          }
         }
       })
       .state('create-visitor-profile', {
@@ -89,11 +94,10 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('VisitorsCtrl', function ($scope, visitorService, $rootScope, guestGroupConstant, alertService, $filter) {
+  .controller('VisitorsCtrl', function ($scope, visitorService, $rootScope, guestGroupConstant, alertService, $filter, hasAppointments) {
     $scope.visitors = [];
     $scope.search = {};
     var rows = [];
-
     var exports = [];
 
     $scope.csvHeader = [
@@ -159,6 +163,10 @@ angular.module('viLoggedClientApp')
     };
 
     function updateTableData() {
+      var createdBy = null;
+      if (!$scope.user.is_staff && !$scope.user.is_superuser) {
+        createdBy = $scope.user.id;
+      }
       $scope.visitors = rows.filter(function (row) {
         var date = moment(row.created);
         var include = true;
@@ -188,6 +196,9 @@ angular.module('viLoggedClientApp')
           include = include && (date.isSame($scope.search.created, 'day'));
         }
 
+        if (hasAppointments.length || createdBy !== null) {
+          include = include && (hasAppointments.indexOf(row.uuid) !== -1 || row.created_by === createdBy);
+        }
 
         return include;
       });
@@ -202,7 +213,7 @@ angular.module('viLoggedClientApp')
           contact_address: row.visitors_address,
           company_name: row.company_name,
           company_address: row.company_address,
-          group_type: row.group_type.group_name,
+          group_type: row.group_type != null && angular.isDefined(row.group_type) ? row.group_type.group_name : 'None',
           created_date: $filter('date')(row.created, 'longDate'),
           created_by: row.created_by,
           modified_date:  $filter('date')(row.modified, 'longDate'),
@@ -392,14 +403,14 @@ angular.module('viLoggedClientApp')
         var compiledSMSTemplate = utility.compileTemplate(visitor, smsTemplate, '&&');
 
 
-        if (angular.isDefined($scope.visitor.visitors_phone) && $scope.visitor.visitors_phone !== '') {
+        if (angular.isDefined($scope.visitor.visitors_phone) && $scope.visitor.visitors_phone !== '' && $scope.visitor.visitors_phone !== null) {
           notificationService.send.sms({
             message: compiledSMSTemplate,
             mobiles: $scope.visitor.visitors_phone
           });
         }
 
-        if (angular.isDefined($scope.visitor.visitors_email) && $scope.visitor.visitors_email !== '') {
+        if (angular.isDefined($scope.visitor.visitors_email) && $scope.visitor.visitors_email !== '' && $scope.visitor.visitors_email !== null) {
           notificationService.send.email({
             to: $scope.visitor.visitors_email,
             subject: 'Visitor\'s account created.',
@@ -418,8 +429,8 @@ angular.module('viLoggedClientApp')
         last_name: validationService.BASIC,
         gender: validationService.BASIC,
         visitors_phone: phoneNumberValidation,
-        visitors_email: emailValidation
-        //group_type_id: validationService.BASIC
+        visitors_email: emailValidation,
+        group_type: validationService.BASIC
       };
 
       var validationParams2 = {
@@ -452,7 +463,6 @@ angular.module('viLoggedClientApp')
           $scope.visitor.date_of_birth = $filter('date')($scope.visitor.date_of_birth, 'yyyy-MM-dd');
         }
 
-        $scope.visitor.group_type = $scope.visitor.group_type_id;
         if (!angular.isDefined($scope.visitorsLocation.residential_country)) {
           $scope.visitorsLocation.residential_country = 'Other';
           $scope.visitorsLocation.residential_state = 'Not set';
@@ -491,9 +501,15 @@ angular.module('viLoggedClientApp')
               });
           })
           .catch(function (reason) {
+            Object.keys(reason).forEach(function (key) {
+              $scope.validationErrors[key] = reason[key];
+              $rootScope.busy = false;
+            });
             notificationService.setTimeOutNotification(reason);
             $rootScope.busy = false;
           });
+      } else {
+        $rootScope.busy = false;
       }
 
     };

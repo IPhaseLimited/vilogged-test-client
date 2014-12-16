@@ -364,10 +364,10 @@ angular.module('viLoggedClientApp')
         }
 
         if (include && $scope.search.role) {
-          if ($scope.search.role === 'superuser') include = row.is_active && row.is_staff && row.is_superuser;
-          if ($scope.search.role === 'admin') include = row.is_active && row.is_staff && !row.is_superuser;
-          if ($scope.search.role === 'staff') include = row.is_active && !row.is_staff && !row.is_superuser;
-          if ($scope.search.role === 'not active') include = !row.is_active;
+          if ($scope.search.role === 'is_superuser') include = row.is_active && row.is_staff && row.is_superuser;
+          if ($scope.search.role === 'is_staff') include = row.is_active && row.is_staff && !row.is_superuser;
+          if ($scope.search.role === 'is_active') include = row.is_active && !row.is_staff && !row.is_superuser;
+          if ($scope.search.role === 'not_active') include = !row.is_active;
         }
 
         if (include && $scope.search.department) {
@@ -383,12 +383,15 @@ angular.module('viLoggedClientApp')
       });
 
       $scope.users.forEach(function (row) {
-        exports.push({
+        var department = angular.isDefined(row.department) && row.department !== null ? row.department : '';
+        department = angular.isDefined(row.user_profile) && row.user_profile !== null? row.user_profile.department : department;
+        var phone = angular.isDefined(row.user_profile) && row.user_profile !== null? row.user_profile.phone : '';
+          exports.push({
           name: row.first_name + ' ' + row.last_name,
           username: row.username,
           role: row.role,
-          department: angular.isDefined(row.user_profile.department) && row.user_profile.department !== null ? row.user_profile.department : '',
-          phone: row.phone
+          department: department,
+          phone: phone
         });
       });
       $scope.export = exports;
@@ -418,7 +421,6 @@ angular.module('viLoggedClientApp')
 
     //TODO:: flash message
     $scope.deleteAccount = function(id) {
-      $rootScope.busy = true;
       if (userService.user.id === id) {
         return;
       }
@@ -433,11 +435,9 @@ angular.module('viLoggedClientApp')
             .then(function(response) {
               alertService.messageToTop.success('Account deleted successfully.');
               getUsers();
-              $rootScope.busy = false;
             })
             .catch(function(reason) {
               notificationService.setTimeOutNotification(reason);
-              $rootScope.busy = false;
             });
         });
     }

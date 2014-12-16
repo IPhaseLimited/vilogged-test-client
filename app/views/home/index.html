@@ -5,8 +5,8 @@
         <div class="pull-left">Appointments in Progress</div>
         <div class="widget-icons pull-right">
           <button ng-disabled="!appointmentsInProgressExport.length" class="btn btn-primary hidden-print" type="button"
-                  ng-csv="appointmentsInProgressExport" csv-header="appointmentsInProgressCsvHeader"  filename="{{getFileName('appointmentsInProgress')}}">
-            Export Appointments in Progress Reports
+                  ng-csv="appointmentsInProgressExport" csv-header="csvHeader"  filename="{{getFileName('appointmentsInProgress')}}">
+            Export
           </button>
         </div>
         <div class="clearfix"></div>
@@ -52,7 +52,10 @@
       <div class="widget-head">
         <div class="pull-left">Appointments Awaiting Approval</div>
         <div class="widget-icons pull-right">
-
+          <button ng-disabled="!appointmentsAwaitingApprovalExport.length" class="btn btn-primary hidden-print" type="button"
+                  ng-csv="appointmentsAwaitingApprovalExport" csv-header="csvHeader"  filename="{{getFileName('appointmentsAwaitingApproval')}}">
+            Export
+          </button>
         </div>
         <div class="clearfix"></div>
       </div>
@@ -70,7 +73,7 @@
               <th>S/N</th>
               <th>Host's Name</th>
               <th>Visitor's Name</th>
-              <th>Date</th>
+              <th>Appointment Date</th>
               <th></th>
             </tr>
             </thead>
@@ -103,7 +106,10 @@
       <div class="widget-head">
         <div class="pull-left">Approved Appointments never used</div>
         <div class="widget-icons pull-right">
-
+          <button ng-disabled="!appointmentsNeverUsedExport.length" class="btn btn-primary hidden-print" type="button"
+                  ng-csv="appointmentsNeverUsedExport" csv-header="csvHeader"  filename="{{getFileName('appointmentsNeverUsed')}}">
+            Export
+          </button>
         </div>
         <div class="clearfix"></div>
       </div>
@@ -156,7 +162,10 @@
       <div class="widget-head">
         <div class="pull-left">Approved not checked-in</div>
         <div class="widget-icons pull-right">
-
+          <button ng-disabled="!appointmentsNotCheckedInExport.length" class="btn btn-primary hidden-print" type="button"
+                  ng-csv="appointmentsNotCheckedInExport" csv-header="csvHeader"  filename="{{getFileName('approvedNotCheckedIn')}}">
+            Export
+          </button>
         </div>
         <div class="clearfix"></div>
       </div>
@@ -207,7 +216,10 @@
       <div class="widget-head">
         <div class="pull-left">Expired Appointments</div>
         <div class="widget-icons pull-right">
-
+          <button ng-disabled="!expiredAppointmentsExport.length" class="btn btn-primary hidden-print" type="button"
+                  ng-csv="expiredAppointmentsExport" csv-header="csvHeader"  filename="{{getFileName('expiredAppointments')}}">
+            Export
+          </button>
         </div>
         <div class="clearfix"></div>
       </div>

@@ -9,18 +9,11 @@
  */
 angular.module('viLoggedClientApp')
   .service('storageService', function storageService($q, $window, utility, collections, pouchStorageService,
-                                                     couchDbService, db, userService, apiService) {
+                                                     couchDbService, db, apiService, $cookieStore) {
 
     var dataManagementService = apiService;
-    var currentUser = userService.user;
-    var DEFAULT_TIME = '0000-00-00T00:00:00.000Z';
-    var DEFAULT_USER = {
-      id: 1
-    };
 
-    if (!currentUser) {
-      currentUser = DEFAULT_USER;
-    }
+
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     /**
@@ -97,6 +90,17 @@ angular.module('viLoggedClientApp')
      * @returns {Promise}
      */
     var insertData = function(table, data) {
+      var currentUser = $cookieStore.get('current-user');
+
+      var DEFAULT_USER = {
+        id: 1
+      };
+
+      if (angular.isUndefined(currentUser)) {
+        currentUser = DEFAULT_USER;
+      } else if (currentUser.is_vistor) {
+        currentUser.id = 1;
+      }
       if(data.hasOwnProperty('uuid')){
         throw 'insert should only be called with fresh record that has not uuid or primary key field.';
       }
@@ -114,6 +118,17 @@ angular.module('viLoggedClientApp')
      * @returns {Promise}
      */
     var updateData = function(table, data, updateDateModified) {
+      var currentUser = $cookieStore.get('current-user');
+
+      var DEFAULT_USER = {
+        id: 1
+      };
+
+      if (angular.isUndefined(currentUser)) {
+        currentUser = DEFAULT_USER;
+      } else if (currentUser.is_vistor) {
+        currentUser.id = 1;
+      }
       if(!data.hasOwnProperty('uuid')){
         throw 'update should only be called with data that has UUID or primary key already.';
       }
@@ -234,6 +249,17 @@ angular.module('viLoggedClientApp')
     };
 
     var validateBatch = function(batch) {
+      var currentUser = $cookieStore.get('current-user');
+
+      var DEFAULT_USER = {
+        id: 1
+      };
+
+      if (angular.isUndefined(currentUser)) {
+        currentUser = DEFAULT_USER;
+      } else if (currentUser.is_vistor) {
+        currentUser.id = 1;
+      }
       var now = utility.getDateTime();
       if (!utility.has(batch, 'uuid')) {
         batch.uuid = utility.uuidGenerator();
