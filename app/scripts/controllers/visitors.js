@@ -475,8 +475,13 @@ angular.module('viLoggedClientApp')
 
             function afterRegistration() {
 
-              alertService.success('Visitor profile was saved successfully.');
-              $state.go('visitors');
+              if ($scope.user.is_staff) {
+                alertService.success('Visitor profile was saved successfully.');
+                $state.go('visitors');
+              } else {
+                alertService.success('Your profile was saved successfully.');
+                $state.go('show-visitor', {visitor_id: $scope.visitor.uuid});
+              }
               sendNotification();
             }
 
@@ -484,7 +489,8 @@ angular.module('viLoggedClientApp')
             visitorsLocationService.save($scope.visitorsLocation)
               .then(function () {
                 $rootScope.busy = false;
-                afterRegistration();
+                alertService.success('Visitor profile was saved successfully.');
+                $state.go('visitors');
               })
               .catch(function (reason) {
                 Object.keys(reason).forEach(function (key) {
