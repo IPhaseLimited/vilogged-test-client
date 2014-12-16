@@ -88,7 +88,7 @@
               <span ng-show="!user.is_superuser && !user.is_staff && user.is_active">Staff</span>
               <span ng-show="!user.is_superuser && !user.is_staff && !user.is_active">Not Active</span>
             </td>
-            <td>{{ user.user_profile.department.department }}</td>
+            <td>{{ user.user_profile.department }}</td>
             <td>{{ user.user_profile.phone }}</td>
             <td>
               <a class="btn btn-success btn-xs" ui-sref="editUser({user_id: user.id})"><i class="fa fa-edit"></i>
