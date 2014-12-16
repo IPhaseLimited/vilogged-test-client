@@ -364,10 +364,10 @@ angular.module('viLoggedClientApp')
         }
 
         if (include && $scope.search.role) {
-          if ($scope.search.role === 'superuser') include = row.is_active && row.is_staff && row.is_superuser;
-          if ($scope.search.role === 'admin') include = row.is_active && row.is_staff && !row.is_superuser;
-          if ($scope.search.role === 'staff') include = row.is_active && !row.is_staff && !row.is_superuser;
-          if ($scope.search.role === 'not active') include = !row.is_active;
+          if ($scope.search.role === 'is_superuser') include = row.is_active && row.is_staff && row.is_superuser;
+          if ($scope.search.role === 'is_staff') include = row.is_active && row.is_staff && !row.is_superuser;
+          if ($scope.search.role === 'is_active') include = row.is_active && !row.is_staff && !row.is_superuser;
+          if ($scope.search.role === 'not_active') include = !row.is_active;
         }
 
         if (include && $scope.search.department) {
