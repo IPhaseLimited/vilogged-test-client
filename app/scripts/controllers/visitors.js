@@ -129,7 +129,7 @@ angular.module('viLoggedClientApp')
       visitorService.all()
         .then(function (response) {
           $rootScope.busy = false;
-          rows = response;
+          rows = $filter('orderBy')(response, 'created', 'reverse');
           $scope.pagination.totalItems = rows.length;
           $scope.pagination.numPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
           updateTableData();
