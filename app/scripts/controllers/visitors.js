@@ -413,7 +413,7 @@ angular.module('viLoggedClientApp')
         if (angular.isDefined($scope.visitor.visitors_email) && $scope.visitor.visitors_email !== '' && $scope.visitor.visitors_email !== null) {
           notificationService.send.email({
             to: $scope.visitor.visitors_email,
-            subject: 'Visitor\'s account created.',
+            subject: 'Visitor\'s profile created.',
             message: compiledEmailTemplate
           });
         }
@@ -475,13 +475,8 @@ angular.module('viLoggedClientApp')
 
             function afterRegistration() {
 
-              if ($scope.user.is_staff) {
-                alertService.success('Visitor profile was saved successfully.');
-                $state.go('visitors');
-              } else {
-                alertService.success('Your profile was saved successfully.');
-                $state.go('show-visitor', {visitor_id: $scope.visitor.uuid});
-              }
+              alertService.success('Visitor profile was saved successfully.');
+              $state.go('visitors');
               sendNotification();
             }
 
