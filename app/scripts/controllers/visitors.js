@@ -582,44 +582,26 @@ angular.module('viLoggedClientApp')
 
       });
 
-    var appointments = appointmentService.getNestedAppointmentsByVisitor($stateParams.visitor_id);
+    appointmentService.getNestedAppointmentsByVisitor($stateParams.visitor_id)
+      .then(function(response) {
+        $rootScope.busy = false;
 
-    appointments
-      .then(function () {
-        $scope.appointmentLoaded = true;
-        if ($scope.appointmentLoaded) {
-          $rootScope.busy = false;
-        }
-      })
-      .catch(function (reason) {
-        notificationService.setTimeOutNotification(reason);
-        $scope.appointmentLoaded = true;
-        if ($scope.visitorLoaded) {
-          $rootScope.busy = false;
-        }
-      });
-
-    appointments
-      .then(function (response) {
         $scope.upcomingAppointments = response
           .filter(function (appointment) {
             return appointment.is_approved &&
               new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.is_expired;
           });
-      })
-      .catch(function (reason) {
-        notificationService.setTimeOutNotification(reason);
-      });
 
-    appointments
-      .then(function (response) {
         $scope.appointments = response;
         $scope.pagination.totalAppointments = $scope.appointments.length;
         $scope.pagination.appointmentNumPages =
           Math.ceil($scope.pagination.totalAppointments / $scope.pagination.appointmentsPerPage);
+
       })
-      .catch(function (reason) {
+      .catch(function(reason) {
+        $rootScope.busy = false;
         notificationService.setTimeOutNotification(reason);
       });
+
   })
 ;
