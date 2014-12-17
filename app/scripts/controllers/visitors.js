@@ -152,6 +152,23 @@ angular.module('viLoggedClientApp')
 
     };
 
+    function dateFormat() {
+      return {
+        opened: false,
+        open: function ($event) {
+          $event.preventDefault();
+          $event.stopPropagation();
+
+          this.opened = true;
+        }
+      };
+    }
+
+    $scope.dateRange = {
+      from: dateFormat(),
+      to: dateFormat()
+    };
+
     $scope.sort = function(column) {
       if ($scope.orderByColumn[column]) {
         $scope.orderByColumn[column].reverse = !$scope.orderByColumn[column].reverse;
@@ -198,6 +215,15 @@ angular.module('viLoggedClientApp')
 
         if (hasAppointments.length || createdBy !== null) {
           include = include && (hasAppointments.indexOf(row.uuid) !== -1 || row.created_by === createdBy);
+        }
+
+
+        if (include && $scope.search.from) {
+          include = include && $filter('date')(row.created, 'yyyy-MM-dd') >= $filter('date')($scope.search.from, 'yyyy-MM-dd');
+        }
+
+        if (include && $scope.search.to) {
+          include = include && $filter('date')(row.created, 'yyyy-MM-dd') <= $filter('date')($scope.search.to, 'yyyy-MM-dd');
         }
 
         return include;
