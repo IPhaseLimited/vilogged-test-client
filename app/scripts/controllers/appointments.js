@@ -214,6 +214,23 @@ angular.module('viLoggedClientApp')
         });
     };
 
+    function dateFormat() {
+      return {
+        opened: false,
+        open: function ($event) {
+          $event.preventDefault();
+          $event.stopPropagation();
+
+          this.opened = true;
+        }
+      };
+    }
+
+    $scope.filterRange = {
+      from: dateFormat(),
+      to: dateFormat()
+    };
+
     function getAppointments() {
       appointmentService.all()
         .then(function(response) {
