@@ -226,7 +226,7 @@ angular.module('viLoggedClientApp')
       };
     }
 
-    $scope.filterRange = {
+    $scope.dateRange = {
       from: dateFormat(),
       to: dateFormat()
     };
@@ -302,6 +302,15 @@ angular.module('viLoggedClientApp')
         if (include && $scope.search.is_approved) {
 
           include = include &&  String($scope.search.is_approved) === String(row.is_approved);
+        }
+
+
+        if (include && $scope.search.from) {
+          include = include && $filter('date')(row.appointment_date, 'yyyy-MM-dd') >= $filter('date')($scope.search.from, 'yyyy-MM-dd');
+        }
+
+        if (include && $scope.search.to) {
+          include = include && $filter('date')(row.appointment_date, 'yyyy-MM-dd') <= $filter('date')($scope.search.to, 'yyyy-MM-dd');
         }
 
         return include;
