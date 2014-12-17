@@ -138,7 +138,7 @@ angular.module('viLoggedClientApp')
       maxSize: 5,
       itemsPerPage: 10
     };
-    var exports = [];
+
 
     $scope.search = {};
     var rows = [];
@@ -268,6 +268,7 @@ angular.module('viLoggedClientApp')
     }, true);
 
     function updateTableData() {
+      var exports = [];
       $scope.appointments = rows.filter(function (row) {
 
         var date = moment(row.appointment_date);
