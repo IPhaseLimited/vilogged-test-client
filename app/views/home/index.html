@@ -91,24 +91,68 @@
   <div class="col-sm-6">
     <div class="widget">
       <div class="widget-head">
-        <div class="pull-left">Appointments Awaiting Approval</div>
-        <div class="widget-icons pull-right">
-          <button ng-disabled="!appointmentsAwaitingApprovalExport.length" class="btn btn-primary btn-xs hidden-print" type="button"
-                  ng-csv="appointmentsAwaitingApprovalExport" csv-header="csvHeader"  filename="{{getFileName('appointmentsAwaitingApproval')}}">
-            Export
-          </button>
+        <div class="pull-left">Awaiting Approval</div>
+        <div style="width: 70%;" class="widget-icons pull-right">
+
+          <div class="row">
+            <div class="col-xs-4">
+              <div class="input-group input-group-sm">
+                <input
+                  placeholder="Filter from"
+                  type="text"
+                  class="form-control"
+                  ng-model="search.awaitingApproval.from"
+                  ng-change="getAwaitingApproval()"
+                  datepicker-popup
+                  is-open="dateRange.awaitingApproval.from.opened"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="dateRange.awaitingApproval.from.open($event)">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </button>
+                </span>
+              </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="input-group input-group-sm">
+                <input
+                  placeholder="Filter to"
+                  type="text"
+                  class="form-control"
+                  ng-change="getAwaitingApproval()"
+                  ng-model="search.awaitingApproval.to"
+                  datepicker-popup
+                  is-open="dateRange.awaitingApproval.to.opened"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="dateRange.awaitingApproval.to.open($event)">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </button>
+                </span>
+              </div>
+            </div>
+            <div class="col-xs-2">
+              <button class="btn btn-primary btn-sm" ng-click="search.awaitingApproval = {}">Clear</button>
+            </div>
+            <div class="col-xs-2">
+              <button ng-disabled="!awaitingApprovalExport.length" class="btn btn-primary btn-sm hidden-print" type="button"
+                      ng-csv="awaitingApprovalExport" csv-header="csvHeader"  filename="{{getFileName('appointmentsAwaitingApproval')}}">
+                Export
+              </button>
+            </div>
+          </div>
+
+
         </div>
         <div class="clearfix"></div>
       </div>
       <div class="widget-content">
         <div class="padd">
-          <div class="alert alert-info" ng-show="!appointmentsAwaitingApproval.length">
+          <div class="alert alert-info" ng-show="!awaitingApproval.length">
             <p>
               There are no appointments awaiting approval.
             </p>
           </div>
 
-          <table class="table table-condense table-bordered" ng-show="appointmentsAwaitingApproval.length">
+          <table class="table table-condense table-bordered" ng-show="awaitingApproval.length">
             <thead>
             <tr>
               <th>S/N</th>
@@ -119,7 +163,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="appointmentAwaitingApproval in appointmentsAwaitingApproval | limitTo:5">
+            <tr ng-repeat="appointmentAwaitingApproval in awaitingApproval | limitTo:5">
               <td>{{ $index+1 }}</td>
               <td>{{ appointmentAwaitingApproval.host_id.first_name + ' ' +
                 appointmentAwaitingApproval.host_id.last_name }}
