@@ -33,12 +33,7 @@ angular.module('viLoggedClientApp')
       })
   })
   .controller('MainCtrl', function($scope, appointmentService, utility, $rootScope, notificationService, $filter) {
-    var inProgress = [],
-        awaitingApproval = [],
-        notCheckedIn = [],
-        expiredAppointments = [],
-        neverUsed = [],
-        appointments = [];
+    var appointments = [];
 
     $scope.inProgress = [];
     $scope.appointmentsAwaitingApproval = [];
