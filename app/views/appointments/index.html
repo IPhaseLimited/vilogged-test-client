@@ -145,7 +145,7 @@
 
               <a ui-sref="visitor-check-in({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
                  ng-if="!appointment.checked_in && !appointment.visitor_id.group_type.black_listed"
-                 ng-show="isAppointmentExpired(appointment.appointment_date, appointment.visit_end_time) && user.is_staff"
+                 ng-show="!isAppointmentExpired(appointment.appointment_date, appointment.visit_end_time) && user.is_staff"
                  ng-class="{disabled: !appointment.is_approved}">Check In</a>
 
               <a ui-sref="visitor-check-out({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
