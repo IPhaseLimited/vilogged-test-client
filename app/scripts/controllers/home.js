@@ -73,14 +73,14 @@ angular.module('viLoggedClientApp')
         var startTime = utility.getTimeStamp(row.appointment_date, row.visit_start_time);
         var endTime = utility.getTimeStamp(row.appointment_date, row.visit_end_time);
         var date = new Date().getTime();
-        include = row.is_approved && ( date >= startTime || date <= endTime) && row.checked_in && !row.checked_out;
+        include = include && row.is_approved && ( date >= startTime || date <= endTime) && row.checked_in && !row.checked_out;
 
         if (include && $scope.search.inProgress.from) {
-          include = include && $filter('date')(row.appointment_date, 'yyyy-MM-dd') === $filter('date')($scope.search.inProgress.from, 'yyyy-MM-dd');
+          include = include && $filter('date')(row.appointment_date, 'yyyy-MM-dd') >= $filter('date')($scope.search.inProgress.from, 'yyyy-MM-dd');
         }
 
         if (include && $scope.search.inProgress.to) {
-          include = include && $filter('date')(row.appointment_date, 'yyyy-MM-dd') === $filter('date')($scope.search.inProgress.to, 'yyyy-MM-dd');
+          include = include && $filter('date')(row.appointment_date, 'yyyy-MM-dd') <= $filter('date')($scope.search.inProgress.to, 'yyyy-MM-dd');
         }
 
         return include;
@@ -101,10 +101,46 @@ angular.module('viLoggedClientApp')
 
       $scope.appointmentsInProgressExport = appointmentsInProgressExports;
     }
+
+    function getAwaitingApproval() {
+      var awaitingApprovalExports = [];
+      $scope.awaitingApproval = appointments.filter (function (row) {
+
+        var include = true;
+
+        include = include && row.is_approved === null && (new Date(row.appointment_date).getTime() >= new Date().getTime());
+
+        if (include && $scope.search.awaitingApproval.from) {
+          include = include && $filter('date')(row.appointment_date, 'yyyy-MM-dd') >= $filter('date')($scope.search.awaitingApproval.from, 'yyyy-MM-dd');
+        }
+
+        if (include && $scope.search.awaitingApproval.to) {
+          include = include && $filter('date')(row.appointment_date, 'yyyy-MM-dd') <= $filter('date')($scope.search.awaitingApproval.to, 'yyyy-MM-dd');
+        }
+
+        return include;
+      });
+
+      $scope.awaitingApproval.forEach(function (row) {
+        awaitingApprovalExports.push({
+          visitor_name: row.visitor_id.first_name + ' ' + row.visitor_id.last_name,
+          host_name: row.host_id.first_name + ' ' + row.host_id.last_name,
+          appointment_date: row.appointment_date,
+          start_time: row.start_time,
+          end_time: row.end_time,
+          checked_in: row.checked_in,
+          created: row.created,
+          modified: row.modified
+        })
+      });
+
+      $scope.awaitingApprovalExport = awaitingApprovalExports;
+    }
     $scope.getInProgress = getInProgress;
+    $scope.getAwaitingApproval = getAwaitingApproval;
 
     $scope.dateRange = {
-      awaiting: {
+      awaitingApproval: {
         from: dateFormat(),
         to: dateFormat()
       },
@@ -125,8 +161,6 @@ angular.module('viLoggedClientApp')
 
 
     $rootScope.busy = true;
-
-    var appointmentsAwaitingApprovalExports = [];
     var appointmentsNotCheckedInExports = [];
     var expiredAppointmentsExports = [];
     var appointmentsNeverUsedExports = [];
@@ -146,6 +180,7 @@ angular.module('viLoggedClientApp')
       .then(function(response) {
         appointments = response;
         getInProgress();
+        getAwaitingApproval();
 
         $scope.appointmentsAwaitingApproval = response
           .filter(function(appointment) {
@@ -169,21 +204,6 @@ angular.module('viLoggedClientApp')
               (utility.getTimeStamp(appointment.appointment_date) < new Date().getTime());
           });
 
-
-        $scope.appointmentsAwaitingApproval.forEach(function (row) {
-          appointmentsAwaitingApprovalExports.push({
-            visitor_name: row.visitor_id.first_name + ' ' + row.visitor_id.last_name,
-            host_name: row.host_id.first_name + ' ' + row.host_id.last_name,
-            appointment_date: row.appointment_date,
-            start_time: row.start_time,
-            end_time: row.end_time,
-            checked_in: row.checked_in,
-            created: row.created,
-            modified: row.modified
-          })
-        });
-
-        $scope.appointmentsAwaitingApprovalExport = appointmentsAwaitingApprovalExports;
 
         $scope.appointmentsNotCheckedIn.forEach(function (row) {
           appointmentsNotCheckedInExports.push({
