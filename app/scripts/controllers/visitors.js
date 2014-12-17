@@ -98,7 +98,7 @@ angular.module('viLoggedClientApp')
     $scope.visitors = [];
     $scope.search = {};
     var rows = [];
-    var exports = [];
+
 
     $scope.csvHeader = [
       'Passcode',
@@ -180,6 +180,7 @@ angular.module('viLoggedClientApp')
     };
 
     function updateTableData() {
+      var exports = [];
       var createdBy = null;
       if (!$scope.user.is_staff && !$scope.user.is_superuser) {
         createdBy = $scope.user.id;
