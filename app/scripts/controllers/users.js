@@ -301,7 +301,6 @@ angular.module('viLoggedClientApp')
   })
   .controller('UsersCtrl', function($scope, $filter, userService, notificationService, alertService, $rootScope) {
     var rows = [];
-    var exports = [];
 
     $scope.search = {};
 
@@ -350,6 +349,7 @@ angular.module('viLoggedClientApp')
     };
 
     function updateTableData() {
+      var exports = [];
       $scope.users = rows.filter(function (row) {
         var date = moment(row.created);
         var include = true;
