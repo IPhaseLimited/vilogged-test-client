@@ -2,13 +2,56 @@
   <div class="widget-head">
     <div class="pull-left"><div class="appointment-legend"><div class="text-danger">Expired</div>  <div class="text-success">Upcoming</div></div></div>
     <div class="widget-icons pull-right">
-      <button ng-disabled="!export.length" class="btn btn-primary hidden-print" type="button"
-              ng-csv="export" csv-header="csvHeader"  filename="{{getFileName('appointments')}}">
-        Export
-      </button>
-      <a class="btn btn-primary" ui-sref="create-appointment" ng-show="user.is_active">
-        <i class="fa fa-plus-circle"></i> Create Appointment
-      </a>
+
+      <div class="row">
+        <div class="col-xs-3">
+          <div class="input-group input-group-sm">
+            <input
+              placeholder="Filter from"
+              type="text"
+              class="form-control"
+              ng-model="search.from"
+              datepicker-popup
+              is-open="dateRange.from.opened"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="dateRange.from.open($event)">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </button>
+                </span>
+          </div>
+        </div>
+        <div class="col-xs-3">
+          <div class="input-group input-group-sm">
+            <input
+              placeholder="Filter to"
+              type="text"
+              class="form-control"
+              ng-model="search.to"
+              datepicker-popup
+              is-open="dateRange.to.opened"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="dateRange.to.open($event)">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </button>
+                </span>
+          </div>
+        </div>
+        <div class="col-xs-1">
+          <button class="btn btn-primary btn-sm" ng-click="search = {}">Clear</button>
+        </div>
+        <div class="col-xs-1">
+          <button ng-disabled="!export.length" class="btn btn-primary btn-sm hidden-print" type="button"
+                  ng-csv="export" csv-header="csvHeader"  filename="{{getFileName('appointments')}}">
+            Export
+          </button>
+        </div>
+
+        <div class="col-xs-4 clearfix">
+          <a class="btn btn-primary btn-sm pull-right" ui-sref="create-appointment" ng-show="user.is_active">
+            <i class="fa fa-plus-circle"></i> Create Appointment
+          </a>
+        </div>
+      </div>
     </div>
     <div class="clearfix"></div>
   </div>
@@ -119,7 +162,7 @@
             <td>{{ appointment.label_code }}</td>
             <td>{{ ((appointment).visitor_id).first_name + ' ' + ((appointment).visitor_id).last_name }}</td>
             <td>{{ ((appointment).host_id).first_name + ' ' + ((appointment).host_id).last_name }}</td>
-            <td>{{ appointment.appointment_date | date:'EEE, MMM d, y' }}</td>
+            <td>{{ appointment.appointment_date | date:'MMM d, y' }}</td>
             <td>{{ appointment.visit_start_time | date:'hh:mm a' }}</td>
             <td>{{ appointment.visit_end_time | date:'hh:mm a' }}</td>
             <td class="text-center">
@@ -130,7 +173,7 @@
                  'fa-circle-o text-default': appointment.is_approved === null
                  }"></i>
             </td>
-            <td>{{ appointment.created | date:'EEE, MMM d, y' }}</td>
+            <td>{{ appointment.created | date:'MMM d, y' }}</td>
             <td>
               <a ui-sref="show-appointment({appointment_id: appointment.uuid})" class="btn btn-xs btn-success">
                 <i class="fa fa-eye"></i> View</a>
@@ -145,12 +188,11 @@
 
               <a ui-sref="visitor-check-in({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
                  ng-if="!appointment.checked_in && !appointment.visitor_id.group_type.black_listed"
-                 ng-show="isAppointmentUpcoming(appointment.appointment_date, appointment.visit_start_time) && user.is_staff"
+                 ng-show="!isAppointmentExpired(appointment.appointment_date, appointment.visit_end_time) && user.is_staff"
                  ng-class="{disabled: !appointment.is_approved}">Check In</a>
 
               <a ui-sref="visitor-check-out({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
-                 ng-show="(isAppointmentUpcoming(appointment.appointment_date, appointment.visit_start_time))
-                 && user.is_staff && appointment.checked_in !== null && appointment.checked_out === null">Check Out</a>
+                 ng-show="user.is_staff && appointment.checked_in !== null && appointment.checked_out === null">Check Out</a>
 
               <a ui-sref="edit-appointment({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
                  ng-if="!appointment.checked_in" ng-show="isAppointmentUpcoming(appointment.appointment_date, appointment.visit_start_time)  && user.is_active

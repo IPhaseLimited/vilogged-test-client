@@ -98,7 +98,7 @@ angular.module('viLoggedClientApp')
     $scope.visitors = [];
     $scope.search = {};
     var rows = [];
-    var exports = [];
+
 
     $scope.csvHeader = [
       'Passcode',
@@ -129,7 +129,7 @@ angular.module('viLoggedClientApp')
       visitorService.all()
         .then(function (response) {
           $rootScope.busy = false;
-          rows = response;
+          rows = $filter('orderBy')(response, 'created', 'reverse');
           $scope.pagination.totalItems = rows.length;
           $scope.pagination.numPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
           updateTableData();
@@ -152,6 +152,23 @@ angular.module('viLoggedClientApp')
 
     };
 
+    function dateFormat() {
+      return {
+        opened: false,
+        open: function ($event) {
+          $event.preventDefault();
+          $event.stopPropagation();
+
+          this.opened = true;
+        }
+      };
+    }
+
+    $scope.dateRange = {
+      from: dateFormat(),
+      to: dateFormat()
+    };
+
     $scope.sort = function(column) {
       if ($scope.orderByColumn[column]) {
         $scope.orderByColumn[column].reverse = !$scope.orderByColumn[column].reverse;
@@ -163,6 +180,7 @@ angular.module('viLoggedClientApp')
     };
 
     function updateTableData() {
+      var exports = [];
       var createdBy = null;
       if (!$scope.user.is_staff && !$scope.user.is_superuser) {
         createdBy = $scope.user.id;
@@ -198,6 +216,15 @@ angular.module('viLoggedClientApp')
 
         if (hasAppointments.length || createdBy !== null) {
           include = include && (hasAppointments.indexOf(row.uuid) !== -1 || row.created_by === createdBy);
+        }
+
+
+        if (include && $scope.search.from) {
+          include = include && $filter('date')(row.created, 'yyyy-MM-dd') >= $filter('date')($scope.search.from, 'yyyy-MM-dd');
+        }
+
+        if (include && $scope.search.to) {
+          include = include && $filter('date')(row.created, 'yyyy-MM-dd') <= $filter('date')($scope.search.to, 'yyyy-MM-dd');
         }
 
         return include;
@@ -413,7 +440,7 @@ angular.module('viLoggedClientApp')
         if (angular.isDefined($scope.visitor.visitors_email) && $scope.visitor.visitors_email !== '' && $scope.visitor.visitors_email !== null) {
           notificationService.send.email({
             to: $scope.visitor.visitors_email,
-            subject: 'Visitor\'s account created.',
+            subject: 'Visitor\'s profile created.',
             message: compiledEmailTemplate
           });
         }
@@ -489,7 +516,8 @@ angular.module('viLoggedClientApp')
             visitorsLocationService.save($scope.visitorsLocation)
               .then(function () {
                 $rootScope.busy = false;
-                afterRegistration();
+                alertService.success('Visitor profile was saved successfully.');
+                $state.go('visitors');
               })
               .catch(function (reason) {
                 Object.keys(reason).forEach(function (key) {
@@ -582,44 +610,26 @@ angular.module('viLoggedClientApp')
 
       });
 
-    var appointments = appointmentService.getNestedAppointmentsByVisitor($stateParams.visitor_id);
+    appointmentService.getNestedAppointmentsByVisitor($stateParams.visitor_id)
+      .then(function(response) {
+        $rootScope.busy = false;
 
-    appointments
-      .then(function () {
-        $scope.appointmentLoaded = true;
-        if ($scope.appointmentLoaded) {
-          $rootScope.busy = false;
-        }
-      })
-      .catch(function (reason) {
-        notificationService.setTimeOutNotification(reason);
-        $scope.appointmentLoaded = true;
-        if ($scope.visitorLoaded) {
-          $rootScope.busy = false;
-        }
-      });
-
-    appointments
-      .then(function (response) {
         $scope.upcomingAppointments = response
           .filter(function (appointment) {
             return appointment.is_approved &&
               new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.is_expired;
           });
-      })
-      .catch(function (reason) {
-        notificationService.setTimeOutNotification(reason);
-      });
 
-    appointments
-      .then(function (response) {
         $scope.appointments = response;
         $scope.pagination.totalAppointments = $scope.appointments.length;
         $scope.pagination.appointmentNumPages =
           Math.ceil($scope.pagination.totalAppointments / $scope.pagination.appointmentsPerPage);
+
       })
-      .catch(function (reason) {
+      .catch(function(reason) {
+        $rootScope.busy = false;
         notificationService.setTimeOutNotification(reason);
       });
+
   })
 ;

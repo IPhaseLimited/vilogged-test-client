@@ -138,7 +138,7 @@ angular.module('viLoggedClientApp')
       maxSize: 5,
       itemsPerPage: 10
     };
-    var exports = [];
+
 
     $scope.search = {};
     var rows = [];
@@ -214,10 +214,27 @@ angular.module('viLoggedClientApp')
         });
     };
 
+    function dateFormat() {
+      return {
+        opened: false,
+        open: function ($event) {
+          $event.preventDefault();
+          $event.stopPropagation();
+
+          this.opened = true;
+        }
+      };
+    }
+
+    $scope.dateRange = {
+      from: dateFormat(),
+      to: dateFormat()
+    };
+
     function getAppointments() {
       appointmentService.all()
         .then(function(response) {
-          rows = response;
+          rows = $filter('orderBy')(response, 'created', 'reverse');
           $scope.pagination.totalItems = rows.length;
           $scope.pagination.numPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
           updateTableData();
@@ -232,7 +249,7 @@ angular.module('viLoggedClientApp')
     function getUserAppointments() {
       appointmentService.getNestedAppointmentsByUser($rootScope.user)
         .then(function(response) {
-          rows = response;
+          rows = $filter('orderBy')(response, 'created', 'reverse');;
           $scope.pagination.totalItems = rows.length;
           $scope.pagination.numPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
           $rootScope.busy = false;
@@ -251,6 +268,7 @@ angular.module('viLoggedClientApp')
     }, true);
 
     function updateTableData() {
+      var exports = [];
       $scope.appointments = rows.filter(function (row) {
 
         var date = moment(row.appointment_date);
@@ -285,6 +303,15 @@ angular.module('viLoggedClientApp')
         if (include && $scope.search.is_approved) {
 
           include = include &&  String($scope.search.is_approved) === String(row.is_approved);
+        }
+
+
+        if (include && $scope.search.from) {
+          include = include && $filter('date')(row.appointment_date, 'yyyy-MM-dd') >= $filter('date')($scope.search.from, 'yyyy-MM-dd');
+        }
+
+        if (include && $scope.search.to) {
+          include = include && $filter('date')(row.appointment_date, 'yyyy-MM-dd') <= $filter('date')($scope.search.to, 'yyyy-MM-dd');
         }
 
         return include;
