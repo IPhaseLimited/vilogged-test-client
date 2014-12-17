@@ -129,7 +129,7 @@ angular.module('viLoggedClientApp')
       visitorService.all()
         .then(function (response) {
           $rootScope.busy = false;
-          rows = response;
+          rows = $filter('orderBy')(response, 'created', 'reverse');
           $scope.pagination.totalItems = rows.length;
           $scope.pagination.numPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
           updateTableData();
@@ -413,7 +413,7 @@ angular.module('viLoggedClientApp')
         if (angular.isDefined($scope.visitor.visitors_email) && $scope.visitor.visitors_email !== '' && $scope.visitor.visitors_email !== null) {
           notificationService.send.email({
             to: $scope.visitor.visitors_email,
-            subject: 'Visitor\'s account created.',
+            subject: 'Visitor\'s profile created.',
             message: compiledEmailTemplate
           });
         }
@@ -489,7 +489,8 @@ angular.module('viLoggedClientApp')
             visitorsLocationService.save($scope.visitorsLocation)
               .then(function () {
                 $rootScope.busy = false;
-                afterRegistration();
+                alertService.success('Visitor profile was saved successfully.');
+                $state.go('visitors');
               })
               .catch(function (reason) {
                 Object.keys(reason).forEach(function (key) {
