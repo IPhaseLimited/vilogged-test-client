@@ -2,13 +2,56 @@
   <div class="widget-head">
     <div class="pull-left"><div class="appointment-legend"><div class="text-danger">Expired</div>  <div class="text-success">Upcoming</div></div></div>
     <div class="widget-icons pull-right">
-      <button ng-disabled="!export.length" class="btn btn-primary hidden-print" type="button"
-              ng-csv="export" csv-header="csvHeader"  filename="{{getFileName('appointments')}}">
-        Export
-      </button>
-      <a class="btn btn-primary" ui-sref="create-appointment" ng-show="user.is_active">
-        <i class="fa fa-plus-circle"></i> Create Appointment
-      </a>
+
+      <div class="row">
+        <div class="col-xs-3">
+          <div class="input-group input-group-sm">
+            <input
+              placeholder="Filter from"
+              type="text"
+              class="form-control"
+              ng-model="search.from"
+              datepicker-popup
+              is-open="dateRange.from.opened"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="dateRange.from.open($event)">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </button>
+                </span>
+          </div>
+        </div>
+        <div class="col-xs-3">
+          <div class="input-group input-group-sm">
+            <input
+              placeholder="Filter to"
+              type="text"
+              class="form-control"
+              ng-model="search.to"
+              datepicker-popup
+              is-open="dateRange.to.opened"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="dateRange.to.open($event)">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </button>
+                </span>
+          </div>
+        </div>
+        <div class="col-xs-1">
+          <button class="btn btn-primary btn-sm" ng-click="search = {}">Clear</button>
+        </div>
+        <div class="col-xs-1">
+          <button ng-disabled="!export.length" class="btn btn-primary btn-sm hidden-print" type="button"
+                  ng-csv="export" csv-header="csvHeader"  filename="{{getFileName('appointments')}}">
+            Export
+          </button>
+        </div>
+
+        <div class="col-xs-4 clearfix">
+          <a class="btn btn-primary btn-sm pull-right" ui-sref="create-appointment" ng-show="user.is_active">
+            <i class="fa fa-plus-circle"></i> Create Appointment
+          </a>
+        </div>
+      </div>
     </div>
     <div class="clearfix"></div>
   </div>
