@@ -217,7 +217,7 @@ angular.module('viLoggedClientApp')
     function getAppointments() {
       appointmentService.all()
         .then(function(response) {
-          rows = response;
+          rows = $filter('orderBy')(response, 'created', 'reverse');
           $scope.pagination.totalItems = rows.length;
           $scope.pagination.numPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
           updateTableData();
@@ -232,7 +232,7 @@ angular.module('viLoggedClientApp')
     function getUserAppointments() {
       appointmentService.getNestedAppointmentsByUser($rootScope.user)
         .then(function(response) {
-          rows = response;
+          rows = $filter('orderBy')(response, 'created', 'reverse');;
           $scope.pagination.totalItems = rows.length;
           $scope.pagination.numPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
           $rootScope.busy = false;

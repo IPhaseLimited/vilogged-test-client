@@ -119,7 +119,7 @@
             <td>{{ appointment.label_code }}</td>
             <td>{{ ((appointment).visitor_id).first_name + ' ' + ((appointment).visitor_id).last_name }}</td>
             <td>{{ ((appointment).host_id).first_name + ' ' + ((appointment).host_id).last_name }}</td>
-            <td>{{ appointment.appointment_date | date:'EEE, MMM d, y' }}</td>
+            <td>{{ appointment.appointment_date | date:'MMM d, y' }}</td>
             <td>{{ appointment.visit_start_time | date:'hh:mm a' }}</td>
             <td>{{ appointment.visit_end_time | date:'hh:mm a' }}</td>
             <td class="text-center">
@@ -130,7 +130,7 @@
                  'fa-circle-o text-default': appointment.is_approved === null
                  }"></i>
             </td>
-            <td>{{ appointment.created | date:'EEE, MMM d, y' }}</td>
+            <td>{{ appointment.created | date:'MMM d, y' }}</td>
             <td>
               <a ui-sref="show-appointment({appointment_id: appointment.uuid})" class="btn btn-xs btn-success">
                 <i class="fa fa-eye"></i> View</a>
@@ -145,12 +145,11 @@
 
               <a ui-sref="visitor-check-in({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
                  ng-if="!appointment.checked_in && !appointment.visitor_id.group_type.black_listed"
-                 ng-show="isAppointmentUpcoming(appointment.appointment_date, appointment.visit_start_time) && user.is_staff"
+                 ng-show="!isAppointmentExpired(appointment.appointment_date, appointment.visit_end_time) && user.is_staff"
                  ng-class="{disabled: !appointment.is_approved}">Check In</a>
 
               <a ui-sref="visitor-check-out({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
-                 ng-show="(isAppointmentUpcoming(appointment.appointment_date, appointment.visit_start_time))
-                 && user.is_staff && appointment.checked_in !== null && appointment.checked_out === null">Check Out</a>
+                 ng-show="user.is_staff && appointment.checked_in !== null && appointment.checked_out === null">Check Out</a>
 
               <a ui-sref="edit-appointment({ appointment_id: appointment.uuid })" class="btn btn-xs btn-success"
                  ng-if="!appointment.checked_in" ng-show="isAppointmentUpcoming(appointment.appointment_date, appointment.visit_start_time)  && user.is_active
