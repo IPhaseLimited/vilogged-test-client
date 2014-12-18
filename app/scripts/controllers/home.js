@@ -60,6 +60,19 @@ angular.module('viLoggedClientApp')
       };
     }
 
+    function exportData(row) {
+      return {
+        visitor_name: row.visitor_id.first_name + ' ' + row.visitor_id.last_name,
+        host_name: row.host_id.first_name + ' ' + row.host_id.last_name,
+        appointment_date: row.appointment_date,
+        start_time: row.start_time,
+        end_time: row.end_time,
+        checked_in: row.checked_in,
+        created: row.created,
+        modified: row.modified
+      };
+    }
+
     function getInProgress() {
       var appointmentsInProgressExports = [];
       $scope.inProgress = appointments.filter (function (row) {
@@ -82,16 +95,7 @@ angular.module('viLoggedClientApp')
       });
 
       $scope.inProgress.forEach(function (row) {
-        appointmentsInProgressExports.push({
-          visitor_name: row.visitor_id.first_name + ' ' + row.visitor_id.last_name,
-          host_name: row.host_id.first_name + ' ' + row.host_id.last_name,
-          appointment_date: row.appointment_date,
-          start_time: row.start_time,
-          end_time: row.end_time,
-          checked_in: row.checked_in,
-          created: row.created,
-          modified: row.modified
-        })
+        appointmentsInProgressExports.push(exportData(row));
       });
 
       $scope.appointmentsInProgressExport = appointmentsInProgressExports;
@@ -117,16 +121,7 @@ angular.module('viLoggedClientApp')
       });
 
       $scope.awaitingApproval.forEach(function (row) {
-        awaitingApprovalExports.push({
-          visitor_name: row.visitor_id.first_name + ' ' + row.visitor_id.last_name,
-          host_name: row.host_id.first_name + ' ' + row.host_id.last_name,
-          appointment_date: row.appointment_date,
-          start_time: row.start_time,
-          end_time: row.end_time,
-          checked_in: row.checked_in,
-          created: row.created,
-          modified: row.modified
-        })
+        awaitingApprovalExports.push(exportData(row));
       });
 
       $scope.awaitingApprovalExport = awaitingApprovalExports;
@@ -153,16 +148,7 @@ angular.module('viLoggedClientApp')
       });
 
       $scope.expiredAppointments.forEach(function (row) {
-        expiredExports.push({
-          visitor_name: row.visitor_id.first_name + ' ' + row.visitor_id.last_name,
-          host_name: row.host_id.first_name + ' ' + row.host_id.last_name,
-          appointment_date: row.appointment_date,
-          start_time: row.start_time,
-          end_time: row.end_time,
-          checked_in: row.checked_in,
-          created: row.created,
-          modified: row.modified
-        })
+        expiredExports.push(exportData(row));
       });
 
       $scope.expiredAppointmentsExport = expiredExports;
@@ -189,16 +175,7 @@ angular.module('viLoggedClientApp')
       });
 
       $scope.neverUsed.forEach(function (row) {
-        neverUsedExports.push({
-          visitor_name: row.visitor_id.first_name + ' ' + row.visitor_id.last_name,
-          host_name: row.host_id.first_name + ' ' + row.host_id.last_name,
-          appointment_date: row.appointment_date,
-          start_time: row.start_time,
-          end_time: row.end_time,
-          checked_in: row.checked_in,
-          created: row.created,
-          modified: row.modified
-        })
+        neverUsedExports.push(exportData(row));
       });
 
       $scope.appointmentsNeverUsedExport = neverUsedExports;
@@ -224,16 +201,7 @@ angular.module('viLoggedClientApp')
       });
 
       $scope.notCheckedIn.forEach(function (row) {
-        notCheckedIn.push({
-          visitor_name: row.visitor_id.first_name + ' ' + row.visitor_id.last_name,
-          host_name: row.host_id.first_name + ' ' + row.host_id.last_name,
-          appointment_date: row.appointment_date,
-          start_time: row.start_time,
-          end_time: row.end_time,
-          checked_in: row.checked_in,
-          created: row.created,
-          modified: row.modified
-        })
+        notCheckedIn.push(exportData(row));
       });
 
       $scope.appointmentsNotCheckedInExport = notCheckedIn;
