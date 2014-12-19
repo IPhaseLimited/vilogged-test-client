@@ -12,7 +12,6 @@
                   type="text"
                   class="form-control"
                   ng-model="search.inProgress.from"
-                  ng-change="getInProgress()"
                   datepicker-popup
                   is-open="dateRange.inProgress.from.opened"/>
                 <span class="input-group-btn">
@@ -28,7 +27,6 @@
                   placeholder="Filter to"
                   type="text"
                   class="form-control"
-                  ng-change="getInProgress()"
                   ng-model="search.inProgress.to"
                   datepicker-popup
                   is-open="dateRange.inProgress.to.opened"/>
@@ -102,7 +100,6 @@
                   type="text"
                   class="form-control"
                   ng-model="search.awaitingApproval.from"
-                  ng-change="getAwaitingApproval()"
                   datepicker-popup
                   is-open="dateRange.awaitingApproval.from.opened"/>
                 <span class="input-group-btn">
@@ -118,7 +115,6 @@
                   placeholder="Filter to"
                   type="text"
                   class="form-control"
-                  ng-change="getAwaitingApproval()"
                   ng-model="search.awaitingApproval.to"
                   datepicker-popup
                   is-open="dateRange.awaitingApproval.to.opened"/>
@@ -189,24 +185,64 @@
     </div>
     <div class="widget">
       <div class="widget-head">
-        <div class="pull-left">Approved Appointments never used</div>
-        <div class="widget-icons pull-right">
-          <button ng-disabled="!appointmentsNeverUsedExport.length" class="btn btn-primary btn-xs hidden-print" type="button"
-                  ng-csv="appointmentsNeverUsedExport" csv-header="csvHeader"  filename="{{getFileName('appointmentsNeverUsed')}}">
-            Export
-          </button>
+        <div class="pull-left">Approved never used</div>
+        <div style="width: 70%;" class="widget-icons pull-right">
+
+          <div class="row">
+            <div class="col-xs-4">
+              <div class="input-group input-group-sm">
+                <input
+                  placeholder="Filter from"
+                  type="text"
+                  class="form-control"
+                  ng-model="search.neverUsed.from"
+                  datepicker-popup
+                  is-open="dateRange.neverUsed.from.opened"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="dateRange.neverUsed.from.open($event)">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </button>
+                </span>
+              </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="input-group input-group-sm">
+                <input
+                  placeholder="Filter to"
+                  type="text"
+                  class="form-control"
+                  ng-model="search.neverUsed.to"
+                  datepicker-popup
+                  is-open="dateRange.neverUsed.to.opened"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="dateRange.neverUsed.to.open($event)">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </button>
+                </span>
+              </div>
+            </div>
+            <div class="col-xs-2">
+              <button class="btn btn-primary btn-sm" ng-click="search.neverUsed = {}">Clear</button>
+            </div>
+            <div class="col-xs-2">
+              <button ng-disabled="!appointmentsNeverUsedExport.length" class="btn btn-primary btn-sm hidden-print" type="button"
+                      ng-csv="appointmentsNeverUsedExport" csv-header="csvHeader"  filename="{{getFileName('appointmentsNeverUsed')}}">
+                Export
+              </button>
+            </div>
+          </div>
         </div>
         <div class="clearfix"></div>
       </div>
       <div class="widget-content">
         <div class="padd">
-          <div class="alert alert-info" ng-show="!appointmentsNeverUsed.length">
+          <div class="alert alert-info" ng-show="!neverUsed.length">
             <p>
               There are no appointments approved but never used.
             </p>
           </div>
 
-          <table class="table table-condense table-bordered" ng-show="appointmentsNeverUsed.length">
+          <table class="table table-condense table-bordered" ng-show="neverUsed.length">
             <thead>
             <tr>
               <th>S/N</th>
@@ -217,7 +253,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="appointmentNeverUsed in appointmentsNeverUsed | limitTo:5">
+            <tr ng-repeat="appointmentNeverUsed in neverUsed | limitTo:5">
               <td>{{ $index+1 }}</td>
               <td>{{ appointmentNeverUsed.host_id.first_name + ' ' +
                 appointmentNeverUsed.host_id.last_name }}
@@ -246,23 +282,64 @@
     <div class="widget">
       <div class="widget-head">
         <div class="pull-left">Approved not checked-in</div>
-        <div class="widget-icons pull-right">
-          <button ng-disabled="!appointmentsNotCheckedInExport.length" class="btn btn-primary btn-xs hidden-print" type="button"
-                  ng-csv="appointmentsNotCheckedInExport" csv-header="csvHeader"  filename="{{getFileName('approvedNotCheckedIn')}}">
-            Export
-          </button>
+        <div style="width: 70%;" class="widget-icons pull-right">
+          <div class="row">
+            <div class="col-xs-4">
+              <div class="input-group input-group-sm">
+                <input
+                  placeholder="Filter from"
+                  type="text"
+                  class="form-control"
+                  ng-model="search.notCheckedIn.from"
+                  datepicker-popup
+                  is-open="dateRange.notCheckedIn.from.opened"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="dateRange.notCheckedIn.from.open($event)">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </button>
+                </span>
+              </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="input-group input-group-sm">
+                <input
+                  placeholder="Filter to"
+                  type="text"
+                  class="form-control"
+                  ng-model="search.notCheckedIn.to"
+                  datepicker-popup
+                  is-open="dateRange.notCheckedIn.to.opened"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="dateRange.notCheckedIn.to.open($event)">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </button>
+                </span>
+              </div>
+            </div>
+            <div class="col-xs-2">
+              <button class="btn btn-primary btn-sm" ng-click="search.notCheckedIn = {}">Clear</button>
+            </div>
+            <div class="col-xs-2">
+              <button ng-disabled="!appointmentsNotCheckedInExport.length" class="btn btn-primary btn-sm hidden-print" type="button"
+                      ng-csv="appointmentsNotCheckedInExport" csv-header="csvHeader"  filename="{{getFileName('approvedNotCheckedIn')}}">
+                Export
+              </button>
+            </div>
+          </div>
+
+
         </div>
         <div class="clearfix"></div>
       </div>
       <div class="widget-content">
         <div class="padd">
-          <div class="alert alert-info" ng-show="!appointmentsNotCheckedIn.length">
+          <div class="alert alert-info" ng-show="!notCheckedIn.length">
             <p>
               There are no appointments approved that are not checked in.
             </p>
           </div>
 
-          <table class="table table-condense table-bordered" ng-show="appointmentsNotCheckedIn.length">
+          <table class="table table-condense table-bordered" ng-show="notCheckedIn.length">
             <thead>
             <tr>
               <th>S/N</th>
@@ -273,7 +350,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="appointmentNotCheckedIn in appointmentsNotCheckedIn | limitTo:5">
+            <tr ng-repeat="appointmentNotCheckedIn in notCheckedIn | limitTo:5">
               <td>{{ $index+1 }}</td>
               <td>{{ appointmentNotCheckedIn.host_id.first_name + ' ' +
                 appointmentNotCheckedIn.host_id.last_name }}
@@ -299,12 +376,54 @@
     </div>
     <div class="widget">
       <div class="widget-head">
-        <div class="pull-left">Expired Appointments</div>
-        <div class="widget-icons pull-right">
-          <button ng-disabled="!expiredAppointmentsExport.length" class="btn btn-primary btn-xs hidden-print" type="button"
-                  ng-csv="expiredAppointmentsExport" csv-header="csvHeader"  filename="{{getFileName('expiredAppointments')}}">
-            Export
-          </button>
+        <div class="pull-left">Expired</div>
+        <div style="width: 70%;" class="widget-icons pull-right">
+
+          <div class="row">
+            <div class="col-xs-4">
+              <div class="input-group input-group-sm">
+                <input
+                  placeholder="Filter from"
+                  type="text"
+                  class="form-control"
+                  ng-model="search.expired.from"
+                  datepicker-popup
+                  is-open="dateRange.expired.from.opened"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="dateRange.expired.from.open($event)">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </button>
+                </span>
+              </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="input-group input-group-sm">
+                <input
+                  placeholder="Filter to"
+                  type="text"
+                  class="form-control"
+                  ng-model="search.expired.to"
+                  datepicker-popup
+                  is-open="dateRange.expired.to.opened"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="dateRange.expired.to.open($event)">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </button>
+                </span>
+              </div>
+            </div>
+            <div class="col-xs-2">
+              <button class="btn btn-primary btn-sm" ng-click="search.expired = {}">Clear</button>
+            </div>
+            <div class="col-xs-2">
+              <button ng-disabled="!expiredAppointmentsExport.length" class="btn btn-primary btn-sm hidden-print" type="button"
+                      ng-csv="expiredAppointmentsExport" csv-header="csvHeader"  filename="{{getFileName('expiredAppointments')}}">
+                Export
+              </button>
+            </div>
+          </div>
+
+
         </div>
         <div class="clearfix"></div>
       </div>
