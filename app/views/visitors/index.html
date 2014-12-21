@@ -62,8 +62,8 @@
           <tr>
             <th></th>
             <th><input class="form-control" ng-model="search.name"></th>
-            <th><input class="form-control" ng-model="search.visitors_email"></th>
-            <th><input class="form-control" ng-model="search.visitors_phone"></th>
+            <th ng-show="user.is_superuser || !user.is_staff"><input class="form-control" ng-model="search.visitors_email"></th>
+            <th ng-show="user.is_superuser || !user.is_staff"><input class="form-control" ng-model="search.visitors_phone"></th>
             <th><input class="form-control" ng-model="search.company_name"></th>
             <th><input class="form-control" ng-model="search.group_type"></th>
             <th>
@@ -89,14 +89,14 @@
                 </span>
               </a>
             </th>
-            <th>
+            <th ng-show="user.is_superuser || !user.is_staff">
               <a class="pointer block" ng-click="sort('visitors_email')">Visitor's Email
                 <span ng-show="orderByColumn['visitors_email']"
                       ng-class="{'fa fa-sort-amount-asc': orderByColumn['visitors_email'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['visitors_email'].reverse}">
                 </span>
               </a>
             </th>
-            <th>
+            <th ng-show="user.is_superuser || !user.is_staff">
               <a class="pointer block" ng-click="sort('visitors_phone')">Visitor's Phone
                 <span ng-show="orderByColumn['visitors_phone']"
                       ng-class="{'fa fa-sort-amount-asc': orderByColumn['visitors_phone'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['visitors_phone'].reverse}">
@@ -141,8 +141,8 @@
 
               </span>
             </td>
-            <td>{{ visitor.visitors_email }}</td>
-            <td>{{ visitor.visitors_phone }}</td>
+            <td ng-show="user.is_superuser || !user.is_staff">{{ visitor.visitors_email }}</td>
+            <td ng-show="user.is_superuser || !user.is_staff">{{ visitor.visitors_phone }}</td>
             <td>{{ visitor.company_name }}</td>
             <td>
               <span class="label" ng-class="{'label-danger':  visitor.group_type.black_listed,

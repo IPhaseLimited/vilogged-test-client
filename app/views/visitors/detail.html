@@ -34,13 +34,13 @@
                 <div class="col-sm-8">{{ visitor.last_name }}</div>
               </div>
               <div class="row">
-                <div class="col-sm-4">Visitor Phone</div>
-                <div class="col-sm-8">{{ visitor.visitors_phone }}</div>
+                <div class="col-sm-4" ng-show="user.is_superuser || !user.is_staff">Visitor Phone</div>
+                <div class="col-sm-8" ng-show="user.is_superuser || !user.is_staff">{{ visitor.visitors_phone }}</div>
               </div>
               <div class="row">
-                <div class="col-sm-4">Email</div>
-                <div class="col-sm-8">{{ visitor.visitors_email }}</div>
+                <div class="col-sm-8" ng-show="user.is_superuser || !user.is_staff">{{ visitor.visitors_email }}</div>
               </div>
+              <div class="col-sm-4" ng-show="user.is_superuser || !user.is_staff">Email</div>
               <div class="row">
                 <div class="col-sm-4">Company</div>
                 <div class="col-sm-8">{{ visitor.company_name }}</div>
