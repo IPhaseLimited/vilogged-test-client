@@ -11,7 +11,7 @@
   </div>
   <div>
     <div>
-      <div style="width: 100%; background: #cccccc; margin-top: 5%; margin-bottom: 5%; max-height: 210px">
+      <div style="width: 100%; margin-top: 5%; margin-bottom: 5%; max-height: 210px">
         <img ng-if="((appointment).visitor_id).image" ng-src="{{ appointment.visitor_id.image }}" alt="" width="100%"
              style="margin:auto; width: 244px; height: 217px; display: block" class="img-responsive"/>
         <img ng-if="!((appointment).visitor_id).image" ng-src="img/place_holder.jpg" alt=""
@@ -22,7 +22,8 @@
       <div style="margin-bottom: 10px">Name: {{ appointment.visitor_id.first_name }} {{ appointment.visitor_id.last_name }}</div>
       <div>Host: {{ appointment.host_id.first_name }} {{ appointment.host_id.last_name }}</div>
       <div>Department: {{ ((((appointment).host_id).user_profile).department) }}</div>
-      <div>Appointment ID: <strong>{{ appointment.label_code }}</strong></div>
+      <div ng-if="((((appointment).host_id).user_profile).department_floor) !== null">Floor: <strong>{{ ((((appointment).host_id).user_profile).department_floor) }}</strong></div>
+      <!--div>Appointment ID: <strong>{{ appointment.label_code }}</strong></div-->
     </div>
     <div style="clear: both"></div>
   </div>
