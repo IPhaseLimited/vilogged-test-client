@@ -455,6 +455,15 @@ angular.module('viLoggedClientApp')
       var emailValidation = validationService.EMAIL;
       var phoneNumberValidation = validationService.BASIC;
       phoneNumberValidation.pattern = '/^[0-9]/';
+      phoneNumberValidation.checkLength = true;
+
+      if ($scope.phoneNumberPrefix === 'Others') {
+        phoneNumberValidation.minLength = 6;
+        phoneNumberValidation.maxLength = 15;
+      } else {
+        phoneNumberValidation.maxLength = 7;
+        phoneNumberValidation.minLength = 7;
+      }
 
       var validationParams = {
         first_name: validationService.BASIC,
