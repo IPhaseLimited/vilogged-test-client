@@ -450,8 +450,8 @@ angular.module('viLoggedClientApp')
       }
 
       $rootScope.busy = true;
-      $scope.visitor.visitors_phone = $scope.phoneNumberPrefix !== 'Others' ? $scope.phoneNumberPrefix + $scope.visitor.visitors_phone :
-        $scope.visitor.visitors_phone;
+      $scope.visitor.visitors_phone = $scope.phoneNumberPrefix !== 'Others' ? $scope.phoneNumberPrefix + $scope.visitors_phone :
+        $scope.visitors_phone;
       var emailValidation = validationService.EMAIL;
       var phoneNumberValidation = validationService.BASIC;
       phoneNumberValidation.pattern = '/^[0-9]/';
