@@ -208,16 +208,16 @@
 
       <div class="col-sm-6 row">
         <div class="col-sm-3">
-          <select class="form-control">
+          <select class="form-control" ng-model="phoneNumberPrefix">
             <option></option>
-            <option ng-selected="phoneNumberPrefix === visitor.phoneNumberPrefix" value="{{ phoneNumberPrefix }}"
+            <option ng-selected="phoneNumberPrefix === phoneNumberPrefix" value="{{ phoneNumberPrefix }}"
                     ng-repeat="phoneNumberPrefix in phoneNumberPrefixes track by $index">
               {{ phoneNumberPrefix }}
             </option>
           </select>
         </div>
         <div class="col-sm-9">
-          <input type="text" class="form-control" id="visitorPhone" name="visitorPhone" ng-model="visitor.visitors_phone">
+          <input type="text" class="form-control" id="visitorPhone" name="visitorPhone" ng-model="visitors_phone">
         </div>
 
         <div class="text-danger bold" ng-show="(validationErrors).visitors_phone.length">
