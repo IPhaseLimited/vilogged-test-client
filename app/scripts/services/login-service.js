@@ -117,6 +117,7 @@ angular.module('viLoggedClientApp')
     }
 
     function logout() {
+      //delete $http.defaults.headers.common['Authorization'];
       $cookieStore.remove('vi-token');
       $cookieStore.remove('no-login');
       $cookieStore.remove('current-user');
