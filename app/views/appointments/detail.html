@@ -5,7 +5,9 @@
        || appointment.is_expired) && user.is_staff && appointment.is_approved" ng-click="printLabel()">
       <i class="fa fa-print"></i> Print Label
     </a>
-    <div ng-show="appointment.is_approved === null && !appointment.is_expired && user.id === appointment.host_id.id">
+
+    <div
+      ng-show="appointment.is_approved === null && !isAppointmentExpired(appointment.appointment_date, appointment.visit_end_time) && user.id === appointment.host_id.id">
       <a class="btn btn-success" ng-click="toggleAppointmentApproval(true)">Approve</a>
       <a class="btn btn-danger" ng-click="toggleAppointmentApproval(false)">Disapprove</a>
     </div>
@@ -236,7 +238,8 @@
     </div>
   </div>
 </div>
-<div ng-show="appointment.is_approved === null && !appointment.is_expired && user.id === appointment.host_id.id">
+<div
+  ng-show="appointment.is_approved === null && !isAppointmentExpired(appointment.appointment_date, appointment.visit_end_time) && user.id === appointment.host_id.id">
   <a class="btn btn-success" ng-click="toggleAppointmentApproval(1)">Approve</a>
   <a class="btn btn-danger" ng-click="toggleAppointmentApproval(0)">Disapprove</a>
 </div>

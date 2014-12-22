@@ -249,7 +249,7 @@ angular.module('viLoggedClientApp')
     function getUserAppointments() {
       appointmentService.getNestedAppointmentsByUser($rootScope.user)
         .then(function(response) {
-          rows = $filter('orderBy')(response, 'created', 'reverse');;
+          rows = $filter('orderBy')(response, 'created', 'reverse');
           $scope.pagination.totalItems = rows.length;
           $scope.pagination.numPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
           $rootScope.busy = false;
@@ -705,7 +705,7 @@ angular.module('viLoggedClientApp')
 
     $scope.createAppointment = function() {
       $rootScope.busy = true;
-      $scope.appointment.label_code = utility.generateRandomInteger().toString().substr(0,5);
+      $scope.appointment.label_code = utility.generateRandomInteger().toString().substr(-5);
       $scope.appointment.appointment_date = $filter('date')($scope.appointment.appointment_date, 'yyyy-MM-dd');
       $scope.appointment.is_expired = false;
       $scope.appointment.checked_in = null;

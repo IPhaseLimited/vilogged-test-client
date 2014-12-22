@@ -77,6 +77,7 @@ angular.module('viLoggedClientApp')
         'logout',
         'login',
         'create-visitor-profile',
+        'edit-visitor-profile',
         'show-visitor',
         'visitors'
       ]
