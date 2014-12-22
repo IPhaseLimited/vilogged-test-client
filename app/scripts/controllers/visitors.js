@@ -414,7 +414,7 @@ angular.module('viLoggedClientApp')
     }
 
     $scope.saveProfile = function () {
-      console.log($scope.phone);
+
       /**
        * sends email and sms to new visitor account
        */
@@ -454,7 +454,7 @@ angular.module('viLoggedClientApp')
       var emailValidation = validationService.EMAIL;
       var phonePrefixValidation = validationService.BASIC;
       var phoneSuffixValidation = validationService.BASIC;
-      phoneSuffixValidation.pattern = '/^[0-9]';
+      phoneSuffixValidation.pattern = '/^[0-9]/';
       phoneSuffixValidation.checkLength = true;
 
       if ($scope.phone.prefix !== 'Others') {
@@ -488,7 +488,6 @@ angular.module('viLoggedClientApp')
       var validateLocation = validationService.validateFields(validationParams2, $scope.visitorsLocation);
 
       var validatePhone = validationService.validateFields(phoneValidationParams, $scope.phone);
-      console.log(validatePhone);
 
       if (!angular.isDefined($scope.visitor.visitors_pass_code)) {
         $scope.visitor.visitors_pass_code = new Date().getTime();
