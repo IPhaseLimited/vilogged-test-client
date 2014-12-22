@@ -276,6 +276,9 @@ angular.module('viLoggedClientApp')
     $scope.activateImageUploader = false;
     $scope.activateCamera = false;
     $scope.imageCapture = false;
+    $scope.phoneNumberPrefixes = ["0701", "0703", "0705", "0706", "0708", "0802", "0803", "0804", "0805", "0806", "0807",
+      "0808", "0809", "0810", "0811", "0812", "0813", "0814", "0815", "0816", "0817", "0818", "0819", "0909", "0902",
+      "0903", "0905", "Others"];
 
     $rootScope.busy = true;
     visitorGroupsService.all()
@@ -447,6 +450,8 @@ angular.module('viLoggedClientApp')
       }
 
       $rootScope.busy = true;
+      $scope.visitor.visitors_phone = $scope.phoneNumberPrefix !== 'Other' ? $scope.phoneNumberPrefix + $scope.visitor.visitors_phone :
+        $scope.visitor.visitors_phone;
       var emailValidation = validationService.EMAIL;
       var phoneNumberValidation = validationService.BASIC;
       phoneNumberValidation.pattern = '/^[0-9]/';
