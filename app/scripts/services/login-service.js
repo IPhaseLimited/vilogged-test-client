@@ -28,7 +28,10 @@ angular.module('viLoggedClientApp')
             loginResponse.loginRawResponse = response;
             $cookieStore.put('vi-token', response.token);
             $http.defaults.headers.common['Authorization'] = 'Token ' + response.token;
-            userService.currentUser()
+            $cookieStore.put('current-user', response.user);
+            $rootScope.user = response.user;
+            deferred.resolve(loginResponse);
+            /*userService.currentUser()
               .then(function(user) {
                 $rootScope.user = user;
                 $cookieStore.put('current-user', user);
@@ -37,7 +40,7 @@ angular.module('viLoggedClientApp')
               .catch(function(reason) {
                 loginResponse.loginMessage = reason;
                 deferred.resolve(loginResponse);
-              });
+              });*/
           })
           .error(function(reason, status) {
             loginResponse.status = status;
