@@ -130,10 +130,10 @@ angular.module('viLoggedClientApp')
           var messages = [];
           var fieldData = formModelObject[key];
           var required = validateRequired(fieldData, params[key]);
-          var lengthValidation = validateStringLength(fieldData, params[key]);
-          var emailValidation = params[key].type === 'email' ? validateEmail(fieldData, params[key]) : [];
-          var usernameValidation = params[key].type === 'username' ? validateUsername(fieldData, params[key]) : [];
-          var intValidation = params[key].type === 'int' ? validateInt(fieldData, params[key]) : [];
+          var lengthValidation = angular.isDefined(fieldData) ? validateStringLength(fieldData, params[key]) : [];
+          var emailValidation = params[key].type === 'email' && angular.isDefined(fieldData) ? validateEmail(fieldData, params[key]) : [];
+          var usernameValidation = params[key].type === 'username' && angular.isDefined(fieldData) ? validateUsername(fieldData, params[key]) : [];
+          var intValidation = params[key].type === 'int' && angular.isDefined(fieldData) ? validateInt(fieldData, params[key]) : [];
           var updatedMessages = messages.concat(required, lengthValidation, emailValidation,
             usernameValidation, intValidation);
 
