@@ -209,28 +209,27 @@
       <div class="col-sm-6 row">
         <div class="col-sm-3">
           <select class="form-control" ng-model="phone.prefix">
-            <option></option>
+            <option value=""></option>
             <option ng-selected="phoneNumberPrefix === phone.prefix" value="{{ phoneNumberPrefix }}"
                     ng-repeat="phoneNumberPrefix in phoneNumberPrefixes track by $index">
               {{ phoneNumberPrefix }}
             </option>
           </select>
-        </div>
-        <div class="col-sm-9">
-          <input type="text" class="form-control" id="visitorPhone" name="visitorPhone" ng-model="phone.suffix">
-        </div>
-
-        <div class="text-danger bold" ng-show="(validationErrors).prefix.length">
+          <div class="text-danger bold" ng-show="(validationErrors).prefix.length">
           <span ng-repeat="error in (validationErrors).prefix">
             {{ error }}<br>
           </span>
+          </div>
         </div>
-
-        <div class="text-danger bold" ng-show="(validationErrors).suffix.length">
+        <div class="col-sm-9">
+          <input type="text" class="form-control" id="visitorPhone" name="visitorPhone" ng-model="phone.suffix">
+          <div class="text-danger bold" ng-show="(validationErrors).suffix.length">
           <span ng-repeat="error in (validationErrors).suffix">
             {{ error }}<br>
           </span>
+          </div>
         </div>
+
       </div>
 
     </div>
