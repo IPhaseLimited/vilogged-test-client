@@ -34,7 +34,7 @@ function formController($scope, $state, companyDepartmentsService, $stateParams,
     $rootScope.busy = true;
 
     var validationParams = {
-      department_name: validationService.BASIC
+      department_name: validationService.BASIC()
     };
     $scope.validationErrors = validationService.validateFields(validationParams, $scope.companyDepartments);
     if (Object.keys( $scope.validationErrors).length === 0) {

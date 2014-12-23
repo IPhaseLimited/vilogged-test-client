@@ -34,7 +34,7 @@ function formController($scope, $state, visitorGroupsService, $stateParams, $mod
     $rootScope.busy = true;
 
     var validationParams = {
-      group_name: validationService.BASIC
+      group_name: validationService.BASIC()
     };
     $scope.validationErrors = validationService.validateFields(validationParams, $scope.visitorGroup);
     if (Object.keys( $scope.validationErrors).length === 0) {
