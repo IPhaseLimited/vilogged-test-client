@@ -276,6 +276,10 @@ angular.module('viLoggedClientApp')
     $scope.activateImageUploader = false;
     $scope.activateCamera = false;
     $scope.imageCapture = false;
+    $scope.phoneNumberPrefixes = ["0701", "0703", "0705", "0706", "0708", "0802", "0803", "0804", "0805", "0806", "0807",
+      "0808", "0809", "0810", "0811", "0812", "0813", "0814", "0815", "0816", "0817", "0818", "0819", "0909", "0902",
+      "0903", "0905", "Others"];
+    $scope.phoneNumber = {};
 
     $rootScope.busy = true;
     visitorGroupsService.all()
@@ -447,27 +451,44 @@ angular.module('viLoggedClientApp')
       }
 
       $rootScope.busy = true;
-      var emailValidation = validationService.EMAIL;
-      var phoneNumberValidation = validationService.BASIC;
-      phoneNumberValidation.pattern = '/^[0-9]/';
+      var emailValidation = validationService.EMAIL();
+
+      var nameValidation = validationService.BASIC();
+      nameValidation.pattern = '/^[a-zA-Z]/';
+
+      var phonePrefix = validationService.BASIC();
+      var phoneSuffix = validationService.BASIC();
+
+      phonePrefix.pattern = '/^[0-9]/';
+      phoneSuffix.checkLength = true;
+
+      if ($scope.phoneNumber.prefix === 'Others') {
+        phoneSuffix.minLength = 6;
+        phoneSuffix.maxLength = 15;
+      } else {
+        phoneSuffix.maxLength = 7;
+        phoneSuffix.minLength = 7;
+      }
+
+      var phoneValidationParams = {
+        prefix: phonePrefix,
+        suffix: phoneSuffix
+      };
 
       var validationParams = {
-        first_name: validationService.BASIC,
-        last_name: validationService.BASIC,
-        gender: validationService.BASIC,
-        visitors_phone: phoneNumberValidation,
+        first_name: nameValidation,
+        last_name: nameValidation,
+        gender: validationService.BASIC(),
         visitors_email: emailValidation,
-        group_type: validationService.BASIC
+        group_type: validationService.BASIC()
       };
 
       var validationParams2 = {
-        contact_address: validationService.BASIC
-        //residential_country: validationService.BASIC,
-        //residential_lga: validationService.BASIC,
-        //residential_state: validationService.BASIC
+        contact_address: validationService.BASIC()
       };
 
       var validateLocation = validationService.validateFields(validationParams2, $scope.visitorsLocation);
+      var validatePhoneNumbers = validationService.validateFields(phoneValidationParams, $scope.phoneNumber);
 
       if (!angular.isDefined($scope.visitor.visitors_pass_code)) {
         $scope.visitor.visitors_pass_code = new Date().getTime();
@@ -477,10 +498,20 @@ angular.module('viLoggedClientApp')
       (Object.keys(validateLocation)).forEach(function (key) {
         $scope.validationErrors[key] = validateLocation[key];
       });
+
+      (Object.keys(validatePhoneNumbers)).forEach(function (key) {
+        $scope.validationErrors[key] = validatePhoneNumbers[key];
+      });
+
+
+
       if (!Object.keys($scope.validationErrors).length) {
         if (!angular.isDefined($scope.visitor.company_name)) {
           $scope.visitor.company_name = 'Anonymous';
         }
+
+        $scope.visitor.visitors_phone = $scope.phoneNumber.prefix === 'Others' ?
+          $scope.phoneNumber.suffix : $scope.phoneNumber.prefix + $scope.phoneNumber.suffix;
 
         if ($scope.takenImg) {
           $scope.visitor.image = $scope.takenImg;

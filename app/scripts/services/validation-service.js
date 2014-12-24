@@ -13,72 +13,80 @@ angular.module('viLoggedClientApp')
     var emailPattern = /^(([^<>()[]\.,;:s@"]+(.[^<>()[]\.,;:s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
     var usernamePattern = /^[A-Za-z0-9_]{3,20}$/;
 
-    var BASIC = {
-      required: true,
-      pattern: '',
-      checkLength: false,
-      minLength: 0,
-      maxLength: 0,
-      unique: false,
-      dbName: '',
-      type: 'basic'
+    var BASIC = function() {
+      return {
+        required: true,
+        pattern: '',
+        checkLength: false,
+        minLength: 0,
+        maxLength: 0,
+        unique: false,
+        dbName: '',
+        type: 'basic'
+      };
     };
 
-    var INT = {
-      required: false,
-      pattern: '/^[0-9]/',
-      checkLength: false,
-      minLength: 0,
-      maxLength: 0,
-      unique: false,
-      dbName: '',
-      type: 'int'
+    var INT = function(){
+      return {
+        required: false,
+          pattern: '/^[0-9]/',
+        checkLength: false,
+        minLength: 0,
+        maxLength: 0,
+        unique: false,
+        dbName: '',
+        type: 'int'
+      };
     };
 
-    var EMAIL = {
-      required: false,
-      pattern: emailPattern,
-      checkLength: false,
-      unique: false,
-      dbName: '',
-      fieldName: '',
-      dataList: [],
-      type: 'email'
+    var EMAIL = function() {
+      return {
+        required: false,
+          pattern: emailPattern,
+        checkLength: false,
+        unique: false,
+        dbName: '',
+        fieldName: '',
+        dataList: [],
+        type: 'email'
+      };
     };
 
-    var USERNAME = {
-      required: false,
-      pattern: usernamePattern,
-      checkLength: true,
-      minLength: 3,
-      maxLength: 20,
-      unique: false,
-      dbName: '',
-      fieldName: '',
-      dataList: [],
-      type: 'username'
+    var USERNAME = function() {
+      return {
+        required: false,
+        pattern: usernamePattern,
+        checkLength: true,
+        minLength: 3,
+        maxLength: 20,
+        unique: false,
+        dbName: '',
+        fieldName: '',
+        dataList: [],
+        type: 'username'
+      };
     };
 
     function validateRequired(fieldData, _params) {
-      var params = angular.isDefined(_params) && angular.isObject(_params) ? _params : BASIC;
+      var params = angular.isDefined(_params) && angular.isObject(_params) ? _params :BASIC();
       return (fieldData === '' || fieldData === undefined) && params.required ? ['This field is required'] : [];
     }
 
     function validateStringLength(fieldData, _params) {
-      var params = angular.isDefined(_params) && angular.isObject(_params) ? _params : BASIC;
+      var params = angular.isDefined(_params) && angular.isObject(_params) ? _params : BASIC();
       var messages = [];
       if (params.checkLength && params.minLength > fieldData.length) {
         messages.push('character length is less than ' + params.minLength);
       }
 
-      if (params.checkLength && params.maxLength !== 0 && params.maxLength > fieldData.length) {
+      if (params.checkLength && params.maxLength !== 0 && fieldData.length > params.maxLength) {
         messages.push('you have exceeded the maximum characters allowed (' + params.maxLength + ')');
       }
       return messages;
     }
 
     function validateInt(fieldData, _params) {
-      var params = angular.isDefined(_params) && angular.isObject(_params) ? _params : BASIC;
+      var params = angular.isDefined(_params) && angular.isObject(_params) ? _params : BASIC();
       var messages = [];
       if (params.pattern !== '' && params.pattern.test(fieldData)) {
         messages.push('Only integers are allowed.');
@@ -87,7 +95,7 @@ angular.module('viLoggedClientApp')
     }
 
     function validateEmail(fieldData, _params) {
-      var params = angular.isDefined(_params) && angular.isObject(_params) ? _params : EMAIL;
+      var params = angular.isDefined(_params) && angular.isObject(_params) ? _params : EMAIL();
       var messages = [];
       if (fieldData !== '' && fieldData !== undefined && params.pattern.test(fieldData)) {
         messages.push('invalid email provided');
@@ -105,7 +113,7 @@ angular.module('viLoggedClientApp')
     }
 
     function validateUsername(fieldData, _params) {
-      var params = angular.isDefined(_params) && angular.isObject(_params) ? _params : USERNAME;
+      var params = angular.isDefined(_params) && angular.isObject(_params) ? _params : USERNAME();
       var messages = [];
       if (fieldData !== '' && fieldData !== undefined && params.pattern.test(fieldData)) {
         messages.push('invalid email provided');
@@ -126,16 +134,14 @@ angular.module('viLoggedClientApp')
       var errors = {};
       if (angular.isObject(params) && (Object.keys(params)).length > 0) {
         (Object.keys(params)).forEach(function(key) {
-
           var messages = [];
           var fieldData = formModelObject[key];
           var required = validateRequired(fieldData, params[key]);
-          var lengthValidation = validateStringLength(fieldData, params[key]);
-          var emailValidation = params[key].type === 'email' ? validateEmail(fieldData, params[key]) : [];
-          var usernameValidation = params[key].type === 'username' ? validateUsername(fieldData, params[key]) : [];
-          var intValidation = params[key].type === 'int' ? validateInt(fieldData, params[key]) : [];
-          var updatedMessages = messages.concat(required, lengthValidation, emailValidation,
-            usernameValidation, intValidation);
+          var lengthValidation = angular.isDefined(fieldData) ? validateStringLength(fieldData, params[key]) : [];
+          var emailValidation = params[key].type === 'email' && angular.isDefined(fieldData) ? validateEmail(fieldData, params[key]) : [];
+          var usernameValidation = params[key].type === 'username' && angular.isDefined(fieldData) ? validateUsername(fieldData, params[key]) : [];
+          var intValidation = params[key].type === 'int' && angular.isDefined(fieldData) ? validateInt(fieldData, params[key]) : [];
+          var updatedMessages = messages.concat(required, lengthValidation, emailValidation, usernameValidation, intValidation);
 
           if (updatedMessages.length > 0) {
             errors[key] = updatedMessages;
