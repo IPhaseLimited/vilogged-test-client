@@ -380,6 +380,15 @@ angular.module('viLoggedClientApp')
         .then(function (response) {
           $scope.visitor = response;
 
+          if ($scope.visitor.visitors_phone) {
+            var prefix = $scope.visitor.visitors_phone.substr(0,4);
+            var suffix = $scope.visitor.visitors_phone.substr(3);
+
+            $scope.phoneNumber.prefix = $scope.phoneNumberPrefixes.indexOf(prefix) > 0 ? $scope.phone.prefix : "Others";
+
+            $scope.phoneNumber.suffix = prefix !== "Others" ? $scope.visitor.visitors_phone : suffix;
+          }
+
           if ($scope.visitor.nationality) {
             $scope.states = Object.keys($scope.countryState[$scope.visitor.nationality].states).sort();
           }
@@ -394,9 +403,11 @@ angular.module('viLoggedClientApp')
               if (response.length) {
                 $scope.visitorsLocation = response[0];
 
-                $scope.locationStates = Object.keys($scope.countryState[$scope.visitorsLocation.residential_country].states).sort();
-                if ($scope.countryState[$scope.visitorsLocation.residential_country].states[$scope.visitorsLocation.residential_state]) {
-                  $scope.locationLgas = $scope.countryState[$scope.visitorsLocation.residential_country].states[$scope.visitorsLocation.residential_state].lga.sort();
+                if ($scope.countryState[$scope.visitorsLocation.residential_country]) {
+                  $scope.locationStates = Object.keys($scope.countryState[$scope.visitorsLocation.residential_country].states).sort();
+                  if ($scope.countryState[$scope.visitorsLocation.residential_country].states[$scope.visitorsLocation.residential_state]) {
+                    $scope.locationLgas = $scope.countryState[$scope.visitorsLocation.residential_country].states[$scope.visitorsLocation.residential_state].lga.sort();
+                  }
                 }
               }
               $rootScope.busy = false;
