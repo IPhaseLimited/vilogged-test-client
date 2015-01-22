@@ -736,6 +736,9 @@ angular.module('viLoggedClientApp')
       $scope.appointment.checked_in = null;
       $scope.appointment.checked_out = null;
 
+      var representing = $scope.appointment.representing.split(',');
+      $scope.appointment.representing = JSON.stringify(representing);
+
       $scope.appointment.visit_start_time = $filter('date')($scope.visit_start_time, 'HH:mm:ss');
       $scope.appointment.visit_end_time = $filter('date')($scope.visit_end_time, 'HH:mm:ss');
 
