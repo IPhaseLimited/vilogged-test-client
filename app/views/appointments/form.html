@@ -156,8 +156,10 @@
               class="text-danger">*</span></label>
 
             <div class="col-sm-6">
-              <textarea name="purpose" id="purpose" class="form-control" ng-model="appointment.purpose"
-                        required></textarea>
+              <select name="purpose" id="purpose" ng-change="validateVisitationTime()" ng-model="appointment.purpose" class="form-control">
+                <option value="Official">Official</option>
+                <option value="Personal">Personal</option>
+              </select>
               <div class="text-danger bold" ng-show="(validationErrors).purpose.length">
                 <span ng-repeat="error in validationErrors.purpose">
                   {{ error }}<br/>
