@@ -631,10 +631,10 @@ angular.module('viLoggedClientApp')
           $rootScope.busy = false;
           return;
         }
-        userService.getUserByPhone(phone)
+        userService.getUserByNameOrPhone(phone)
           .then(function(response) {
-            $rootScope.busy = false;
             $scope.hosts = response;
+            $rootScope.busy = false;
           })
           .catch(function(reason) {
             $rootScope.busy = false;
