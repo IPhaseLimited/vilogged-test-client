@@ -22,12 +22,24 @@
 
             <div class="col-sm-6">
               <ui-select ng-model="host.selected" theme="select2">
-                <ui-select-match placeholder="Select a host in the list or search with his phone number...">
+                <ui-select-match placeholder="Select a host in the list or search with his phone number or name...">
                   {{$select.selected.first_name + ' ' + $select.selected.last_name}}
                 </ui-select-match>
                 <ui-select-choices refresh="hostLookUp.refreshHostsList($select.search)"
                                    refresh-delay="1000" repeat="host in hosts track by $index | filter: phone">
-                  <div> {{host.first_name}} {{host.last_name}}</div>
+                  <div>
+                    <strong>{{host.first_name}} {{host.last_name}}</strong><br>
+                    <span ng-show="host.user_profile.work_phone">
+                      <strong>Ext Number: </strong>{{host.user_profile.work_phone}}
+                    </span>
+                    <span ng-show="host.user_profile.phone">
+                      <strong>Mobile Number: </strong>{{host.user_profile.phone}}
+                    </span>
+                    <br>
+                    <span ng-show="host.user_profile.department">
+                      <strong>Department: </strong>{{host.user_profile.department}}
+                    </span>
+                  </div>
                 </ui-select-choices>
               </ui-select>
               <div class="text-danger bold" ng-show="(validationErrors).host_id.length">
