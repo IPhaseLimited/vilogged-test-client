@@ -599,6 +599,31 @@ angular.module('viLoggedClientApp')
 
     };
 
+    $scope.validateVisitationTime = function () {
+      var checkVisitTime = [];
+      if ($scope.appointment.purpose === 'Personal') {
+        var dayOfWeek = moment($scope.appointment.appointment_date).weekday();
+        var nameOfDay = moment.weekdaysShort(dayOfWeek);
+
+        var visitStartTime = $filter('date')($scope.visit_start_time, 'HH:mm:ss').substr(0,2);
+        var visitEndTime = $filter('date')($scope.visit_end_time, 'HH:mm:ss').substr(0,2);
+
+        if (nameOfDay !== 'Tue' && nameOfDay !== 'Thu') {
+          checkVisitTime.push('Personal visitors are only allowed on Tuesday and Thursday');
+        } else if (nameOfDay !== 'Thu') {
+          checkVisitTime.push('Personal visitors are only allowed on Tuesday and Thursday');
+        } else if (visitStartTime < 13 || visitStartTime > 15 || visitEndTime > 15) {
+          checkVisitTime.push('Personal visitor are only allowed between the hours of 1 and 3pm');
+        }
+      }
+
+      if (checkVisitTime.length) {
+        $scope.validationErrors['purpose'] = checkVisitTime;
+      } else {
+        delete $scope.validationErrors['purpose'];
+      }
+    };
+
     $scope.hostLookUp = {
       refreshHostsList: function(phone) {
         $rootScope.busy = true;
@@ -606,10 +631,10 @@ angular.module('viLoggedClientApp')
           $rootScope.busy = false;
           return;
         }
-        userService.getUserByPhone(phone)
+        userService.getUserByNameOrPhone(phone)
           .then(function(response) {
-            $rootScope.busy = false;
             $scope.hosts = response;
+            $rootScope.busy = false;
           })
           .catch(function(reason) {
             $rootScope.busy = false;

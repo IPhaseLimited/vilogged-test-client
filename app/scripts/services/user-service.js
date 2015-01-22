@@ -63,6 +63,37 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     }
 
+    function getUserByName(value) {
+      var deferred = $q.defer();
+
+      var promises = [
+        findUserBy('first_name', value),
+        findUserBy('last_name', value)
+      ];
+
+      $q.all(promises)
+        .then(function(response) {
+          if (response[0].length || response[1].length) {
+            if (response[0].length) {
+              deferred.resolve(response[0]);
+            } else {
+              deferred.resolve(response[1]);
+            }
+          } else {
+            deferred.reject({message: 'no match found'});
+          }
+        })
+        .catch(function(reason) {
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
+        });
+
+      return deferred.promise;
+    }
+
     function getUserByPhone(value) {
       var deferred = $q.defer();
 
@@ -81,6 +112,39 @@ angular.module('viLoggedClientApp')
               deferred.resolve(response[1]);
             } else {
               deferred.resolve(response[2]);
+            }
+          } else {
+            deferred.reject({message: 'no match found'});
+          }
+        })
+        .catch(function(reason) {
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
+        });
+
+      return deferred.promise;
+    }
+
+    function getUserByNameOrPhone(value) {
+      var deferred = $q.defer();
+
+      var promises = [
+        getUserByPhone(value),
+        getUserByName(value)
+      ];
+
+      $q.all(promises)
+        .then(function(response) {
+          if (response[0].length || response[1].length) {
+            if (response[0].length) {
+              console.log(response)
+              deferred.resolve(response[0]);
+            } else {
+              console.log(response)
+              deferred.resolve(response[1]);
             }
           } else {
             deferred.reject({message: 'no match found'});
@@ -258,5 +322,7 @@ angular.module('viLoggedClientApp')
     this.findUserBy = findUserBy;
     this.usersNested = listNestedUsers;
     this.getUserByPhone = getUserByPhone;
+    this.getUserByName = getUserByName;
+    this.getUserByNameOrPhone = getUserByNameOrPhone;
     this.getLDAPUsers = getUsersFromLDAP;
   });
