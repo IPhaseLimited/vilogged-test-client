@@ -12,20 +12,24 @@
   <div>
     <div>
       <div style="width: 100%; margin-top: 5%; margin-bottom: 5%; max-height: 210px">
+        <div style="text-align: center; font-weight: bold">{{ appointment.purpose }}</div>
         <img ng-if="((appointment).visitor_id).image" ng-src="{{ appointment.visitor_id.image }}" alt="" width="100%"
-             style="margin:auto; width: 244px; height: 217px; display: block" class="img-responsive"/>
+             style="margin:auto; width: 244px; height: 200px; display: block" class="img-responsive"/>
         <img ng-if="!((appointment).visitor_id).image" ng-src="img/place_holder.jpg" alt=""
-             style="margin:auto; width: 244px; height: 217px; display: block" class="img-responsive"/>
+             style="margin:auto; width: 244px; height: 200px; display: block" class="img-responsive"/>
       </div>
     </div>
     <div style="font-size: 16px;">
-      <div style="margin-bottom: 10px">Name: {{ appointment.visitor_id.first_name }} {{ appointment.visitor_id.last_name }}</div>
+      <div style="top-bottom: 10px">Name: {{ appointment.visitor_id.first_name }} {{ appointment.visitor_id.last_name }}</div>
       <div>Host: {{ appointment.host_id.first_name }} {{ appointment.host_id.last_name }}</div>
       <div>Department: {{ ((((appointment).host_id).user_profile).department) }}</div>
       <div ng-if="((((appointment).host_id).user_profile).department_floor) !== null">Floor: <strong>{{ ((((appointment).host_id).user_profile).department_floor) }}</strong></div>
-      <!--div>Appointment ID: <strong>{{ appointment.label_code }}</strong></div-->
+      <div style="text-align: center">
+        Appointment Date & Time<br>
+        {{ appointment.appointment_date | date: 'dd/MM/yyyy' }} {{ appointment.visit_start_time | date: 'HH:mm' }} - {{ appointment.visit_end_time | date: 'HH:mm' }}
+      </div>
     </div>
     <div style="clear: both"></div>
   </div>
-  <img id="barcode"  style="max-height:30px; margin-top: 20px; width:100%">
+  <img id="barcode"  style="max-height:30px; margin-top: 10px; width:100%">
 </div>
