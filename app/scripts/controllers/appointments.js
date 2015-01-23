@@ -318,14 +318,20 @@ angular.module('viLoggedClientApp')
       });
 
       $scope.appointments.forEach(function(row) {
+        var host = angular.isDefined(row.host_id) && row.host_id !== null ? row.host_id : null;
+        var department = '';
+        if (host !== null) {
+          department = angular.isDefined(row.host_id.user_profile) && row.host_id.user_profile !== null ? row.host_id.user_profile.department : '';
+        }
+
         exports.push({
           visitor: row.visitor_id.first_name +' '+ row.visitor_id.last_name,
           visitorsGender: row.visitor_id.gender,
           representing: row.representing,
           purpose_of_visit: row.purpose,
-          host: row.host_id.first_name + ' '+ row.host_id.last_name,
-          hostGender: row.host_id.gender,
-          hostDepartment: row.host_id.user_profile.department,
+          host: angular.isDefined(row.host_id) && row.host_id !== null ? row.host_id.first_name + ' '+ row.host_id.last_name : '',
+          hostGender: angular.isDefined(row.host_id) && row.host_id !== null ? row.host_id.gender : '',
+          hostDepartment: department,
           appointmentDate: row.appointment_date,
           startTime: row.visit_start_time,
           endTime: row.visit_end_time,
@@ -485,7 +491,31 @@ angular.module('viLoggedClientApp')
     $scope.visitor = {};
     $scope.customErrors = {};
     $scope.validationErrors = {};
+    $scope.teamMembers = {
+      members: [{name: ''}],
+      checkEmpty: function() {
+        var emptyFields = [];
+        $scope.teamMembers.members.forEach(function(row) {
+          if (row.name === '' || row.name === undefined || row.name === null) {
+            emptyFields.push(row.name);
+          }
+        });
+        return emptyFields;
+      },
+      add: function() {
+        if ($scope.teamMembers.checkEmpty().length === 0) {
+          $scope.teamMembers.members.push({
+            name: ''
+          });
+        }
+      },
+      remove: function(index) {
+        if ($scope.teamMembers.members.length > 1) {
+          $scope.teamMembers.members.splice(index);
+        }
 
+      }
+    };
 
 
     $scope.clearError = function(key) {
@@ -529,8 +559,6 @@ angular.module('viLoggedClientApp')
           $rootScope.busy = false;
           notificationService.setTimeOutNotification(reason);
         });
-
-
     }
 
     $scope.appointmentDate = {
@@ -735,9 +763,18 @@ angular.module('viLoggedClientApp')
       $scope.appointment.is_expired = false;
       $scope.appointment.checked_in = null;
       $scope.appointment.checked_out = null;
+      $scope.appointment.teams = '';
+      if (!$scope.teamMembers.checkEmpty().length) {
+        var teams = [];
+        $scope.teamMembers.members.forEach(function(row) {
+          teams.push(row.name);
+        });
 
-      var representing = $scope.appointment.representing.split(',');
-      $scope.appointment.representing = JSON.stringify(representing);
+        $scope.appointment.teams = teams.join(', ');
+      }
+
+      //var representing = $scope.appointment.representing.split(',');
+      //$scope.appointment.representing = JSON.stringify(representing);
 
       $scope.appointment.visit_start_time = $filter('date')($scope.visit_start_time, 'HH:mm:ss');
       $scope.appointment.visit_end_time = $filter('date')($scope.visit_end_time, 'HH:mm:ss');
@@ -803,6 +840,8 @@ angular.module('viLoggedClientApp')
             console.log(reason);
             notificationService.setTimeOutNotification(reason);
           });
+      } else {
+        $rootScope.busy = false;
       }
     };
   })
