@@ -143,6 +143,13 @@
           <p ng-show="!appointment.purpose">None</p>
         </div>
       </div>
+      <div class="row" ng-show="appointment.teamMembers">
+        <div>
+          <h3>Team Members</h3>
+          <hr/>
+          <p>{{ appointment.teamMembers }}</p>
+        </div>
+      </div>
       <table class="table table-condensed">
         <tr>
           <th>Appointment Date</th>
