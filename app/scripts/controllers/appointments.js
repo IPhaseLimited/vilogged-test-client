@@ -633,15 +633,15 @@ angular.module('viLoggedClientApp')
         var dayOfWeek = moment($scope.appointment.appointment_date).weekday();
         var nameOfDay = moment.weekdaysShort(dayOfWeek);
 
+        console.log(nameOfDay);
+
         var visitStartTime = $filter('date')($scope.visit_start_time, 'HH:mm:ss').substr(0,2);
         var visitEndTime = $filter('date')($scope.visit_end_time, 'HH:mm:ss').substr(0,2);
 
         if (nameOfDay !== 'Tue' && nameOfDay !== 'Thu') {
-          checkVisitTime.push('Personal visitors are only allowed on Tuesday and Thursday');
-        } else if (nameOfDay !== 'Thu') {
-          checkVisitTime.push('Personal visitors are only allowed on Tuesday and Thursday');
+          checkVisitTime.push('Personal visitors are only allowed on Tuesday and Thursday between 1pm and 3pm');
         } else if (visitStartTime < 13 || visitStartTime > 15 || visitEndTime > 15) {
-          checkVisitTime.push('Personal visitor are only allowed between the hours of 1 and 3pm');
+          checkVisitTime.push('Personal visits are only allowed between the hours of 1pm and 3pm on Tuesday and Thursday');
         }
       }
 
