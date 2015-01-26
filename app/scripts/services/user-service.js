@@ -133,6 +133,8 @@ angular.module('viLoggedClientApp')
     function getUserByNameOrPhone(value) {
       var deferred = $q.defer();
 
+      var value = encodeURIComponent(value);
+
       var promises = [
         getUserByPhone(value),
         getUserByName(value)
