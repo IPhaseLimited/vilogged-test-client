@@ -80,7 +80,7 @@ angular.module('viLoggedClientApp')
               deferred.resolve(response[1]);
             }
           } else {
-            deferred.reject({message: 'no match found'});
+            deferred.resolve({message: 'no match found'});
           }
         })
         .catch(function(reason) {
@@ -114,7 +114,7 @@ angular.module('viLoggedClientApp')
               deferred.resolve(response[2]);
             }
           } else {
-            deferred.reject({message: 'no match found'});
+            deferred.resolve({message: 'no match found'});
           }
         })
         .catch(function(reason) {
@@ -140,14 +140,12 @@ angular.module('viLoggedClientApp')
         .then(function(response) {
           if (response[0].length || response[1].length) {
             if (response[0].length) {
-              console.log(response)
               deferred.resolve(response[0]);
             } else {
-              console.log(response)
               deferred.resolve(response[1]);
             }
           } else {
-            deferred.reject({message: 'no match found'});
+            deferred.resolve({message: 'no match found'});
           }
         })
         .catch(function(reason) {
