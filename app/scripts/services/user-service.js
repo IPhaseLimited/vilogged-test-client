@@ -73,15 +73,16 @@ angular.module('viLoggedClientApp')
 
       $q.all(promises)
         .then(function(response) {
+          var match = [];
           if (response[0].length || response[1].length) {
             if (response[0].length) {
-              deferred.resolve(response[0]);
+              match = response[0];
             } else {
-              deferred.resolve(response[1]);
+              match = response[1];
             }
-          } else {
-            deferred.resolve({message: 'no match found'});
           }
+
+          deferred.resolve(match);
         })
         .catch(function(reason) {
           if (reason === null) {
@@ -105,17 +106,18 @@ angular.module('viLoggedClientApp')
 
       $q.all(promises)
         .then(function(response) {
+          var match = [];
           if (response[0].length || response[1].length || response[2].length) {
             if (response[0].length) {
-              deferred.resolve(response[0]);
+              match = response[0];
             } else if (response[1].length) {
-              deferred.resolve(response[1]);
+              match = response[1];
             } else {
-              deferred.resolve(response[2]);
+              match = response[2];
             }
-          } else {
-            deferred.resolve({message: 'no match found'});
           }
+
+          deferred.resolve(match);
         })
         .catch(function(reason) {
           if (reason === null) {
@@ -138,15 +140,17 @@ angular.module('viLoggedClientApp')
 
       $q.all(promises)
         .then(function(response) {
+
+          var match = [];
           if (response[0].length || response[1].length) {
             if (response[0].length) {
-              deferred.resolve(response[0]);
+              match = response[0];
             } else {
-              deferred.resolve(response[1]);
+              match = response[1];
             }
-          } else {
-            deferred.resolve({message: 'no match found'});
           }
+
+          deferred.resolve(match);
         })
         .catch(function(reason) {
           if (reason === null) {
