@@ -382,18 +382,18 @@ angular.module('viLoggedClientApp')
 
           if ($scope.visitor.visitors_phone) {
             var prefix = $scope.visitor.visitors_phone.substr(0,4);
-            var suffix = $scope.visitor.visitors_phone.substr(3);
+            var suffix = $scope.visitor.visitors_phone.substr(4);
 
-            $scope.phoneNumber.prefix = $scope.phoneNumberPrefixes.indexOf(prefix) > 0 ? $scope.phone.prefix : "Others";
+            $scope.phoneNumber.prefix = $scope.phoneNumberPrefixes.indexOf(prefix) > 0 ? prefix : "Others";
 
-            $scope.phoneNumber.suffix = prefix !== "Others" ? $scope.visitor.visitors_phone : suffix;
+            $scope.phoneNumber.suffix = prefix === "Others" ? $scope.visitor.visitors_phone : suffix;
           }
 
           if ($scope.visitor.nationality) {
             $scope.states = Object.keys($scope.countryState[$scope.visitor.nationality].states).sort();
           }
 
-          if ($scope.visitor.state_of_origin) {
+          if ($scope.visitor.state_of_origin && $scope.countryState[$scope.visitor.nationality]) {
             if ($scope.countryState[$scope.visitor.nationality].states[$scope.visitor.state_of_origin]) {
               $scope.lgas = $scope.countryState[$scope.visitor.nationality].states[$scope.visitor.state_of_origin].lga.sort();
             }
@@ -513,8 +513,6 @@ angular.module('viLoggedClientApp')
       (Object.keys(validatePhoneNumbers)).forEach(function (key) {
         $scope.validationErrors[key] = validatePhoneNumbers[key];
       });
-
-
 
       if (!Object.keys($scope.validationErrors).length) {
         if (!angular.isDefined($scope.visitor.company_name)) {
