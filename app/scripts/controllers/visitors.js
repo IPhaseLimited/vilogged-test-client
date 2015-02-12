@@ -276,6 +276,7 @@ angular.module('viLoggedClientApp')
     $scope.activateImageUploader = false;
     $scope.activateCamera = false;
     $scope.imageCapture = false;
+    $scope.locked = false;
     $scope.phoneNumberPrefixes = ["0701", "0703", "0705", "0706", "0708", "0802", "0803", "0804", "0805", "0806", "0807",
       "0808", "0809", "0810", "0811", "0812", "0813", "0814", "0815", "0816", "0817", "0818", "0819", "0909", "0902",
       "0903", "0905", "Others"];
@@ -343,6 +344,12 @@ angular.module('viLoggedClientApp')
       } else {
         delete $scope.validationErrors['date_of_birth'];
       }
+    };
+
+    $scope.lockPointer = function ($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+      $scope.locked = !$scope.locked;
     };
 
     $scope.setFiles = function (element, field) {
@@ -425,7 +432,6 @@ angular.module('viLoggedClientApp')
     }
 
     $scope.saveProfile = function () {
-
       /**
        * sends email and sms to new visitor account
        */

@@ -154,11 +154,12 @@
         </div>
 
         <div class="form-group">
-          <label for="scanned_signature" class="col-sm-3 control-label">Scanned Signature</label>
+          <label for="signature" class="col-sm-3 control-label">Signature</label>
 
           <div class="col-sm-6">
-            <input type="file" id="scanned_signature" ng-model-instant
-                   onchange="angular.element(this).scope().setFiles(this, 'scanned_signature')">
+            <div j-signature="visitor.scanned_signature" data-pen-color="#29506D" data-line-color="#29506D"
+                 data-readonly="readonly" lock="locked"></div>
+            <button class="btn btn-danger btn-xs" ng-click="visitor.scanned_signature = ''" ng-if="visitor.scanned_signature !== ''">Clear Signature</button>
           </div>
         </div>
       </div>
