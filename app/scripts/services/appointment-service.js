@@ -32,7 +32,7 @@ angular.module('viLoggedClientApp')
 
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + '/nested/')
+      $http.get(BASE_URL + DB_NAME)
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -60,7 +60,7 @@ angular.module('viLoggedClientApp')
     function findByFieldNested(field, value) {
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + '/nested/?' + field + '=' + value)
+      $http.get(BASE_URL + DB_NAME + field + '=' + value)
         .success(function(response) {
           deferred.resolve(response);
         })
@@ -145,7 +145,7 @@ angular.module('viLoggedClientApp')
     function getNested(id) {
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + '/nested/' + id)
+      $http.get(BASE_URL + DB_NAME + id)
         .success(function(response) {
           deferred.resolve(response);
         })
