@@ -23,103 +23,76 @@ angular.module('viLoggedClientApp')
           label: 'Settings'
         }
       })
-      .state('app-config', {
-        parent: 'root.index',
-        url: '/app-config',
-        templateUrl: '/views/settings/config.html',
-        controller: 'ConfigCtrl',
-        data: {
-          label: 'App Configuration'
-        },
-        ncyBreadcrumb: {
-          label: 'App Configuration',
-          parent: 'settings'
-        }
-      })
-      .state('database-settings', {
-        parent: 'root.index',
-        url: '/app-config',
-        templateUrl: '/views/settings/config.html',
-        controller: 'ConfigCtrl',
-        data: {
-          label: 'App Configuration'
-        },
-        ncyBreadcrumb: {
-          label: 'App Configuration',
-          parent: 'settings'
-        }
-      })
-      .state('ldap-config', {
-        url: '/ldap-config',
-        parent: 'root.index',
-        templateUrl: '/views/settings/active-directory.html',
-        controller: 'LDAPConfigCtrl',
-        data: {
-          label: 'LDAP Configuration'
-        },
-        ncyBreadcrumb: {
-          label: 'LDAP Configuration',
-          parent: 'settings'
-        }
-      });
   })
-  .controller('LDAPConfigCtrl', function($scope, $rootScope, settingsService, $http, $q, alertService,
-                                                    notificationService, userService) {
+  .controller('SettingFormCtrl', function ($scope, utility, $http, $rootScope, notificationService, settingsService, $q,
+                                           config, alertService) {
+    //$rootScope.busy = true;
+    $scope.appConfig = {
+      backend: config.api.backend,
+      localBrowserPort: config.api.localBrowserPort,
+      remoteBackend: config.api.remoteBackend,
+      backendCommon: config.api.backendCommon,
+      couchDB: config.api.couchDB,
+      localDB: config.api.localDB
+    };
 
     $scope.ldapSettings = {};
-    $http.get(notificationService.BASE_URL+':8088/api/ldap-config')
-      .success(function(response) {
-        $scope.ldapSettings = response;
-      })
-      .error(function(reason) {
-        notificationService.setTimeOutNotification(reason);
-      });
+    $scope.databaseSetting = {};
+    $scope.smsSetting = {};
+    $scope.emailSetting = {};
+    $scope.systemSetting = {};
+    $scope.validationErrors = {};
 
-    $scope.showPassword = false;
-
-    $scope.save = function() {
-      $rootScope.busy = false;
-      $scope.validationErrors = {};
-      $http.post(notificationService.BASE_URL+':8088/api/ldap-config', $scope.ldapSettings)
-        .success(function(response) {
-          userService.getLDAPUsers()
-            .then(function(response) {
-              alertService.messageToTop.success('Users from LDAP server has successfully been imported.');
-              getUsers();
-              $rootScope.busy = false;
-            })
-            .catch(function(reason) {
-              notificationService.setTimeOutNotification(reason);
-              $rootScope.busy = false;
-            });
-          alertService.success('settings saved successfully');
-        })
-        .error(function(reason) {
-          notificationService.setTimeOutNotification(reason);
-        });
-
-    }
-  })
-  .controller('ConfigCtrl', function($scope, $rootScope, settingsService, $http, $q, alertService, config, $state, notificationService) {
-    $scope.settings = {
-      localSetting: {
-        backend: config.api.backend,
-        localBrowserPort: config.api.localBrowserPort,
-        remoteBackend: config.api.remoteBackend,
-        backendCommon: config.api.backendCommon,
-        couchDB: config.api.couchDB,
-        localDB: config.api.localDB
+    $scope.currentPage = 'emailSetting';
+    $scope.pages = {
+      appConfig: {
+        urlName: 'app-config',
+        pageTitle: 'App Configuration'
+      },
+      databaseSetting: {
+        urlName: 'database-settings',
+        pageTitle: 'Database Configuration'
+      },
+      ldapSettings: {
+        urlName: 'ldap-settings',
+        pageTitle: 'Database Configuration'
+      },
+      emailSetting: {
+        urlName: 'email-settings',
+        pageTitle: 'Email Configuration'
+      },
+      smsSetting: {
+        urlName: 'sms-settings',
+        pageTitle: 'SMS Configuration'
+      },
+      systemSetting: {
+        urlName: 'system-settings',
+        pageTitle: 'System Configuration'
       }
     };
 
+    getFromRemote('ldapSettings');
+    getFromRemote('databaseSetting');
+    getFromRemote('emailSetting');
+    getFromRemote('smsSetting');
+    //getFromRemote('systemSetting');
+
     $scope.save = function() {
+      if ($scope.currentPage === 'appConfig') {
+        saveAppConfig();
+      } else {
+        saveSettings();
+      }
+    };
+
+
+    function saveAppConfig() {
       $rootScope.busy = false;
-      $scope.validationErrors = {};
       var promises = [
-        settingsService.testUrl($scope.settings.localSetting.backend),
-        settingsService.testUrl($scope.settings.localSetting.remoteBackend),
-        settingsService.testUrl($scope.settings.localSetting.couchDB),
-        settingsService.testUrl($scope.settings.localSetting.localDB)
+        settingsService.testUrl($scope.appConfig.backend),
+        settingsService.testUrl($scope.appConfig.remoteBackend),
+        settingsService.testUrl($scope.appConfig.couchDB),
+        settingsService.testUrl($scope.appConfig.localDB)
       ];
       $q.all(promises)
         .then(function(response) {
@@ -144,9 +117,9 @@ angular.module('viLoggedClientApp')
             if (messages.length) {
               alertService.error(messages.join('\n'));
             }
-            $http.post(notificationService.BASE_URL+':8088/api/app-config', $scope.settings)
-              .success(function(response) {
-                $state.go('home');
+            $http.post(notificationService.BASE_URL+':8088/api/app-config', $scope.appConfig)
+              .success(function() {
+                alertService.success('Setting Saved successfully');
               })
               .error(function(reason) {
                 console.log(reason);
@@ -160,68 +133,28 @@ angular.module('viLoggedClientApp')
         .catch(function(reason) {
           $rootScope.busy = false;
         });
-
     }
 
-  })
-  .controller('DatabaseSettingsCtrl', function() {
-
-  })
-  .controller('SettingFormCtrl', function ($scope, utility, $http, $rootScope, notificationService) {
-    $rootScope.busy = true;
-    $scope.currentPage = 'server-setting';
-    $scope.pageTile = utility.toTitleCase('Server Setting');
-    $scope.currentPageTemplateUrl = '/views/settings/server-setting.html';
-
-    $scope.settings = {
-      serverSetting: {},
-      databaseSetting: {},
-      systemSetting: {}
-    };
-
-
-    $http.get(notificationService.BASE_URL+':8088/api/settings')
-      .success(function (response) {
-        $rootScope.busy = false;
-        $scope.settings = response;
-      })
-      .error(function () {
-        $rootScope.busy = false;
-
-      });
-
-    $scope.save = function () {
-      $http.post(notificationService.BASE_URL+':8088/api/settings', $scope.settings)
-        .success(function (response) {
-
+    function getFromRemote(key) {
+      $http.get(notificationService.BASE_URL+':8088/api/'+$scope.pages[key].urlName)
+        .success(function(response) {
+          $scope[key] = response;
         })
-        .error(function (reason) {
+        .error(function(reason) {
           notificationService.setTimeOutNotification(reason);
         });
-    };
-
-    $scope.setCurrentPage = function (page) {
-      switch (page) {
-        case 'server-setting':
-          $scope.currentPage = 'server-setting';
-          $scope.currentPageTemplateUrl = '/views/settings/server-setting.html';
-          break;
-        case 'database-setting':
-          $scope.currentPage = 'database-setting';
-          $scope.pageTile = utility.toTitleCase('database setting');
-          $scope.currentPageTemplateUrl = '/views/settings/database-setting.html';
-          break;
-        case 'system-setting':
-          $scope.currentPage = 'system-setting';
-          $scope.pageTile = utility.toTitleCase('system setting');
-          $scope.currentPageTemplateUrl = '/views/settings/system-setting.html';
-          break;
-        default:
-          $scope.currentPage = 'about';
-          $scope.pageTile = utility.toTitleCase('about');
-          $scope.currentPageTemplateUrl = '/views/settings/about.html';
-          break;
-      }
-      $rootScope.busy = false;
     }
+
+    function saveSettings() {
+      $scope.validationErrors = {};
+      $http.post(notificationService.BASE_URL+':8088/api/'+$scope.pages[$scope.currentPage].urlName,
+        $scope[$scope.currentPage])
+        .success(function() {
+          alertService.success('settings saved successfully');
+        })
+        .error(function(reason) {
+          notificationService.setTimeOutNotification(reason);
+        });
+    }
+
   });

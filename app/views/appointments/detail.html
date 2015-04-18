@@ -138,9 +138,16 @@
         <div class="col-sm-6">
           <h3>Representing</h3>
           <hr/>
-          <p ng-show="appointment.purpose">{{ appointment.representing }}</p>
+          <p ng-show="appointment.representing">{{ appointment.representing }}</p>
 
           <p ng-show="!appointment.purpose">None</p>
+        </div>
+      </div>
+      <div class="row" ng-show="appointment.teamMembers">
+        <div>
+          <h3>Team Members</h3>
+          <hr/>
+          <p>{{ appointment.teamMembers }}</p>
         </div>
       </div>
       <table class="table table-condensed">

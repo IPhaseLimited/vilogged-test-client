@@ -276,6 +276,7 @@ angular.module('viLoggedClientApp')
     $scope.activateImageUploader = false;
     $scope.activateCamera = false;
     $scope.imageCapture = false;
+    $scope.locked = false;
     $scope.phoneNumberPrefixes = ["0701", "0703", "0705", "0706", "0708", "0802", "0803", "0804", "0805", "0806", "0807",
       "0808", "0809", "0810", "0811", "0812", "0813", "0814", "0815", "0816", "0817", "0818", "0819", "0909", "0902",
       "0903", "0905", "Others"];
@@ -345,6 +346,12 @@ angular.module('viLoggedClientApp')
       }
     };
 
+    $scope.lockPointer = function ($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+      $scope.locked = !$scope.locked;
+    };
+
     $scope.setFiles = function (element, field) {
       $scope.$apply(function () {
 
@@ -380,11 +387,20 @@ angular.module('viLoggedClientApp')
         .then(function (response) {
           $scope.visitor = response;
 
+          if ($scope.visitor.visitors_phone) {
+            var prefix = $scope.visitor.visitors_phone.substr(0,4);
+            var suffix = $scope.visitor.visitors_phone.substr(4);
+
+            $scope.phoneNumber.prefix = $scope.phoneNumberPrefixes.indexOf(prefix) > 0 ? prefix : "Others";
+
+            $scope.phoneNumber.suffix = prefix === "Others" ? $scope.visitor.visitors_phone : suffix;
+          }
+
           if ($scope.visitor.nationality) {
             $scope.states = Object.keys($scope.countryState[$scope.visitor.nationality].states).sort();
           }
 
-          if ($scope.visitor.state_of_origin) {
+          if ($scope.visitor.state_of_origin && $scope.countryState[$scope.visitor.nationality]) {
             if ($scope.countryState[$scope.visitor.nationality].states[$scope.visitor.state_of_origin]) {
               $scope.lgas = $scope.countryState[$scope.visitor.nationality].states[$scope.visitor.state_of_origin].lga.sort();
             }
@@ -394,9 +410,11 @@ angular.module('viLoggedClientApp')
               if (response.length) {
                 $scope.visitorsLocation = response[0];
 
-                $scope.locationStates = Object.keys($scope.countryState[$scope.visitorsLocation.residential_country].states).sort();
-                if ($scope.countryState[$scope.visitorsLocation.residential_country].states[$scope.visitorsLocation.residential_state]) {
-                  $scope.locationLgas = $scope.countryState[$scope.visitorsLocation.residential_country].states[$scope.visitorsLocation.residential_state].lga.sort();
+                if ($scope.countryState[$scope.visitorsLocation.residential_country]) {
+                  $scope.locationStates = Object.keys($scope.countryState[$scope.visitorsLocation.residential_country].states).sort();
+                  if ($scope.countryState[$scope.visitorsLocation.residential_country].states[$scope.visitorsLocation.residential_state]) {
+                    $scope.locationLgas = $scope.countryState[$scope.visitorsLocation.residential_country].states[$scope.visitorsLocation.residential_state].lga.sort();
+                  }
                 }
               }
               $rootScope.busy = false;
@@ -414,7 +432,6 @@ angular.module('viLoggedClientApp')
     }
 
     $scope.saveProfile = function () {
-
       /**
        * sends email and sms to new visitor account
        */
@@ -502,8 +519,6 @@ angular.module('viLoggedClientApp')
       (Object.keys(validatePhoneNumbers)).forEach(function (key) {
         $scope.validationErrors[key] = validatePhoneNumbers[key];
       });
-
-
 
       if (!Object.keys($scope.validationErrors).length) {
         if (!angular.isDefined($scope.visitor.company_name)) {

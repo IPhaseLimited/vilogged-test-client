@@ -1,6 +1,6 @@
 <div class="widget">
   <div class="widget-head">
-    <div class="pull-left"><h3>{{ pageTile }}</h3></div>
+    <div class="pull-left"><h3>{{ pages[currentPage].pageTitle }}</h3></div>
     <div class="widget-icons pull-right">
 
     </div>
@@ -11,23 +11,23 @@
       <div class="row">
         <div class="col-xs-12">
           <ul class="nav nav-pills" role="tablist">
-            <li role="presentation" ng-class="{active: currentPage === 'server-setting'}">
-              <a class="pointer" ng-click="setCurrentPage('server-setting')">Server Setting</a>
+            <li role="presentation" ng-class="{active: currentPage === 'emailSetting'}">
+              <a class="pointer" ng-click="currentPage = 'emailSetting'">Email Setting</a>
             </li>
-            <li role="presentation" ng-class="{active: currentPage === 'database-setting'}">
-              <a class="pointer" ng-click="setCurrentPage('database-setting')">Database Setting</a>
+            <li role="presentation" ng-class="{active: currentPage === 'smsSetting'}">
+              <a class="pointer" ng-click="currentPage = 'smsSetting'">SMS Setting</a>
             </li>
-            <li role="presentation" ng-class="{active: currentPage === 'system-setting'}">
-              <a class="pointer" ng-click="setCurrentPage('system-setting')">System Setting</a>
+            <li role="presentation" ng-class="{active: currentPage === 'databaseSetting'}">
+              <a class="pointer" ng-click="currentPage = 'databaseSetting'">Database Setting</a>
             </li>
-            <li role="presentation" ng-class="{active: currentPage === 'local-setting'}">
-              <a ui-sref="app-config">Local Setting</a>
+            <li role="presentation" ng-class="{active: currentPage === 'systemSetting'}">
+              <a class="pointer" ng-click="currentPage = 'systemSetting'">System Setting</a>
             </li>
-            <li role="presentation" ng-class="{active: currentPage === 'ldap-setting'}">
-              <a class="pointer" ui-sref="ldap-config">LDAP Setting</a>
+            <li role="presentation" ng-class="{active: currentPage === 'appConfig'}">
+              <a class="pointer" ng-click="currentPage = 'appConfig'">App Config</a>
             </li>
-            <li role="presentation" ng-class="{active: currentPage === 'about'}">
-              <a class="pointer" ng-click="setCurrentPage('about-setting')">About</a>
+            <li role="presentation" ng-class="{active: currentPage === 'ldapSettings'}">
+              <a class="pointer" ng-click="currentPage = 'ldapSettings'">LDAP Setting</a>
             </li>
           </ul>
           <div class="clearfix"></div>
@@ -38,7 +38,7 @@
       <div class="row">
         <div class="col-xs-12" style="margin-top: 30px;">
           <form class="form-horizontal">
-            <div ng-include=currentPageTemplateUrl></div>
+            <div ng-include="'views/settings/'+pages[currentPage].urlName +'.html'"></div>
 
             <div class="col-sm-offset-2 col-sm-6" ng-hide="currentPage === 'about'">
               <button ng-click="save()" class="btn btn-primary">Save Setting</button>

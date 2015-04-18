@@ -44,7 +44,7 @@ angular.module('viLoggedClientApp')
       //return storageService.all(DB_NAME);
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + '/nested/')
+      $http.get(BASE_URL + DB_NAME + '/all')
         .success(function(response) {
           deferred.resolve(response);
         })

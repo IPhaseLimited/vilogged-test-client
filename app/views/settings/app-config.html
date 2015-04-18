@@ -2,10 +2,10 @@
 <fieldset>
 
   <div class="form-group">
-    <label class="control-label col-sm-4" for="backend">Database Server</label>
+    <label class="control-label col-sm-2" for="backend">Database Server</label>
 
     <div class="col-sm-6">
-      <input class="form-control" name="backend" id="backend"  type="text" ng-model="settings.localSetting.backend"/>
+      <input class="form-control" name="backend" id="backend"  type="text" ng-model="appConfig.backend"/>
       <div class="text-danger bold" ng-show="(validationErrors).backend.length">
         <span ng-repeat="error in (validationErrors).backend">
           {{ error }}<br>
@@ -15,10 +15,10 @@
   </div>
 
   <div class="form-group">
-    <label class="control-label col-sm-4" for="cron">Port</label>
+    <label class="control-label col-sm-2" for="cron">Port</label>
 
     <div class="col-sm-6">
-      <input class="form-control" name="cron" id="cron"  type="text" ng-model="settings.localSetting.localBrowserPort"/>
+      <input class="form-control" name="cron" id="cron"  type="text" ng-model="appConfig.localBrowserPort"/>
       <div class="text-danger bold" ng-show="(validationErrors).localBrowserPort.length">
         <span ng-repeat="error in (validationErrors).localBrowserPort">
           {{ error }}<br>
@@ -28,10 +28,10 @@
   </div>
 
   <div class="form-group">
-    <label class="control-label col-sm-4" for="remoteBackend">Remote Backend Url</label>
+    <label class="control-label col-sm-2" for="remoteBackend">Remote Backend Url</label>
 
     <div class="col-sm-6">
-      <input class="form-control" name="remoteBackend" id="remoteBackend"  type="text" ng-model="settings.localSetting.remoteBackend"/>
+      <input class="form-control" name="remoteBackend" id="remoteBackend"  type="text" ng-model="appConfig.remoteBackend"/>
       <div class="text-danger bold" ng-show="(validationErrors).remoteBackend.length">
         <span ng-repeat="error in (validationErrors).remoteBackend">
           {{ error }}<br>
@@ -41,10 +41,10 @@
   </div>
 
   <div class="form-group">
-    <label class="control-label col-sm-4" for="couchDB">CouchDB Url</label>
+    <label class="control-label col-sm-2" for="couchDB">CouchDB Url</label>
 
     <div class="col-sm-6">
-      <input class="form-control" name="couchDB" id="couchDB"  ng-model="settings.localSetting.couchDB" type="text"/>
+      <input class="form-control" name="couchDB" id="couchDB"  ng-model="appConfig.couchDB" type="text"/>
       <div class="text-danger bold" ng-show="(validationErrors).couchDB.length">
         <span ng-repeat="error in (validationErrors).couchDB">
           {{ error }}<br>
@@ -54,10 +54,10 @@
   </div>
 
   <div class="form-group">
-    <label class="control-label col-sm-4" for="localDB">Local DB</label>
+    <label class="control-label col-sm-2" for="localDB">Local DB</label>
 
     <div class="col-sm-6">
-      <input class="form-control" name="localDB" id="localDB"  ng-model="settings.localSetting.localDB" type="text"/>
+      <input class="form-control" name="localDB" id="localDB"  ng-model="appConfig.localDB" type="text"/>
       <div class="text-danger bold" ng-show="(validationErrors).localDB.length">
         <span ng-repeat="error in (validationErrors).localDB">
           {{ error }}<br>
