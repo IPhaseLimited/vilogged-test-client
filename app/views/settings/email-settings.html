@@ -5,7 +5,7 @@
       <label class="control-label col-sm-2" for="smtpFromName">Organisation</label>
 
       <div class="col-sm-6">
-        <input class="form-control" name="smtpFromName" id="smtpFromName"  type="text" ng-model="settings.serverSetting.smtpFromName"/>
+        <input class="form-control" name="smtpFromName" id="smtpFromName"  type="text" ng-model="emailSetting.smtpFromName"/>
       </div>
     </div>
 
@@ -13,7 +13,7 @@
       <label class="control-label col-sm-2" for="smtpHost">SMTP Host</label>
 
       <div class="col-sm-6">
-        <input class="form-control" name="smtpHost" id="smtpHost"  type="text" ng-model="settings.serverSetting.smtpHost"/>
+        <input class="form-control" name="smtpHost" id="smtpHost"  type="text" ng-model="emailSetting.smtpHost"/>
       </div>
     </div>
 
@@ -21,7 +21,7 @@
       <label class="control-label col-sm-2" for="smtpUser">SMTP User</label>
 
       <div class="col-sm-6">
-        <input class="form-control" name="smtpUser" id="smtpUser"  type="text" ng-model="settings.serverSetting.smtpUser"/>
+        <input class="form-control" name="smtpUser" id="smtpUser"  type="text" ng-model="emailSetting.smtpUser"/>
       </div>
     </div>
 
@@ -29,7 +29,7 @@
       <label class="control-label col-sm-2" for="smtpPassword">SMTP Password</label>
 
       <div class="col-sm-6">
-        <input class="form-control" name="smtpPassword" id="smtpPassword"  type="text" ng-model="settings.serverSetting.smtpPass"/>
+        <input class="form-control" name="smtpPassword" id="smtpPassword"  type="text" ng-model="emailSetting.smtpPass"/>
       </div>
     </div>
 
@@ -37,7 +37,7 @@
       <label class="control-label col-sm-2" for="smtpPort">SMTP Port</label>
 
       <div class="col-sm-6">
-        <input class="form-control" name="smtpPort" id="smtpPort"  ng-model="settings.serverSetting.smtpPort" type="text"/>
+        <input class="form-control" name="smtpPort" id="smtpPort"  ng-model="emailSetting.smtpPort" type="text"/>
       </div>
     </div>
 
@@ -45,7 +45,7 @@
       <label class="control-label col-sm-2" for="replyToEmail">Reply Email</label>
 
       <div class="col-sm-6">
-        <input class="form-control" name="replyToEmail" id="replyToEmail"  ng-model="settings.serverSetting.replyToEmail" type="text"/>
+        <input class="form-control" name="replyToEmail" id="replyToEmail"  ng-model="emailSetting.replyToEmail" type="text"/>
         Please sure you can send and receive mail from the address above or just leave blank to use the user emmail
       </div>
     </div>
