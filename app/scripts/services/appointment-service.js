@@ -60,7 +60,7 @@ angular.module('viLoggedClientApp')
     function findByFieldNested(field, value) {
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + field + '=' + value)
+      $http.get(BASE_URL + DB_NAME + '/?' + field + '=' + value)
         .success(function(response) {
           deferred.resolve(response);
         })
