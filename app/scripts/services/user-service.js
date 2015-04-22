@@ -17,7 +17,7 @@ angular.module('viLoggedClientApp')
 
     function getAllUsers() {
       var deferred = $q.defer();
-      $http.get(BASE_URL + 'all', CONFIG)
+      $http.get(BASE_URL + '/all', CONFIG)
         .success(function (users) {
           deferred.resolve(users)
         })
@@ -297,7 +297,7 @@ angular.module('viLoggedClientApp')
     function listNestedUsers() {
       var deferred = $q.defer();
 
-      $http.get(BASE_URL, CONFIG)
+      $http.get(BASE_URL+'/all', CONFIG)
         .success(function (response) {
           deferred.resolve(response);
         })
