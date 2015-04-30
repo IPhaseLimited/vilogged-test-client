@@ -304,6 +304,12 @@ angular.module('viLoggedClientApp')
 
     $scope.search = {};
 
+    $scope.pagination = {
+      currentPage: 1,
+      maxSize: 5,
+      itemsPerPage: 10
+    };
+
     $scope.csvHeader = [
       'User\'s Name',
       'Username',
@@ -317,6 +323,8 @@ angular.module('viLoggedClientApp')
       userService.usersNested()
         .then(function(response) {
           rows = response;
+          $scope.pagination.totalItems = rows.length;
+          $scope.pagination.numPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
           updateTableData();
           $rootScope.busy = false;
         })
@@ -381,6 +389,9 @@ angular.module('viLoggedClientApp')
 
         return include;
       });
+
+      $scope.pagination.totalItems = $scope.users.length;
+      $scope.pagination.numPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
 
       $scope.users.forEach(function (row) {
         var department = angular.isDefined(row.department) && row.department !== null ? row.department : '';
