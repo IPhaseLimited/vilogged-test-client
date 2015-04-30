@@ -42,14 +42,14 @@
             <th>
               <a class="pointer block" ng-click="sort('first_name')">Name
                 <span ng-show="orderByColumn['first_name']"
-                        ng-class="{'fa fa-sort-amount-asc': orderByColumn['first_name'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['first_name'].reverse}">
+                      ng-class="{'fa fa-sort-amount-asc': orderByColumn['first_name'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['first_name'].reverse}">
                 </span>
               </a>
             </th>
             <th>
               <a class="pointer block" ng-click="sort('username')">Username
                 <span ng-show="orderByColumn['username']"
-                    ng-class="{'fa fa-sort-amount-asc': orderByColumn['username'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['username'].reverse}">
+                      ng-class="{'fa fa-sort-amount-asc': orderByColumn['username'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['username'].reverse}">
                 </span>
               </a>
             </th>
@@ -78,8 +78,8 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="user in users | limitTo:10">
-            <td>{{ $index + 1 }}</td>
+          <tr ng-repeat="user in users | paginationOffset:pagination.currentPage:pagination.itemsPerPage">
+            <td>{{ $index + 1 + ((pagination.currentPage-1) * pagination.itemsPerPage) }}</td>
             <td>{{ user.first_name + ' ' + user.last_name }}</td>
             <td>{{ user.username }}</td>
             <td>
@@ -112,6 +112,16 @@
       </div>
     </div>
     <div class="widget-foot">
+
+      <div class="row">
+        <div class="col-sm-6" style="padding-top: 15px;">
+          Showing Page: {{ pagination.currentPage }} of {{ pagination.numPages }}
+        </div>
+        <div class="col-sm-6">
+          <pagination total-items="pagination.totalItems" ng-model="pagination.currentPage" max-size="maxSize" class="pagination-sm pull-right"
+                      boundary-links="true" rotate="false" items-per-page="pagination.itemsPerPage"></pagination>
+        </div>
+      </div>
       <!-- Footer goes here -->
     </div>
   </div>
