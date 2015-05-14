@@ -185,7 +185,7 @@ angular.module('viLoggedClientApp')
     function saveUserAccount(user) {
       var deferred = $q.defer();
       if (!user.id) {
-        $http.post(BASE_URL + '/user/', user, CONFIG)
+        $http.post(BASE_URL + '/', user, CONFIG)
           .success(function (response) {
             deferred.resolve(response);
           })
@@ -204,7 +204,7 @@ angular.module('viLoggedClientApp')
 
     function updateUser(user) {
       var deferred = $q.defer();
-      $http.put(BASE_URL + '/user/' + user.id + '/', user, CONFIG)
+      $http.put(BASE_URL + '/' + user.id + '/', user, CONFIG)
         .success(function (response) {
           deferred.resolve(response);
         })
@@ -247,7 +247,7 @@ angular.module('viLoggedClientApp')
 
     function removeUser(id) {
       var deferred = $q.defer();
-      $http.delete(BASE_URL + '/user/' + id + '/', CONFIG)
+      $http.delete(BASE_URL + '/' + id + '/', CONFIG)
         .success(function (response) {
           deferred.resolve(response);
         })
@@ -280,7 +280,7 @@ angular.module('viLoggedClientApp')
 
     function findUserBy(field, value) {
       var deferred = $q.defer();
-      $http.get(BASE_URL + '/user/?' + field + '=' + value, CONFIG)
+      $http.get(BASE_URL + '/?' + field + '=' + value, CONFIG)
         .success(function (response) {
           deferred.resolve(response);
         })
