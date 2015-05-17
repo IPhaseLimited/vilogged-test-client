@@ -1,0 +1,52 @@
+
+<fieldset>
+
+  <div class="form-group">
+    <label class="control-label col-sm-2">
+      Server FQDN\IP
+    </label>
+    <div class="col-sm-6">
+      <input class="form-control" ng-model="ldapSettings.serverName" placeholder="ldap.example.com" >
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label col-sm-2">
+      Port
+    </label>
+    <div class="col-sm-6">
+      <input class="form-control" ng-model="ldapSettings.port" >
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label col-sm-2">
+      Admin Username
+    </label>
+    <div class="col-sm-6">
+      <input class="form-control" ng-model="ldapSettings.adminUserName" placeholder="" >
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label col-sm-2">
+      Admin Password
+    </label>
+    <div class="col-sm-6">
+      <input ng-if="!showPassword" class="form-control" type="password" ng-model="ldapSettings.bindPassword" >
+      <input ng-if="showPassword" class="form-control" type="text" ng-model="ldapSettings.bindPassword">
+      Show password <input type="checkbox" ng-model="showPassword">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label col-sm-2">
+      Domain Controller
+    </label>
+    <div class="col-sm-6">
+      <input class="form-control" ng-model="ldapSettings.domainController" >
+    </div>
+  </div>
+  <hr/>
+</fieldset>
+

@@ -26,14 +26,15 @@ angular.module('viLoggedClientApp')
       }
       return getAllFromServer();
     };
+    var BASE_URL = config.api.backend + '/api/v1/user';
 
     function getAllUsers() {
       var deferred = $q.defer();
-      $http.get(config.api.backend + '/api/v1/users/', CONFIG)
-        .success(function(users) {
+      $http.get(BASE_URL + '/all', CONFIG)
+        .success(function (users) {
           deferred.resolve(users)
         })
-        .error(function(reason) {
+        .error(function (reason) {
           if (reason === null) {
             deferred.reject('timeout');
           } else {
@@ -46,11 +47,11 @@ angular.module('viLoggedClientApp')
 
     function getUser(id) {
       var deferred = $q.defer();
-      $http.get(config.api.backend + '/api/v1/user/' + id + '/', CONFIG)
-        .then(function(response) {
+      $http.get(BASE_URL + '/' + id + '/', CONFIG)
+        .then(function (response) {
           deferred.resolve(response.data);
         })
-        .catch(function(reason) {
+        .catch(function (reason) {
           if (reason === null) {
             deferred.reject('timeout');
           } else {
@@ -62,11 +63,11 @@ angular.module('viLoggedClientApp')
 
     function getCurrentUser() {
       var deferred = $q.defer();
-      $http.get(config.api.backend + '/api/v1/current-user/', CONFIG)
-        .success(function(user) {
+      $http.get(BASE_URL + '/current-user/', CONFIG)
+        .success(function (user) {
           deferred.resolve(user);
         })
-        .error(function(reason) {
+        .error(function (reason) {
           if (reason === null) {
             deferred.reject('timeout');
           } else {
@@ -85,7 +86,7 @@ angular.module('viLoggedClientApp')
       ];
 
       $q.all(promises)
-        .then(function(response) {
+        .then(function (response) {
           var match = [];
           if (response[0].length || response[1].length) {
             if (response[0].length) {
@@ -97,7 +98,7 @@ angular.module('viLoggedClientApp')
 
           deferred.resolve(match);
         })
-        .catch(function(reason) {
+        .catch(function (reason) {
           if (reason === null) {
             deferred.reject('timeout');
           } else {
@@ -118,7 +119,7 @@ angular.module('viLoggedClientApp')
       ];
 
       $q.all(promises)
-        .then(function(response) {
+        .then(function (response) {
           var match = [];
           if (response[0].length || response[1].length || response[2].length) {
             if (response[0].length) {
@@ -132,7 +133,7 @@ angular.module('viLoggedClientApp')
 
           deferred.resolve(match);
         })
-        .catch(function(reason) {
+        .catch(function (reason) {
           if (reason === null) {
             deferred.reject('timeout');
           } else {
@@ -154,7 +155,7 @@ angular.module('viLoggedClientApp')
       ];
 
       $q.all(promises)
-        .then(function(response) {
+        .then(function (response) {
 
           var match = [];
           if (response[0].length || response[1].length) {
@@ -167,7 +168,7 @@ angular.module('viLoggedClientApp')
 
           deferred.resolve(match);
         })
-        .catch(function(reason) {
+        .catch(function (reason) {
           if (reason === null) {
             deferred.reject('timeout');
           } else {
@@ -180,11 +181,11 @@ angular.module('viLoggedClientApp')
 
     function getUsersFromLDAP() {
       var deferred = $q.defer();
-      $http.get(config.api.backend + '/api/v1/import-users')
-        .success(function(response) {
+      $http.get(BASE_URL + '/import-users')
+        .success(function (response) {
           deferred.resolve(response);
         })
-        .error(function(reason) {
+        .error(function (reason) {
           if (reason === null) {
             deferred.reject('timeout');
           } else {
@@ -197,11 +198,11 @@ angular.module('viLoggedClientApp')
     function saveUserAccount(user) {
       var deferred = $q.defer();
       if (!user.id) {
-        $http.post(config.api.backend + '/api/v1/user/', user, CONFIG)
-          .success(function(response) {
+        $http.post(BASE_URL + '/', user, CONFIG)
+          .success(function (response) {
             deferred.resolve(response);
           })
-          .error(function(reason) {
+          .error(function (reason) {
             if (reason === null) {
               deferred.reject('timeout');
             } else {
@@ -216,11 +217,11 @@ angular.module('viLoggedClientApp')
 
     function updateUser(user) {
       var deferred = $q.defer();
-      $http.put(config.api.backend + '/api/v1/user/' + user.id + '/', user, CONFIG)
-        .success(function(response) {
+      $http.put(BASE_URL + '/' + user.id + '/', user, CONFIG)
+        .success(function (response) {
           deferred.resolve(response);
         })
-        .error(function(reason) {
+        .error(function (reason) {
           if (reason === null) {
             deferred.reject('timeout');
           } else {
@@ -233,13 +234,13 @@ angular.module('viLoggedClientApp')
     function toggleUserAccountActive(id) {
       var deferred = $q.defer();
       getUser(id)
-        .then(function(response) {
+        .then(function (response) {
           response.is_active = !response.is_active;
           updateUser(response)
-            .then(function(response) {
+            .then(function (response) {
               deferred.resolve(response);
             })
-            .catch(function(reason) {
+            .catch(function (reason) {
               if (reason === null) {
                 deferred.reject('timeout');
               } else {
@@ -247,7 +248,7 @@ angular.module('viLoggedClientApp')
               }
             });
         })
-        .catch(function(reason) {
+        .catch(function (reason) {
           if (reason === null) {
             deferred.reject('timeout');
           } else {
@@ -259,11 +260,11 @@ angular.module('viLoggedClientApp')
 
     function removeUser(id) {
       var deferred = $q.defer();
-      $http.delete(config.api.backend + '/api/v1/user/' + id + '/', CONFIG)
-        .success(function(response) {
+      $http.delete(BASE_URL + '/' + id + '/', CONFIG)
+        .success(function (response) {
           deferred.resolve(response);
         })
-        .error(function(reason) {
+        .error(function (reason) {
           if (reason === null) {
             deferred.reject('timeout');
           } else {
@@ -276,11 +277,11 @@ angular.module('viLoggedClientApp')
 
     function updatePassword(password) {
       var deferred = $q.defer();
-      $http.post(config.api.backend + '/api/v1/user/set/password', password, CONFIG)
-        .success(function(response) {
+      $http.post(config.api.backend + '/user/set/password', password, CONFIG)
+        .success(function (response) {
           deferred.resolve(response);
         })
-        .error(function(reason) {
+        .error(function (reason) {
           if (reason === null) {
             deferred.reject('timeout');
           } else {
@@ -292,11 +293,11 @@ angular.module('viLoggedClientApp')
 
     function findUserBy(field, value) {
       var deferred = $q.defer();
-      $http.get(config.api.backend + '/api/v1/user/?' + field + '=' + value, CONFIG)
-        .success(function(response) {
+      $http.get(BASE_URL + '/?' + field + '=' + value, CONFIG)
+        .success(function (response) {
           deferred.resolve(response);
         })
-        .error(function(reason) {
+        .error(function (reason) {
           if (reason === null) {
             deferred.reject('timeout');
           } else {
@@ -309,11 +310,11 @@ angular.module('viLoggedClientApp')
     function listNestedUsers() {
       var deferred = $q.defer();
 
-      $http.get(config.api.backend + '/api/v1/users/nested', CONFIG)
-        .success(function(response) {
+      $http.get(BASE_URL+'/all', CONFIG)
+        .success(function (response) {
           deferred.resolve(response);
         })
-        .error(function(reason) {
+        .error(function (reason) {
           if (reason === null) {
             deferred.reject('timeout');
           } else {
