@@ -13,6 +13,19 @@ angular.module('viLoggedClientApp')
 
     var TIME_OUT = 90000; //1.5min
     var CONFIG = {timeout: TIME_OUT};
+    var DB_NAME = 'user';
+
+    var getAll = function () {
+      var deferred = $q.defer();
+      var cache = cacheService.cache(DB_NAME);
+      var cached = cache.get(DB_NAME);
+      if (angular.isDefined(cached)) {
+        deferred.resolve(cached);
+        getAllFromServer();
+        return deferred.promise;
+      }
+      return getAllFromServer();
+    };
     var BASE_URL = config.api.backend + '/api/v1/user';
 
     function getAllUsers() {

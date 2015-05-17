@@ -107,7 +107,7 @@ angular.module('viLoggedClientApp')
 
         var include = true;
 
-        include = include && row.is_approved === null && (new Date(row.appointment_date).getTime() >= new Date().getTime());
+        include = include && !row.is_approved && (new Date(row.appointment_date).getTime() >= new Date().getTime());
 
         if (include && $scope.search.awaitingApproval.from) {
           include = include && $filter('date')(row.appointment_date, 'yyyy-MM-dd') >= $filter('date')($scope.search.awaitingApproval.from, 'yyyy-MM-dd');

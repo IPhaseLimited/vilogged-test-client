@@ -390,7 +390,8 @@ angular.module('viLoggedClientApp')
         return include;
       });
 
-
+      $scope.pagination.totalItems = $scope.users.length;
+      $scope.pagination.numPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
 
       $scope.users.forEach(function (row) {
         var department = angular.isDefined(row.department) && row.department !== null ? row.department : '';
