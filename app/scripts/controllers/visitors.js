@@ -23,14 +23,19 @@ angular.module('viLoggedClientApp')
           label: 'Visitors'
         },
         resolve: {
-          hasAppointments: function(visitorService) {
-            return visitorService.hasAppointments();
+          allVisitors: function(visitorService, notificationService) {
+            return visitorService.all()
+              .catch(notificationService.log);
+          },
+          hasAppointments: function(visitorService, notificationService) {
+            return visitorService.hasAppointments()
+              .catch(notificationService.log);
           }
         }
       })
-      .state('create-visitor-profile', {
+      .state('visitor-form', {
         parent: 'root.index',
-        url: '/visitors/add',
+        url: '/visitors/add:_id',
         templateUrl: 'views/visitors/widget-form.html',
         controller: 'VisitorFormCtrl',
         resolve: {
@@ -47,41 +52,9 @@ angular.module('viLoggedClientApp')
           parent: 'visitors'
         }
       })
-      .state('visitor-registration', {
-        url: '/register',
-        templateUrl: 'views/visitors/widget-form.html',
-        controller: 'VisitorFormCtrl',
-        resolve: {
-          countryState: function (countryStateService) {
-            return countryStateService.all();
-          }
-        },
-        data: {
-          label: 'Register'
-        }
-      })
-      .state('edit-visitor-profile', {
+      .state('visitor', {
         parent: 'root.index',
-        url: '/visitors/:visitor_id/edit',
-        templateUrl: 'views/visitors/widget-form.html',
-        controller: 'VisitorFormCtrl',
-        resolve: {
-          countryState: function (countryStateService) {
-            return countryStateService.all();
-          }
-        },
-        data: {
-          label: 'Edit Profile',
-          requiredPermission: 'is_active'
-        },
-        ncyBreadcrumb: {
-          label: 'Edit Visitor\'s Profile',
-          parent: 'visitors'
-        }
-      })
-      .state('show-visitor', {
-        parent: 'root.index',
-        url: '/visitors/:visitor_id',
+        url: '/visitors/:_id',
         templateUrl: 'views/visitors/detail.html',
         controller: 'VisitorDetailCtrl',
         data: {
@@ -94,11 +67,28 @@ angular.module('viLoggedClientApp')
         }
       });
   })
-  .controller('VisitorsCtrl', function ($scope, visitorService, $rootScope, guestGroupConstant, alertService, $filter, hasAppointments) {
-    $scope.visitors = [];
+  .controller('VisitorsCtrl', function (
+    $scope,
+    visitorService,
+    $rootScope,
+    guestGroupConstant,
+    alertService,
+    $filter,
+    allVisitors,
+    hasAppointments
+  ) {
+    $scope.visitors = allVisitors;
     $scope.search = {};
-    var rows = [];
+    $scope.pagination = {
+      currentPage: 1,
+      maxSize: 5,
+      itemsPerPage: 10
+    };
 
+    var rows = $filter('orderBy')(allVisitors, 'created', 'reverse');
+    $scope.pagination.totalItems = rows.length;
+    $scope.pagination.numPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
+    updateTableData();
 
     $scope.csvHeader = [
       'Passcode',
@@ -120,27 +110,10 @@ angular.module('viLoggedClientApp')
       open: function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
-        this.opened = true;
+        this.opened = !this.opened;
       }
     };
 
-    function getVisitors() {
-      $rootScope.busy = true;
-      visitorService.all()
-        .then(function (response) {
-          $rootScope.busy = false;
-          rows = $filter('orderBy')(response, 'created', 'reverse');
-          $scope.pagination.totalItems = rows.length;
-          $scope.pagination.numPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage);
-          updateTableData();
-        })
-        .catch(function (reason) {
-          $rootScope.busy = false;
-
-        });
-    }
-
-    getVisitors();
     $scope.$watch('search', function () {
       updateTableData();
     }, true);
@@ -158,8 +131,7 @@ angular.module('viLoggedClientApp')
         open: function ($event) {
           $event.preventDefault();
           $event.stopPropagation();
-
-          this.opened = true;
+          this.opened = !this.opened;
         }
       };
     }
@@ -185,84 +157,100 @@ angular.module('viLoggedClientApp')
       if (!$scope.user.is_staff && !$scope.user.is_superuser) {
         createdBy = $scope.user.id;
       }
-      $scope.visitors = rows.filter(function (row) {
-        var date = moment(row.created);
-        var include = true;
 
-        if (include && $scope.search.name) {
-          include = row.first_name.toLowerCase().indexOf($scope.search.name.toLowerCase()) > -1 ||
-          row.last_name.toLowerCase().indexOf($scope.search.name.toLowerCase()) > -1;
+      (function() {
+        $scope.visitors = [];
+        var length = rows.length;
+        for (var i = 0; i < length; i++) {
+          var row = rows[i];
+          var date = moment(row.created);
+          var include = true;
+
+          if (include && $scope.search.name) {
+            include = row.first_name.toLowerCase().indexOf($scope.search.name.toLowerCase()) > -1 ||
+            row.last_name.toLowerCase().indexOf($scope.search.name.toLowerCase()) > -1;
+          }
+
+          if (include && $scope.search.visitors_email) {
+            include = row.visitors_email.toLowerCase().indexOf($scope.search.visitors_email.toLowerCase()) > -1;
+          }
+
+          if (include && $scope.search.visitors_phone) {
+            include = row.visitors_phone.toLowerCase().indexOf($scope.search.visitors_phone.toLowerCase()) > -1;
+          }
+
+          if (include && $scope.search.company_name) {
+            include = row.company_name.toLowerCase().indexOf($scope.search.company_name.toLowerCase()) > -1;
+          }
+
+          if (include && $scope.search.group_type && row.group_type) {
+            include = guestGroupConstant[row.group_type].toLowerCase().indexOf($scope.search.company_name.toLowerCase()) > -1;
+          }
+
+          if (include && $scope.search.created) {
+            include = include && (date.isSame($scope.search.created, 'day'));
+          }
+
+          if (hasAppointments.length || createdBy !== null) {
+            include = include && (hasAppointments.indexOf(row.uuid) !== -1 || row.created_by === createdBy);
+          }
+
+
+          if (include && $scope.search.from) {
+            include = include && $filter('date')(row.created, 'yyyy-MM-dd') >= $filter('date')($scope.search.from, 'yyyy-MM-dd');
+          }
+
+          if (include && $scope.search.to) {
+            include = include && $filter('date')(row.created, 'yyyy-MM-dd') <= $filter('date')($scope.search.to, 'yyyy-MM-dd');
+          }
+
+          if (include) {
+            $scope.visitors.push(row);
+            exports.push({
+              pass_code: row.visitors_pass_code,
+              name: row.first_name + ' ' + row.last_name,
+              gender: row.gender,
+              email: row.visitors_email,
+              phone: row.visitors_phone,
+              contact_address: row.visitors_address,
+              company_name: row.company_name,
+              company_address: row.company_address,
+              group_type: row.group_type != null && angular.isDefined(row.group_type) ? row.group_type.group_name : 'None',
+              created_date: $filter('date')(row.created, 'longDate'),
+              created_by: row.created_by,
+              modified_date:  $filter('date')(row.modified, 'longDate'),
+              modified_by: row.modified_by
+            });
+          }
         }
+      })();
 
-        if (include && $scope.search.visitors_email) {
-          include = row.visitors_email.toLowerCase().indexOf($scope.search.visitors_email.toLowerCase()) > -1;
-        }
-
-        if (include && $scope.search.visitors_phone) {
-          include = row.visitors_phone.toLowerCase().indexOf($scope.search.visitors_phone.toLowerCase()) > -1;
-        }
-
-        if (include && $scope.search.company_name) {
-          include = row.company_name.toLowerCase().indexOf($scope.search.company_name.toLowerCase()) > -1;
-        }
-
-        if (include && $scope.search.group_type && row.group_type) {
-          include = guestGroupConstant[row.group_type].toLowerCase().indexOf($scope.search.company_name.toLowerCase()) > -1;
-        }
-
-        if (include && $scope.search.created) {
-          include = include && (date.isSame($scope.search.created, 'day'));
-        }
-
-        if (hasAppointments.length || createdBy !== null) {
-          include = include && (hasAppointments.indexOf(row.uuid) !== -1 || row.created_by === createdBy);
-        }
-
-
-        if (include && $scope.search.from) {
-          include = include && $filter('date')(row.created, 'yyyy-MM-dd') >= $filter('date')($scope.search.from, 'yyyy-MM-dd');
-        }
-
-        if (include && $scope.search.to) {
-          include = include && $filter('date')(row.created, 'yyyy-MM-dd') <= $filter('date')($scope.search.to, 'yyyy-MM-dd');
-        }
-
-        return include;
-      });
-
-      $scope.visitors.forEach(function (row) {
-        exports.push({
-          pass_code: row.visitors_pass_code,
-          name: row.first_name + ' ' + row.last_name,
-          gender: row.gender,
-          email: row.visitors_email,
-          phone: row.visitors_phone,
-          contact_address: row.visitors_address,
-          company_name: row.company_name,
-          company_address: row.company_address,
-          group_type: row.group_type != null && angular.isDefined(row.group_type) ? row.group_type.group_name : 'None',
-          created_date: $filter('date')(row.created, 'longDate'),
-          created_by: row.created_by,
-          modified_date:  $filter('date')(row.modified, 'longDate'),
-          modified_by: row.modified_by
-        });
-      });
       $scope.export = exports;
     }
-
-    $scope.pagination = {
-      currentPage: 1,
-      maxSize: 5,
-      itemsPerPage: 10
-    };
 
     $scope.getGroupType = function (index) {
       return guestGroupConstant[index];
     }
   })
-  .controller('VisitorFormCtrl', function ($scope, $state, $stateParams, $rootScope, $window, $filter, visitorService,
-                                           validationService, countryStateService, guestGroupConstant, userService,
-                                           countryState, visitorGroupsService,visitorsLocationService, notificationService, utility, alertService) {
+  .controller('VisitorFormCtrl', function (
+    $scope,
+    $state,
+    $stateParams,
+    $rootScope,
+    $window,
+    $filter,
+    visitorService,
+    validationService,
+    countryStateService,
+    guestGroupConstant,
+    userService,
+    countryState,
+    visitorGroupsService,
+    visitorsLocationService,
+    notificationService,
+    utility,
+    alertService
+  ) {
     $scope.visitors = [];
     $scope.visitor = {};
     $scope.visitorsLocation = {};
@@ -612,8 +600,15 @@ angular.module('viLoggedClientApp')
       }
     };
   })
-  .controller('VisitorDetailCtrl', function ($scope, $stateParams, visitorService, appointmentService,
-                                             visitorsLocationService, $rootScope, notificationService) {
+  .controller('VisitorDetailCtrl', function (
+    $scope,
+    $stateParams,
+    visitorService,
+    appointmentService,
+    visitorsLocationService,
+    $rootScope,
+    notificationService
+  ) {
     $scope.visitor = {};
     $scope.visitorsLocation = {};
     $scope.appointments = [];
@@ -656,7 +651,7 @@ angular.module('viLoggedClientApp')
 
       });
 
-    appointmentService.getNestedAppointmentsByVisitor($stateParams.visitor_id)
+    appointmentService.getNestedAppointmentsByVisitor($stateParams._id)
       .then(function(response) {
         $rootScope.busy = false;
 

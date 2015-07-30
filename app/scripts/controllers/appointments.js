@@ -346,7 +346,7 @@ angular.module('viLoggedClientApp')
      return (appointmentService.getOutlookCalender(appointment));
     };
   })
-  .controller('AppointmentDetailCtrl', function($scope, $state, $stateParams, appointmentService, utility, $modal, growl,
+  .controller('AppointmentDetailCtrl', function($scope, $state, $stateParams, appointmentService, utility, $modal, toastr,
                                                 notificationService, $rootScope, alertService) {
 
     $rootScope.busy = true;
@@ -471,7 +471,7 @@ angular.module('viLoggedClientApp')
       return appointmentService.isAppointmentExpired(appointmentDate, visitEndTime);
     };
   })
-  .controller('AppointmentFormCtrl', function($scope, $stateParams, $state, $timeout, $filter, visitorService, growl,
+  .controller('AppointmentFormCtrl', function($scope, $stateParams, $state, $timeout, $filter, visitorService, toastr,
                                               userService, appointmentService, utility, validationService, $rootScope,
                                               notificationService, alertService) {
 
@@ -847,7 +847,7 @@ angular.module('viLoggedClientApp')
   })
   .controller('CheckInCtrl', function($scope, $state, $stateParams, $q, visitorService, appointmentService, entranceService,
                                       vehicleTypeConstant, notificationService, utility, restrictedItemsService,
-                                      vehicleService, growl, $rootScope, alertService) {
+                                      vehicleService, toastr, $rootScope, alertService) {
 
     $scope.appointment = {};
     $scope.restricted_items = [{
@@ -1006,7 +1006,7 @@ angular.module('viLoggedClientApp')
     }
   })
   .controller('CheckOutCtrl', function ($scope, $state, $stateParams, appointmentService, utility, notificationService,
-                                        growl, $rootScope, alertService) {
+                                        toastr, $rootScope, alertService) {
 
     $rootScope.busy = true;
     appointmentService.get($stateParams.appointment_id)

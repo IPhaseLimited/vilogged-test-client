@@ -8,41 +8,41 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('alertService', function alertService(utility, growl) {
+  .service('alertService', function alertService(utility, toastr) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     function error(message) {
-      growl.addErrorMessage(message);
+     toastr.error(message);
     }
 
     function success(message) {
-      growl.addSuccessMessage(message);
+      toastr.success(message);
     }
 
     function info(message) {
-      growl.addInfoMessage(message);
+      toastr.info(message);
     }
 
     function warning(message) {
-      growl.addWarnMessage(message);
+      toastr.warning(message);
     }
 
     this.messageToTop = {
       error: function(message) {
         utility.scrollToTop();
-        growl.addErrorMessage(message);
+        toastr.error(message);
       },
       success: function(message) {
         utility.scrollToTop();
-        growl.addSuccessMessage(message);
+        toastr.success(message);
       },
       warning: function(message) {
         utility.scrollToTop();
-        growl.addErrorMessage(message);
+        toastr.warning(message);
       },
       info: function(message) {
         utility.scrollToTop();
-        growl.addErrorMessage(message);
+        toastr.info(message);
       }
     };
 

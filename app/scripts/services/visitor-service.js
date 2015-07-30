@@ -8,9 +8,9 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('visitorService', function visitorService($q, storageService, db, syncService, $http, config, $cookieStore) {
+  .service('visitorService', function visitorService($q, storageService, db, syncService, $http, config, $cookies, cacheService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
-    var DB_NAME = db.VISITORS;
+    var DB_NAME = db.VISITORS, _this = this;
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
 
     var EMAIL_TEMPLATE = 'Hello &&first_name&& &&last_name&&,\n\nYour profile as a visitor has ' +
@@ -20,13 +20,50 @@ angular.module('viLoggedClientApp')
     var SMS_TEMPLATE = 'Hello &&first_name&& &&last_name&&, your profile as a visitor has been created. You can ' +
       'now log on using either, Phone Number: &&phone&& OR Pass Code: &&pass_code&&';
 
-    function findByField(field, value) {
-      //return storageService.findByField(DB_NAME, field, value);
 
+    _this.all = function() {
+      return storageService.all(DB_NAME);
+    };
+
+    _this.get = function(id) {
+      return storageService.find(DB_NAME);
+    };
+
+    _this.remove = function(id) {
+      return storageService.removeRecord(DB_NAME, id);
+    };
+
+    _this.findByPassCodeOrPhone = function(value) {
       var deferred = $q.defer();
 
-      $http.get(BASE_URL + DB_NAME + '/?' + field + '=' + value)
-        .success(function(response) {
+      var promises = [
+        storageService.all(DB_NAME, {visitors_pass_code: value}),
+        storageService.all(DB_NAME, {visitors_phone: value})
+      ];
+      $q.all(promises)
+        .then(function(response) {
+          var res = response[0].concat(response[1]);
+          if (res.length > 0) {
+            deferred.resolve(res[0]);
+          } else {
+            deferred.reject({message: 'no match found'});
+          }
+        })
+        .catch(function(reason) {
+          if (reason === null) {
+            deferred.reject('timeout');
+          } else {
+            deferred.reject(reason);
+          }
+        });
+
+      return deferred.promise;
+    };
+
+    _this.findByPhone = function(value) {
+      var deferred = $q.defer();
+      storageService(DB_NAME, {visitors_phone: value})
+        .then(function(response) {
           deferred.resolve(response);
         })
         .catch(function(reason) {
@@ -38,37 +75,14 @@ angular.module('viLoggedClientApp')
         });
 
       return deferred.promise;
-    }
+    };
 
-    function getAllVisitors() {
-      //return storageService.all(DB_NAME);
+    _this.visitorsGroupByCompanyName = function() {
       var deferred = $q.defer();
-
-      $http.get(BASE_URL + DB_NAME + '/all')
-        .success(function(response) {
-          deferred.resolve(response);
-        })
-        .catch(function(reason) {
-          if (reason === null) {
-            deferred.reject('timeout');
-          } else {
-            deferred.reject(reason);
-          }
-        });
-
-      return deferred.promise;
-    }
-
-    function getChanges() {
-      return syncService.getChanges(DB_NAME);
-    }
-
-    function visitorsGroupByCompanyName() {
-      var deferred = $q.defer();
-      getAllVisitors()
+      storageService.all(DB_NAME)
         .then(function(response) {
           var visitors = {};
-          for (var i=0; i<response.length; i++) {
+          for (var i=0; i < response.length; i++) {
             var visitor = response[i];
             if (!visitors.hasOwnProperty(visitor.company_name)) {
               visitors[visitor.company_name] = [];
@@ -87,29 +101,17 @@ angular.module('viLoggedClientApp')
           }
         });
       return deferred.promise;
-    }
-
-    this.findByField = findByField;
+    };
 
     this.save = function(object) {
       return storageService.save(DB_NAME, object);
     };
 
-    this.get = function(id) {
-      return storageService.find(DB_NAME, id);
-    };
-
-
-
-    this.findByVisitorPassCode = function(visitorPassCode) {
+    _this.findByVisitorPassCode = function(visitorPassCode) {
       var deferred = $q.defer();
-      findByField('visitors_pass_code', visitorPassCode)
+      storageService.all(DB_NAME, {visitors_pass_code: visitorPassCode})
         .then(function(response) {
-          var filtered = {};
-          if (response.length > 0) {
-            filtered = response[0];
-          }
-          deferred.resolve(filtered);
+          deferred.resolve(response[0] || {});
         })
         .catch(function(reason) {
           if (reason === null) {
@@ -122,86 +124,36 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     };
 
-    this.findByPhone = function(value) {
+    _this.hasAppointments = function() {
       var deferred = $q.defer();
-
-      findByField('visitors_phone', value)
-        .then(function(response) {
-          deferred.resolve(response);
-        })
-        .catch(function(reason) {
-          if (reason === null) {
-            deferred.reject('timeout');
-          } else {
-            deferred.reject(reason);
-          }
-        });
-
-      return deferred.promise;
-    };
-
-    this.findByPassCodeOrPhone = function(value) {
-      var deferred = $q.defer();
-
-      var promises = [
-        findByField('visitors_pass_code', value),
-        findByField('visitors_phone', value)
-      ];
-      $q.all(promises)
-        .then(function(response) {
-          if (response[0].length || response[1].length ) {
-            if (response[0].length) {
-              deferred.resolve(response[0][0]);
-            } else {
-              deferred.resolve(response[1][0]);
-            }
-          } else {
-            deferred.reject({message: 'no match found'});
-          }
-        })
-        .catch(function(reason) {
-          if (reason === null) {
-            deferred.reject('timeout');
-          } else {
-            deferred.reject(reason);
-          }
-        });
-
-      return deferred.promise;
-    };
-
-    function hasAppointments() {
-      var deferred = $q.defer();
-      var currentUser = $cookieStore.get('current-user');
+      var currentUser = $cookies.getObject('current-user') || {};
       var visitorsList = [];
       if (!currentUser.is_vistor && !currentUser.is_staff) {
-        $http.get(BASE_URL+db.APPOINTMENTS+'?host_id='+currentUser.id)
-          .success(function(response) {
+        storageService.all(db.APPOINTMENTS, {host_id: currentUser._id})
+          .then(function(response) {
             if (response.length) {
-              response.forEach(function(row) {
+              var len = response.length;
+              for (var i = 0; i < len; i++) {
+                var row = response[i];
                 if (visitorsList.indexOf(row.visitor_id) === -1) {
                   visitorsList.push(row.visitor_id);
                 }
-              });
-
+              }
             }
             deferred.resolve(visitorsList);
           })
-          .error(function(reason) {
-            deferred.resolve(visitorsList);
+          .catch(function(reason) {
+            deferred.reject(reason);
           });
+
       } else {
         deferred.resolve(visitorsList);
       }
 
       return deferred.promise;
-    }
+    };
 
-    this.hasAppointments = hasAppointments;
 
-    this.all = getAllVisitors;
-    this.changes = getChanges;
-    this.getVisitorsGroupedByCompany = visitorsGroupByCompanyName;
     this.DBNAME = DB_NAME;
     this.EMAIL_TEMPLATE = EMAIL_TEMPLATE;
     this.SMS_TEMPLATE = SMS_TEMPLATE;

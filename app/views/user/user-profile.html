@@ -4,7 +4,7 @@
       <div class="widget-head">
         <div class="pull-left">User Account</div>
         <div class="widget-icons pull-right">
-          <a class="btn btn-primary btn-xs" ui-sref="editUser({user_id: user.id})"><i class="fa fa-edit"></i> Edit</a>
+          <a class="btn btn-primary btn-xs" ui-sref="editUser({user_id: user._id})"><i class="fa fa-edit"></i> Edit</a>
         </div>
         <div class="clearfix"></div>
       </div>
@@ -26,24 +26,24 @@
                 </tr>
                 <tr>
                   <th>Phone</th>
-                  <td ng-if="user.user_profile.phone">
-                    {{ user.user_profile.phone }}
+                  <td ng-if="user.phone">
+                    {{ user.phone }}
                   </td>
-                  <td ng-if="!user.user_profile.phone"> Nil</td>
+                  <td ng-if="!user.phone"> Nil</td>
                 </tr>
                 <tr>
                   <th>Home Phone</th>
-                  <td ng-if="user.user_profile.home_phone">
-                    {{ user.user_profile.home_phone }}
+                  <td ng-if="user.home_phone">
+                    {{ user.home_phone }}
                   </td>
-                  <td ng-if="!user.user_profile.home_phone"> Nil</td>
+                  <td ng-if="!user.home_phone"> Nil</td>
                 </tr>
                 <tr>
                   <th>Office Phone</th>
-                  <td ng-if="user.user_profile.work_phone">
-                    {{ user.user_profile.work_phone }}
+                  <td ng-if="user.work_phone">
+                    {{ user.work_phone }}
                   </td>
-                  <td ng-if="!user.user_profile.work_phone"> Nil</td>
+                  <td ng-if="!user.work_phone"> Nil</td>
                 </tr>
               </table>
             </div>
@@ -77,20 +77,20 @@
           <table class="table table-condensed table-responsive">
             <tr>
               <th class="col-sm-8">Number of Unattended Appointments</th>
-              <td class="col-sm-4" ng-if="appointmentsAwaitingApprovalCount ">
-                {{ appointmentsAwaitingApprovalCount | number }}
+              <td class="col-sm-4" ng-if="userAppointments.appointmentsAwaitingApprovalCount ">
+                {{ userAppointments.appointmentsAwaitingApprovalCount | number }}
               </td>
-              <td class="col-sm-4" ng-if="!appointmentsAwaitingApprovalCount ">0</td>
+              <td class="col-sm-4" ng-if="!userAppointments.appointmentsAwaitingApprovalCount ">0</td>
             </tr>
             <tr>
               <th class="col-sm-8">Number of Upcoming Appointments</th>
-              <td class="col-sm-4" ng-if="upcomingAppointmentCount ">{{ upcomingAppointmentCount | number }}</td>
-              <td class="col-sm-4" ng-if="!upcomingAppointmentCount ">0</td>
+              <td class="col-sm-4" ng-if="userAppointments.upcomingAppointmentCount ">{{ userAppointments.upcomingAppointmentCount | number }}</td>
+              <td class="col-sm-4" ng-if="!userAppointments.upcomingAppointmentCount ">0</td>
             </tr>
             <tr class="text-danger">
               <th class="col-sm-8">Total Number of Appointments</th>
-              <td class="col-sm-4" ng-if="numberOfAppointments">{{ numberOfAppointments | number }}</td>
-              <td class="col-sm-4" ng-if="!numberOfAppointments">0</td>
+              <td class="col-sm-4" ng-if="userAppointments.numberOfAppointments">{{ userAppointments.numberOfAppointments | number }}</td>
+              <td class="col-sm-4" ng-if="!userAppointments.numberOfAppointments">0</td>
             </tr>
           </table>
         </div>
@@ -116,12 +116,12 @@
       </div>
       <div class="widget-content">
         <div class="padd">
-          <div class="alert alert-info" ng-if="!upcomingAppointmentCount">
+          <div class="alert alert-info" ng-if="!userAppointments.upcomingAppointmentCount">
             <p>You have no upcoming appointments</p>
           </div>
         </div>
 
-        <table class="table table-condensed table-bordered" ng-if="upcomingAppointmentCount">
+        <table class="table table-condensed table-bordered" ng-if="userAppointments.upcomingAppointmentCount">
           <thead>
           <tr>
             <th>S/N</th>
@@ -132,7 +132,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="appointment in upcomingAppointments | limitTo:5 | orderBy: 'appointment.appointment_date'">
+          <tr ng-repeat="appointment in userAppointments.upcomingAppointments | limitTo:5 | orderBy: 'appointment.appointment_date'">
             <td>{{ $index+1 }}</td>
             <td>{{ appointment.visitor_id.first_name + " " + appointment.visitor_id.last_name }}</td>
             <td>{{ appointment.appointment_date | date: 'EEE, MMM d, y' }}</td>
@@ -161,12 +161,12 @@
       </div>
       <div class="widget-content">
         <div class="padd">
-          <div class="alert alert-info" ng-if="!appointmentsAwaitingApprovalCount">
+          <div class="alert alert-info" ng-if="!userAppointments.appointmentsAwaitingApprovalCount">
             <p>You have no appointment awaiting your approval</p>
           </div>
         </div>
 
-        <table class="table table-condensed table-bordered" ng-if="appointmentsAwaitingApprovalCount">
+        <table class="table table-condensed table-bordered" ng-if="userAppointments.appointmentsAwaitingApprovalCount">
           <thead>
           <tr>
             <th>S/N</th>
@@ -178,7 +178,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="appointment in appointmentsAwaitingApproval | limitTo: 5 | orderBy: 'appointment.appointment_date'">
+          <tr ng-repeat="appointment in userAppointments.appointmentsAwaitingApproval | limitTo: 5 | orderBy: 'appointment.appointment_date'">
             <td>{{ $index+1 }}</td>
             <td>{{ appointment.visitor_id.first_name + " " + appointment.visitor_id.last_name }}</td>
             <td>{{ appointment.appointment_date | date: 'EEE, MMM d, y' }}</td>

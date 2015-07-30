@@ -86,21 +86,7 @@
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
     display: none !important;
 }
-.growl {
-  z-index: 10000;
-  left: 50%;
-  min-width: 250px;
-  max-width: 400px;
-  width: auto;
-}
 
-.growl-item.ng-enter,
-.growl-item.ng-leave {
-  -webkit-transition:1s linear all;
-  -moz-transition:1s linear all;
-  -o-transition:1s linear all;
-  transition:1s linear all;
-}
 .loading-status {
   z-index: 10000;
   position: fixed;
@@ -137,4 +123,7 @@
 .appointment-legend{
   font-size: 10px;
   line-height: 10px;
+}
+.growl-message{
+  font-size: 18px;
 }

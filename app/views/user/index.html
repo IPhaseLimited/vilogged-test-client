@@ -4,18 +4,16 @@
     </div>
     <div class="widget-icons pull-right">
       <button ng-click="importUsers()" class="btn btn-primary">Import Users</button>
-      <button ng-disabled="!export.length" class="btn btn-primary hidden-print" type="button"
-              ng-csv="export" csv-header="csvHeader" filename="{{getFileName('users')}}">
+      <button ng-disabled="!UsersCtrl.export.length" class="btn btn-primary hidden-print" type="button"
+              ng-csv="UsersCtrl.export" csv-header="UsersCtrl.csvHeader" filename="{{UsersCtrl.getFileName('users')}}">
         Export
       </button>
-      <a class="btn btn-primary" ui-sref="createUser"><i class="fa fa-plus-circle"></i> Create User Account</a>
+      <a class="btn btn-primary" ui-sref="user-form"><i class="fa fa-plus-circle"></i> Create User Account</a>
     </div>
     <div class="clearfix"></div>
   </div>
   <div class="widget-content">
     <div class="padd">
-      <growl-notifications></growl-notifications>
-
       <div class="row">
         <table class="table table-condensed table-bordered">
           <thead>
@@ -40,37 +38,37 @@
           <tr>
             <th>S/N</th>
             <th>
-              <a class="pointer block" ng-click="sort('first_name')">Name
-                <span ng-show="orderByColumn['first_name']"
-                      ng-class="{'fa fa-sort-amount-asc': orderByColumn['first_name'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['first_name'].reverse}">
+              <a class="pointer block" ng-click="UsersCtrl.sort('first_name')">Name
+                <span ng-show="UsersCtrl.orderByColumn['first_name']"
+                      ng-class="{'fa fa-sort-amount-asc': UsersCtrl.orderByColumn['first_name'].reverse, 'fa fa-sort-amount-desc': !UsersCtrl.orderByColumn['first_name'].reverse}">
                 </span>
               </a>
             </th>
             <th>
-              <a class="pointer block" ng-click="sort('username')">Username
-                <span ng-show="orderByColumn['username']"
-                      ng-class="{'fa fa-sort-amount-asc': orderByColumn['username'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['username'].reverse}">
+              <a class="pointer block" ng-click="UsersCtrl.sort('username')">Username
+                <span ng-show="UsersCtrl.orderByColumn['username']"
+                      ng-class="{'fa fa-sort-amount-asc': UsersCtrl.orderByColumn['username'].reverse, 'fa fa-sort-amount-desc': !UsersCtrl.orderByColumn['username'].reverse}">
                 </span>
               </a>
             </th>
             <th>
-              <a class="pointer block" ng-click="sort('role')">Role
-                <span ng-show="orderByColumn['role']"
-                      ng-class="{'fa fa-sort-amount-asc': orderByColumn['role'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['role'].reverse}">
+              <a class="pointer block" ng-click="UsersCtrl.sort('role')">Role
+                <span ng-show="UsersCtrl.orderByColumn['role']"
+                      ng-class="{'fa fa-sort-amount-asc': UsersCtrl.orderByColumn['role'].reverse, 'fa fa-sort-amount-desc': !UsersCtrl.orderByColumn['role'].reverse}">
                 </span>
               </a>
             </th>
             <th>
-              <a class="pointer block" ng-click="sort('user_profile.department')">Department
-                <span ng-show="orderByColumn['user_profile.department']"
-                      ng-class="{'fa fa-sort-amount-asc': orderByColumn['user_profile.department'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['user_profile.department.department'].reverse}">
+              <a class="pointer block" ng-click="UsersCtrl.sort('department')">Department
+                <span ng-show="UsersCtrl.orderByColumn['department']"
+                      ng-class="{'fa fa-sort-amount-asc': UsersCtrl.orderByColumn['department'].reverse, 'fa fa-sort-amount-desc': !UsersCtrl.orderByColumn['department'].reverse}">
                 </span>
               </a>
             </th>
             <th>
-              <a class="pointer block" ng-click="sort('user_profile.work_phone')">Work Phone
-                <span ng-show="orderByColumn['user_profile.work_phone']"
-                      ng-class="{'fa fa-sort-amount-asc': orderByColumn['user_profile.work_phone'].reverse, 'fa fa-sort-amount-desc': !orderByColumn['user_profile.work_phone'].reverse}">
+              <a class="pointer block" ng-click="UsersCtrl.sort('phone')">Phone
+                <span ng-show="orderByColumn['phone']"
+                      ng-class="{'fa fa-sort-amount-asc': UsersCtrl.orderByColumn['phone'].reverse, 'fa fa-sort-amount-desc': !UsersCtrl.orderByColumn['phone'].reverse}">
                 </span>
               </a>
             </th>
@@ -78,8 +76,8 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="user in users | paginationOffset:pagination.currentPage:pagination.itemsPerPage">
-            <td>{{ $index + 1 + ((pagination.currentPage-1) * pagination.itemsPerPage) }}</td>
+          <tr ng-repeat="user in UsersCtrl.all | paginationOffset:UsersCtrl.pagination.currentPage:UsersCtrl.pagination.itemsPerPage">
+            <td>{{ $index + 1 + ((UsersCtrl.pagination.currentPage-1) * UsersCtrl.pagination.itemsPerPage) }}</td>
             <td>{{ user.first_name + ' ' + user.last_name }}</td>
             <td>{{ user.username }}</td>
             <td>
@@ -88,21 +86,22 @@
               <span ng-show="!user.is_superuser && !user.is_staff && user.is_active">Staff</span>
               <span ng-show="!user.is_superuser && !user.is_staff && !user.is_active">Not Active</span>
             </td>
-            <td>{{ user.user_profile.department }}</td>
-            <td>{{ user.user_profile.phone }}</td>
+            <td>{{ user.department }}</td>
+            <td>{{ user.phone }}</td>
             <td>
-              <a class="btn btn-success btn-xs" ui-sref="editUser({user_id: user.id})"><i class="fa fa-edit"></i>
+              <a class="btn btn-success btn-xs" ui-sref="user-form({_id: user._id})"><i class="fa fa-edit"></i>
                 Edit</a>
-              <a class="btn btn-primary btn-xs" ng-show="user.is_active"
-                 ng-click="toggleActive(user.id)">
-                <i class="fa fa-times-circle"></i> Deactivate
-              </a>
-              <a class="btn btn-primary btn-xs" ng-show="!user.is_active"
-                 ng-click="toggleActive(user.id)">
-                <i class="fa fa-check-circle"></i> Activate
+              <a class="btn btn-primary btn-xs" ng-click="toggleActive(user)">
+                <i class="fa " ng-class="{'fa-times-circle': user.is_active, 'fa-check-circle': !user.is_active }"></i>
+                <span ng-show="user.is_active">
+                   Deactivate
+                </span>
+                <span ng-show="!user.is_active">
+                   Activate
+                </span>
               </a>
 
-              <a class="btn btn-danger btn-xs" ng-click="deleteAccount(user.id)">
+              <a class="btn btn-danger btn-xs" ng-click="deleteAccount(user._id)">
                 <i class="fa fa-minus-circle"></i> Delete
               </a>
             </td>
@@ -113,9 +112,9 @@
     </div>
     <div class="widget-foot">
 
-      <div class="row">
+      <div class="row" ng-if="UsersCtrl.all.length">
         <div class="col-sm-6" style="padding-top: 15px;">
-          Showing Page: {{ pagination.currentPage }} of {{ pagination.numPages }}
+          Showing Page: {{ UsersCtrl.pagination.currentPage }} of {{ UsersCtrl.pagination.numPages }}
         </div>
         <div class="col-sm-6">
           <pagination total-items="pagination.totalItems" ng-model="pagination.currentPage" max-size="maxSize" class="pagination-sm pull-right"

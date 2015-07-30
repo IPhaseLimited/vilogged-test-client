@@ -8,14 +8,14 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('notificationService', function notificationService($modal, $http, $q, growl, config) {
+  .service('notificationService', function notificationService($modal, $http, $q, config, alertService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
-    var BACKEND = config.api.backend.split(':');
+    var BACKEND = config.api.backend.split(':'), _this = this;
     var PORT = BACKEND.pop();
     var BASE_URL = BACKEND.join(':');
 
-    this.BASE_URL = BASE_URL;
+    _this.BASE_URL = BASE_URL;
 
     function sendMessage(objectParams, apiUrl) {
       var deferred = $q.defer();
@@ -31,20 +31,25 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     }
 
-    this.setTimeOutNotification = function(reason) {
-
+    _this.setTimeOutNotification = function(reason, options) {
+      options = options || {};
       if (reason === 'timeout' || reason === null) {
-        growl.addErrorMessage('it looks like your network is experiencing some problem');
+        alertService.error('it looks like your network is experiencing some problem');
       } else if (Object.prototype.toString.call(reason) === '[object Object]' && parseInt(reason.status) === 0) {
-        growl.addErrorMessage('it looks like your network is experiencing some problem');
+        alertService.error('it looks like your network is experiencing some problem');
       } else {
-
+        alertService.error('Error loading data for page');
       }
       return reason;
     };
 
-    this.modal = {};
-    this.modal.confirm = function(paramObject) {
+    _this.log = function(reason, options) {
+      options = options || {};
+      return _this.setTimeOutNotification(reason, options);
+    };
+
+    _this.modal = {};
+    _this.modal.confirm = function(paramObject) {
       var modalInstance = $modal.open({
         templateUrl: 'views/partials/confirm-dialog.html',
         controller: function($scope, $modalInstance){
@@ -62,7 +67,7 @@ angular.module('viLoggedClientApp')
       return modalInstance.result;
     };
 
-    this.send = {
+    _this.send = {
       sms: function(smsParams) {
         sendMessage(smsParams, BASE_URL+':8088/api/send-sms')
           .then(function(response) {

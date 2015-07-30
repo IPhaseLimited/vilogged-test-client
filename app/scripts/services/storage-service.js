@@ -9,10 +9,18 @@
  */
 angular.module('viLoggedClientApp')
   .service('storageService', function storageService($q, $window, utility, collections, pouchStorageService,
-                                                     couchDbService, db, apiService, $cookieStore) {
+                                                     couchDbService, db, apiService, $cookies, localStorageService) {
 
-    var dataManagementService = apiService;
+    var driver = 'api';
 
+    var drivers = {
+      localDB: localStorageService,
+      pouchDB: pouchStorageService,
+      api: apiService,
+      couchDB: couchDbService
+    };
+
+    var dataManagementService = drivers[driver];
 
     // AngularJS will instantiate a singleton by calling "new" on this function
 
@@ -20,16 +28,20 @@ angular.module('viLoggedClientApp')
      * Add new table data to the store.
      *
      * @param {string} table - Table name.
-     * @param {mixed} data - rows of the table (all values are stored as JSON.)
+     * @param data - rows of the table (all values are stored as JSON.)
+     * @param options
      * @return {promise|Function|promise|promise|promise|*}
      * @private
      */
-    var setData = function(table, data) {
+    var setData = function(table, data, options) {
+      options = options || {};
+      var identifier = options.identifier || '_id';
       var deferred = $q.defer();
-      if(!data.hasOwnProperty('uuid')){
+      if(!data.hasOwnProperty(identifier)){
         deferred.reject('data should have a uuid or primary key field.');
+        return deferred.promise;
       }
-      dataManagementService.put(table, data)
+      dataManagementService.put(table, data, options)
         .then(function(result) {
           deferred.resolve(result);
         })
@@ -39,8 +51,8 @@ angular.module('viLoggedClientApp')
       return deferred.promise;
     };
 
-    var getData = function(key) {
-      return dataManagementService.allDocs(key);
+    var getData = function(key, options) {
+      return dataManagementService.allDocs(key, options);
     };
     /**
      * This function removes a given record with the given uuid from the given
@@ -48,13 +60,17 @@ angular.module('viLoggedClientApp')
      * with reason why removeData failed.
      *
      * @param tableName
-     * @param uuid
+     * @param id
+     * @param options
      * @returns {promise|Function|promise|promise|promise|*}
      */
-    var removeRecordFromTable = function(tableName, uuid){
-      return dataManagementService.get(tableName, uuid)
+    var removeRecordFromTable = function(tableName, id, options){
+      if (driver === 'api') {
+        return dataManagementService.remove(tableName, id, options);
+      }
+      return dataManagementService.get(tableName, id, options)
         .then(function(doc) {
-          return dataManagementService.remove(tableName, uuid, doc._rev);
+          return dataManagementService.remove(tableName, id, doc._rev, options);
         });
     };
 
@@ -64,8 +80,8 @@ angular.module('viLoggedClientApp')
      * @param key - Table name.
      * @returns {*|boolean|Array|Promise|string}
      */
-    var removeData = function(key) {
-      return dataManagementService.destroy(key);
+    var removeData = function(key, options) {
+      return dataManagementService.destroy(key, options);
     };
 
     /**
@@ -76,8 +92,10 @@ angular.module('viLoggedClientApp')
     var clearStorage = function() {
       var promises = [];
       for(var i in collections){
-        var dbName  = collections[i];
-        promises.push(dataManagementService.destroy(dbName));
+        if (collections.hasOwnProperty(i)) {
+          var dbName  = collections[i];
+          promises.push(dataManagementService.destroy(dbName));
+        }
       }
       return $q.all(promises);
     };
@@ -87,27 +105,31 @@ angular.module('viLoggedClientApp')
      *
      * @param table
      * @param data
+     * @param options
      * @returns {Promise}
      */
-    var insertData = function(table, data) {
-      var currentUser = $cookieStore.get('current-user');
-
+    var insertData = function(table, data, options) {
+      var currentUser = $cookies.getObject('current-user');
+      options = options || {};
+      var identifier = options.identifier || '_id';
       var DEFAULT_USER = {
         id: 1
       };
 
       if (angular.isUndefined(currentUser)) {
         currentUser = DEFAULT_USER;
-      } else if (currentUser.is_vistor) {
-        currentUser.id = 1;
       }
-      if(data.hasOwnProperty('uuid')){
+
+      if(data.hasOwnProperty('_id')){
         throw 'insert should only be called with fresh record that has not uuid or primary key field.';
       }
-      data.uuid = utility.uuidGenerator();
+      if (identifier === '_id') {
+        data[identifier] = utility.uuidGenerator();
+      }
+
       data.created = data.modified = utility.getDateTime();
-      data.created_by = currentUser.id;
-      return setData(table, data);
+      data.created_by = currentUser._id;
+      return setData(table, data, options);
     };
 
     /**
@@ -115,35 +137,40 @@ angular.module('viLoggedClientApp')
      *
      * @param table
      * @param data
+     * @param options
+     * @param updateDateModified
      * @returns {Promise}
      */
-    var updateData = function(table, data, updateDateModified) {
-      var currentUser = $cookieStore.get('current-user');
-
+    var updateData = function(table, data, options, updateDateModified) {
+      options = options || {};
+      var currentUser = $cookies.getObject('current-user');
+      var identifier = options.identifier || '_id';
       var DEFAULT_USER = {
-        id: 1
+        _id: 1
       };
 
       if (angular.isUndefined(currentUser)) {
         currentUser = DEFAULT_USER;
-      } else if (currentUser.is_vistor) {
-        currentUser.id = 1;
       }
-      if(!data.hasOwnProperty('uuid')){
+      if(!data.hasOwnProperty(identifier)){
         throw 'update should only be called with data that has UUID or primary key already.';
       }
       if(updateDateModified !== false){
         data.modified = utility.getDateTime();
-        data.modified_by = currentUser.id;
+        data.modified_by = currentUser._id;
       }
 
-      return dataManagementService.get(table, data.uuid)
+      if (driver === 'api') {
+        return setData(table, data, options);
+      }
+
+      return dataManagementService.get(table, data[identifier], options)
         .then(function(doc) {
           data._rev = doc._rev;
-          return setData(table, data);
+          return setData(table, data, options);
         })
         .catch(function() {
-          return setData(table, data);
+          return setData(table, data, options);
         });
     };
 
@@ -152,15 +179,18 @@ angular.module('viLoggedClientApp')
      *
      * @param table
      * @param data
+     * @param options
      * @returns {*}
      */
-    var saveData = function(table, data) {
+    var saveData = function(table, data, options) {
+      options = options || {};
+      var identifier = options.identifier || '_id';
 
       if ((typeof data === 'object') && (data !== null)) {
-        if (Object.keys(data).indexOf('uuid') !== -1 && data.uuid.length > 0) {
-          return updateData(table, data);
+        if (Object.keys(data).indexOf(identifier) !== -1 && data[identifier].length > 0) {
+          return updateData(table, data, options);
         } else {
-          return insertData(table, data);
+          return insertData(table, data, options);
         }
       } else {
         var deferred = $q.defer();
@@ -170,21 +200,21 @@ angular.module('viLoggedClientApp')
 
     };
 
-    var getFromTableByKey = function(table, key) {
+    var getFromTableByKey = function(table, key, options) {
       //key = String(key);//force conversion to string
       //return pouchStorageService.get(table, key);
-      return dataManagementService.get(table, key);
+      return dataManagementService.get(table, key, options);
     };
 
     /**
      * this is basically just filter() but the idea is that there are probably ways to pass this
      * to the storage layer to get the filtering done in the db, so make it a separae fn and figure that out later
      */
-    var getFromTableByLambda = function(tableName, fn) {
+    var getFromTableByLambda = function(tableName, options, fn) {
       var deferred = $q.defer();
       var results = [];
       try {
-        getData(tableName)
+        getData(tableName, options)
           .then(function(data) {
             results = data.filter(fn);
             deferred.resolve(results);
@@ -193,9 +223,9 @@ angular.module('viLoggedClientApp')
           });
       } catch (e) {
         deferred.reject(e);
-      } finally {
-        return deferred.promise;
       }
+
+      return deferred.promise;
     };
 
     /**
@@ -203,20 +233,21 @@ angular.module('viLoggedClientApp')
      * this collection can not be indexed via key, to get table rows that can
      * be accessed via keys use all() or getData()
      */
-    var getAllFromTable = function(tableName) {
-      var deferred = $q.defer();
-      getData(tableName)
+    var getAllFromTable = function(tableName, options) {
+
+      return getData(tableName, options)
         .then(function(data) {
+          if (angular.isArray(data)) {
+            return data;
+          }
           var rows = [];
           for (var key in data) {
-            rows.push(data[key]);
+            if (data.hasOwnProperty(key)) {
+              rows.push(data[key]);
+            }
           }
-          deferred.resolve(rows);
-        })
-        .catch(function(reason) {
-          deferred.reject(reason);
+          return rows;
         });
-      return deferred.promise;
     };
 
     /**
@@ -225,19 +256,22 @@ angular.module('viLoggedClientApp')
      * @param tableName
      * @param field
      * @param value
+     * @param options
      * @returns {promise}
      */
 
-    var findByField = function(tableName, field, value) {
-
+    var findByField = function(tableName, field, value, options) {
       var deferred = $q.defer();
-      getAllFromTable(tableName)
+      getAllFromTable(tableName, options)
         .then(function(response) {
+          var filtered = [];
 
-          var filtered = response
-           .filter(function(row) {
-              return String(row[field]) === value;
-           });
+          for (var i = 0; i < response.length; i++) {
+            var row = response[i];
+            if (row[field] === value) {
+              filtered.push(row);
+            }
+          }
 
            deferred.resolve(filtered);
         })
@@ -249,22 +283,22 @@ angular.module('viLoggedClientApp')
     };
 
     var validateBatch = function(batch) {
-      var currentUser = $cookieStore.get('current-user');
+      var currentUser = $cookies.getObject('current-user');
 
       var DEFAULT_USER = {
-        id: 1
+        _id: 1
       };
 
       if (angular.isUndefined(currentUser)) {
         currentUser = DEFAULT_USER;
       } else if (currentUser.is_vistor) {
-        currentUser.id = 1;
+        currentUser._id = 1;
       }
       var now = utility.getDateTime();
-      if (!utility.has(batch, 'uuid')) {
+      if (!utility.has(batch, '_id')) {
         batch.uuid = utility.uuidGenerator();
         batch.created = now;
-        batch.created_by = currentUser.id;
+        batch.created_by = currentUser._id;
       }
       batch.modified = now;
       return batch;
@@ -282,26 +316,8 @@ angular.module('viLoggedClientApp')
       return dataManagementService.bulkDocs(table, _batches);
     };
 
-    var setDatabase = function(table, data) {
-      return dataManagementService.bulkDocs(table, data);
-    };
-
-    var compactDatabases = function() {
-      var promises = [];
-      var dbNames = Object.keys(db);
-      dbNames.forEach(function(key) {
-        promises.push(dataManagementService.compact(db[key]));
-      });
-      return $q.all(promises);
-    };
-
-    var viewCleanups = function() {
-      var promises = [];
-      for (var i in collections) {
-        var dbName = collections[i];
-        promises.push(dataManagementService.viewCleanup(dbName));
-      }
-      return $q.all(promises);
+    var setDatabase = function(table, data, options) {
+      return dataManagementService.bulkDocs(table, data, options);
     };
 
     var api = {
@@ -317,8 +333,6 @@ angular.module('viLoggedClientApp')
       update: updateData,
       save: saveData,
       setDatabase: setDatabase,
-      compactDatabases: compactDatabases,
-      viewCleanups: viewCleanups,
       where: getFromTableByLambda,
       find: getFromTableByKey,
       insertBatch: insertBatch

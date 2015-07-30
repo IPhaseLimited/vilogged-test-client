@@ -4,8 +4,8 @@ angular.module('db.names', [])
 
   .constant('db', {
     APPOINTMENTS: 'appointment',
-    COMPANY_DEPARTMENTS: 'company_department',
-    ENTRANCE: 'company_entrance',
+    DEPARTMENTS: 'department',
+    ENTRANCE: 'entrance',
     RESTRICTED_ITEMS: 'restricted_item',
     VEHICLE: 'vehicle',
     VISITORS: 'visitor',

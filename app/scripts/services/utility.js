@@ -218,4 +218,20 @@ angular.module('viLoggedClientApp')
       return template;
     };
 
+    this.isEmptyObject = function(object) {
+      object = Object.prototype.toString.call(object) === '[object Object]' ? object : {};
+      return (Object.keys(object)).length === 0;
+    };
+
+    this.filter = function(list, callback) {
+      var filtered = [], length = list.length;
+      for (var i = 0; i < length; i++) {
+        var row = list[i];
+        if (callback(row)) {
+          filtered.push(row);
+        }
+      }
+      return filtered;
+    };
+
   });

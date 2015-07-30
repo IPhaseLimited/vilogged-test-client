@@ -10,15 +10,15 @@
 angular.module('viLoggedClientApp')
   .service('visitorGroupsService', function visitorGroupsService($q, storageService, db, utility, syncService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
-    var DB_NAME = db.Visitor_Group.replace(/_/, '-');
+    var DB_NAME = db.Visitor_Group.replace(/_/, '-'), _this = this;
 
-    function getAll() {
-      return storageService.all(DB_NAME);
-    }
+    _this.all = function(options) {
+      return storageService.all(DB_NAME, options);
+    };
 
-    function getAllObject() {
+    _this.getAllObject = function(options) {
       var deferred = $q.defer();
-      getAll()
+      _this.all(options)
         .then(function(response) {
           deferred.resolve(utility.castArrayToObject(response));
         })
@@ -27,27 +27,25 @@ angular.module('viLoggedClientApp')
         });
 
       return deferred.promise;
-    }
+    };
 
-    this.changes = function() {
+    _this.changes = function() {
       return syncService.getChanges(DB_NAME);
     };
 
-    this.save = function(object) {
+    _this.save = function(object) {
       return storageService.save(DB_NAME, object);
     };
 
-    this.get = function(id) {
+    _this.get = function(id) {
 
       return storageService.find(DB_NAME, id);
     };
 
-    this.remove = function(id) {
+    _this.remove = function(id) {
       return storageService.removeRecord(DB_NAME, id);
     };
 
-    this.all = getAll;
-
-    this.getUpdates = syncService.getUpdates;
+    _this.getUpdates = syncService.getUpdates;
 
   });

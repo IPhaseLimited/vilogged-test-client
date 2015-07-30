@@ -8,7 +8,7 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('syncService', function syncService($q, $http, pouchdb, config, db, $cookieStore, $interval, $rootScope) {
+  .service('syncService', function syncService($q, $http, pouchdb, config, db, $cookies, $interval, $rootScope) {
     var dbNames = db;
 
     function updateRecord(fn, _delay) {
@@ -21,7 +21,7 @@ angular.module('viLoggedClientApp')
     }
 
     function getDBChanges(db) {
-      var lastSeq = $cookieStore.get(db);
+      var lastSeq = $coo$cookies(db);
       if (angular.isUndefined(lastSeq)) {
         lastSeq = 1;
       }

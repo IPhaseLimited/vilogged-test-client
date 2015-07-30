@@ -10,30 +10,30 @@
 angular.module('viLoggedClientApp')
   .service('authorizationService', function authorizationService($q, $rootScope, userService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
-    var currentUser = userService.user;
+    var currentUser = userService.user, _this = this;
 
-    function authorize(requiredPermission) {
+    _this.authorize = function(requiredPermission) {
       if(currentUser) return currentUser[requiredPermission];
-    }
+    };
 
-    function canPerformAdminActions() {
+    _this.canPerformAdminActions = function() {
       return currentUser.is_superuser;
-    }
+    };
 
-    this.canEditAppointment = function(appointment) {
-      return parseInt(appointment.host.id) === parseInt(currentUser.id) || currentUser.is_superuser;
+    _this.canEditAppointment = function(appointment) {
+      return parseInt(appointment.host_id._id) === parseInt(currentUser._id) || currentUser.is_superuser;
     };
 
     this.canViewAppointment = function(appointment) {
-      return !currentUser.is_superuser || !currentUser.is_staff || parseInt(appointment.host.id) === parseInt(currentUser.id);
+      return !currentUser.is_superuser || !currentUser.is_staff || parseInt(appointment.host_id._id) === parseInt(currentUser._id);
     };
 
     this.canCreateAppointment = function(visitor) {
-      return visitor.group_type !== 'Banned';
+      return !visitor.group.black_listed;
     };
 
-    this.canEditProfile = function(userId) {
-      return user.id === currentUser.id || currentUser.is_superuser;
+    this.canEditProfile = function(user) {
+      return user._id === currentUser._id || currentUser.is_superuser;
     };
 
     this.canCheckInOrCheckOutVisitor = function() {
@@ -83,8 +83,4 @@ angular.module('viLoggedClientApp')
       ]
     };
 
-    this.authorize = authorize;
-    this.canModifyUser = canPerformAdminActions;
-    this.canModifyDepartment = canPerformAdminActions;
-    this.canModifyEntrance =  canPerformAdminActions;
   });

@@ -19,14 +19,12 @@
                 <i class="fa fa-lock"></i> Login
               </div>
               <div class="col-md-6">
-                <a class="btn btn-warning btn btn-xs pull-right" ng-click="displayUserLogin=!displayUserLogin"
-                   ng-show="displayUserLogin">
-                  <i class="fa"></i> User Login
-                </a>
-
-                <a class="btn btn-primary btn btn-xs pull-right" ng-click="displayUserLogin=!displayUserLogin"
-                   ng-show="!displayUserLogin">
-                  Guest Login
+                <a class="btn  btn btn-xs pull-right"
+                   ng-class="{'btn-warning': displayVisitorLogin, 'btn-primary': !displayVisitorLogin}"
+                   ng-click="LoginCtrl.toggleForm()">
+                  <i class="fa"></i>
+                  <span ng-show="displayVisitorLogin">User Login</span>
+                  <span ng-show="!displayVisitorLogin">Guest Login</span>
                 </a>
               </div>
             </div>
@@ -35,11 +33,6 @@
           <div class="widget-content">
             <div class="padd">
               <!-- Login form -->
-
-              <div class="alert fade in alert alert-danger" style="text-align: center;" ng-show="loginError">
-                <button data-dismiss="alert" class="close" type="button" ng-click="loginError=!loginError">×</button>
-                {{ errorMessages }}
-              </div>
 
               <div ng-show="!displayVisitorLogin">
                 <form novalidate="" name="visitorLoginForm">

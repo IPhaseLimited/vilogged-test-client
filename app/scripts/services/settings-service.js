@@ -8,14 +8,14 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('settingsService', function settingsService($rootScope, $http, $location, $q, $cookieStore) {
+  .service('settingsService', function settingsService($rootScope, $http, $location, $q, $cookies) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     function loadConfig() {
       var deferred = $q.defer();
       $http.get('/scripts/config.json')
         .success(function(response) {
           deferred.resolve(response);
-          $cookieStore.put('config', response);
+          $coo$cookies('config', response);
           $rootScope.config = response;
         })
         .error(function(reason, status) {
