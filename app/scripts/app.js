@@ -58,6 +58,7 @@ angular.module('viLoggedClientApp', [
     uiSelectConfig.theme = 'bootstrap';
   })
   .config(function($breadcrumbProvider) {
+
     $breadcrumbProvider.setOptions({
       prefixStateName: 'home',
       template: 'bootstrap2'
