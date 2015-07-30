@@ -8,7 +8,16 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('loginService', function loginService($q, $cookieStore, $http, $rootScope, userService, config, visitorService) {
+  .service('loginService', function loginService(
+    $q,
+    $cookies,
+    $http,
+    $rootScope,
+    userService,
+    config,
+    visitorService,
+    sessionService
+  ) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     function login(credentials) {
@@ -26,27 +35,16 @@ angular.module('viLoggedClientApp')
             loginResponse.status = status;
             loginResponse.loginMessage = 'login was successful';
             loginResponse.loginRawResponse = response;
-            $cookieStore.put('vi-token', response.token);
+            $cookies.putObject('vi-token', response.token);
             $http.defaults.headers.common['Authorization'] = 'Token ' + response.token;
-            $cookieStore.put('current-user', response.user);
+            $cookies.putObject('current-user', response.user);
             $rootScope.user = response.user;
             deferred.resolve(loginResponse);
-            /*userService.currentUser()
-              .then(function(user) {
-                $rootScope.user = user;
-                $cookieStore.put('current-user', user);
-                deferred.resolve(loginResponse);
-              })
-              .catch(function(reason) {
-                loginResponse.loginMessage = reason;
-                deferred.resolve(loginResponse);
-              });*/
           })
           .error(function(reason, status) {
             loginResponse.status = status;
-            if (angular.isDefined(reason.non_field_errors)){
-              loginResponse.loginMessage = reason.non_field_errors[0];
-            }
+            reason = reason || {};
+
             if (angular.isDefined(reason.detail)) {
               loginResponse.loginMessage = reason.detail === 'Invalid Token' ? ERROR_MESSAGE : reason.detail;
             }
@@ -81,7 +79,7 @@ angular.module('viLoggedClientApp')
             loginResponse.loginMessage = 'Login was successful';
             loginResponse.loginRawResponse = response;
             $rootScope.user = toUser(response);
-            $cookieStore.put('vi-visitor', $rootScope.user );
+            $cookies.putObject('vi-visitor', $rootScope.user );
             deferred.resolve(loginResponse);
           })
           .catch(function(reason) {
@@ -107,22 +105,17 @@ angular.module('viLoggedClientApp')
         is_superuser: false,
         is_active: false,
         is_staff: false,
-        id: visitor.uuid,
+        _id: visitor._id,
         is_vistor: true
       }
     }
 
     function anonymousLogin() {
-      $cookieStore.put('vi-anonymous-token', Date.now())
+      $cookies.putObject('vi-anonymous-token', Date.now())
     }
 
     function logout() {
-      //delete $http.defaults.headers.common['Authorization'];
-      $cookieStore.remove('vi-token');
-      $cookieStore.remove('no-login');
-      $cookieStore.remove('current-user');
-      $cookieStore.remove('vi-visitor');
-      $cookieStore.remove('vi-anonymous-token');
+      return sessionService.logout();
     }
 
     this.login = login;

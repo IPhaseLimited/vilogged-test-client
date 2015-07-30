@@ -1,8 +1,8 @@
 <div>
   <form name="departmentForm" novalidate>
     <div class="form-group" >
-      <label for="group_name">Group Type Name</label> <span class="text-danger bold">*</span>
-      <input id="group_name" class="form-control" ng-model="visitorGroup.name" required>
+      <label for="name">Department Name</label> <span class="text-danger bold">*</span>
+      <input id="name" class="form-control" ng-model="department.name" required>
       <div class="text-danger bold" ng-show="(validationErrors).name.length">
         <ul ng-repeat="error in (validationErrors).name">
           <li>{{ error }}</li>
@@ -11,13 +11,8 @@
 
     </div>
     <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-8">
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" ng-model="visitorGroup.black_listed"> Black List
-          </label>
-        </div>
-      </div>
+      <label for="description">Description</label>
+      <input id="description" class="form-control" ng-model="department.description">
     </div>
 
     <button class="btn btn-primary" ng-click="save()">Save</button>

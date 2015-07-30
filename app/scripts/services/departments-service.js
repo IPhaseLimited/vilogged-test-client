@@ -8,9 +8,9 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('companyDepartmentsService', function companyDepartmentsService($q, storageService, db, utility, syncService) {
+  .service('departmentService', function departmentService($q, storageService, db, utility, syncService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
-    var DB_NAME = db.COMPANY_DEPARTMENTS.replace(/_/, '-');
+    var DB_NAME = db.DEPARTMENTS;
 
     function getAll() {
       return storageService.all(DB_NAME);

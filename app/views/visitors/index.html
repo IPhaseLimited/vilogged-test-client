@@ -11,6 +11,7 @@
               type="text"
               class="form-control"
               ng-model="search.from"
+              ng-click="dateRange.from.open($event)"
               datepicker-popup
               is-open="dateRange.from.opened"/>
                 <span class="input-group-btn">
@@ -28,6 +29,7 @@
               class="form-control"
               ng-model="search.to"
               datepicker-popup
+              ng-click="dateRange.to.open($event)"
               is-open="dateRange.to.opened"/>
                 <span class="input-group-btn">
                   <button type="button" class="btn btn-default" ng-click="dateRange.to.open($event)">
@@ -47,23 +49,26 @@
         </div>
 
         <div class="col-xs-4 clearfix">
-          <a class="fa fa-plus-circle btn btn-primary btn-sm pull-right" ui-sref="create-visitor-profile"> Create Visitor Profile</a>
+          <a class="fa fa-plus-circle btn btn-primary btn-sm pull-right" ui-sref="visitor-form"> Create Visitor Profile</a>
         </div>
       </div>
     </div>
     <div class="clearfix"></div>
   </div>
-
+  <div class="widget-head">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="pull-right">
+          <form action="">
+            <input class="form-control" ng-model="search.visitors_phone" placeholder="Search for visitor by phone number">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="widget-content">
     <div class="padd">
       <div >
-        <div class="pull-right">
-          <form action="" class="form-inline">
-            <input class="form-control" ng-model="search.visitors_phone"
-                   placeholder="Search for visitor by phone number">
-          </form>
-        </div>
-        <div class="clearfix"></div>
         <table class="table table-striped table-condensed table-responsive table-bordered">
           <thead>
           <tr>
@@ -76,6 +81,7 @@
             <th>
               <div style="max-width: 200px" class="input-group">
                 <input type="text" class="form-control" ng-model="search.created"
+                       ng-click="createdDate.open($event)"
                        datepicker-popup is-open="createdDate.opened"
                        date-disabled="disabled(date, mode)"/>
                 <span class="input-group-btn">
@@ -139,7 +145,7 @@
             ng-class="{'text-danger': visitor.group_type.black_listed}">
             <td>{{ $index + 1 + ((pagination.currentPage-1) * pagination.itemsPerPage) }}</td>
             <td>
-              <a class="btn-link" ui-sref="edit-visitor-profile({visitor_id: visitor.uuid})"
+              <a class="btn-link" ui-sref="visitor-form({_id: visitor.uuid})"
                  title="Edit {{ visitor.first_name }}'s details" ng-show="user.is_staff">
                 {{ visitor.first_name }} {{ visitor.last_name }}
               </a>
@@ -160,12 +166,12 @@
             </td>
             <td>{{ visitor.created |date: 'dd MMM, yyyy' }}</td>
             <td>
-              <a class="btn btn-success btn-xs" ui-sref="show-visitor({visitor_id: visitor.uuid})"
+              <a class="btn btn-success btn-xs" ui-sref="visitor({visitor_id: visitor._id})"
                  title="View {{ visitor.first_name }}'s details" ng-show="user.is_active">
                 <i class="fa fa-eye"></i> View
               </a>
 
-              <a class="btn btn-success btn-xs" ui-sref="create-appointment-visitor({visitor_id: visitor.uuid})"
+              <a class="btn btn-success btn-xs" ui-sref="create-appointment-visitor({_id: visitor._id})"
                  title="Create appointment" ng-show="user.is_active &&  !visitor.group_type.black_listed">
                 <i class="fa fa-plus-circle"></i> Create Appointment
               </a>
@@ -174,7 +180,7 @@
           </tbody>
         </table>
         <br/>
-        <div class="row">
+        <div class="row" ng-if="visitors.length">
           <div class="col-sm-6" style="padding-top: 15px;">
             Showing Page: {{pagination.currentPage}} of {{pagination.numPages}}
           </div>

@@ -8,43 +8,39 @@
  * Service in the viLoggedClientApp.
  */
 angular.module('viLoggedClientApp')
-  .service('entranceService', function entranceService($q, $http, db, storageService, syncService, config) {
+  .service('entranceService', function entranceService($q, db, storageService, syncService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
-    var DB_NAME = db.ENTRANCE.replace(/_/, '-');
-    var BASE_URL = config.api.backend + config.api.backendCommon + '/';
+    var DB_NAME = db.ENTRANCE.replace(/_/, '-'), _this = this;
 
-    function getAllEntrance() {
-      return storageService.all(DB_NAME)
-    }
+    _this.all = function(options) {
+      return storageService.all(DB_NAME, options)
+    };
 
-    function getEntrance(id) {
-      return storageService.find(DB_NAME, id);
-    }
+    _this.get = function(id, options) {
+      return storageService.find(DB_NAME, id, options);
+    };
 
-    this.save = function(entrance) {
+    _this.save = function(entrance) {
       return storageService.save(DB_NAME, entrance);
     };
 
-    this.remove = function(id) {
+    _this.remove = function(id) {
       return storageService.removeRecord(DB_NAME, id);
     };
 
-    function hasUsage(id) {
+    _this.hasUsage = function(id) {
       var deferred = $q.defer();
       var DB_NAME = db.APPOINTMENTS;
 
-      $http.get(BASE_URL+DB_NAME+'?entrance_id='+id)
-        .success(function(response) {
+      storageService.all(DB_NAME, {entrance_id: id})
+        .then(function(response) {
           deferred.resolve(!(response.length === 0));
         })
-        .error(function(reason) {
+        .catch(function(reason) {
           deferred.reject(reason);
         });
       return deferred.promise;
-    }
+    };
 
-    this.all = getAllEntrance;
-    this.get = getEntrance;
-    this.hasUsage = hasUsage;
     this.getUpdates = syncService.getUpdates;
   });

@@ -12,70 +12,33 @@ angular.module('viLoggedClientApp')
                                                              entranceService, config, $filter) {
 
     // AngularJS will instantiate a singleton by calling "new" on this function
-    var DB_NAME = db.APPOINTMENTS;
+    var DB_NAME = db.APPOINTMENTS, _this = this;
     var BASE_URL = config.api.backend + config.api.backendCommon + '/';
 
-    var APPOINTMENT_APPROVAL_EMAIL_TEMPLATE = 'Hello &&first_name&& &&last_name&&,\n\nYour appointment with &&host_first_name&& &&host_last_name&& has been approved.'
+    _this.APPOINTMENT_APPROVAL_EMAIL_TEMPLATE = 'Hello &&first_name&& &&last_name&&,\n\nYour appointment with &&host_first_name&& &&host_last_name&& has been approved.'
       + '\n\nYour appointment is scheduled for\n\nDate:&&date&& \nExpected Check in Time: &&start_time&&' +
       '\n\nNigerian Communication Commission';
 
-    var APPOINTMENT_APPROVAL_SMS_TEMPLATE = 'Hello &&first_name&& &&last_name&&, your appointment with &&host_first_name&& &&host_last_name&& has been approved.'
+    _this.APPOINTMENT_APPROVAL_SMS_TEMPLATE = 'Hello &&first_name&& &&last_name&&, your appointment with &&host_first_name&& &&host_last_name&& has been approved.'
       + ' Your appointment is scheduled for Date:&&date&& Expected Check in Time: &&end_time&&';
 
-    var APPOINTMENT_CREATED_EMAIL_TEMPLATE = 'Hello &&first_name&& &&last_name&&,\n\nYou have an appointment awaiting your approval\n\n'+
+    _this.APPOINTMENT_CREATED_EMAIL_TEMPLATE = 'Hello &&first_name&& &&last_name&&,\n\nYou have an appointment awaiting your approval\n\n'+
       'Nigerian Communication Commission';
 
-    var APPOINTMENT_CREATED_SMS_TEMPLATE = 'Hello &&first_name&& &&last_name&&, you have an appointment awaiting your approval';
+    _this.APPOINTMENT_CREATED_SMS_TEMPLATE = 'Hello &&first_name&& &&last_name&&, you have an appointment awaiting your approval';
 
-    function getAllAppointments() {
-      //return storageService.all(DB_NAME);
+    _this.all = function(options) {
+      return storageService.all(DB_NAME, options);
+    };
 
+    _this.get = function(id, options) {
+      return storageService.find(DB_NAME, id, options);
+    };
+
+    _this.getByUser = function(user) {
       var deferred = $q.defer();
-
-      $http.get(BASE_URL + DB_NAME + '/all')
-        .success(function(response) {
-          deferred.resolve(response);
-        })
-        .catch(function(reason) {
-          deferred.reject(reason);
-        });
-
-      return deferred.promise;
-    }
-
-    function findByField(field, value) {
-      var deferred = $q.defer();
-
-      $http.get(BASE_URL + DB_NAME + '/?' + field + '=' + value)
-        .success(function(response) {
-          deferred.resolve(response);
-        })
-        .catch(function(reason) {
-          deferred.reject(reason);
-        });
-
-      return deferred.promise;
-    }
-
-    function findByFieldNested(field, value) {
-      var deferred = $q.defer();
-
-      $http.get(BASE_URL + DB_NAME + '/?' + field + '=' + value)
-        .success(function(response) {
-          deferred.resolve(response);
-        })
-        .catch(function(reason) {
-          deferred.reject(reason);
-        });
-
-      return deferred.promise;
-    }
-
-    function getNestedAppointmentsByUser(user) {
-      var deferred = $q.defer();
-
-      if (user !== undefined) {
-        findByFieldNested('host_id__id', user.id)
+      if (user) {
+        storageService.all(DB_NAME, {host_id: user._id})
           .then(function(response) {
             deferred.resolve(response);
           })
@@ -85,12 +48,11 @@ angular.module('viLoggedClientApp')
       }
 
       return deferred.promise;
-    }
+    };
 
-    function getNestedAppointmentsByVisitor(visitor) {
+    _this.getByVisitor = function(visitor) {
       var deferred = $q.defer();
-
-      findByFieldNested('visitor_id__uuid', visitor)
+      storageService.all(DB_NAME)
         .then(function(response) {
           deferred.resolve(response);
         })
@@ -99,35 +61,17 @@ angular.module('viLoggedClientApp')
         });
 
       return deferred.promise;
-    }
+    };
 
-    function getAppointmentsByUser(user) {
-      var deferred = $q.defer();
-
-      findByField('host_id', user.id)
-        .then(function(response) {
-          deferred.resolve(response);
-        })
-        .catch(function(reason) {
-          deferred.reject(reason);
-        });
-
-      return deferred.promise;
-    }
-
-    function save(object) {
+    _this.save = function(object) {
       return storageService.save(DB_NAME, object);
-    }
+    };
 
-    function getUserUpcomingAppointments(user) {
+    _this.getUserUpcomingAppointments = function(user) {
       var deferred = $q.defer();
-      getAppointmentsByUser(user)
+      _this.getByUser(user)
         .then(function(response) {
-          var filtered = response
-            .filter(function(appointment) {
-              return appointment.approved &&
-                new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.expired;
-            });
+          var filtered = utility.filter(response, function (row) { return row.is_approved && new Date(row.appointment_date).getTime() > new Date().getTime() && !row.expired;});
           deferred.resolve(filtered);
         })
         .catch(function(reason) {
@@ -135,40 +79,17 @@ angular.module('viLoggedClientApp')
         });
 
       return deferred.promise;
-    }
+    };
 
-    function get(id) {
-      return storageService.find(DB_NAME, id);
-    }
+    _this.appointmentsAwaitingApprovalFilter = function(response) {
+      return utility.filter(response, function(row) {return !row.is_approved && !row.expired && new Date(row.appointment_date).getTime() > new Date().getTime();});
+    };
 
-
-    function getNested(id) {
+    _this.getUserAppointmentsAwaitingApproval = function(user) {
       var deferred = $q.defer();
-
-      $http.get(BASE_URL + DB_NAME + id)
-        .success(function(response) {
-          deferred.resolve(response);
-        })
-        .catch(function(reason) {
-          deferred.reject(reason);
-        });
-
-      return deferred.promise;
-    }
-
-    function appointmentsAwaitingApprovalFilter(response) {
-      return response
-        .filter(function(appointment) {
-          return !appointment.approved && !appointment.expired && utility.getTimeStamp(appointment.appointment_date) > new Date().getTime();
-        });
-    }
-
-    function getUserAppointmentsAwaitingApproval(user) {
-      var deferred = $q.defer();
-      getAppointmentsByUser(user)
+      _this.getByUser(user)
         .then(function(response) {
-          var filtered = appointmentsAwaitingApprovalFilter(response);
-
+          var filtered = _this.appointmentsAwaitingApprovalFilter(response);
           deferred.resolve(filtered);
         }).
         catch(function(reason) {
@@ -176,36 +97,14 @@ angular.module('viLoggedClientApp')
         });
 
       return deferred.promise;
-    }
+    };
 
-    function getAppointmentsByVisitor(visitor_id) {
-      var deferred = $q.defer();
-      getAllAppointments(DB_NAME)
-        .then(function(response) {
-          var filtered = response
-            .filter(function(appointment) {
-              return appointment.visitor_id.id === visitor_id;
-            });
-
-          deferred.resolve(filtered);
-        })
-        .catch(function(reason) {
-          deferred.reject(reason);
-        });
-
-      return deferred.promise;
-    }
-
-    function getVisitorUpcomingAppointments(visitor_id) {
+    _this.getVisitorUpcomingAppointments = function (visitor_id) {
       var deferred = $q.defer();
 
-      findByField('visitor_id__uuid', visitor_id)
+      storageService.all(DB_NAME, {visitor_id: visitor_id})
         .then(function(response) {
-          var filtered = response
-            .filter(function(appointment) {
-              return appointment.approved &&
-                new Date(appointment.appointment_date).getTime() > new Date().getTime() && !appointment.expired;
-            });
+          var filtered = utility.filter(response, function(row) {return row.is_approved && new Date(row.appointment_date).getTime() > new Date().getTime() && !row.expired;});
           deferred.resolve(filtered)
         })
         .catch(function(reason) {
@@ -214,66 +113,60 @@ angular.module('viLoggedClientApp')
 
 
       return deferred.promise;
-    }
+    };
 
-    function appointmentsByDay(date) {
+    _this.appointmentsByDay = function(date) {
       var deferred = $q.defer();
       var searchTimeStamp = angular.isDefined(date) ? utility.getTimeStamp(date) : utility.getTimeStamp(moment().format('l'));
-      getAllAppointments()
+      _this.all()
         .then(function(response) {
-          var appointments = response
-            .filter(function(appointment) {
-              var appointmentTimeStamp = utility.getTimeStamp(appointment.appointment_date);
-              return searchTimeStamp === appointmentTimeStamp;
-            });
+          var appointments = utility.filter(response, function(row) {return utility.getTimeStamp(row.appointment_date) === searchTimeStamp;});
           deferred.resolve(appointments);
         })
         .catch(function(reason) {
           deferred.reject(reason);
         });
       return deferred.promise;
-    }
+    };
 
-    function appointmentsByPeriod(date, period) {
+    _this.appointmentsByPeriod = function(date, period) {
       var deferred = $q.defer();
       date = angular.isDefined(date) ? date : moment().format('l');
       //TODO:: look for a better way to set moment date;
       moment()._d = date;
       var weekStartedOn = utility.getTimeStamp(moment().startOf(period));
       var weekEndedOn = utility.getTimeStamp(moment().endOf(period));
-      getAllAppointments()
+      _this.all()
         .then(function(response) {
-          var appointments = response
-            .filter(function(appointment) {
-              var appointmentTimeStamp = utility.getTimeStamp(appointment.appointment_date);
-              return appointmentTimeStamp >= weekStartedOn || appointmentTimeStamp <= weekEndedOn;
-            });
+          var appointments = utility.filter(response, function(row) {
+            var appointmentTimeStamp = utility.getTimeStamp(row.appointment_date);
+            return appointmentTimeStamp >= weekStartedOn || appointmentTimeStamp <= weekEndedOn;
+          });
+
           deferred.resolve(appointments);
         })
         .catch(function(reason) {
           deferred.reject(reason);
         });
       return deferred.promise;
-    }
+    };
 
-    function appointmentByWeek(date) {
-      return appointmentsByPeriod(date, 'week');
-    }
+    _this.appointmentByWeek = function(date) {
+      return _this.appointmentsByPeriod(date, 'week');
+    };
 
-    function appointmentByMonth(date) {
-      return appointmentsByPeriod(date, 'month');
-    }
+    _this.appointmentByMonth = function(date) {
+      return _this.appointmentsByPeriod(date, 'month');
+    };
 
-    function defaultEntrance() {
+    _this.defaultEntrance = function() {
       var deferred = $q.defer();
       entranceService.all()
         .then(function(response) {
           if (response.length) {
             deferred.resolve(response[0].uuid);
           } else {
-            entranceService.save({
-              entrance_name: 'Main Gate'
-            })
+            entranceService.save({name: 'Main Gate'})
               .then(function(response) {
                 deferred.resolve(response.uuid);
               })
@@ -287,42 +180,17 @@ angular.module('viLoggedClientApp')
           deferred.reject(reason);
         });
       return deferred.promise;
-    }
-
-    function findByMultipleFields(object){
-      var deferred = $q.defer();
-      var params = [];
-      Object.keys(object).forEach(function(key) {
-        params.push(key+'='+object[key]);
-      });
-      params = params.join('&');
-      $http.get(BASE_URL+DB_NAME+'?'+params)
-        .success(function(response) {
-          deferred.resolve(response);
-        })
-        .error(function(reason) {
-          deferred.reject(reason);
-        });
-      return deferred.promise;
-    }
+    };
 
     /*
      * Finds an existing but unexpired appointment with a host.
      * cancel save if one is found
      * */
-    function findExistingAppointment (visitorId, hostId) {
+    _this.findExistingAppointment = function(visitorId, hostId) {
       var deferred = $q.defer();
-      appointmentService.findByField('visitor_id', visitorId)
+      storageService.all(DB_NAME, {visitor_id: visitorId, host_id: hostId, is_expired: false})
         .then(function(response){
-          var existingAppointment = response.filter(function(appointment) {
-            if (visitorId === undefined) {
-              return false;
-            }
-            return appointment.host_id === hostId && !appointment.checked_out
-              && (!appointment.is_expired || utility.getTimeStamp(appointment) < new Date().getTime());
-          });
-
-
+          var existingAppointment = utility.filter(response, function(row) {return row.checked_out && (utility.getTimeStamp(row.appointment_date) < new Date().getTime());});
           existingAppointment.length ? deferred.reject('Selected visitor has pending appointment with selected host, ' +
           'kindly conclude pending appointment first') :
             deferred.resolve('');
@@ -330,19 +198,20 @@ angular.module('viLoggedClientApp')
         .catch(function(reason) {
           deferred.reject(reason);
         });
-    }
+    };
 
-    function hasPendingAppointment(appointmentObject) {
+    _this.hasPendingAppointment = function(appointmentObject) {
       var deferred = $q.defer();
       var params = {
         visitor_id: appointmentObject.visitor_id,
         host_id: appointmentObject.host_id,
         is_expired: false
       };
-      findByMultipleFields(params)
+
+      storageService.all(DB_NAME, params)
         .then(function(response) {
           if (response.length) {
-            var pendingAppointments = response.filter(function(appointment){
+            var pendingAppointments = utility.filter(response, function(appointment){
               var date = new Date();
               var end =  (appointment.appointment_date + ' '+ $filter('date')(appointment.visit_end_time, 'HH:mm:ss')).split(/[\s|:|-]/);
               var todayTimeStamp = new Date(date.getYear(),date.getMonth(), date.getDate()).getTime();
@@ -364,11 +233,11 @@ angular.module('viLoggedClientApp')
           deferred.reject(reason);
         });
       return deferred.promise;
-    }
+    };
 
-    function remove(appointmentId) {
+    _this.remove = function(appointmentId) {
       return storageService.removeRecord(DB_NAME, appointmentId);
-    }
+    };
 
     function outLookCalenderTemplate() {
 
@@ -389,7 +258,7 @@ angular.module('viLoggedClientApp')
       'END:VCALENDAR';
     }
 
-    function getOutlookCalender(appointment) {
+    _this.getOutlookCalender = function(appointment) {
 
       var start = (appointment.appointment_date + ' '+ $filter('date')(appointment.visit_start_time, 'HH:mm:ss')).split(/[\s|:|-]/);
       var end =  (appointment.appointment_date + ' '+ $filter('date')(appointment.visit_end_time, 'HH:mm:ss')).split(/[\s|:|-]/);
@@ -408,44 +277,20 @@ angular.module('viLoggedClientApp')
       };
 
       return utility.compileTemplate(params, outLookCalenderTemplate());
-    }
+    };
 
-    this.isAppointmentUpcoming = function(appointmentDate, visitStartTime) {
+    _this.isAppointmentUpcoming = function(appointmentDate, visitStartTime) {
       var start = (appointmentDate + ' '+ $filter('date')(visitStartTime, 'HH:mm:ss')).split(/[\s|:|-]/);
       var startTime = new Date(start[0], start[1]-1, start[2], start[3], start[4], start[5]);
       return new Date().getTime() <= startTime.getTime();
     };
 
-    this.isAppointmentExpired = function(appointmentDate, visitEndTime) {
+    _this.isAppointmentExpired = function(appointmentDate, visitEndTime) {
       var end =  (appointmentDate + ' '+ $filter('date')(visitEndTime, 'HH:mm:ss')).split(/[\s|:|-]/);
       var endTime = new Date(end[0], end[1]-1, end[2], end[3], end[4], end[5]);
       return new Date().getTime() >= endTime.getTime();
     };
 
-    this.get = get;
-    this.getNested = getNested;
-    this.all = getAllAppointments;
-    this.save = save;
-    this.remove = remove;
-    this.findByField = findByField;
-    this.getUserUpcomingAppointments = getUserUpcomingAppointments;
-    this.getAppointmentsByUser = getAppointmentsByUser;
-    this.getNestedAppointmentsByUser = getNestedAppointmentsByUser;
-    this.getUserAppointmentsAwaitingApproval = getUserAppointmentsAwaitingApproval;
-    this.getVisitorUpcomingAppointments = getVisitorUpcomingAppointments;
-    this.getAppointmentsByVisitor = getAppointmentsByVisitor;
-    this.getNestedAppointmentsByVisitor = getNestedAppointmentsByVisitor;
-    this.getAppointmentsByWeek = appointmentByWeek;
-    this.getAppointmentsByMonth = appointmentByMonth;
-    this.getAppointmentsByDay = appointmentsByDay;
-    this.defaultEntrance = defaultEntrance;
-    this.findExistingAppointment = findExistingAppointment;
-    this.hasPendingAppointment = hasPendingAppointment;
-    this.getOutlookCalender = getOutlookCalender;
     this.getUpdates = syncService.getUpdates;
-    this.APPOINTMENT_APPROVAL_EMAIL_TEMPLATE = APPOINTMENT_APPROVAL_EMAIL_TEMPLATE;
-    this.APPOINTMENT_APPROVAL_SMS_TEMPLATE = APPOINTMENT_APPROVAL_SMS_TEMPLATE;
-    this.APPOINTMENT_CREATED_EMAIL_TEMPLATE = APPOINTMENT_CREATED_EMAIL_TEMPLATE;
-    this.APPOINTMENT_CREATED_SMS_TEMPLATE = APPOINTMENT_CREATED_SMS_TEMPLATE;
 
   });

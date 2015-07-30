@@ -1,7 +1,7 @@
 <ul id="nav">
 
   <!-- Main menu with font awesome icon -->
-  <li id="li-home" ng-show="user.is_staff"><a href="/"><i class="fa fa-home"></i> Dashboard</a>
+  <li id="li-home" ng-show="user.is_staff"><a ui-sref="home"><i class="fa fa-home"></i> Dashboard</a>
   </li>
   <li class="" id="li-appointments" ng-show="user.is_active">
     <a ui-sref="appointments">
@@ -13,11 +13,11 @@
       <i class="fa fa-male"></i> Visitors
     </a>
   </li>
-  <!--<li id="li-department" ng-show="user.is_superuser">
-    <a ui-sref="company-departments">
+  <li id="li-department" ng-show="user.is_superuser">
+    <a ui-sref="departments">
       <i class="fa fa-institution"></i> Departments
     </a>
-  </li>-->
+  </li>
   <li id="li-staff" ng-show="user.is_superuser">
     <a ui-sref="users">
       <i class="fa fa-users"></i> Users

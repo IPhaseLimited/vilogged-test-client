@@ -10,34 +10,26 @@
 angular.module('viLoggedClientApp')
   .service('visitorsLocationService', function visitorsLocationService($q, storageService, db, $http, config, syncService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
-    var BASE_URL = config.api.backend + config.api.backendCommon + '/';
+    var BASE_URL = config.api.backend + config.api.backendCommon + '/', _this = this;
     var DB_NAME = db.VISITORS_LOCATION.replace(/_/, '-');
+
+    _this.all = function(options) {
+      return storageService.all(DB_NAME, options);
+    };
 
     this.save = function(object) {
       return storageService.save(DB_NAME, object);
     };
 
-    this.get = function(id) {
-      return storageService.find(DB_NAME, id);
+    _this.get = function(id, options) {
+      return storageService.find(DB_NAME, id, options);
     };
 
-    this.findByField = function(field, value) {
-      var deferred = $q.defer();
-
-      $http.get(BASE_URL + DB_NAME + '?' + field + '=' + value)
-        .success(function(response) {
-          deferred.resolve(response);
-        })
-        .error(function(reason) {
-          if (reason === null) {
-            deferred.reject('timeout');
-          } else {
-            deferred.reject(reason);
-          }
-        });
-
-      return deferred.promise;
+    _this.findByField = function(field, value) {
+      var options = {};
+      options[field] = value;
+      return storageService.all(options);
     };
 
-    this.getUpdates = syncService.getUpdates;
+    _this.getUpdates = syncService.getUpdates;
   });

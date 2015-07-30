@@ -3,7 +3,7 @@
     <!--div class="pull-left">Title</div-->
     <div class="widget-icons pull-right">
       <div>
-        <a class="fa fa-plus-circle btn btn-primary btn-sm" ui-sref="add-company-department" ng-show="user.is_superuser"> Create Department</a>
+        <a class="fa fa-plus-circle btn btn-primary btn-sm" ui-sref="add-department" ng-show="user.is_superuser"> Create Department</a>
       </div>
     </div>
     <div class="clearfix"></div>
@@ -34,19 +34,19 @@
             <tbody>
             <tr ng-repeat="department in departments">
               <td>{{ $index + 1}}</td>
-              <td>{{ department.department_name }}</td>
+              <td>{{ department.name }}</td>
               <td>{{ department.description }}</td>
               <td>{{ department.created | date: 'EEE, MMM d, y' }}</td>
               <td>{{ department.modified | date: 'EEE, MMM d, y' }}</td>
               <td>{{ department.created_by | date: 'EEE, MMM d, y' }}</td>
               <td>
-                <a class="hidden-xs pointer btn btn-info btn-xs hide" ng-click="addDepartment(department.uuid)">
+                <a class="hidden-xs pointer btn btn-info btn-xs hide" ng-click="addDepartment(department._id)">
                   <i class="fa fa-edit"></i> Edit
                 </a>
-                <a class="pointer btn btn-info btn-xs" ui-sref="edit-company-department({id: department.uuid})">
+                <a class="pointer btn btn-info btn-xs" ui-sref="edit-department({id: department._id})">
                   <i class="fa fa-edit"></i> Edit
                 </a>
-                <a ng-click="remove(department.uuid)" class="btn btn-danger btn-xs">
+                <a ng-click="remove(department._id)" class="btn btn-danger btn-xs">
                   <i class="fa fa-times-circle"></i> Delete
                 </a>
               </td>

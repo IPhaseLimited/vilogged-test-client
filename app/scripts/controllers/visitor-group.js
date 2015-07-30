@@ -8,7 +8,7 @@
  * Controller of the viLoggedClientApp
  */
 
-function formController($scope, $state, visitorGroupsService, $stateParams, $modalInstance, _id, validationService,
+function VGFormController($scope, $state, visitorGroupsService, $stateParams, $modalInstance, _id, validationService,
                         $rootScope, alertService, notificationService) {
   var id = angular.isDefined(_id) ? _id : $stateParams.id;
   $scope.visitorGroup = {};
@@ -159,7 +159,7 @@ angular.module('viLoggedClientApp')
         templateUrl: 'views/visitor-groups/modal-form.html',
         controller: function($scope, $state, visitorGroupsService, $stateParams, $modalInstance,
                              validationService, $rootScope) {
-          formController($scope, $state, visitorGroupsService, $stateParams, $modalInstance, id,
+          VGFormController($scope, $state, visitorGroupsService, $stateParams, $modalInstance, id,
             validationService, $rootScope);
         }
       });
@@ -175,5 +175,5 @@ angular.module('viLoggedClientApp')
   })
   .controller('VisitorGroupsFormCtrl', function($scope, $state, visitorGroupsService, $stateParams,
                                                      validationService, $rootScope, alertService) {
-    formController($scope, $state, visitorGroupsService, $stateParams, validationService, $rootScope, alertService);
+    VGFormController($scope, $state, visitorGroupsService, $stateParams, validationService, $rootScope, alertService);
   });
